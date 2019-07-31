@@ -1,0 +1,121 @@
+.mg-select-control {
+  position: relative;
+  min-width: 220px;
+  height: 32px;
+  font-size: 14px;
+  color: #475466;
+  outline: none;
+
+  &, * {
+    box-sizing: border-box;
+    transition: all 300ms !important;
+  }
+
+  .mg-select-current {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0 34px 0 12px;
+    line-height: 30px;
+    border: 1px solid #CCD7E6;
+    border-radius: 2px;
+    cursor: pointer;
+
+    svg {
+      position: absolute;
+      top: 3px;
+      right: 5px;
+    }
+
+    &.active {
+      border-color: #1CA1C1;
+
+      svg {
+        transform: rotate(180deg);
+        transform-origin: center;
+      }
+    }
+  }
+
+  .mg-select-list {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #CCD7E6;
+    border-top: 0;
+    border-radius: 0 0 2px 2px;
+    list-style-type: none;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 7px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    &.active {
+      border-color: #1CA1C1;
+    }
+
+    .mg-select-item {
+      height: 30px;
+      padding: 0 12px;
+      border-top: 1px solid #ddd;
+      line-height: 30px;
+      cursor: pointer;
+
+      &:first-child {
+        border-top: 0;
+      }
+
+      &.active {
+        background-color: #F4F5F9;
+        color: #1CA1C1;
+        box-shadow: inset 2px 0 #1CA1C1;
+      }
+    }
+  }
+}
+
+.mg-select-container {
+  border-width: 0;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  outline: none;
+
+  .mg-select-label {
+    padding: 3px 2px 0;
+    display: block;
+    font-size: 14px;
+    line-height: 19px;
+    outline: none;
+
+    &.inline {
+      padding: 0 8px 0 0;
+      line-height: 32px;
+
+      &.right {
+        text-align: right;
+      }
+    }
+  }
+
+  .mg-select-control {
+    flex: 1;
+  }
+
+  .mg-select-wrapper {
+    height: 32px;
+    display: flex;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .mg-select-hint {
+    margin-left: 3px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #516075;
+    outline: none;
+  }
+}

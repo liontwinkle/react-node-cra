@@ -1,0 +1,28 @@
+.mg-tab-container {
+  width: 100%;
+  height: 49px;
+  border-bottom: 1px solid #dadee0;
+
+  .mg-tab {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 48px;
+    color: #1CA1C1;
+    text-align: center;
+    transition: all 300ms;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #F4F5F9;
+    }
+
+    &.active {
+      box-shadow: inset 0 -2px #1CA1C1;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}

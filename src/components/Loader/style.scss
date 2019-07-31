@@ -1,0 +1,37 @@
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.app-loader {
+  width: 50px;
+  height: 50px;
+  border: 2px solid transparent;
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spinner 1s linear infinite;
+
+  &.big {
+    width: 100px;
+    height: 100px;
+  }
+
+  &.small {
+    width: 30px;
+    height: 30px;
+  }
+
+  &.ex-small {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &.dark {
+    border-top-color: #212529;
+  }
+}
