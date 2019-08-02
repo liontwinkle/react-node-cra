@@ -10,6 +10,8 @@ import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
+import AddSections from './AddSections';
+import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
 
@@ -23,7 +25,12 @@ function PropertyActions(props) {
     updateCategory,
   } = props;
 
-  const [open, setOpen] = useState({ add: false, edit: false });
+  const [open, setOpen] = useState({
+    add: false,
+    edit: false,
+    add_section: false,
+    edit_section: false,
+  });
   const handleToggle = field => () => {
     setOpen({
       ...open,
@@ -46,7 +53,29 @@ function PropertyActions(props) {
   return (
     <div className="mg-property-actions d-flex flex-column align-items-center">
       <Tooltip
-        title="Add Property Fields"
+        title="Add Section"
+        position="left"
+        arrow
+      >
+        <IconButton disabled={isUpdating} onClick={handleToggle('add_section')}>
+          <AddIcon style={{ fontSize: 20 }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip
+        title="Edit Sections"
+        position="left"
+        arrow
+      >
+        <IconButton disabled={isUpdating} onClick={handleToggle('edit_section')}>
+          <EditIcon style={{ fontSize: 20 }} />
+        </IconButton>
+      </Tooltip>
+
+      <div className="divider" />
+
+      <Tooltip
+        title="Add Property Field"
         position="left"
         arrow
       >
@@ -65,6 +94,8 @@ function PropertyActions(props) {
         </IconButton>
       </Tooltip>
 
+      <div className="divider" />
+
       <Tooltip
         title="Save Properties"
         position="left"
@@ -74,6 +105,14 @@ function PropertyActions(props) {
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
+      {open.add_section && (
+        <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
+      )}
+
+      {open.edit_section && (
+        <EditSections open={open.edit_section} handleClose={handleToggle('edit_section')} />
+      )}
 
       {open.add && (
         <AddPropertyFields open={open.add} handleClose={handleToggle('add')} />

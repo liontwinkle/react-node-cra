@@ -143,3 +143,5 @@ export const convertDateFormat = (date) => {
     second: '2-digit',
   }).format(convertDateFormat);
 };
+
+export const sortByOrder = (a, b) => a.order - b.order;

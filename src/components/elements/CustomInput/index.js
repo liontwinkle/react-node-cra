@@ -11,6 +11,7 @@ const CustomInput = ({
   label,
   labelAlignment,
   placeholder,
+  min,
   inline,
   inlineWidth,
   hint,
@@ -40,6 +41,7 @@ const CustomInput = ({
         type={type}
         className="mg-input"
         placeholder={placeholder}
+        min={min}
         value={value}
         onChange={onChange}
       />
@@ -61,6 +63,7 @@ CustomInput.propTypes = {
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
   placeholder: PropTypes.string,
+  min: PropTypes.number,
   inline: PropTypes.bool,
   inlineWidth: PropTypes.number,
   hint: PropTypes.string,
@@ -78,6 +81,7 @@ CustomInput.defaultProps = {
   label: '',
   labelAlignment: '',
   placeholder: '',
+  min: undefined,
   inline: false,
   inlineWidth: 88,
   hint: '',

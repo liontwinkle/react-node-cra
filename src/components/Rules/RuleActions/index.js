@@ -46,7 +46,7 @@ function RuleActions(props) {
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       <Tooltip
-        title="Add Rule Keys"
+        title="Add Rule Key"
         position="left"
         arrow
       >
@@ -64,6 +64,8 @@ function RuleActions(props) {
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
+      <div className="divider" />
 
       <Tooltip
         title="Save Rules"
