@@ -54,7 +54,7 @@ function AddRuleKeys(props) {
     setRuleKeyData(newClient);
   };
 
-  const disabled = !(category && ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
+  const disabled = !(ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
@@ -66,11 +66,11 @@ function AddRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule keys has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success' });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule keys.', { variant: 'error' });
+          enqueueSnackbar('Error in adding rule key.', { variant: 'error' });
         });
     }
   };
@@ -132,13 +132,9 @@ function AddRuleKeys(props) {
 AddRuleKeys.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-AddRuleKeys.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

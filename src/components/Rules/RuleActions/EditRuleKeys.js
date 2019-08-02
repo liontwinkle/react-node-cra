@@ -47,11 +47,11 @@ function EditRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule keys has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success' });
           // handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule keys.', { variant: 'error' });
+          enqueueSnackbar('Error in adding rule key.', { variant: 'error' });
         });
     }, 600);
   });
@@ -71,11 +71,11 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule keys has been updated successfully.', { variant: 'success' });
+            enqueueSnackbar('Rule key has been updated successfully.', { variant: 'success' });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating rule keys.', { variant: 'error' });
+            enqueueSnackbar('Error in updating rule key.', { variant: 'error' });
           });
       }
     }, 600);
@@ -91,11 +91,11 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule keys has been deleted successfully.', { variant: 'success' });
+            enqueueSnackbar('Rule key has been deleted successfully.', { variant: 'success' });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting rule keys.', { variant: 'error' });
+            enqueueSnackbar('Error in deleting rule key.', { variant: 'error' });
           });
       }
     }, 600);
@@ -135,13 +135,9 @@ function EditRuleKeys(props) {
 
 EditRuleKeys.propTypes = {
   open: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-};
-
-EditRuleKeys.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

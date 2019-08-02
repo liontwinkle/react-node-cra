@@ -17,7 +17,7 @@ const CategorySchema = new Schema({
     label: String,
     order: Number,
   }],
-  propertyKeys: [{
+  propertyFields: [{
     key: String,
     label: String,
     propertyType: String,

@@ -21,37 +21,48 @@ function EditPropertyFields(props) {
     handleClose,
   } = props;
 
-  const { ruleKeys } = category;
+  const sections = {};
+  category.sections.forEach((section) => {
+    sections[section.key] = section.label;
+  });
+
+  const { propertyFields } = category;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
       {
         title: 'Type',
-        field: 'ruleType',
+        field: 'propertyType',
         lookup: { string: 'String', number: 'Number' },
       },
+      {
+        title: 'Section',
+        field: 'section',
+        lookup: sections,
+      },
     ],
-    data: ruleKeys,
+    data: propertyFields,
   };
 
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      ruleKeys.push({
+      propertyFields.push({
         key: newData.key,
         label: newData.label,
-        ruleType: newData.ruleType,
+        propertyType: newData.propertyType,
+        section: newData.section,
       });
 
-      updateCategory(category.id, { ruleKeys })
+      updateCategory(category.id, { propertyFields })
         .then(() => {
-          enqueueSnackbar('Rule keys has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Property field has been added successfully.', { variant: 'success' });
           // handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule keys.', { variant: 'error' });
+          enqueueSnackbar('Error in adding property field.', { variant: 'error' });
         });
     }, 600);
   });
@@ -60,22 +71,23 @@ function EditPropertyFields(props) {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = ruleKeys.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        ruleKeys.splice(ruleKeyIndex, 1, {
+        propertyFields.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
-          ruleType: newData.ruleType,
+          propertyType: newData.propertyType,
+          section: newData.section,
           _id: newData._id,
         });
 
-        updateCategory(category.id, { ruleKeys })
+        updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Rule keys has been updated successfully.', { variant: 'success' });
+            enqueueSnackbar('Property field has been updated successfully.', { variant: 'success' });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating rule keys.', { variant: 'error' });
+            enqueueSnackbar('Error in updating property field.', { variant: 'error' });
           });
       }
     }, 600);
@@ -85,17 +97,17 @@ function EditPropertyFields(props) {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = ruleKeys.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        ruleKeys.splice(ruleKeyIndex, 1);
+        propertyFields.splice(ruleKeyIndex, 1);
 
-        updateCategory(category.id, { ruleKeys })
+        updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Rule keys has been deleted successfully.', { variant: 'success' });
+            enqueueSnackbar('Property field has been deleted successfully.', { variant: 'success' });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property fields.', { variant: 'error' });
+            enqueueSnackbar('Error in deleting property field.', { variant: 'error' });
           });
       }
     }, 600);
@@ -108,7 +120,7 @@ function EditPropertyFields(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Edit Rule Keys
+        Edit Property Fields
       </DialogTitle>
 
       <DialogContent className="mg-edit-properties-content">
@@ -135,13 +147,9 @@ function EditPropertyFields(props) {
 
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-};
-
-EditPropertyFields.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

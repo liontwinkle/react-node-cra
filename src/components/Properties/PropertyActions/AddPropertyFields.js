@@ -34,43 +34,45 @@ function AddPropertyFields(props) {
     updateCategory,
   } = props;
 
-  const [ruleKeyData, setRuleKeyData] = useState({
+  const [propertyFieldsData, setPropertyFieldsData] = useState({
     key: '',
     label: '',
-    ruleType: { key: 'string', label: 'String' },
+    propertyType: { key: 'string', label: 'String' },
+    section: null,
   });
   const handleChange = field => (e) => {
     const newClient = {
-      ...ruleKeyData,
+      ...propertyFieldsData,
       [field]: e.target.value,
     };
-    setRuleKeyData(newClient);
+    setPropertyFieldsData(newClient);
   };
-  const handleChangeType = (ruleType) => {
+  const handleChangeType = (propertyType) => {
     const newClient = {
-      ...ruleKeyData,
-      ruleType,
+      ...propertyFieldsData,
+      propertyType,
     };
-    setRuleKeyData(newClient);
+    setPropertyFieldsData(newClient);
   };
 
-  const disabled = !(category && ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
+  const disabled = !(propertyFieldsData.key && propertyFieldsData.label && propertyFieldsData.propertyType);
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { ruleKeys } = category;
-      ruleKeys.push({
-        ...ruleKeyData,
-        ruleType: ruleKeyData.ruleType.key,
+      const { propertyFields } = category;
+      propertyFields.push({
+        ...propertyFieldsData,
+        propertyType: propertyFieldsData.propertyType.key,
+        section: propertyFieldsData.section && propertyFieldsData.section.key,
       });
 
-      updateCategory(category.id, { ruleKeys })
+      updateCategory(category.id, { propertyFields })
         .then(() => {
-          enqueueSnackbar('Property fields has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Property field has been added successfully.', { variant: 'success' });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding property fields.', { variant: 'error' });
+          enqueueSnackbar('Error in adding property field.', { variant: 'error' });
         });
     }
   };
@@ -82,7 +84,7 @@ function AddPropertyFields(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Add Rule Keys
+        Add Property Fields
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
@@ -90,22 +92,30 @@ function AddPropertyFields(props) {
           className="mb-3"
           label="Key"
           inline
-          value={ruleKeyData.key}
+          value={propertyFieldsData.key}
           onChange={handleChange('key')}
         />
         <CustomInput
           className="mb-3"
           label="Label"
           inline
-          value={ruleKeyData.label}
+          value={propertyFieldsData.label}
           onChange={handleChange('label')}
         />
         <CustomSelectWithLabel
+          className="mb-3"
           label="Type"
           inline
-          value={ruleKeyData.ruleType}
+          value={propertyFieldsData.propertyType}
           items={ruleKeyTypes}
           onChange={handleChangeType}
+        />
+        <CustomSelectWithLabel
+          label="Section"
+          inline
+          value={propertyFieldsData.section}
+          items={category.sections}
+          onChange={handleChange('section')}
         />
       </DialogContent>
 
@@ -132,13 +142,9 @@ function AddPropertyFields(props) {
 AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-AddPropertyFields.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

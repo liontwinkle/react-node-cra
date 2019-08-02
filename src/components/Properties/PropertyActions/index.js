@@ -31,8 +31,8 @@ function PropertyActions(props) {
     });
   };
 
-  const saveRules = properties => () => {
-    if (category && !isUpdating) {
+  const saveProperties = () => {
+    if (!isUpdating) {
       updateCategory(category.id, { properties })
         .then(() => {
           enqueueSnackbar('Properties has been updated successfully.', { variant: 'success' });
@@ -50,7 +50,7 @@ function PropertyActions(props) {
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('add')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('add')}>
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -60,7 +60,7 @@ function PropertyActions(props) {
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('edit')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('edit')}>
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -70,7 +70,7 @@ function PropertyActions(props) {
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating || !category} onClick={saveRules(properties)}>
+        <IconButton disabled={isUpdating} onClick={saveProperties}>
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -87,14 +87,10 @@ function PropertyActions(props) {
 }
 
 PropertyActions.propTypes = {
-  isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
   properties: PropTypes.object.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+  category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-PropertyActions.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({
