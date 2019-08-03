@@ -65,12 +65,13 @@ export default (state = INITIAL_STATE, action) => {
       if (clientIdx > -1) {
         clients.splice(clientIdx, 1, action.payload.data);
       } else {
-        clients.push(action.data);
+        clients.push(action.payload.data);
       }
       return {
         ...state,
         isUpdating: false,
         clients: clients.slice(0),
+        client: action.payload.data,
       };
     case types.CLIENT_UPDATE_FAIL:
       return {
@@ -93,6 +94,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isDeleting: false,
         clients: clients.slice(0),
+        client: null,
       };
     case types.CLIENT_DELETE_FAIL:
       return {

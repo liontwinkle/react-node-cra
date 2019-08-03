@@ -146,6 +146,12 @@ body {
   }
 }
 
-.MuiDialog-paperWidthSm {
-  max-width: 800px !important;
+.MuiDialog-root {
+  .MuiDialog-paper {
+    padding: 1rem;
+  }
+
+  .MuiDialog-paperWidthSm {
+    max-width: 832px !important;
+  }
 }

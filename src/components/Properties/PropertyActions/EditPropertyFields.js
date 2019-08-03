@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { tableIcons } from 'utils/constants';
+import { propertyTypes, tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 
 function EditPropertyFields(props) {
@@ -34,7 +34,7 @@ function EditPropertyFields(props) {
       {
         title: 'Type',
         field: 'propertyType',
-        lookup: { string: 'String', number: 'Number' },
+        lookup: propertyTypes,
       },
       {
         title: 'Section',

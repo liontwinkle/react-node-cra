@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { ruleKeyTypes } from 'utils/constants';
+import { propertyFieldTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
 
@@ -34,7 +34,7 @@ function AddPropertyFields(props) {
     updateCategory,
   } = props;
 
-  const [propertyFieldsData, setPropertyFieldsData] = useState({
+  const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
     label: '',
     propertyType: { key: 'string', label: 'String' },
@@ -42,28 +42,28 @@ function AddPropertyFields(props) {
   });
   const handleChange = field => (e) => {
     const newClient = {
-      ...propertyFieldsData,
+      ...propertyFieldData,
       [field]: e.target.value,
     };
-    setPropertyFieldsData(newClient);
+    setPropertyFieldData(newClient);
   };
   const handleChangeType = (propertyType) => {
     const newClient = {
-      ...propertyFieldsData,
+      ...propertyFieldData,
       propertyType,
     };
-    setPropertyFieldsData(newClient);
+    setPropertyFieldData(newClient);
   };
 
-  const disabled = !(propertyFieldsData.key && propertyFieldsData.label && propertyFieldsData.propertyType);
+  const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { propertyFields } = category;
       propertyFields.push({
-        ...propertyFieldsData,
-        propertyType: propertyFieldsData.propertyType.key,
-        section: propertyFieldsData.section && propertyFieldsData.section.key,
+        ...propertyFieldData,
+        propertyType: propertyFieldData.propertyType.key,
+        section: propertyFieldData.section && propertyFieldData.section.key,
       });
 
       updateCategory(category.id, { propertyFields })
@@ -92,28 +92,28 @@ function AddPropertyFields(props) {
           className="mb-3"
           label="Key"
           inline
-          value={propertyFieldsData.key}
+          value={propertyFieldData.key}
           onChange={handleChange('key')}
         />
         <CustomInput
           className="mb-3"
           label="Label"
           inline
-          value={propertyFieldsData.label}
+          value={propertyFieldData.label}
           onChange={handleChange('label')}
         />
         <CustomSelectWithLabel
           className="mb-3"
           label="Type"
           inline
-          value={propertyFieldsData.propertyType}
-          items={ruleKeyTypes}
+          value={propertyFieldData.propertyType}
+          items={propertyFieldTypes}
           onChange={handleChangeType}
         />
         <CustomSelectWithLabel
           label="Section"
           inline
-          value={propertyFieldsData.section}
+          value={propertyFieldData.section}
           items={category.sections}
           onChange={handleChange('section')}
         />

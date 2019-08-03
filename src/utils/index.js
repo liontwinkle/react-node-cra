@@ -145,3 +145,12 @@ export const convertDateFormat = (date) => {
 };
 
 export const sortByOrder = (a, b) => a.order - b.order;
+
+export const getObjectFromArray = (array) => {
+  const res = {};
+  array.forEach((item) => {
+    res[item.key] = item.label;
+  });
+
+  return res;
+};

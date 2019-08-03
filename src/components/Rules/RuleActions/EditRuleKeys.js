@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { tableIcons } from 'utils/constants';
+import { ruleTypes, tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 
 function EditRuleKeys(props) {
@@ -29,7 +29,7 @@ function EditRuleKeys(props) {
       {
         title: 'Type',
         field: 'ruleType',
-        lookup: { string: 'String', number: 'Number' },
+        lookup: ruleTypes,
       },
     ],
     data: ruleKeys,

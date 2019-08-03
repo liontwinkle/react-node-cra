@@ -1,101 +1,115 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import Popper from '@material-ui/core/Popper';
+import Fade from '@material-ui/core/Fade';
+import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import './style.scss';
 
-class CustomSelect extends Component {
-  state = {
-    isOpened: false,
+function CustomSelect(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event = null) => {
+    setAnchorEl(anchorEl ? null : (event && event.currentTarget));
   };
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
+  const [wrapperRef, setWrapperRef] = useState(null);
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
+  const getWrapperRef = (ref) => {
+    setWrapperRef(ref);
+  };
 
-  handleClickOutside = (event) => {
+  const handleClickOutside = (event) => {
     if (
-      this.state.isOpened
-      && this.wrapperRef
-      && this.wrapperRef.contains
-      && !this.wrapperRef.contains(event.target)
+      anchorEl
+      && wrapperRef
+      && wrapperRef.contains
+      && !wrapperRef.contains(event.target)
     ) {
-      this.toggle();
+      handleClick();
     }
   };
 
-  getWrapperRef = (ref) => {
-    this.wrapperRef = ref;
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
+
+  const changeValue = value => () => {
+    props.onChange(value);
+    handleClick();
   };
 
-  toggle = () => {
-    this.setState(prevState => ({
-      isOpened: !prevState.isOpened,
-    }));
-  };
+  const {
+    className,
+    placeholder,
+    value: current,
+    items,
+  } = props;
 
-  changeValue = value => () => {
-    this.props.onChange(value);
-    this.toggle();
-  };
+  const isOpened = Boolean(anchorEl);
+  const id = isOpened ? 'mg-popper' : undefined;
 
-  render() {
-    const { isOpened } = this.state;
-    const {
-      className,
-      placeholder,
-      value: current,
-      items,
-    } = this.props;
+  const maxHeight = 400;
+  const height = Math.min(maxHeight, items.length * 30 + 1);
 
-    const maxHeight = 400;
-    const height = Math.min(maxHeight, items.length * 30 + 1);
+  console.log(wrapperRef);
 
-    return (
-      <div
-        className={`mg-select-control ${className}`}
-        ref={this.getWrapperRef}
+  return (
+    <div
+      className={`mg-select-control ${className}`}
+      ref={getWrapperRef}
+    >
+      <Button
+        className={`mg-select-current${isOpened ? ' active' : ''}`}
+        aria-describedby={id}
+        variant="outlined"
+        onClick={handleClick}
       >
-        <div
-          className={`mg-select-current${isOpened ? ' active' : ''}`}
-          onClick={this.toggle}
-        >
-          {(current && current.label) || placeholder}
+        {(current && current.label) || placeholder}
 
-          <ArrowDropDownIcon />
-        </div>
+        <ArrowDropDownIcon />
+      </Button>
 
-        {isOpened && (
-          <ul
-            className={`mg-select-list${isOpened ? ' active' : ''}`}
-            style={{ height }}
-          >
-            <PerfectScrollbar
-              options={{
-                suppressScrollX: true,
-                minScrollbarLength: 50,
-              }}
+      <Popper
+        id={id}
+        open={isOpened}
+        anchorEl={anchorEl}
+        transition
+      >
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <ul
+              className={`mg-select-list${isOpened ? ' active' : ''}`}
+              style={{ height }}
             >
-              {items.map(item => (
-                <li
-                  key={item.key}
-                  className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
-                  onClick={this.changeValue(item)}
-                >
-                  {item.label}
-                </li>
-              ))}
-            </PerfectScrollbar>
-          </ul>
+              <PerfectScrollbar
+                options={{
+                  suppressScrollX: true,
+                  minScrollbarLength: 50,
+                }}
+              >
+                {items.map(item => (
+                  <li
+                    key={item.key}
+                    className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
+                    onClick={changeValue(item)}
+                  >
+                    {item.label}
+                  </li>
+                ))}
+              </PerfectScrollbar>
+            </ul>
+          </Fade>
         )}
-      </div>
-    );
-  }
+      </Popper>
+    </div>
+  );
 }
 
 CustomSelect.propTypes = {

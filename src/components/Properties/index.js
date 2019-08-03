@@ -19,7 +19,17 @@ class Properties extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.category.properties, nextProps.category.properties)) {
       if (this.props.category.id === nextProps.category.id) {
-        // ToDo: update properties
+        const properties = {};
+        const keys = Object.keys(this.state.properties);
+        const propKeys = Object.keys(nextProps.category.properties);
+
+        keys.forEach((key) => {
+          if (propKeys.indexOf(key) > -1) {
+            properties[key] = this.state.properties[key];
+          }
+        });
+
+        this.setState({ properties });
       } else {
         this.setState({
           properties: nextProps.category.properties || {},
@@ -44,8 +54,6 @@ class Properties extends Component {
 
   render() {
     const { name, properties, sections } = this.state;
-    // eslint-disable-next-line
-    const { category } = this.props;
 
     return (
       <div className="mg-properties-container d-flex">

@@ -42,8 +42,6 @@ class Rules extends Component {
 
   render() {
     const { map, ruleKeys } = this.state;
-    // eslint-disable-next-line
-    const { category } = this.props;
 
     const json = getJsonFromMap(map, '', '');
 
