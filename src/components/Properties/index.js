@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import isEqual from 'lodash/isEqual';
 
 import { sortByOrder } from 'utils';
-import { CustomSection, CustomInput } from 'components/elements';
+import { CustomInput, CustomSection, CustomToggle } from 'components/elements';
 import PropertyActions from './PropertyActions';
 
 import './style.scss';
 
 class Properties extends Component {
   state = {
-    name: '',
     properties: this.props.category.properties || {},
+    property: {},
     sections: this.props.category.sections || [],
   };
 
@@ -50,24 +51,73 @@ class Properties extends Component {
     });
   };
 
-  renderFields = () => {};
+  toggleSwitch = field => () => {
+    this.setState(prevState => ({
+      [field]: !prevState[field],
+    }));
+  };
+
+  renderSectionFields = (section) => {
+    const res = [];
+    const { property } = this.state;
+    const { propertyFields } = this.props.category;
+
+    propertyFields.forEach((p) => {
+      if (p.section === section.key) {
+        if (p.propertyType === 'input') {
+          res.push(
+            <CustomInput
+              label={p.label}
+              inline
+              value={property[p.key]}
+              onChange={this.changeInput(p.key)}
+              key={p.key}
+            />,
+          );
+        } else if (p.propertyType === 'select') {
+          res.push(
+            <CustomInput
+              label={p.label}
+              inline
+              value={property[p.key]}
+              onChange={this.changeInput(p.key)}
+              key={p.key}
+            />,
+          );
+        } else if (p.propertyType === 'toggle') {
+          res.push(
+            <CustomToggle
+              label={p.label}
+              value={property[p.key]}
+              onToggle={this.toggleSwitch(p.key)}
+              key={p.key}
+            />,
+          );
+        }
+      }
+    });
+
+    return res;
+  };
 
   render() {
-    const { name, properties, sections } = this.state;
+    const { properties, sections } = this.state;
 
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
-          {sections.map(section => (
-            <CustomSection title={section.label} key={section.key}>
-              <CustomInput
-                label="Name"
-                inline
-                value={name}
-                onChange={this.changeInput('name')}
-              />
-            </CustomSection>
-          ))}
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            {sections.map(section => (
+              <CustomSection title={section.label} key={section.key}>
+                {this.renderSectionFields(section)}
+              </CustomSection>
+            ))}
+          </PerfectScrollbar>
         </div>
 
         <PropertyActions properties={properties} />

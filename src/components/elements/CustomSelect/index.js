@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Popper from '@material-ui/core/Popper';
-import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
@@ -16,17 +15,20 @@ function CustomSelect(props) {
   };
 
   const [wrapperRef, setWrapperRef] = useState(null);
-
   const getWrapperRef = (ref) => {
     setWrapperRef(ref);
+  };
+
+  const [popperRef, setPopperRef] = useState(null);
+  const getPopperRef = (ref) => {
+    setPopperRef(ref);
   };
 
   const handleClickOutside = (event) => {
     if (
       anchorEl
-      && wrapperRef
-      && wrapperRef.contains
-      && !wrapperRef.contains(event.target)
+      && popperRef && popperRef.contains && !popperRef.contains(event.target)
+      && wrapperRef && wrapperRef.contains && !wrapperRef.contains(event.target)
     ) {
       handleClick();
     }
@@ -58,7 +60,10 @@ function CustomSelect(props) {
   const maxHeight = 400;
   const height = Math.min(maxHeight, items.length * 30 + 1);
 
-  console.log(wrapperRef);
+  let width = 0;
+  if (wrapperRef) {
+    ({ width } = wrapperRef.getBoundingClientRect());
+  }
 
   return (
     <div
@@ -80,33 +85,29 @@ function CustomSelect(props) {
         id={id}
         open={isOpened}
         anchorEl={anchorEl}
-        transition
       >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
-            <ul
-              className={`mg-select-list${isOpened ? ' active' : ''}`}
-              style={{ height }}
-            >
-              <PerfectScrollbar
-                options={{
-                  suppressScrollX: true,
-                  minScrollbarLength: 50,
-                }}
+        <ul
+          className={`mg-select-list${isOpened ? ' active' : ''}`}
+          ref={getPopperRef}
+          style={{ width, height }}
+        >
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            {items.map(item => (
+              <li
+                key={item.key}
+                className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
+                onClick={changeValue(item)}
               >
-                {items.map(item => (
-                  <li
-                    key={item.key}
-                    className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
-                    onClick={changeValue(item)}
-                  >
-                    {item.label}
-                  </li>
-                ))}
-              </PerfectScrollbar>
-            </ul>
-          </Fade>
-        )}
+                {item.label}
+              </li>
+            ))}
+          </PerfectScrollbar>
+        </ul>
       </Popper>
     </div>
   );

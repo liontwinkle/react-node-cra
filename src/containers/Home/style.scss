@@ -16,6 +16,7 @@
 
     .resizer {
       position: relative;
+      z-index: 150;
       background: #A9A9A9;
       cursor: col-resize;
 

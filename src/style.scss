@@ -146,12 +146,17 @@ body {
   }
 }
 
-.MuiDialog-root {
-  .MuiDialog-paper {
-    padding: 1rem;
-  }
+//.MuiDialog-root {
+//  .MuiDialog-paper {
+//    padding: 1rem;
+//  }
+//
+//  .MuiDialog-paperWidthSm {
+//    max-width: 832px !important;
+//  }
+//}
 
-  .MuiDialog-paperWidthSm {
-    max-width: 832px !important;
-  }
+#mg-popper {
+  z-index: 200;
+  transform: translateX(-50%);
 }
