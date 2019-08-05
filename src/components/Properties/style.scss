@@ -16,8 +16,10 @@
         border-left: 0 !important;
       }
 
-      .mg-input-control {
-        margin-top: 0.5rem;
+      .mg-section-control {
+        > div:not(:first-child) {
+          margin-top: 0.5rem;
+        }
       }
     }
   }

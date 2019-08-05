@@ -50,9 +50,17 @@ function CustomSelect(props) {
   const {
     className,
     placeholder,
-    value: current,
+    value,
     items,
   } = props;
+
+  let current;
+  const isValueString = typeof value === 'string';
+  if (isValueString) {
+    current = items.find(item => item.key === value);
+  } else {
+    current = value;
+  }
 
   const isOpened = Boolean(anchorEl);
   const id = isOpened ? 'mg-popper' : undefined;
@@ -101,7 +109,7 @@ function CustomSelect(props) {
               <li
                 key={item.key}
                 className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
-                onClick={changeValue(item)}
+                onClick={changeValue(isValueString ? item.key : item)}
               >
                 {item.label}
               </li>
@@ -116,7 +124,10 @@ function CustomSelect(props) {
 CustomSelect.propTypes = {
   className: PropTypes.string,
   placeholder: PropTypes.string,
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+  ]),
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

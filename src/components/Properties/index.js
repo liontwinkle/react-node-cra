@@ -5,7 +5,12 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import isEqual from 'lodash/isEqual';
 
 import { sortByOrder } from 'utils';
-import { CustomInput, CustomSection, CustomToggle } from 'components/elements';
+import {
+  CustomInput,
+  CustomSection,
+  CustomSelectWithLabel,
+  CustomToggle,
+} from 'components/elements';
 import PropertyActions from './PropertyActions';
 
 import './style.scss';
@@ -46,14 +51,29 @@ class Properties extends Component {
   }
 
   changeInput = field => (e) => {
-    this.setState({
-      [field]: e.target.value,
-    });
+    this.setState(prevState => ({
+      property: {
+        ...prevState.property,
+        [field]: e.target.value,
+      },
+    }));
+  };
+
+  changeSelect = field => (value) => {
+    this.setState(prevState => ({
+      property: {
+        ...prevState.property,
+        [field]: value,
+      },
+    }));
   };
 
   toggleSwitch = field => () => {
     this.setState(prevState => ({
-      [field]: !prevState[field],
+      property: {
+        ...prevState.property,
+        [field]: !prevState.property[field],
+      },
     }));
   };
 
@@ -76,11 +96,12 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'select') {
           res.push(
-            <CustomInput
+            <CustomSelectWithLabel
               label={p.label}
               inline
               value={property[p.key]}
-              onChange={this.changeInput(p.key)}
+              items={[]}
+              onChange={this.changeSelect(p.key)}
               key={p.key}
             />,
           );
