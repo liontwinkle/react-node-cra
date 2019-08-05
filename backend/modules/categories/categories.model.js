@@ -22,6 +22,10 @@ const CategorySchema = new Schema({
     label: String,
     propertyType: String,
     section: String,
+    items:[{
+      key:String,
+      label:String
+    }],
     order: Number,
   }],
   rules: Object,

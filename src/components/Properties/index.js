@@ -11,15 +11,24 @@ import {
   CustomSelectWithLabel,
   CustomToggle,
 } from 'components/elements';
-import PropertyActions from './PropertyActions';
 
 import './style.scss';
+import { Tooltip } from 'react-tippy';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import { IconButton } from '../elements';
+import PropertyActions from './PropertyActions';
+import AddSelectItems from './PropertyActions/AddSelectItems';
+import EditSelectItems from './PropertyActions/EditSelectItems';
 
 class Properties extends Component {
   state = {
     properties: this.props.category.properties || {},
-    property: {},
     sections: this.props.category.sections || [],
+    isUpdating: false,
+    selectKey: '',
+    isOpenSelItemModal: false,
+    isOpenSelItemEditModal: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -51,9 +60,10 @@ class Properties extends Component {
   }
 
   changeInput = field => (e) => {
+    e.persist();
     this.setState(prevState => ({
-      property: {
-        ...prevState.property,
+      properties: {
+        ...prevState.properties,
         [field]: e.target.value,
       },
     }));
@@ -61,8 +71,8 @@ class Properties extends Component {
 
   changeSelect = field => (value) => {
     this.setState(prevState => ({
-      property: {
-        ...prevState.property,
+      properties: {
+        ...prevState.properties,
         [field]: value,
       },
     }));
@@ -70,16 +80,30 @@ class Properties extends Component {
 
   toggleSwitch = field => () => {
     this.setState(prevState => ({
-      property: {
-        ...prevState.property,
-        [field]: !prevState.property[field],
+      properties: {
+        ...prevState.properties,
+        [field]: !prevState.properties[field],
       },
+    }));
+  };
+
+  handleSelItemToggle = (key) => {
+    this.setState(prevState => ({
+      isOpenSelItemModal: !prevState.isOpenSelItemModal,
+      selectKey: key,
+    }));
+  };
+
+  handleSelItemEditToggle = (key) => {
+    this.setState(prevState => ({
+      isOpenSelItemEditModal: !prevState.isOpenSelItemEditModal,
+      selectKey: key,
     }));
   };
 
   renderSectionFields = (section) => {
     const res = [];
-    const { property } = this.state;
+    const { properties } = this.state;
     const { propertyFields } = this.props.category;
 
     propertyFields.forEach((p) => {
@@ -89,27 +113,48 @@ class Properties extends Component {
             <CustomInput
               label={p.label}
               inline
-              value={property[p.key]}
+              value={properties[p.key]}
               onChange={this.changeInput(p.key)}
               key={p.key}
             />,
           );
         } else if (p.propertyType === 'select') {
           res.push(
-            <CustomSelectWithLabel
-              label={p.label}
-              inline
-              value={property[p.key]}
-              items={[]}
-              onChange={this.changeSelect(p.key)}
-              key={p.key}
-            />,
+            <div className="mg-select-section" key={p.key}>
+              <CustomSelectWithLabel
+                label={p.label}
+                inline
+                value={properties[p.key]}
+                items={p.items || []}
+                onChange={this.changeSelect(p.key)}
+                key={p.key}
+              />
+              <Tooltip
+                title="Edit Sections"
+                position="left"
+                arrow
+              >
+                <IconButton disabled={this.state.isUpdating} onClick={() => this.handleSelItemEditToggle(p.key)}>
+                  <EditIcon style={{ fontSize: 20 }} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title="Add Select Items"
+                position="bottom"
+                arrow
+              >
+                <IconButton disabled={this.state.isUpdating} onClick={() => this.handleSelItemToggle(p.key)}>
+                  <AddIcon style={{ fontSize: 20 }} />
+                </IconButton>
+              </Tooltip>
+            </div>,
+
           );
         } else if (p.propertyType === 'toggle') {
           res.push(
             <CustomToggle
               label={p.label}
-              value={property[p.key]}
+              value={properties[p.key]}
               onToggle={this.toggleSwitch(p.key)}
               key={p.key}
             />,
@@ -122,7 +167,13 @@ class Properties extends Component {
   };
 
   render() {
-    const { properties, sections } = this.state;
+    const {
+      properties,
+      sections,
+      isOpenSelItemModal,
+      isOpenSelItemEditModal,
+      selectKey,
+    } = this.state;
 
     return (
       <div className="mg-properties-container d-flex">
@@ -139,6 +190,24 @@ class Properties extends Component {
               </CustomSection>
             ))}
           </PerfectScrollbar>
+          {isOpenSelItemModal && (
+            <AddSelectItems
+              selectKey={selectKey}
+              open={isOpenSelItemModal}
+              handleClose={
+                this.handleSelItemToggle('')
+              }
+            />
+          )}
+          {isOpenSelItemEditModal && (
+            <EditSelectItems
+              selectKey={selectKey}
+              open={isOpenSelItemEditModal}
+              handleClose={
+                this.handleSelItemEditToggle('')
+              }
+            />
+          )}
         </div>
 
         <PropertyActions properties={properties} />
@@ -153,6 +222,7 @@ Properties.propTypes = {
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
+  isUpdating: store.categoriesData.isUpdating,
 });
 
 export default connect(mapStateToProps)(Properties);

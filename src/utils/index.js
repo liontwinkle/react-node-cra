@@ -27,6 +27,11 @@ export const getCategoryTree = (categories) => {
   return getSubTree(list, depth, parentId);
 };
 
+export const isExist = (obj, key) => {
+  const filterArr = obj.filter(item => (item.key === key));
+  return filterArr.length;
+};
+
 export const getNodeKey = ({ treeIndex }) => treeIndex;
 
 export const getMapFromJson = (data, pKey) => {
