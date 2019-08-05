@@ -54,6 +54,13 @@ function AddPropertyFields(props) {
     };
     setPropertyFieldData(newClient);
   };
+  const handleChangeSection = (section) => {
+    const newClient = {
+      ...propertyFieldData,
+      section,
+    };
+    setPropertyFieldData(newClient);
+  };
 
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
@@ -115,7 +122,7 @@ function AddPropertyFields(props) {
           inline
           value={propertyFieldData.section}
           items={category.sections}
-          onChange={handleChange('section')}
+          onChange={handleChangeSection}
         />
       </DialogContent>
 
