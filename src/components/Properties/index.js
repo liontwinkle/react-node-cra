@@ -130,8 +130,8 @@ class Properties extends Component {
                 key={p.key}
               />
               <Tooltip
-                title="Edit Sections"
-                position="left"
+                title="Edit Select Items"
+                position="bottom"
                 arrow
               >
                 <IconButton disabled={this.state.isUpdating} onClick={() => this.handleSelItemEditToggle(p.key)}>
@@ -195,7 +195,7 @@ class Properties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemModal}
               handleClose={
-                this.handleSelItemToggle('')
+                this.handleSelItemToggle
               }
             />
           )}
@@ -204,7 +204,7 @@ class Properties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemEditModal}
               handleClose={
-                this.handleSelItemEditToggle('')
+                this.handleSelItemEditToggle
               }
             />
           )}
