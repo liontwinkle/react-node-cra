@@ -3,7 +3,8 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
-  removeEntity
+  removeEntity,
+  removeChildren
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -52,11 +53,9 @@ exports.update = (req, res) => {
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   req.category
-    .deleteMany({parentId:req.params.categoryId}, function (err, result) {
-      req.category
-        .findByIdAsync(req.params.categoryId)
-        .then(handleEntityNotFound(res, req))
-        .then(removeEntity(res))
-        .catch(handleError(res));
-    });
+    .findByIdAsync(req.params.categoryId)
+    .then(handleEntityNotFound(res, req))
+    .then(removeEntity(res))
+    .then(removeChildren(req,req.params.categoryId ))
+    .catch(handleError(res));
 };
