@@ -49,7 +49,6 @@ function saveUpdates(updates) {
     return entity.saveAsync();
   };
 }
-
 function removeEntity(res) {
   return entity => entity && entity.removeAsync().then(respondWith(res, 204));
 }

@@ -52,8 +52,11 @@ exports.update = (req, res) => {
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   req.category
-    .findByIdAsync(req.params.categoryId)
-    .then(handleEntityNotFound(res, req))
-    .then(removeEntity(res))
-    .catch(handleError(res));
+    .deleteMany({parentId:req.params.categoryId}, function (err, result) {
+      req.category
+        .findByIdAsync(req.params.categoryId)
+        .then(handleEntityNotFound(res, req))
+        .then(removeEntity(res))
+        .catch(handleError(res));
+    });
 };
