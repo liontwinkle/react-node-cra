@@ -54,12 +54,14 @@ function VirtualSortableTree(props) {
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
-            enqueueSnackbar('Category name has been updated successfully.', { variant: 'success' });
-
+            enqueueSnackbar('Category name has been updated successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
             handleConfirm(node, path);
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding category.', { variant: 'error' });
+            enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
 
             handleConfirm(node, path, category.name);
           });
@@ -121,11 +123,11 @@ function VirtualSortableTree(props) {
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
         const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
-        enqueueSnackbar(string, { variant: 'success' });
+        enqueueSnackbar(string, { variant: 'success', autoHideDuration: 1000 });
         handleConfirm(node, path);
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error' });
+        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
         handleConfirm(node, path, category.name);
       });
   };

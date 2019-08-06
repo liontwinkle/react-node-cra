@@ -41,11 +41,11 @@ function ClientRemove(props) {
     if (!isDeleting) {
       removeClient(client.id)
         .then(() => {
-          enqueueSnackbar('The client has been deleted successfully.', { variant: 'success' });
+          enqueueSnackbar('The client has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
           handleOpen();
         })
         .catch(() => {
-          enqueueSnackbar('Error in deleting client.', { variant: 'error' });
+          enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };

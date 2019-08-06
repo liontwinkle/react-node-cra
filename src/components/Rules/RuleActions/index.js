@@ -35,10 +35,10 @@ function RuleActions(props) {
     if (!isUpdating) {
       updateCategory(category.id, { rules })
         .then(() => {
-          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success' });
+          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating rules.', { variant: 'error' });
+          enqueueSnackbar('Error in updating rules.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };

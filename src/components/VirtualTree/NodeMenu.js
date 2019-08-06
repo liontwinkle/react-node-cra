@@ -49,7 +49,7 @@ function NodeMenu(props) {
       parentId: node.item.id,
     })
       .then((category) => {
-        enqueueSnackbar('New category has been created successfully.', { variant: 'success' });
+        enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
 
         setTreeData(
           addNodeUnderParent({
@@ -66,7 +66,7 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error' });
+        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
       });
     handleClose();
   };
@@ -90,7 +90,7 @@ function NodeMenu(props) {
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
-        enqueueSnackbar('The category has been deleted successfully.', { variant: 'success' });
+        enqueueSnackbar('The category has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
 
         setTreeData(
           removeNodeAtPath({
@@ -101,7 +101,7 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in deleting category.', { variant: 'error' });
+        enqueueSnackbar('Error in deleting category.', { variant: 'error', autoHideDuration: 1000 });
       });
     handleClose();
   };

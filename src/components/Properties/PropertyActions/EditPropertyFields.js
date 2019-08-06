@@ -58,11 +58,17 @@ function EditPropertyFields(props) {
 
       updateCategory(category.id, { propertyFields })
         .then(() => {
-          enqueueSnackbar('Property field has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Property field has been added successfully.',
+            {
+              variant: 'success', autoHideDuration: 1000,
+            });
           // handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding property field.', { variant: 'error' });
+          enqueueSnackbar('Error in adding property field.',
+            {
+              variant: 'error', autoHideDuration: 1000,
+            });
         });
     }, 600);
   });
@@ -83,11 +89,14 @@ function EditPropertyFields(props) {
 
         updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been updated successfully.', { variant: 'success' });
+            enqueueSnackbar('Property field has been updated successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.', { variant: 'error' });
+            enqueueSnackbar('Error in updating property field.', { variant: 'error', autoHideDuration: 1000 });
           });
       }
     }, 600);
@@ -103,11 +112,17 @@ function EditPropertyFields(props) {
 
         updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been deleted successfully.', { variant: 'success' });
+            enqueueSnackbar('Property field has been deleted successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
             // handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property field.', { variant: 'error' });
+            enqueueSnackbar('Error in deleting property field.',
+              {
+                variant: 'error', autoHideDuration: 1000,
+              });
           });
       }
     }, 600);

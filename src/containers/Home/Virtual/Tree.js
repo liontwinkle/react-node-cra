@@ -33,7 +33,7 @@ function Tree(props) {
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
       .then((category) => {
-        enqueueSnackbar('New category has been created successfully.', { variant: 'success' });
+        enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
         setTreeData(
           treeData.concat({
             title: category.name,
@@ -43,7 +43,7 @@ function Tree(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error' });
+        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
       });
   };
 

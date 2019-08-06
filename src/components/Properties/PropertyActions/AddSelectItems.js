@@ -60,7 +60,7 @@ function AddSelectItems(props) {
           selectItems.items.push(sectionsData);
         } else {
           updateFlag = false;
-          enqueueSnackbar('Item is already exist.', { variant: 'error' });
+          enqueueSnackbar('Item is already exist.', { variant: 'error', autoHideDuration: 1000 });
         }
       } else {
         selectItems.items = sectionsData;
@@ -69,11 +69,11 @@ function AddSelectItems(props) {
       if (updateFlag) {
         updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Item has been added successfully.', { variant: 'success' });
+            enqueueSnackbar('Item has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.', { variant: 'error' });
+            enqueueSnackbar('Error in adding Item.', { variant: 'error', autoHideDuration: 1000 });
           });
       }
     }

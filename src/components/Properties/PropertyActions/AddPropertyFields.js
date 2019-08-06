@@ -75,11 +75,17 @@ function AddPropertyFields(props) {
 
       updateCategory(category.id, { propertyFields })
         .then(() => {
-          enqueueSnackbar('Property field has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Property field has been added successfully.',
+            {
+              variant: 'success', autoHideDuration: 1000,
+            });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding property field.', { variant: 'error' });
+          enqueueSnackbar('Error in adding property field.',
+            {
+              variant: 'error', autoHideDuration: 1000,
+            });
         });
     }
   };

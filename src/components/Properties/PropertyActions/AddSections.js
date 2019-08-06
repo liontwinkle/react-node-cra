@@ -55,11 +55,11 @@ function AddSections(props) {
 
       updateCategory(category.id, { sections })
         .then(() => {
-          enqueueSnackbar('Section has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Section has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding section.', { variant: 'error' });
+          enqueueSnackbar('Error in adding section.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };

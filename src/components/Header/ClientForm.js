@@ -52,11 +52,17 @@ function ClientForm(props) {
 
       action(clientData)
         .then(() => {
-          enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`, { variant: 'success' });
+          enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
+            {
+              variant: 'success', autoHideDuration: 1000,
+            });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`, { variant: 'error' });
+          enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
+            {
+              variant: 'error', autoHideDuration: 1000,
+            });
         });
     }
   };
