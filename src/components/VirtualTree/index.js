@@ -96,6 +96,9 @@ function VirtualSortableTree(props) {
   };
 
   const handleDoubleClick = (node, path) => () => {
+    console.log('node>>>', node);
+    console.log('path>>>', path);
+    console.log('treedata>>', treeData);// fixme
     setTreeData(
       changeNodeAtPath({
         treeData,
@@ -109,13 +112,34 @@ function VirtualSortableTree(props) {
     );
   };
 
+  const handleMoveTree = (data) => {
+    const { node } = data;
+    const { path } = data;
+    const currentParentNode = data.nextParentNode;
+    const movedNodeItemName = node.item.name;
+    const currentParentItemName = currentParentNode.item.name;
+    const currentParentItemId = currentParentNode.item._id;
+
+    updateCategory(node.item.id, { parentId: currentParentItemId })
+      .then(() => {
+        const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
+        enqueueSnackbar(string, { variant: 'success' });
+        handleConfirm(node, path);
+      })
+      .catch(() => {
+        enqueueSnackbar('Error in adding category.', { variant: 'error' });
+        handleConfirm(node, path, category.name);
+      });
+  };
+
   const isSelected = node => (category && category.id) === node.item.id;
 
   return (
     <SortableTree
       treeData={treeData}
       onChange={setTreeData}
-      canDrag={false}
+      onMoveNode={handleMoveTree}
+      canDrag
       generateNodeProps={({ node, path }) => ({
         className: isSelected(node) ? 'selected' : '',
         buttons: [
