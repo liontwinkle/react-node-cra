@@ -26,8 +26,6 @@ function Tree(props) {
 
   useEffect(() => {
     if (!isFetchingList) {
-      console.log('category>>>', getCategoryTree(categories));// fixme
-
       setTreeData(getCategoryTree(categories));
     }
   }, [categories, isFetchingList]);

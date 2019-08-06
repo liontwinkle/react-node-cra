@@ -45,7 +45,7 @@ function NodeMenu(props) {
   const handleAdd = () => {
     createCategory({
       name: 'New Category',
-      depth: node.item.depth + 1,
+      // depth: node.item.depth + 1,
       parentId: node.item.id,
     })
       .then((category) => {

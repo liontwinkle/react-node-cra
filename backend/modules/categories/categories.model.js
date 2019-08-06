@@ -7,10 +7,10 @@ const CategorySchema = new Schema({
     type: String,
     default: '',
   },
-  depth: {
-    type: Number,
-    default: 0,
-  },
+  // depth: {
+  //   type: Number,
+  //   default: 0,
+  // },
   properties: Object,
   sections: [{
     key: String,

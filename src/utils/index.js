@@ -1,17 +1,16 @@
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 
-const getSubTree = (list, depth, parentId) => {
+const getSubTree = (list, parentId) => {
   const subTree = [];
-
-  const sublist = list.filter(item => item.depth === depth && item.parentId === parentId);
+  const sublist = list.filter(item => item.parentId === parentId);
   if (sublist.length > 0) {
     sublist.forEach((item) => {
       subTree.push({
         title: item.name,
         editable: false,
         item,
-        children: getSubTree(list, depth + 1, item.id),
+        children: getSubTree(list, item._id),
       });
     });
   }
@@ -20,11 +19,10 @@ const getSubTree = (list, depth, parentId) => {
 };
 
 export const getCategoryTree = (categories) => {
-  const depth = 0;
   const parentId = '';
   const list = categories || [];
 
-  return getSubTree(list, depth, parentId);
+  return getSubTree(list, parentId);
 };
 
 export const isExist = (obj, key) => {
