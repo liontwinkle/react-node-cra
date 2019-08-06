@@ -26,6 +26,8 @@ function Tree(props) {
 
   useEffect(() => {
     if (!isFetchingList) {
+      console.log('category>>>', getCategoryTree(categories));// fixme
+
       setTreeData(getCategoryTree(categories));
     }
   }, [categories, isFetchingList]);
@@ -34,7 +36,6 @@ function Tree(props) {
     createCategory({ name: 'New Category' })
       .then((category) => {
         enqueueSnackbar('New category has been created successfully.', { variant: 'success' });
-
         setTreeData(
           treeData.concat({
             title: category.name,

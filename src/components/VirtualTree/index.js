@@ -113,27 +113,31 @@ function VirtualSortableTree(props) {
   };
 
   const handleMoveTree = (data) => {
-    const { node } = data;
-    const { path } = data;
-    const currentParentNode = data.nextParentNode;
-    const movedNodeItemName = node.item.name;
-    const currentParentItemName = currentParentNode.item.name;
-    const currentParentItemId = currentParentNode.item._id;
-
-    updateCategory(node.item.id, { parentId: currentParentItemId })
-      .then(() => {
-        const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
-        enqueueSnackbar(string, { variant: 'success' });
-        handleConfirm(node, path);
-      })
-      .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error' });
-        handleConfirm(node, path, category.name);
-      });
+    // const { node } = data;
+    // const { path } = data;
+    // console.log('data>>>', data);// fixme
+    // const currentParentNode = data.nextParentNode;
+    // console.log('currentParentNode>>>', currentParentNode);// fixme
+    //
+    // // const children = currentParentNode.children.filter((item)=>(item._id === node.item._id));
+    // // console.log( "children>>>", children );//fixme
+    //
+    //
+    // // updateCategory(node.item.id, { parentId: currentParentItemId, depth: currentParentItemDepth + 1 })
+    // //   .then(() => {
+    // //     const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
+    // //     enqueueSnackbar(string, { variant: 'success' });
+    // //     handleConfirm(node, path);
+    // //   })
+    // //   .catch(() => {
+    // //     enqueueSnackbar('Error in adding category.', { variant: 'error' });
+    // //     handleConfirm(node, path, category.name);
+    // //   });
+    console.log(data);
   };
 
   const isSelected = node => (category && category.id) === node.item.id;
-
+  console.log('realdata>>>', treeData);// fixme
   return (
     <SortableTree
       treeData={treeData}
