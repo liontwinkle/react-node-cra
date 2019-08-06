@@ -53,7 +53,11 @@ function EditPropertyFields(props) {
           });
         } else {
           updateFlag = false;
-          enqueueSnackbar('Item is already exist.', { variant: 'error', autoHideDuration: 1000 });
+          enqueueSnackbar('Item is already exist.',
+            {
+              variant: 'error',
+              autoHideDuration: 1000,
+            });
         }
       } else {
         selectItems.items = {
@@ -65,11 +69,19 @@ function EditPropertyFields(props) {
       if (updateFlag) {
         updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Item has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
+            enqueueSnackbar('Item has been added successfully.',
+              {
+                variant: 'success',
+                autoHideDuration: 1000,
+              });
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in adding Item.',
+              {
+                variant: 'error',
+                autoHideDuration: 1000,
+              });
           });
       }
     }, 600);
@@ -91,13 +103,15 @@ function EditPropertyFields(props) {
           .then(() => {
             enqueueSnackbar('Property field has been updated successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
           })
           .catch(() => {
             enqueueSnackbar('Error in updating property field.',
               {
-                variant: 'error', autoHideDuration: 1000,
+                variant: 'error',
+                autoHideDuration: 1000,
               });
           });
       }
@@ -118,15 +132,24 @@ function EditPropertyFields(props) {
               .then(() => {
                 enqueueSnackbar('Selected item has been deleted successfully.',
                   {
-                    variant: 'success', autoHideDuration: 1000,
+                    variant: 'success',
+                    autoHideDuration: 1000,
                   });
               })
               .catch(() => {
-                enqueueSnackbar('Error in deleting Property.', { variant: 'error', autoHideDuration: 1000 });
+                enqueueSnackbar('Error in deleting Property.',
+                  {
+                    variant: 'error',
+                    autoHideDuration: 1000,
+                  });
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property field.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in deleting property field.',
+              {
+                variant: 'error',
+                autoHideDuration: 1000,
+              });
           });
       }
     }, 600);

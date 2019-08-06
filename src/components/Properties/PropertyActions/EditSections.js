@@ -74,11 +74,16 @@ function EditSections(props) {
           .then(() => {
             enqueueSnackbar('Property field has been updated successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in updating property field.',
+              {
+                variant: 'error',
+                autoHideDuration: 1000,
+              });
           });
       }
     }, 600);
@@ -96,11 +101,16 @@ function EditSections(props) {
           .then(() => {
             enqueueSnackbar('Property field has been deleted successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property field.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in deleting property field.',
+              {
+                variant: 'error',
+                autoHideDuration: 1000,
+              });
           });
       }
     }, 600);
