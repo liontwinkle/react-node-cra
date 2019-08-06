@@ -48,7 +48,6 @@ function EditRuleKeys(props) {
       updateCategory(category.id, { ruleKeys })
         .then(() => {
           enqueueSnackbar('Rule key has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
-          // handleClose();
         })
         .catch(() => {
           enqueueSnackbar('Error in adding rule key.', { variant: 'error', autoHideDuration: 1000 });
@@ -72,7 +71,6 @@ function EditRuleKeys(props) {
         updateCategory(category.id, { ruleKeys })
           .then(() => {
             enqueueSnackbar('Rule key has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
-            // handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in updating rule key.', { variant: 'error', autoHideDuration: 1000 });
@@ -92,7 +90,6 @@ function EditRuleKeys(props) {
         updateCategory(category.id, { ruleKeys })
           .then(() => {
             enqueueSnackbar('Rule key has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
-            // handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in deleting rule key.', { variant: 'error', autoHideDuration: 1000 });

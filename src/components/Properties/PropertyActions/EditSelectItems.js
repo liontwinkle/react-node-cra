@@ -124,7 +124,6 @@ function EditPropertyFields(props) {
               .catch(() => {
                 enqueueSnackbar('Error in deleting Property.', { variant: 'error', autoHideDuration: 1000 });
               });
-            // handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in deleting property field.', { variant: 'error', autoHideDuration: 1000 });

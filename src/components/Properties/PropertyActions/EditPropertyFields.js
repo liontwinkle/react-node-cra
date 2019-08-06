@@ -62,7 +62,6 @@ function EditPropertyFields(props) {
             {
               variant: 'success', autoHideDuration: 1000,
             });
-          // handleClose();
         })
         .catch(() => {
           enqueueSnackbar('Error in adding property field.',
@@ -93,7 +92,6 @@ function EditPropertyFields(props) {
               {
                 variant: 'success', autoHideDuration: 1000,
               });
-            // handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in updating property field.', { variant: 'error', autoHideDuration: 1000 });
@@ -116,7 +114,6 @@ function EditPropertyFields(props) {
               {
                 variant: 'success', autoHideDuration: 1000,
               });
-            // handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in deleting property field.',
