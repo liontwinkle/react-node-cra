@@ -95,6 +95,20 @@ function VirtualSortableTree(props) {
     }
   };
 
+  const handleDoubleClick = (node, path) => () => {
+    setTreeData(
+      changeNodeAtPath({
+        treeData,
+        path,
+        getNodeKey,
+        newNode: {
+          ...node,
+          editable: true,
+        },
+      }),
+    );
+  };
+
   const isSelected = node => (category && category.id) === node.item.id;
 
   return (
@@ -116,6 +130,7 @@ function VirtualSortableTree(props) {
           <input
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
             readOnly={!node.editable}
+            onDoubleClick={handleDoubleClick(node, path)}
             value={node.title}
             onBlur={handleBlur(node, path)}
             onKeyDown={handleKeyDown(node, path)}

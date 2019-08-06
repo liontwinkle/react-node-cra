@@ -73,7 +73,7 @@ class Properties extends Component {
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
-        [field]: value,
+        [field]: value.key,
       },
     }));
   };
@@ -87,19 +87,13 @@ class Properties extends Component {
     }));
   };
 
-  handleSelItemToggle = (key) => {
+  handleSelItemToggle = type => (key) => {
     this.setState(prevState => ({
-      isOpenSelItemModal: !prevState.isOpenSelItemModal,
+      [type]: !prevState[type],
       selectKey: key,
     }));
   };
 
-  handleSelItemEditToggle = (key) => {
-    this.setState(prevState => ({
-      isOpenSelItemEditModal: !prevState.isOpenSelItemEditModal,
-      selectKey: key,
-    }));
-  };
 
   renderSectionFields = (section) => {
     const res = [];
@@ -119,12 +113,13 @@ class Properties extends Component {
             />,
           );
         } else if (p.propertyType === 'select') {
+          const item = (p.items) ? p.items.filter(item => (item.key === properties[p.key]))[0] || {} : {};
           res.push(
             <div className="mg-select-section" key={p.key}>
               <CustomSelectWithLabel
                 label={p.label}
                 inline
-                value={properties[p.key]}
+                value={item}
                 items={p.items || []}
                 onChange={this.changeSelect(p.key)}
                 key={p.key}
@@ -134,7 +129,10 @@ class Properties extends Component {
                 position="bottom"
                 arrow
               >
-                <IconButton disabled={this.state.isUpdating} onClick={() => this.handleSelItemEditToggle(p.key)}>
+                <IconButton
+                  disabled={this.state.isUpdating}
+                  onClick={() => this.handleSelItemToggle('isOpenSelItemEditModal')(p.key)}
+                >
                   <EditIcon style={{ fontSize: 20 }} />
                 </IconButton>
               </Tooltip>
@@ -143,7 +141,10 @@ class Properties extends Component {
                 position="bottom"
                 arrow
               >
-                <IconButton disabled={this.state.isUpdating} onClick={() => this.handleSelItemToggle(p.key)}>
+                <IconButton
+                  disabled={this.state.isUpdating}
+                  onClick={() => this.handleSelItemToggle('isOpenSelItemModal')(p.key)}
+                >
                   <AddIcon style={{ fontSize: 20 }} />
                 </IconButton>
               </Tooltip>
@@ -195,7 +196,7 @@ class Properties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemModal}
               handleClose={
-                this.handleSelItemToggle
+                this.handleSelItemToggle('isOpenSelItemModal')
               }
             />
           )}
@@ -204,7 +205,7 @@ class Properties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemEditModal}
               handleClose={
-                this.handleSelItemEditToggle
+                this.handleSelItemToggle('isOpenSelItemEditModal')
               }
             />
           )}

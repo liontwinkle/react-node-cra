@@ -29,6 +29,7 @@ function EditPropertyFields(props) {
   });
 
   const { propertyFields } = category;
+  const { properties } = category;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -102,11 +103,18 @@ function EditPropertyFields(props) {
       resolve();
       const selectItems = propertyFields.filter(item => (item.key === selectKey))[0].items;
       const ruleKeyIndex = selectItems.findIndex(rk => rk._id === oldData._id);
+      if (properties[selectKey] === oldData.key) properties[selectKey] = '';
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1);
         updateCategory(category.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been deleted successfully.', { variant: 'success' });
+            updateCategory(category.id, { properties })
+              .then(() => {
+                enqueueSnackbar('Selected item has been deleted successfully.', { variant: 'success' });
+              })
+              .catch(() => {
+                enqueueSnackbar('Error in deleting Property.', { variant: 'error' });
+              });
             // handleClose();
           })
           .catch(() => {
