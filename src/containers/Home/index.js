@@ -14,7 +14,7 @@ function Home(props) {
   return (
     <div className="app-container">
       <Container>
-        <Section minSize={350} defaultSize={350}>
+        <Section minSize="35%" defaultSize={350}>
           {value === 'virtual' && <VirtualTree />}
         </Section>
 

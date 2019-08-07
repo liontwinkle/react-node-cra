@@ -10,10 +10,8 @@
 .app-container {
   width: 100vw;
   height: calc(100vh - 64px);
-
   > div {
     height: 100%;
-
     .resizer {
       position: relative;
       z-index: 150;

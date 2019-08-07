@@ -1,6 +1,7 @@
 // import _ from 'lodash';
 
 import types from '../actionTypes';
+import { sortByOrder } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -20,10 +21,13 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PROPERTYFIELD_GET_SUCCESS:
+      const data = action.payload.propertyField[0];
+      const section = data.sections.sort(sortByOrder);
+      data.sections = section;
       return {
         ...state,
         isFetchingList: false,
-        propertyField: action.payload.propertyField[0],
+        propertyField: data,
       };
     case types.PROPERTYFIELD_GET_FAIL:
       return {
