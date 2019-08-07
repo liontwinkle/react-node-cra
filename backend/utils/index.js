@@ -43,7 +43,6 @@ function handleEntityNotFound(res, req) {
 
 function saveUpdates(updates) {
   return entity => {
-    console.log("data>>>>", updates);//fixme
     if (updates) {
       _.assign(entity, updates);
     }

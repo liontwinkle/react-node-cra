@@ -69,7 +69,6 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
   dispatch({
     type: types.PROPERTYFIELD_UPDATE_REQUEST,
   });
-  console.log('updateData>>>', updatedData);// fixme
 
   return propertyFieldsService.update(client.id, type.key, id, updatedData)
     .then((data) => {

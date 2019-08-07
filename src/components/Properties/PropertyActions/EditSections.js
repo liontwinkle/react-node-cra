@@ -9,19 +9,19 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { tableIcons } from 'utils/constants';
-import { updateCategory } from 'redux/actions/categories';
+import { updatePorpertyField } from 'redux/actions/propertyFields';
 
 function EditSections(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     open,
-    category,
-    updateCategory,
+    propertyField,
+    updatePorpertyField,
     handleClose,
   } = props;
 
-  const { sections } = category;
+  const { sections } = propertyField;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -41,7 +41,7 @@ function EditSections(props) {
         order: newData.order,
       });
 
-      updateCategory(category.id, { sections })
+      updatePorpertyField(propertyField.id, { sections })
         .then(() => {
           enqueueSnackbar('Property field has been added successfully.',
             {
@@ -70,7 +70,7 @@ function EditSections(props) {
           _id: newData._id,
         });
 
-        updateCategory(category.id, { sections })
+        updatePorpertyField(propertyField.id, { sections })
           .then(() => {
             enqueueSnackbar('Property field has been updated successfully.',
               {
@@ -97,7 +97,7 @@ function EditSections(props) {
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1);
 
-        updateCategory(category.id, { sections })
+        updatePorpertyField(propertyField.id, { sections })
           .then(() => {
             enqueueSnackbar('Property field has been deleted successfully.',
               {
@@ -150,17 +150,17 @@ function EditSections(props) {
 
 EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  propertyField: PropTypes.object.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  category: store.categoriesData.category,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

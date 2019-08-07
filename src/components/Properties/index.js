@@ -225,7 +225,7 @@ Properties.propTypes = {
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
   propertyField: store.propertyFieldsData.propertyField,
-  isUpdating: store.categoriesData.isUpdating,
+  isUpdating: store.propertyFieldsData.isUpdating,
 });
 
 export default connect(mapStateToProps)(Properties);

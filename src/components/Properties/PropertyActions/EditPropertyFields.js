@@ -9,24 +9,24 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { propertyTypes, tableIcons } from 'utils/constants';
-import { updateCategory } from 'redux/actions/categories';
+import { updatePorpertyField } from 'redux/actions/propertyFields';
 
 function EditPropertyFields(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     open,
-    category,
-    updateCategory,
+    propertyField,
+    updatePorpertyField,
     handleClose,
   } = props;
 
   const sections = {};
-  category.sections.forEach((section) => {
+  propertyField.sections.forEach((section) => {
     sections[section.key] = section.label;
   });
 
-  const { propertyFields } = category;
+  const { propertyFields } = propertyField;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -56,7 +56,7 @@ function EditPropertyFields(props) {
         section: newData.section,
       });
 
-      updateCategory(category.id, { propertyFields })
+      updatePorpertyField(propertyField.id, { propertyFields })
         .then(() => {
           enqueueSnackbar('Property field has been added successfully.',
             {
@@ -86,7 +86,7 @@ function EditPropertyFields(props) {
           _id: newData._id,
         });
 
-        updateCategory(category.id, { propertyFields })
+        updatePorpertyField(propertyField.id, { propertyFields })
           .then(() => {
             enqueueSnackbar('Property field has been updated successfully.',
               {
@@ -108,7 +108,7 @@ function EditPropertyFields(props) {
       if (ruleKeyIndex > -1) {
         propertyFields.splice(ruleKeyIndex, 1);
 
-        updateCategory(category.id, { propertyFields })
+        updatePorpertyField(propertyField.id, { propertyFields })
           .then(() => {
             enqueueSnackbar('Property field has been deleted successfully.',
               {
@@ -159,17 +159,17 @@ function EditPropertyFields(props) {
 
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  propertyField: PropTypes.object.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  category: store.categoriesData.category,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

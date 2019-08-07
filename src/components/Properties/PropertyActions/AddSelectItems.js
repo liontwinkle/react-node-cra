@@ -9,8 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { updateCategory } from 'redux/actions/categories';
 import { CustomInput } from 'components/elements';
+import { updatePorpertyField } from 'redux/actions/propertyFields';
 import { isExist } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
@@ -29,10 +29,10 @@ function AddSelectItems(props) {
   const {
     open,
     isUpdating,
-    category,
+    propertyField,
     handleClose,
     selectKey,
-    updateCategory,
+    updatePorpertyField,
   } = props;
 
   const [sectionsData, setSectionsData] = useState({
@@ -52,7 +52,7 @@ function AddSelectItems(props) {
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { propertyFields } = category;
+      const { propertyFields } = propertyField;
       const selectItems = propertyFields.filter(item => (item.key === selectKey))[0];
       let updateFlag = true;
       if (selectItems.items) {
@@ -67,7 +67,7 @@ function AddSelectItems(props) {
       }
 
       if (updateFlag) {
-        updateCategory(category.id, { propertyFields })
+        updatePorpertyField(propertyField.id, { propertyFields })
           .then(() => {
             enqueueSnackbar('Item has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
             handleClose();
@@ -130,18 +130,18 @@ AddSelectItems.propTypes = {
   open: PropTypes.bool.isRequired,
   selectKey: PropTypes.string.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  isUpdating: store.categoriesData.isUpdating,
-  category: store.categoriesData.category,
+  isUpdating: store.propertyFieldsData.isUpdating,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

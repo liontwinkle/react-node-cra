@@ -35,13 +35,11 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.PROPERTYFIELD_CREATE_REQUEST:
-      console.log('send create request>>>>');// fixme
       return {
         ...state,
         isCreating: true,
       };
     case types.PROPERTYFIELD_CREATE_SUCCESS:
-      console.log('recv create success>>>>', action.payload.data);// fixme
       propertyFields.push(action.payload.data);
       return {
         ...state,
@@ -49,7 +47,6 @@ export default (state = INITIAL_STATE, action) => {
         propertyField: action.payload.data,
       };
     case types.PROPERTYFIELD_CREATE_FAIL:
-      console.log('recv error>>>>');// fixme
       return {
         ...state,
         isCreating: false,

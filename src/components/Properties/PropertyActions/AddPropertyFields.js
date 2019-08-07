@@ -161,7 +161,7 @@ AddPropertyFields.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  isUpdating: store.categoriesData.isUpdating,
+  isUpdating: store.propertyFieldsData.isUpdating,
   propertyField: store.propertyFieldsData.propertyField,
 });
 
