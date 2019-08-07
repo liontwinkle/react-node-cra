@@ -15,6 +15,8 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import SearchIcon from '@material-ui/icons/Search';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
+import { getObjectFromArray } from 'utils';
+
 export const ruleStringItems = [
   { key: 'less', label: 'less' },
   { key: 'less_or_equal', label: 'less or equal' },
@@ -51,6 +53,16 @@ export const ruleKeyTypes = [
   { key: 'string', label: 'String' },
   { key: 'number', label: 'Number' },
 ];
+
+export const ruleTypes = getObjectFromArray(ruleKeyTypes);
+
+export const propertyFieldTypes = [
+  { key: 'input', label: 'Input' },
+  { key: 'select', label: 'Select' },
+  { key: 'toggle', label: 'Toggle' },
+];
+
+export const propertyTypes = getObjectFromArray(propertyFieldTypes);
 
 export const tableIcons = {
   Add: forwardRef((props, ref) => <AddBoxIcon {...props} ref={ref} />),

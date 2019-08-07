@@ -7,21 +7,21 @@ const CategorySchema = new Schema({
     type: String,
     default: '',
   },
-  depth: {
-    type: Number,
-    default: 0,
-  },
   properties: Object,
   sections: [{
     key: String,
     label: String,
     order: Number,
   }],
-  propertyKeys: [{
+  propertyFields: [{
     key: String,
     label: String,
     propertyType: String,
     section: String,
+    items:[{
+      key:String,
+      label:String
+    }],
     order: Number,
   }],
   rules: Object,

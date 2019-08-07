@@ -17,7 +17,10 @@ const CustomSection = ({ title, children }) => (
 
 CustomSection.propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.object,
+  children: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
 };
 
 CustomSection.defaultProps = {

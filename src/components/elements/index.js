@@ -1,4 +1,5 @@
 export { default as CustomInput } from './CustomInput';
+export { default as CustomSection } from './CustomSection';
 export { default as CustomSelect } from './CustomSelect';
 export { default as CustomSelectWithLabel } from './CustomSelect/CustomSelectWithLabel';
 export { default as CustomTab } from './CustomTab';

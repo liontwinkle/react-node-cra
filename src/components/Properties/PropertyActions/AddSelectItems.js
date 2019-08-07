@@ -9,9 +9,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { ruleKeyTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
-import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { CustomInput } from 'components/elements';
+import { isExist } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddRuleKeys(props) {
+function AddSelectItems(props) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -31,47 +31,51 @@ function AddRuleKeys(props) {
     isUpdating,
     category,
     handleClose,
+    selectKey,
     updateCategory,
   } = props;
 
-  const [ruleKeyData, setRuleKeyData] = useState({
+  const [sectionsData, setSectionsData] = useState({
     key: '',
     label: '',
-    ruleType: { key: 'string', label: 'String' },
   });
   const handleChange = field => (e) => {
     const newClient = {
-      ...ruleKeyData,
+      ...sectionsData,
       [field]: e.target.value,
     };
-    setRuleKeyData(newClient);
-  };
-  const handleChangeType = (ruleType) => {
-    const newClient = {
-      ...ruleKeyData,
-      ruleType,
-    };
-    setRuleKeyData(newClient);
+    setSectionsData(newClient);
   };
 
-  const disabled = !(ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
+  const disabled = !(sectionsData.key && sectionsData.label);
+
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { ruleKeys } = category;
-      ruleKeys.push({
-        ...ruleKeyData,
-        ruleType: ruleKeyData.ruleType.key,
-      });
+      const { propertyFields } = category;
+      const selectItems = propertyFields.filter(item => (item.key === selectKey))[0];
+      let updateFlag = true;
+      if (selectItems.items) {
+        if (isExist(selectItems.items, sectionsData.key) === 0) {
+          selectItems.items.push(sectionsData);
+        } else {
+          updateFlag = false;
+          enqueueSnackbar('Item is already exist.', { variant: 'error', autoHideDuration: 1000 });
+        }
+      } else {
+        selectItems.items = sectionsData;
+      }
 
-      updateCategory(category.id, { ruleKeys })
-        .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
-          handleClose();
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in adding rule key.', { variant: 'error', autoHideDuration: 1000 });
-        });
+      if (updateFlag) {
+        updateCategory(category.id, { propertyFields })
+          .then(() => {
+            enqueueSnackbar('Item has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
+            handleClose();
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in adding Item.', { variant: 'error', autoHideDuration: 1000 });
+          });
+      }
     }
   };
 
@@ -82,7 +86,7 @@ function AddRuleKeys(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Add Rule Keys
+        Add Select Items
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
@@ -90,22 +94,15 @@ function AddRuleKeys(props) {
           className="mb-3"
           label="Key"
           inline
-          value={ruleKeyData.key}
+          value={sectionsData.key}
           onChange={handleChange('key')}
         />
         <CustomInput
           className="mb-3"
           label="Label"
           inline
-          value={ruleKeyData.label}
+          value={sectionsData.label}
           onChange={handleChange('label')}
-        />
-        <CustomSelectWithLabel
-          label="Type"
-          inline
-          value={ruleKeyData.ruleType}
-          items={ruleKeyTypes}
-          onChange={handleChangeType}
         />
       </DialogContent>
 
@@ -129,8 +126,9 @@ function AddRuleKeys(props) {
   );
 }
 
-AddRuleKeys.propTypes = {
+AddSelectItems.propTypes = {
   open: PropTypes.bool.isRequired,
+  selectKey: PropTypes.string.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
@@ -149,4 +147,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AddRuleKeys);
+)(AddSelectItems);

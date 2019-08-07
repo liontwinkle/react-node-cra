@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { tableIcons } from 'utils/constants';
+import { ruleTypes, tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 
 function EditRuleKeys(props) {
@@ -29,7 +29,7 @@ function EditRuleKeys(props) {
       {
         title: 'Type',
         field: 'ruleType',
-        lookup: { string: 'String', number: 'Number' },
+        lookup: ruleTypes,
       },
     ],
     data: ruleKeys,
@@ -47,11 +47,10 @@ function EditRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule keys has been added successfully.', { variant: 'success' });
-          // handleClose();
+          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule keys.', { variant: 'error' });
+          enqueueSnackbar('Error in adding rule key.', { variant: 'error', autoHideDuration: 1000 });
         });
     }, 600);
   });
@@ -71,11 +70,10 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule keys has been updated successfully.', { variant: 'success' });
-            // handleClose();
+            enqueueSnackbar('Rule key has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating rule keys.', { variant: 'error' });
+            enqueueSnackbar('Error in updating rule key.', { variant: 'error', autoHideDuration: 1000 });
           });
       }
     }, 600);
@@ -91,11 +89,10 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule keys has been deleted successfully.', { variant: 'success' });
-            // handleClose();
+            enqueueSnackbar('Rule key has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting rule keys.', { variant: 'error' });
+            enqueueSnackbar('Error in deleting rule key.', { variant: 'error', autoHideDuration: 1000 });
           });
       }
     }, 600);
@@ -135,13 +132,9 @@ function EditRuleKeys(props) {
 
 EditRuleKeys.propTypes = {
   open: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-};
-
-EditRuleKeys.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

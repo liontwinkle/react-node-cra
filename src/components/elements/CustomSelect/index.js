@@ -1,107 +1,133 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import Popper from '@material-ui/core/Popper';
+import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import './style.scss';
 
-class CustomSelect extends Component {
-  state = {
-    isOpened: false,
+function CustomSelect(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event = null) => {
+    setAnchorEl(anchorEl ? null : (event && event.currentTarget));
   };
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
+  const [wrapperRef, setWrapperRef] = useState(null);
+  const getWrapperRef = (ref) => {
+    setWrapperRef(ref);
+  };
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
+  const [popperRef, setPopperRef] = useState(null);
+  const getPopperRef = (ref) => {
+    setPopperRef(ref);
+  };
 
-  handleClickOutside = (event) => {
+  const handleClickOutside = (event) => {
     if (
-      this.state.isOpened
-      && this.wrapperRef
-      && this.wrapperRef.contains
-      && !this.wrapperRef.contains(event.target)
+      anchorEl
+      && popperRef && popperRef.contains && !popperRef.contains(event.target)
+      && wrapperRef && wrapperRef.contains && !wrapperRef.contains(event.target)
     ) {
-      this.toggle();
+      handleClick();
     }
   };
 
-  getWrapperRef = (ref) => {
-    this.wrapperRef = ref;
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
+
+  const changeValue = value => () => {
+    props.onChange(value);
+    handleClick();
   };
 
-  toggle = () => {
-    this.setState(prevState => ({
-      isOpened: !prevState.isOpened,
-    }));
-  };
+  const {
+    className,
+    placeholder,
+    value,
+    items,
+  } = props;
 
-  changeValue = value => () => {
-    this.props.onChange(value);
-    this.toggle();
-  };
-
-  render() {
-    const { isOpened } = this.state;
-    const {
-      className,
-      placeholder,
-      value: current,
-      items,
-    } = this.props;
-
-    const maxHeight = 400;
-    const height = Math.min(maxHeight, items.length * 30 + 1);
-
-    return (
-      <div
-        className={`mg-select-control ${className}`}
-        ref={this.getWrapperRef}
-      >
-        <div
-          className={`mg-select-current${isOpened ? ' active' : ''}`}
-          onClick={this.toggle}
-        >
-          {(current && current.label) || placeholder}
-
-          <ArrowDropDownIcon />
-        </div>
-
-        {isOpened && (
-          <ul
-            className={`mg-select-list${isOpened ? ' active' : ''}`}
-            style={{ height }}
-          >
-            <PerfectScrollbar
-              options={{
-                suppressScrollX: true,
-                minScrollbarLength: 50,
-              }}
-            >
-              {items.map(item => (
-                <li
-                  key={item.key}
-                  className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
-                  onClick={this.changeValue(item)}
-                >
-                  {item.label}
-                </li>
-              ))}
-            </PerfectScrollbar>
-          </ul>
-        )}
-      </div>
-    );
+  let current;
+  const isValueString = typeof value === 'string';
+  if (isValueString) {
+    current = items.find(item => item.key === value);
+  } else {
+    current = value;
   }
+
+  const isOpened = Boolean(anchorEl);
+  const id = isOpened ? 'mg-popper' : undefined;
+
+  const maxHeight = 400;
+  const height = Math.min(maxHeight, items.length * 30 + 1);
+
+  let width = 0;
+  if (wrapperRef) {
+    ({ width } = wrapperRef.getBoundingClientRect());
+  }
+
+  return (
+    <div
+      className={`mg-select-control ${className}`}
+      ref={getWrapperRef}
+    >
+      <Button
+        className={`mg-select-current${isOpened ? ' active' : ''}`}
+        aria-describedby={id}
+        variant="outlined"
+        onClick={handleClick}
+      >
+        {(current && current.label) || placeholder}
+
+        <ArrowDropDownIcon />
+      </Button>
+
+      <Popper
+        id={id}
+        open={isOpened}
+        anchorEl={anchorEl}
+      >
+        <ul
+          className={`mg-select-list${isOpened ? ' active' : ''}`}
+          ref={getPopperRef}
+          style={{ width, height }}
+        >
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            {items.map(item => (
+              <li
+                key={item.key}
+                className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
+                onClick={changeValue(isValueString ? item.key : item)}
+              >
+                {item.label}
+              </li>
+            ))}
+          </PerfectScrollbar>
+        </ul>
+      </Popper>
+    </div>
+  );
 }
 
 CustomSelect.propTypes = {
   className: PropTypes.string,
   placeholder: PropTypes.string,
-  value: PropTypes.object,
+  value: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+  ]),
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

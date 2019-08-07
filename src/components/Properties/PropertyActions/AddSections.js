@@ -9,9 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { ruleKeyTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
-import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { CustomInput } from 'components/elements';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -22,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddRuleKeys(props) {
+function AddSections(props) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -34,43 +33,33 @@ function AddRuleKeys(props) {
     updateCategory,
   } = props;
 
-  const [ruleKeyData, setRuleKeyData] = useState({
+  const [sectionsData, setSectionsData] = useState({
     key: '',
     label: '',
-    ruleType: { key: 'string', label: 'String' },
+    order: 0,
   });
   const handleChange = field => (e) => {
     const newClient = {
-      ...ruleKeyData,
+      ...sectionsData,
       [field]: e.target.value,
     };
-    setRuleKeyData(newClient);
-  };
-  const handleChangeType = (ruleType) => {
-    const newClient = {
-      ...ruleKeyData,
-      ruleType,
-    };
-    setRuleKeyData(newClient);
+    setSectionsData(newClient);
   };
 
-  const disabled = !(ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
+  const disabled = !(sectionsData.key && sectionsData.label && (sectionsData.order !== ''));
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { ruleKeys } = category;
-      ruleKeys.push({
-        ...ruleKeyData,
-        ruleType: ruleKeyData.ruleType.key,
-      });
+      const { sections } = category;
+      sections.push(sectionsData);
 
-      updateCategory(category.id, { ruleKeys })
+      updateCategory(category.id, { sections })
         .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
+          enqueueSnackbar('Section has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule key.', { variant: 'error', autoHideDuration: 1000 });
+          enqueueSnackbar('Error in adding section.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };
@@ -82,7 +71,7 @@ function AddRuleKeys(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Add Rule Keys
+        Add Sections
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
@@ -90,22 +79,24 @@ function AddRuleKeys(props) {
           className="mb-3"
           label="Key"
           inline
-          value={ruleKeyData.key}
+          value={sectionsData.key}
           onChange={handleChange('key')}
         />
         <CustomInput
           className="mb-3"
           label="Label"
           inline
-          value={ruleKeyData.label}
+          value={sectionsData.label}
           onChange={handleChange('label')}
         />
-        <CustomSelectWithLabel
-          label="Type"
+        <CustomInput
+          className="mb-3"
+          label="Order"
+          type="number"
+          min={1}
           inline
-          value={ruleKeyData.ruleType}
-          items={ruleKeyTypes}
-          onChange={handleChangeType}
+          value={sectionsData.order}
+          onChange={handleChange('order')}
         />
       </DialogContent>
 
@@ -129,7 +120,7 @@ function AddRuleKeys(props) {
   );
 }
 
-AddRuleKeys.propTypes = {
+AddSections.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
@@ -149,4 +140,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AddRuleKeys);
+)(AddSections);

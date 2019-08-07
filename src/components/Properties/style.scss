@@ -5,15 +5,24 @@
   white-space: nowrap;
 
   .mg-properties-content {
-    padding: 1rem;
+    //padding: 1rem;
     flex: 1;
-
+    .mg-select-section{
+      display: flex;
+      justify-content: space-between;
+    }
     .scrollbar-container {
       height: 100%;
 
       > .mg-rule-group {
         padding: 0 !important;
         border-left: 0 !important;
+      }
+
+      .mg-section-control {
+        > div:not(:first-child) {
+          margin-top: 0.5rem;
+        }
       }
     }
   }
@@ -28,11 +37,17 @@
         margin-top: 0.5rem;
       }
     }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ddd;
+    }
   }
 }
 
 .mg-edit-properties-content {
-  width: 600px;
+  width: 800px;
 
   .MuiPaper-root {
     box-shadow: none;

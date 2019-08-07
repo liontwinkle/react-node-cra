@@ -10,6 +10,8 @@ import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
+import AddSections from './AddSections';
+import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
 
@@ -23,7 +25,12 @@ function PropertyActions(props) {
     updateCategory,
   } = props;
 
-  const [open, setOpen] = useState({ add: false, edit: false });
+  const [open, setOpen] = useState({
+    add: false,
+    edit: false,
+    add_section: false,
+    edit_section: false,
+  });
   const handleToggle = field => () => {
     setOpen({
       ...open,
@@ -31,14 +38,14 @@ function PropertyActions(props) {
     });
   };
 
-  const saveRules = properties => () => {
-    if (category && !isUpdating) {
+  const saveProperties = () => {
+    if (!isUpdating) {
       updateCategory(category.id, { properties })
         .then(() => {
-          enqueueSnackbar('Properties has been updated successfully.', { variant: 'success' });
+          enqueueSnackbar('Properties has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating properties.', { variant: 'error' });
+          enqueueSnackbar('Error in updating properties.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };
@@ -46,11 +53,33 @@ function PropertyActions(props) {
   return (
     <div className="mg-property-actions d-flex flex-column align-items-center">
       <Tooltip
-        title="Add Property Fields"
+        title="Add Section"
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('add')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('add_section')}>
+          <AddIcon style={{ fontSize: 20 }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip
+        title="Edit Sections"
+        position="left"
+        arrow
+      >
+        <IconButton disabled={isUpdating} onClick={handleToggle('edit_section')}>
+          <EditIcon style={{ fontSize: 20 }} />
+        </IconButton>
+      </Tooltip>
+
+      <div className="divider" />
+
+      <Tooltip
+        title="Add Property Field"
+        position="left"
+        arrow
+      >
+        <IconButton disabled={isUpdating} onClick={handleToggle('add')}>
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -60,20 +89,30 @@ function PropertyActions(props) {
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('edit')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('edit')}>
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
+      <div className="divider" />
 
       <Tooltip
         title="Save Properties"
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating || !category} onClick={saveRules(properties)}>
+        <IconButton disabled={isUpdating} onClick={saveProperties}>
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
+      {open.add_section && (
+        <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
+      )}
+
+      {open.edit_section && (
+        <EditSections open={open.edit_section} handleClose={handleToggle('edit_section')} />
+      )}
 
       {open.add && (
         <AddPropertyFields open={open.add} handleClose={handleToggle('add')} />
@@ -87,14 +126,10 @@ function PropertyActions(props) {
 }
 
 PropertyActions.propTypes = {
-  isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
   properties: PropTypes.object.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+  category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-PropertyActions.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

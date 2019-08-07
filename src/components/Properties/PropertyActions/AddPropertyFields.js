@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { ruleKeyTypes } from 'utils/constants';
+import { propertyFieldTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
 
@@ -34,43 +34,58 @@ function AddPropertyFields(props) {
     updateCategory,
   } = props;
 
-  const [ruleKeyData, setRuleKeyData] = useState({
+  const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
     label: '',
-    ruleType: { key: 'string', label: 'String' },
+    propertyType: { key: 'string', label: 'String' },
+    section: null,
   });
   const handleChange = field => (e) => {
     const newClient = {
-      ...ruleKeyData,
+      ...propertyFieldData,
       [field]: e.target.value,
     };
-    setRuleKeyData(newClient);
+    setPropertyFieldData(newClient);
   };
-  const handleChangeType = (ruleType) => {
+  const handleChangeType = (propertyType) => {
     const newClient = {
-      ...ruleKeyData,
-      ruleType,
+      ...propertyFieldData,
+      propertyType,
     };
-    setRuleKeyData(newClient);
+    setPropertyFieldData(newClient);
+  };
+  const handleChangeSection = (section) => {
+    const newClient = {
+      ...propertyFieldData,
+      section,
+    };
+    setPropertyFieldData(newClient);
   };
 
-  const disabled = !(category && ruleKeyData.key && ruleKeyData.label && ruleKeyData.ruleType);
+  const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { ruleKeys } = category;
-      ruleKeys.push({
-        ...ruleKeyData,
-        ruleType: ruleKeyData.ruleType.key,
+      const { propertyFields } = category;
+      propertyFields.push({
+        ...propertyFieldData,
+        propertyType: propertyFieldData.propertyType.key,
+        section: propertyFieldData.section && propertyFieldData.section.key,
       });
 
-      updateCategory(category.id, { ruleKeys })
+      updateCategory(category.id, { propertyFields })
         .then(() => {
-          enqueueSnackbar('Property fields has been added successfully.', { variant: 'success' });
+          enqueueSnackbar('Property field has been added successfully.',
+            {
+              variant: 'success', autoHideDuration: 1000,
+            });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding property fields.', { variant: 'error' });
+          enqueueSnackbar('Error in adding property field.',
+            {
+              variant: 'error', autoHideDuration: 1000,
+            });
         });
     }
   };
@@ -82,7 +97,7 @@ function AddPropertyFields(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Add Rule Keys
+        Add Property Fields
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
@@ -90,22 +105,30 @@ function AddPropertyFields(props) {
           className="mb-3"
           label="Key"
           inline
-          value={ruleKeyData.key}
+          value={propertyFieldData.key}
           onChange={handleChange('key')}
         />
         <CustomInput
           className="mb-3"
           label="Label"
           inline
-          value={ruleKeyData.label}
+          value={propertyFieldData.label}
           onChange={handleChange('label')}
         />
         <CustomSelectWithLabel
+          className="mb-3"
           label="Type"
           inline
-          value={ruleKeyData.ruleType}
-          items={ruleKeyTypes}
+          value={propertyFieldData.propertyType}
+          items={propertyFieldTypes}
           onChange={handleChangeType}
+        />
+        <CustomSelectWithLabel
+          label="Section"
+          inline
+          value={propertyFieldData.section}
+          items={category.sections}
+          onChange={handleChangeSection}
         />
       </DialogContent>
 
@@ -132,13 +155,9 @@ function AddPropertyFields(props) {
 AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
+  category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-AddPropertyFields.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

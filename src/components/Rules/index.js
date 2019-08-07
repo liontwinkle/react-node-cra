@@ -27,13 +27,8 @@ class Rules extends Component {
   }
 
   setMap = (category) => {
-    let rules = {};
-    let ruleKeys = [];
-
-    if (category) {
-      rules = category.rules || {};
-      ({ ruleKeys } = category);
-    }
+    const rules = category.rules || {};
+    const ruleKeys = category.ruleKeys || [];
 
     this.setState({
       map: getMapFromJson(rules, ''),
@@ -47,8 +42,6 @@ class Rules extends Component {
 
   render() {
     const { map, ruleKeys } = this.state;
-    // eslint-disable-next-line
-    const { category } = this.props;
 
     const json = getJsonFromMap(map, '', '');
 
@@ -65,18 +58,14 @@ class Rules extends Component {
           )}
         </div>
 
-        <RuleActions json={json} />
+        <RuleActions rules={json} />
       </div>
     );
   }
 }
 
 Rules.propTypes = {
-  category: PropTypes.object,
-};
-
-Rules.defaultProps = {
-  category: null,
+  category: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({

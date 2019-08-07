@@ -17,7 +17,7 @@ function RuleActions(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    json,
+    rules,
     isUpdating,
     category,
     updateCategory,
@@ -31,14 +31,14 @@ function RuleActions(props) {
     });
   };
 
-  const saveRules = rules => () => {
-    if (category && !isUpdating) {
+  const saveRules = () => {
+    if (!isUpdating) {
       updateCategory(category.id, { rules })
         .then(() => {
-          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success' });
+          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating rules.', { variant: 'error' });
+          enqueueSnackbar('Error in updating rules.', { variant: 'error', autoHideDuration: 1000 });
         });
     }
   };
@@ -46,11 +46,11 @@ function RuleActions(props) {
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       <Tooltip
-        title="Add Rule Keys"
+        title="Add Rule Key"
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('add')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('add')}>
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -60,17 +60,19 @@ function RuleActions(props) {
         position="left"
         arrow
       >
-        <IconButton disabled={!category} onClick={handleToggle('edit')}>
+        <IconButton disabled={isUpdating} onClick={handleToggle('edit')}>
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
+      <div className="divider" />
 
       <Tooltip
         title="Save Rules"
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating || !category} onClick={saveRules(json)}>
+        <IconButton disabled={isUpdating} onClick={saveRules}>
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -88,13 +90,9 @@ function RuleActions(props) {
 
 RuleActions.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object,
-  json: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
+  rules: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
-};
-
-RuleActions.defaultProps = {
-  category: null,
 };
 
 const mapStateToProps = store => ({

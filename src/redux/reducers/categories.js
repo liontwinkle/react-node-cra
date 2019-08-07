@@ -65,12 +65,13 @@ export default (state = INITIAL_STATE, action) => {
       if (categoryIdx > -1) {
         categories.splice(categoryIdx, 1, action.payload.data);
       } else {
-        categories.push(action.data);
+        categories.push(action.payload.data);
       }
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
+        category: action.payload.data,
       };
     case types.CATEGORY_UPDATE_FAIL:
       return {
@@ -93,6 +94,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isDeleting: false,
         categories: categories.slice(0),
+        category: null,
       };
     case types.CATEGORY_DELETE_FAIL:
       return {

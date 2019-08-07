@@ -49,14 +49,33 @@ function saveUpdates(updates) {
     return entity.saveAsync();
   };
 }
-
 function removeEntity(res) {
   return entity => entity && entity.removeAsync().then(respondWith(res, 204));
+}
+
+function removeChildren( req, id ){
+  req.category.find({parentId: id}).then(
+    (result)=>{
+      req.category
+        .deleteMany({parentId:id}, function (err, result) {
+      });
+      if( result.length > 0 ){
+        result.forEach((item)=>{
+          removeChildren( req, item._id );
+        });
+      }else{
+        req.category
+          .deleteOne({parentId:id}, function (err, result) {
+          });
+      }
+    }
+  );
 }
 
 module.exports = {
   handleError,
   respondWith,
+  removeChildren,
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,

@@ -36,7 +36,7 @@ function ClientSelect(props) {
   useEffect(() => {
     fetchClients()
       .catch(() => {
-        enqueueSnackbar('Error in fetching clients.', { variant: 'error' });
+        enqueueSnackbar('Error in fetching clients.', { variant: 'error', autoHideDuration: 1000 });
       });
   }, [fetchClients, enqueueSnackbar]);
 

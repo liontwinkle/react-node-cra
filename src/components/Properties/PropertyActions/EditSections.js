@@ -8,10 +8,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { propertyTypes, tableIcons } from 'utils/constants';
+import { tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 
-function EditPropertyFields(props) {
+function EditSections(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -21,42 +21,27 @@ function EditPropertyFields(props) {
     handleClose,
   } = props;
 
-  const sections = {};
-  category.sections.forEach((section) => {
-    sections[section.key] = section.label;
-  });
-
-  const { propertyFields } = category;
+  const { sections } = category;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
-      {
-        title: 'Type',
-        field: 'propertyType',
-        lookup: propertyTypes,
-      },
-      {
-        title: 'Section',
-        field: 'section',
-        lookup: sections,
-      },
+      { title: 'Order', field: 'order' },
     ],
-    data: propertyFields,
+    data: sections,
   };
 
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      propertyFields.push({
+      sections.push({
         key: newData.key,
         label: newData.label,
-        propertyType: newData.propertyType,
-        section: newData.section,
+        order: newData.order,
       });
 
-      updateCategory(category.id, { propertyFields })
+      updateCategory(category.id, { sections })
         .then(() => {
           enqueueSnackbar('Property field has been added successfully.',
             {
@@ -76,25 +61,29 @@ function EditPropertyFields(props) {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        propertyFields.splice(ruleKeyIndex, 1, {
+        sections.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
-          propertyType: newData.propertyType,
-          section: newData.section,
+          order: newData.order,
           _id: newData._id,
         });
 
-        updateCategory(category.id, { propertyFields })
+        updateCategory(category.id, { sections })
           .then(() => {
             enqueueSnackbar('Property field has been updated successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in updating property field.',
+              {
+                variant: 'error',
+                autoHideDuration: 1000,
+              });
           });
       }
     }, 600);
@@ -104,21 +93,23 @@ function EditPropertyFields(props) {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        propertyFields.splice(ruleKeyIndex, 1);
+        sections.splice(ruleKeyIndex, 1);
 
-        updateCategory(category.id, { propertyFields })
+        updateCategory(category.id, { sections })
           .then(() => {
             enqueueSnackbar('Property field has been deleted successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
           })
           .catch(() => {
             enqueueSnackbar('Error in deleting property field.',
               {
-                variant: 'error', autoHideDuration: 1000,
+                variant: 'error',
+                autoHideDuration: 1000,
               });
           });
       }
@@ -157,7 +148,7 @@ function EditPropertyFields(props) {
   );
 }
 
-EditPropertyFields.propTypes = {
+EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
@@ -175,4 +166,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(EditPropertyFields);
+)(EditSections);

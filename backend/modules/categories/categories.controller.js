@@ -3,7 +3,8 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
-  removeEntity
+  removeEntity,
+  removeChildren
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -55,5 +56,6 @@ exports.remove = (req, res) => {
     .findByIdAsync(req.params.categoryId)
     .then(handleEntityNotFound(res, req))
     .then(removeEntity(res))
+    .then(removeChildren(req,req.params.categoryId ))
     .catch(handleError(res));
 };
