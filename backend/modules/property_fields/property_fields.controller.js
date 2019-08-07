@@ -5,6 +5,7 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  createProperty,
   removeEntity,
 } = require('../../utils');
 
@@ -20,8 +21,7 @@ exports.index = (req, res) => {
 
 // Creates a new Category in the DB
 exports.create = (req, res) => {
-  PropertyFields
-    .createAsync(req.body)
+    createProperty( PropertyFields, req, res )
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };

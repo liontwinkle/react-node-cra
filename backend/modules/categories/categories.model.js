@@ -8,22 +8,6 @@ const CategorySchema = new Schema({
     default: '',
   },
   properties: Object,
-  sections: [{
-    key: String,
-    label: String,
-    order: Number,
-  }],
-  propertyFields: [{
-    key: String,
-    label: String,
-    propertyType: String,
-    section: String,
-    items:[{
-      key:String,
-      label:String
-    }],
-    order: Number,
-  }],
   rules: Object,
   ruleKeys: [{
     key: String,

@@ -29,17 +29,4 @@ PropertyFieldsSchema.virtual('id').get(function () {
   return this._id.toHexString();
 });
 
-let PropertyFields = mongoose.model('PropertyFields', PropertyFieldsSchema);
-
-/**
- *
- * @param type
- * @returns {Model}
- * Category collections will be changed or created dynamically
- */
-const PropertyFieldsModel = (type = 'taxonomy') => {
-  PropertyFields = mongoose.model(type, PropertyFieldsSchema);
-  return PropertyFields;
-};
-
-module.exports = PropertyFieldsModel;
+module.exports = mongoose.model('Clients', PropertyFieldsSchema);

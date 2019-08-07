@@ -8,13 +8,13 @@ const INITIAL_STATE = {
   isUpdating: false,
   isDeleting: false,
 
-  categories: [],
-  category: null,
+  propertyFields: [],
+  section: [],
   errors: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  const { categories } = state;
+  const { propertyFields } = state;
 
   switch (action.type) {
     // case types.CATEGORIES_GET_REQUEST:
@@ -43,7 +43,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.PROPERTYFIELD_CREATE_SUCCESS:
       console.log('recv create success>>>>', action.payload.data);// fixme
-      categories.push(action.payload.data);
+      propertyFields.push(action.payload.data);
       return {
         ...state,
         isCreating: false,

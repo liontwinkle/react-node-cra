@@ -2,7 +2,7 @@ import propertyFieldsService from 'services/propertyFields.service';
 import types from '../actionTypes';
 
 export const fetchPropertyFields = (clientId, type) => (dispatch, getState) => {
-  if (getState().categoriesData.isFetchingList) {
+  if (getState().propertyFields.isFetchingList) {
     return Promise.reject();
   }
 
@@ -27,18 +27,29 @@ export const fetchPropertyFields = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createPorpertyField = propertyFields => (dispatch, getState) => {
-  if (getState().categoriesData.isCreating) {
+export const createPorpertyField = clientData => (dispatch, getState) => {
+  console.log('create???'); // fixme
+  if (getState().propertyFieldsData.isCreating) {
+    console.log('return???'); // fixme
     return;
   }
 
-  const { client, type } = getState().clientsData;
+  const { clients } = getState().clientsData;
+  console.log('clients>>>', clients);// fixme
+  const client = clients.filter(item => (item.name === clientData.name));
+  console.log('clientData>>>>', client);// fixme
+  const propertyFields = {
+    clientId: client[0].id,
+  };
+  //
+  console.log('propertyFields be sent >>>>', propertyFields);// fixme
 
   dispatch({
     type: types.PROPERTYFIELD_CREATE_REQUEST,
   });
-
-  return propertyFieldsService.create(client.id, type.key, propertyFields)
+  //
+  console.log('current state>>>', getState().propertyFieldsData);// fixme
+  return propertyFieldsService.create(propertyFields)
     .then((data) => {
       console.log('recvdata>>>>', data);// fixme
       dispatch({
@@ -59,35 +70,35 @@ export const createPorpertyField = propertyFields => (dispatch, getState) => {
     });
 };
 
-// export const updateCategory = (id, updatedData) => (dispatch, getState) => {
-//   if (getState().categoriesData.isUpdating) {
-//     return;
-//   }
-//
-//   const { client, type } = getState().clientsData;
-//
-//   dispatch({
-//     type: types.CATEGORY_UPDATE_REQUEST,
-//   });
-//
-//   return propertyFieldsService.update(client.id, type.key, id, updatedData)
-//     .then((data) => {
-//       dispatch({
-//         type: types.CATEGORY_UPDATE_SUCCESS,
-//         payload: { data },
-//       });
-//
-//       return 'success';
-//     })
-//     .catch((error) => {
-//       dispatch({
-//         type: types.CATEGORY_UPDATE_FAIL,
-//         payload: { error },
-//       });
-//
-//       throw error;
-//     });
-// };
+export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => {
+  if (getState().categoriesData.isUpdating) {
+    return;
+  }
+
+  const { client, type } = getState().clientsData;
+
+  dispatch({
+    type: types.CATEGORY_UPDATE_REQUEST,
+  });
+
+  return propertyFieldsService.update(client.id, type.key, id, updatedData)
+    .then((data) => {
+      dispatch({
+        type: types.CATEGORY_UPDATE_SUCCESS,
+        payload: { data },
+      });
+
+      return 'success';
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.CATEGORY_UPDATE_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};
 //
 // export const removeCategory = id => (dispatch, getState) => {
 //   if (getState().categoriesData.isDeleting) {

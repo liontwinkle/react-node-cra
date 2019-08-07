@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
 import { createClient, updateClient } from 'redux/actions/clients';
+import { createPorpertyField, updatePorpertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 
 const useStyles = makeStyles(theme => ({
@@ -28,6 +29,8 @@ function ClientForm(props) {
     client,
     createClient,
     updateClient,
+    createPorpertyField,
+    updatePorpertyField,
     handleClose,
   } = props;
 
@@ -48,15 +51,27 @@ function ClientForm(props) {
   const disabled = !(clientData.name && clientData.code && clientData.url);
   const handleSubmit = () => {
     if (!isSaving && !disabled) {
-      const action = isAdd ? createClient : updateClient;
-
-      action(clientData)
+      console.log('clientdata>>>', clientData);// fixme
+      const actionClient = isAdd ? createClient : updateClient;
+      const actionPropertyField = isAdd ? createPorpertyField : updatePorpertyField;
+      actionClient(clientData)
         .then(() => {
-          enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
-            {
-              variant: 'success', autoHideDuration: 1000,
+          console.log('success_client>>>');// fixme
+          actionPropertyField(clientData)
+            .then(() => {
+              console.log('success_property>>>');// fixme
+              enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
+                {
+                  variant: 'success', autoHideDuration: 1000,
+                });
+              handleClose();
+            })
+            .catch(() => {
+              enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
+                {
+                  variant: 'error', autoHideDuration: 1000,
+                });
             });
-          handleClose();
         })
         .catch(() => {
           enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
@@ -127,6 +142,8 @@ ClientForm.propTypes = {
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  createPorpertyField: PropTypes.func.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
 };
 
 ClientForm.defaultProps = {
@@ -141,6 +158,8 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   createClient,
   updateClient,
+  createPorpertyField,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

@@ -28,7 +28,7 @@ dotenv.config({ path: '.env' });
  * Controllers (route handlers).
  */
 const clientsRoute = require('./modules/clients/clients.route');
-
+const propertyFieldsRoute = require('./modules/property_fields/property_fields.route');
 /**
  * Create Express server.
  */
@@ -83,6 +83,7 @@ app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 3155760000
  * Notes routes.
  */
 app.use('/api/clients', clientsRoute);
+app.use('/api/property_fields', propertyFieldsRoute);
 
 /**
  * Error Handler.

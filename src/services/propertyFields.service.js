@@ -7,11 +7,9 @@ const basePropertyFiledsRoute = '/property_fields';
 //   .then(({ data }) => data)
 //   .catch(err => Promise.reject(err.response));
 
-const create = (clientId, type, propertyField) => httpService
+const create = propertyField => httpService
   .post(basePropertyFiledsRoute, {
     propertyField,
-    clientId,
-    type,
   })
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
