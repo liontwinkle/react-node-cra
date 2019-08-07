@@ -69,29 +69,24 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: false,
         errors: action.payload.error,
       };
-      //
-      // case types.CATEGORY_DELETE_REQUEST:
-      //   return {
-      //     ...state,
-      //     isDeleting: true,
-      //   };
-      // case types.CATEGORY_DELETE_SUCCESS:
-      //   const index = _.findIndex(categories, { id: action.payload.id });
-      //   if (index > -1) {
-      //     categories.splice(index, 1);
-      //   }
-      //   return {
-      //     ...state,
-      //     isDeleting: false,
-      //     categories: categories.slice(0),
-      //     category: null,
-      //   };
-      // case types.CATEGORY_DELETE_FAIL:
-      //   return {
-      //     ...state,
-      //     isDeleting: false,
-      //     errors: action.payload.error,
-      //   };
+
+    case types.PROPERTYFIELD_DELETE_REQUEST:
+      return {
+        ...state,
+        isDeleting: true,
+      };
+    case types.PROPERTYFIELD_DELETE_SUCCESS:
+      return {
+        ...state,
+        isDeleting: false,
+        propertyField: null,
+      };
+    case types.PROPERTYFIELD_DELETE_FAIL:
+      return {
+        ...state,
+        isDeleting: false,
+        errors: action.payload.error,
+      };
       //
       // case types.CATEGORY_SET:
       //   return {

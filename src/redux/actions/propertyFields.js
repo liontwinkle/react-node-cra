@@ -34,6 +34,7 @@ export const createPorpertyField = (clientData, type) => (dispatch, getState) =>
 
   const { clients } = getState().clientsData;
   const client = clients.filter(item => (item.name === clientData.name));
+  console.log('client>>>', client);// fixme
   const propertyFields = {
     clientId: client[0].id,
     type,
@@ -88,36 +89,36 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
       throw error;
     });
 };
-//
-// export const removeCategory = id => (dispatch, getState) => {
-//   if (getState().categoriesData.isDeleting) {
-//     return;
-//   }
-//
-//   const { client, type } = getState().clientsData;
-//
-//   dispatch({
-//     type: types.CATEGORY_DELETE_REQUEST,
-//   });
-//
-//   return propertyFieldsService.remove(client.id, type.key, id)
-//     .then(() => {
-//       dispatch({
-//         type: types.CATEGORY_DELETE_SUCCESS,
-//         payload: { id },
-//       });
-//
-//       return 'success';
-//     })
-//     .catch((error) => {
-//       dispatch({
-//         type: types.CATEGORY_DELETE_FAIL,
-//         payload: { error },
-//       });
-//
-//       throw error;
-//     });
-// };
+
+export const removePorpertyField = () => (dispatch, getState) => {
+  if (getState().propertyFieldsData.isDeleting) {
+    return;
+  }
+
+  const { client } = getState().clientsData;
+
+  console.log('deleting...');// fixme
+  dispatch({
+    type: types.PROPERTYFIELD_DELETE_REQUEST,
+  });
+
+  return propertyFieldsService.remove(client.id)
+    .then(() => {
+      dispatch({
+        type: types.PROPERTYFIELD_DELETE_SUCCESS,
+      });
+
+      return 'success';
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.PROPERTYFIELD_DELETE_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};
 //
 // export const setCategory = category => (dispatch) => {
 //   dispatch({

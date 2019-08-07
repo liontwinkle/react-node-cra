@@ -18,15 +18,15 @@ const update = (clientId, type, id, updatedData) => httpService
   .put(`${basePropertyFiledsRoute}/${id}`, updatedData)
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
-//
-// const remove = (clientId, type, id) => httpService
-//   .remove(`${getCategoryRoute(clientId, type)}/${id}`)
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+
+const remove = clientId => httpService
+  .remove(`${basePropertyFiledsRoute}/${clientId}`)
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 
 export default {
   fetch,
   create,
   update,
-  // remove,
+  remove,
 };

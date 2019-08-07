@@ -14,6 +14,7 @@ import { Tooltip } from 'react-tippy';
 
 import { removeClient } from 'redux/actions/clients';
 import { IconButton } from 'components/elements';
+import { removePorpertyField } from 'redux/actions/propertyFields';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -30,6 +31,7 @@ function ClientRemove(props) {
     isDeleting,
     client,
     removeClient,
+    removePorpertyField,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -39,10 +41,20 @@ function ClientRemove(props) {
 
   const handleRemove = () => {
     if (!isDeleting) {
-      removeClient(client.id)
+      removePorpertyField()
         .then(() => {
-          enqueueSnackbar('The client has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
-          handleOpen();
+          removeClient(client.id)
+            .then(() => {
+              enqueueSnackbar('The client has been deleted successfully.',
+                {
+                  variant: 'success',
+                  autoHideDuration: 1000,
+                });
+              handleOpen();
+            })
+            .catch(() => {
+              enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
+            });
         })
         .catch(() => {
           enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
@@ -104,6 +116,7 @@ ClientRemove.propTypes = {
   isDeleting: PropTypes.bool.isRequired,
   client: PropTypes.object,
   removeClient: PropTypes.func.isRequired,
+  removePorpertyField: PropTypes.func.isRequired,
 };
 
 ClientRemove.defaultProps = {
@@ -117,6 +130,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   removeClient,
+  removePorpertyField,
 }, dispatch);
 
 export default connect(

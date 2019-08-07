@@ -55,14 +55,19 @@ function ClientForm(props) {
       const actionPropertyField = isAdd ? createPorpertyField : updatePorpertyField;
       actionClient(clientData)
         .then(() => {
+          console.log('success1');
           actionPropertyField(clientData, 'virtual')
             .then(() => {
+              console.log('success2');
               actionPropertyField(clientData, 'native')
                 .then(() => {
+                  console.log('success3');
                   actionPropertyField(clientData, 'products')
                     .then(() => {
+                      console.log('success4');
                       actionPropertyField(clientData, 'attribute')
                         .then(() => {
+                          console.log('success5');
                           enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
                             {
                               variant: 'success', autoHideDuration: 1000,

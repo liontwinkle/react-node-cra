@@ -1,3 +1,5 @@
+import {respondWith} from "../../utils";
+
 const PropertyFields = require('./property_fields.model');
 
 const {
@@ -6,7 +8,6 @@ const {
   handleEntityNotFound,
   saveUpdates,
   createProperty,
-  removeEntity,
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -54,9 +55,11 @@ exports.update = (req, res) => {
 
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
+  console.log("clientId",req.params.clientId);//fixme
   PropertyFields
-    .findByIdAsync(req.params.id)
-    .then(handleEntityNotFound(res, req))
-    .then(removeEntity(res))
+    .deleteMany({clientId:req.params.clientId}, function (err, result) {
+      if( result.length > 0 )
+        respondWith(res, 204)
+    })
     .catch(handleError(res));
 };
