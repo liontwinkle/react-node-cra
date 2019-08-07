@@ -29,9 +29,6 @@ exports.create = (req, res) => {
 
 // Gets a single Category from the DB
 exports.show = (req, res) => {
-  console.log( "params>>>", req.params);//fixme
-  console.log( "param1>>>", req.params.clientId);//fixme
-  console.log( "param2>>>", req.params.type);//fixme
   PropertyFields
     .find({clientId:req.params.clientId, type: req.params.type})
     // .select('id name code url createdAt')

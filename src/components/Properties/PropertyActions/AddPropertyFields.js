@@ -10,8 +10,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
 import { propertyFieldTypes } from 'utils/constants';
-import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { updatePorpertyField } from '../../../redux/actions/propertyFields';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -29,9 +29,9 @@ function AddPropertyFields(props) {
   const {
     open,
     isUpdating,
-    category,
     handleClose,
-    updateCategory,
+    propertyField,
+    updatePorpertyField,
   } = props;
 
   const [propertyFieldData, setPropertyFieldData] = useState({
@@ -66,14 +66,14 @@ function AddPropertyFields(props) {
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { propertyFields } = category;
+      const { propertyFields } = propertyField;
       propertyFields.push({
         ...propertyFieldData,
         propertyType: propertyFieldData.propertyType.key,
         section: propertyFieldData.section && propertyFieldData.section.key,
       });
 
-      updateCategory(category.id, { propertyFields })
+      updatePorpertyField(propertyField.id, { propertyFields })
         .then(() => {
           enqueueSnackbar('Property field has been added successfully.',
             {
@@ -127,7 +127,7 @@ function AddPropertyFields(props) {
           label="Section"
           inline
           value={propertyFieldData.section}
-          items={category.sections}
+          items={propertyField.sections}
           onChange={handleChangeSection}
         />
       </DialogContent>
@@ -155,18 +155,18 @@ function AddPropertyFields(props) {
 AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
+  propertyField: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
-  category: store.categoriesData.category,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

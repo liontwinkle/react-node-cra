@@ -55,31 +55,23 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: false,
         errors: action.payload.error,
       };
-
-      // case types.CATEGORY_UPDATE_REQUEST:
-      //   return {
-      //     ...state,
-      //     isUpdating: true,
-      //   };
-      // case types.CATEGORY_UPDATE_SUCCESS:
-      //   const categoryIdx = _.findIndex(categories, { id: action.payload.data.id });
-      //   if (categoryIdx > -1) {
-      //     categories.splice(categoryIdx, 1, action.payload.data);
-      //   } else {
-      //     categories.push(action.payload.data);
-      //   }
-      //   return {
-      //     ...state,
-      //     isUpdating: false,
-      //     categories: categories.slice(0),
-      //     category: action.payload.data,
-      //   };
-      // case types.CATEGORY_UPDATE_FAIL:
-      //   return {
-      //     ...state,
-      //     isUpdating: false,
-      //     errors: action.payload.error,
-      //   };
+    case types.PROPERTYFIELD_UPDATE_REQUEST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.PROPERTYFIELD_UPDATE_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+        propertyField: action.payload.data,
+      };
+    case types.PROPERTYFIELD_UPDATE_FAIL:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
+      };
       //
       // case types.CATEGORY_DELETE_REQUEST:
       //   return {

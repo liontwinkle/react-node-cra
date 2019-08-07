@@ -14,7 +14,7 @@ router.post('/', controller.create);
 router.get('/:clientId/:type', controller.show);
 
 // Request to update a Category
-router.put('/:clientId', controller.update);
+router.put('/:id', controller.update);
 
 // Request to remove a Category
 router.delete('/:clientId', controller.remove);

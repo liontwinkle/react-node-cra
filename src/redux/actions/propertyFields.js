@@ -60,20 +60,21 @@ export const createPorpertyField = (clientData, type) => (dispatch, getState) =>
 };
 
 export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => {
-  if (getState().categoriesData.isUpdating) {
+  if (getState().propertyFieldsData.isUpdating) {
     return;
   }
 
   const { client, type } = getState().clientsData;
 
   dispatch({
-    type: types.CATEGORY_UPDATE_REQUEST,
+    type: types.PROPERTYFIELD_UPDATE_REQUEST,
   });
+  console.log('updateData>>>', updatedData);// fixme
 
   return propertyFieldsService.update(client.id, type.key, id, updatedData)
     .then((data) => {
       dispatch({
-        type: types.CATEGORY_UPDATE_SUCCESS,
+        type: types.PROPERTYFIELD_UPDATE_SUCCESS,
         payload: { data },
       });
 
@@ -81,7 +82,7 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
     })
     .catch((error) => {
       dispatch({
-        type: types.CATEGORY_UPDATE_FAIL,
+        type: types.PROPERTYFIELD_UPDATE_FAIL,
         payload: { error },
       });
 

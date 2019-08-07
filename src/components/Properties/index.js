@@ -24,7 +24,7 @@ import EditSelectItems from './PropertyActions/EditSelectItems';
 class Properties extends Component {
   state = {
     properties: this.props.category.properties || {},
-    sections: this.props.category.sections || [],
+    sections: this.props.propertyField.sections || [],
     isUpdating: false,
     selectKey: '',
     isOpenSelItemModal: false,
@@ -52,9 +52,9 @@ class Properties extends Component {
       }
     }
 
-    if (!isEqual(this.props.category.sections, nextProps.category.sections)) {
+    if (!isEqual(this.props.propertyField.sections, nextProps.propertyField.sections)) {
       this.setState({
-        sections: nextProps.category.sections.sort(sortByOrder) || [],
+        sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
       });
     }
   }
@@ -98,7 +98,7 @@ class Properties extends Component {
   renderSectionFields = (section) => {
     const res = [];
     const { properties } = this.state;
-    const { propertyFields } = this.props.category;
+    const { propertyFields } = this.props.propertyField;
 
     propertyFields.forEach((p) => {
       if (p.section === section.key) {
@@ -219,10 +219,12 @@ class Properties extends Component {
 
 Properties.propTypes = {
   category: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
+  propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.categoriesData.isUpdating,
 });
 

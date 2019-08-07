@@ -13,11 +13,11 @@ const create = propertyField => httpService
   })
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
-//
-// const update = (clientId, type, id, updatedData) => httpService
-//   .put(`${getCategoryRoute(clientId, type)}/${id}`, updatedData)
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+
+const update = (clientId, type, id, updatedData) => httpService
+  .put(`${basePropertyFiledsRoute}/${id}`, updatedData)
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 //
 // const remove = (clientId, type, id) => httpService
 //   .remove(`${getCategoryRoute(clientId, type)}/${id}`)
@@ -27,6 +27,6 @@ const create = propertyField => httpService
 export default {
   fetch,
   create,
-  // update,
+  update,
   // remove,
 };
