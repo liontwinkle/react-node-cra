@@ -2,7 +2,7 @@ import propertyFieldsService from 'services/propertyFields.service';
 import types from '../actionTypes';
 
 export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
-  if (getState().propertyFields.isFetchingList) {
+  if (getState().propertyFieldsData.isFetchingList) {
     return Promise.reject();
   }
 

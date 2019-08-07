@@ -9,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 
-import { updateCategory } from 'redux/actions/categories';
+import { updatePorpertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 
 const useStyles = makeStyles(theme => ({
@@ -28,9 +28,9 @@ function AddSections(props) {
   const {
     open,
     isUpdating,
-    category,
+    propertyField,
     handleClose,
-    updateCategory,
+    updatePorpertyField,
   } = props;
 
   const [sectionsData, setSectionsData] = useState({
@@ -50,10 +50,10 @@ function AddSections(props) {
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { sections } = category;
+      const { sections } = propertyField;
       sections.push(sectionsData);
 
-      updateCategory(category.id, { sections })
+      updatePorpertyField(propertyField.id, { sections })
         .then(() => {
           enqueueSnackbar('Section has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
           handleClose();
@@ -123,18 +123,18 @@ function AddSections(props) {
 AddSections.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  updatePorpertyField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
-  category: store.categoriesData.category,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updatePorpertyField,
 }, dispatch);
 
 export default connect(

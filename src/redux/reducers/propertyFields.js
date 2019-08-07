@@ -22,11 +22,10 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PROPERTYFIELD_GET_SUCCESS:
-      console.log('recvdata<>>>>', action.payload.propertyField); // fixme
       return {
         ...state,
         isFetchingList: false,
-        propertyField: action.payload.propertyField,
+        propertyField: action.payload.propertyField[0],
       };
     case types.PROPERTYFIELD_GET_FAIL:
       return {
