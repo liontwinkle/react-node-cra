@@ -8,8 +8,7 @@ const INITIAL_STATE = {
   isUpdating: false,
   isDeleting: false,
 
-  propertyFields: [],
-  section: [],
+  propertyField: null,
   errors: '',
 };
 
@@ -17,23 +16,24 @@ export default (state = INITIAL_STATE, action) => {
   const { propertyFields } = state;
 
   switch (action.type) {
-    // case types.CATEGORIES_GET_REQUEST:
-    //   return {
-    //     ...state,
-    //     isFetchingList: true,
-    //   };
-    // case types.CATEGORIES_GET_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isFetchingList: false,
-    //     categories: action.payload.categories,
-    //   };
-    // case types.CATEGORIES_GET_FAIL:
-    //   return {
-    //     ...state,
-    //     isFetchingList: false,
-    //     errors: action.payload.error,
-    //   };
+    case types.PROPERTYFIELD_GET_REQUEST:
+      return {
+        ...state,
+        isFetchingList: true,
+      };
+    case types.PROPERTYFIELD_GET_SUCCESS:
+      console.log('recvdata<>>>>', action.payload.propertyField); // fixme
+      return {
+        ...state,
+        isFetchingList: false,
+        propertyField: action.payload.propertyField,
+      };
+    case types.PROPERTYFIELD_GET_FAIL:
+      return {
+        ...state,
+        isFetchingList: false,
+        errors: action.payload.error,
+      };
 
     case types.PROPERTYFIELD_CREATE_REQUEST:
       console.log('send create request>>>>');// fixme
@@ -47,8 +47,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCreating: false,
-        section: action.payload.data.section,
-        propertyFields: action.payload.data.propertyFields,
+        propertyField: action.payload.data,
       };
     case types.PROPERTYFIELD_CREATE_FAIL:
       console.log('recv error>>>>');// fixme

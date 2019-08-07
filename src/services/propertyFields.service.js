@@ -2,10 +2,10 @@ import httpService from './http.service';
 
 const basePropertyFiledsRoute = '/property_fields';
 
-// const fetch = (clientId, type) => httpService
-//   .get(getCategoryRoute(clientId, type))
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+const fetch = (clientId, type) => httpService
+  .get(`${basePropertyFiledsRoute}/${clientId}/${type}`)
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 
 const create = propertyField => httpService
   .post(basePropertyFiledsRoute, {
@@ -25,7 +25,7 @@ const create = propertyField => httpService
 //   .catch(err => Promise.reject(err.response));
 
 export default {
-  // fetch,
+  fetch,
   create,
   // update,
   // remove,

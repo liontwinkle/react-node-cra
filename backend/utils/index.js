@@ -72,24 +72,6 @@ function removeChildren( req, id ){
   );
 }
 
-function createProperty ( collection, reqData, res ){
-  let data = reqData;
-  data['type'] = 'virtual';
-  collection.createAsnyc( data ).then(()=>{
-    data.type = 'native';
-    collection.createAsnyc( data ).then(()=>{
-      data.type = 'products';
-      collection.createAsync( data ).then( ()=>{
-        data.type = 'attribute';
-        collection.createAsync( data ).then( ()=>{
-          respondWith(res, 201);
-        })
-      })
-    });
-  })
-
-}
-
 module.exports = {
   handleError,
   respondWith,
@@ -98,5 +80,4 @@ module.exports = {
   handleEntityNotFound,
   saveUpdates,
   removeEntity,
-  createProperty,
 };

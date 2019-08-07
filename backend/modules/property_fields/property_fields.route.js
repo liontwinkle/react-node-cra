@@ -11,7 +11,7 @@ router.get('/', controller.index);
 router.post('/', controller.create);
 
 // Request to get a Category
-router.get('/:clientId', controller.show);
+router.get('/:clientId/:type', controller.show);
 
 // Request to update a Category
 router.put('/:clientId', controller.update);

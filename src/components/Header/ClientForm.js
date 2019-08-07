@@ -51,20 +51,26 @@ function ClientForm(props) {
   const disabled = !(clientData.name && clientData.code && clientData.url);
   const handleSubmit = () => {
     if (!isSaving && !disabled) {
-      console.log('clientdata>>>', clientData);// fixme
       const actionClient = isAdd ? createClient : updateClient;
       const actionPropertyField = isAdd ? createPorpertyField : updatePorpertyField;
       actionClient(clientData)
         .then(() => {
-          console.log('success_client>>>');// fixme
-          actionPropertyField(clientData)
+          actionPropertyField(clientData, 'virtual')
             .then(() => {
-              console.log('success_property>>>');// fixme
-              enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
-                {
-                  variant: 'success', autoHideDuration: 1000,
+              actionPropertyField(clientData, 'native')
+                .then(() => {
+                  actionPropertyField(clientData, 'products')
+                    .then(() => {
+                      actionPropertyField(clientData, 'attribute')
+                        .then(() => {
+                          enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
+                            {
+                              variant: 'success', autoHideDuration: 1000,
+                            });
+                          handleClose();
+                        });
+                    });
                 });
-              handleClose();
             })
             .catch(() => {
               enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,

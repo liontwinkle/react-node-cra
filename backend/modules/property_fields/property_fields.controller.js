@@ -21,7 +21,8 @@ exports.index = (req, res) => {
 
 // Creates a new Category in the DB
 exports.create = (req, res) => {
-    createProperty( PropertyFields, req, res )
+  PropertyFields
+    .createAsync(req.body.propertyField)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -29,7 +30,7 @@ exports.create = (req, res) => {
 // Gets a single Category from the DB
 exports.show = (req, res) => {
   PropertyFields
-    .findById(req.params.id)
+    .find({clientId:req.param.clientId, type: req.param.type})
     // .select('id name code url createdAt')
     .execAsync()
     .then(handleEntityNotFound(res, req))

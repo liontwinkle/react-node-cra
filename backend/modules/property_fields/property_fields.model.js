@@ -2,11 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PropertyFieldsSchema = new Schema({
-  clientId: {
-    type: String,
-    default: '',
-  },
-  objectType: String,
+  clientId: String,
+  type: String,
   sections: [{
     key: String,
     label: String,
@@ -29,4 +26,4 @@ PropertyFieldsSchema.virtual('id').get(function () {
   return this._id.toHexString();
 });
 
-module.exports = mongoose.model('Clients', PropertyFieldsSchema);
+module.exports = mongoose.model('PropertyFields', PropertyFieldsSchema);

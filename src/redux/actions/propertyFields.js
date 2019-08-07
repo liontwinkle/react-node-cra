@@ -1,25 +1,25 @@
 import propertyFieldsService from 'services/propertyFields.service';
 import types from '../actionTypes';
 
-export const fetchPropertyFields = (clientId, type) => (dispatch, getState) => {
+export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
   if (getState().propertyFields.isFetchingList) {
     return Promise.reject();
   }
 
   dispatch({
-    type: types.CATEGORIES_GET_REQUEST,
+    type: types.PROPERTYFIELD_GET_REQUEST,
   });
 
   return propertyFieldsService.fetch(clientId, type)
-    .then((categories) => {
+    .then((propertyField) => {
       dispatch({
-        type: types.CATEGORIES_GET_SUCCESS,
-        payload: { categories },
+        type: types.PROPERTYFIELD_GET_SUCCESS,
+        payload: { propertyField },
       });
     })
     .catch((error) => {
       dispatch({
-        type: types.CATEGORIES_GET_FAIL,
+        type: types.PROPERTYFIELD_GET_FAIL,
         payload: { error },
       });
 
@@ -27,40 +27,29 @@ export const fetchPropertyFields = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createPorpertyField = clientData => (dispatch, getState) => {
-  console.log('create???'); // fixme
+export const createPorpertyField = (clientData, type) => (dispatch, getState) => {
   if (getState().propertyFieldsData.isCreating) {
-    console.log('return???'); // fixme
     return;
   }
 
   const { clients } = getState().clientsData;
-  console.log('clients>>>', clients);// fixme
   const client = clients.filter(item => (item.name === clientData.name));
-  console.log('clientData>>>>', client);// fixme
   const propertyFields = {
     clientId: client[0].id,
+    type,
   };
-  //
-  console.log('propertyFields be sent >>>>', propertyFields);// fixme
-
   dispatch({
     type: types.PROPERTYFIELD_CREATE_REQUEST,
   });
-  //
-  console.log('current state>>>', getState().propertyFieldsData);// fixme
   return propertyFieldsService.create(propertyFields)
     .then((data) => {
-      console.log('recvdata>>>>', data);// fixme
       dispatch({
         type: types.PROPERTYFIELD_CREATE_SUCCESS,
         payload: { data },
       });
-
       return data;
     })
     .catch((error) => {
-      console.log('recverror>>>>', error);// fixme
       dispatch({
         type: types.PROPERTYFIELD_CREATE_FAIL,
         payload: { error },
