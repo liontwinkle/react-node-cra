@@ -13,8 +13,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  const { propertyFields } = state;
-
   switch (action.type) {
     case types.PROPERTYFIELD_GET_REQUEST:
       return {
@@ -40,7 +38,6 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.PROPERTYFIELD_CREATE_SUCCESS:
-      propertyFields.push(action.payload.data);
       return {
         ...state,
         isCreating: false,

@@ -1,5 +1,3 @@
-import {respondWith} from "../../utils";
-
 const PropertyFields = require('./property_fields.model');
 
 const {
@@ -7,6 +5,7 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  respondWith,
   createProperty,
 } = require('../../utils');
 
@@ -23,9 +22,13 @@ exports.index = (req, res) => {
 // Creates a new Category in the DB
 exports.create = (req, res) => {
   PropertyFields
-    .createAsync(req.body.propertyField)
-    .then(responseWithResult(res, 201))
-    .catch(handleError(res));
+    .insertMany(req.body.propertyField, function( err, result ){
+      if( err ){
+        handleError(res)
+      }else{
+        res.status(201).json(result);
+      }
+    })
 };
 
 // Gets a single Category from the DB
@@ -55,11 +58,14 @@ exports.update = (req, res) => {
 
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
-  console.log("clientId",req.params.clientId);//fixme
   PropertyFields
     .deleteMany({clientId:req.params.clientId}, function (err, result) {
-      if( result.length > 0 )
-        respondWith(res, 204)
+      if( err ){
+        handleError(res);
+      }
+      else{
+        respondWith(res, 204);
+      }
     })
-    .catch(handleError(res));
+    .then(respondWith(res,204))
 };

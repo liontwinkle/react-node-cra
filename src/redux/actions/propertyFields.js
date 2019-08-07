@@ -27,18 +27,21 @@ export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createPorpertyField = (clientData, type) => (dispatch, getState) => {
+export const createPorpertyField = clientData => (dispatch, getState) => {
   if (getState().propertyFieldsData.isCreating) {
     return;
   }
 
   const { clients } = getState().clientsData;
   const client = clients.filter(item => (item.name === clientData.name));
-  console.log('client>>>', client);// fixme
-  const propertyFields = {
-    clientId: client[0].id,
-    type,
-  };
+  const type = ['virtual', 'native', 'products', 'attribute'];
+  const propertyFields = [];
+  type.forEach((item) => {
+    propertyFields.push({
+      clientId: client[0].id,
+      type: item,
+    });
+  });
   dispatch({
     type: types.PROPERTYFIELD_CREATE_REQUEST,
   });
@@ -97,7 +100,6 @@ export const removePorpertyField = () => (dispatch, getState) => {
 
   const { client } = getState().clientsData;
 
-  console.log('deleting...');// fixme
   dispatch({
     type: types.PROPERTYFIELD_DELETE_REQUEST,
   });
