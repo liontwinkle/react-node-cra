@@ -82,9 +82,7 @@ function NodeMenu(props) {
         },
       }),
     );
-    document.getElementById('ok').removeAttribute('readonly');
-    document.getElementById('ok').focus();
-    handleClose(); // fixme
+    handleClose();
   };
 
   const handleRemove = () => {

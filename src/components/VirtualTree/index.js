@@ -152,10 +152,8 @@ function VirtualSortableTree(props) {
         ],
         title: (
           <input
-            type="text"
-            id="ok"
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
-            readOnly={false}
+            readOnly={!node.editable}
             onDoubleClick={handleDoubleClick(node, path)}
             value={node.title}
             onBlur={handleBlur(node, path)}
