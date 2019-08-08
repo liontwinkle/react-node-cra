@@ -134,6 +134,7 @@ function VirtualSortableTree(props) {
   };
 
   const isSelected = node => (category && category.id) === node.item.id;
+  const editable = (clientType.key === 'virtual');
   return (
     <SortableTree
       treeData={treeData}
@@ -148,7 +149,7 @@ function VirtualSortableTree(props) {
             node={node}
             path={path}
             setTreeData={setTreeData}
-            clientType={clientType.key}
+            editable={editable}
           />,
         ],
         title: (
@@ -156,7 +157,7 @@ function VirtualSortableTree(props) {
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
             readOnly={!node.editable}
             onDoubleClick={
-              (clientType.key === 'virtual')
+              (editable)
                 ? handleDoubleClick(node, path) : null}
             value={node.title}
             onBlur={handleBlur(node, path)}
