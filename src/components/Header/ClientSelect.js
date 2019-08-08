@@ -18,7 +18,7 @@ const types = [
   { key: 'virtual', label: 'Virtual' },
   { key: 'native', label: 'Native' },
   { key: 'products', label: 'Products' },
-  { key: 'attribute', label: 'Attribute' },
+  { key: 'attributes', label: 'Attributes' },
 ];
 
 function ClientSelect(props) {
