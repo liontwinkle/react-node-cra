@@ -143,15 +143,16 @@ function VirtualSortableTree(props) {
       canDrag
       generateNodeProps={({ node, path }) => ({
         className: isSelected(node) ? 'selected' : '',
-        buttons: [
-          <TreeNodeMenu
-            treeData={treeData}
-            node={node}
-            path={path}
-            setTreeData={setTreeData}
-            editable={editable}
-          />,
-        ],
+        buttons: editable
+          ? [
+            <TreeNodeMenu
+              treeData={treeData}
+              node={node}
+              path={path}
+              setTreeData={setTreeData}
+              editable={editable}
+            />,
+          ] : [],
         title: (
           <input
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
