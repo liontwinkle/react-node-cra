@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core';
 
 import { propertyFieldTypes } from 'utils/constants';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { isExist } from 'utils';
 import { updatePorpertyField } from '../../../redux/actions/propertyFields';
 
 const useStyles = makeStyles(theme => ({
@@ -67,26 +68,33 @@ function AddPropertyFields(props) {
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { propertyFields } = propertyField;
-      propertyFields.push({
-        ...propertyFieldData,
-        propertyType: propertyFieldData.propertyType.key,
-        section: propertyFieldData.section && propertyFieldData.section.key,
-      });
-
-      updatePorpertyField(propertyField.id, { propertyFields })
-        .then(() => {
-          enqueueSnackbar('Property field has been added successfully.',
-            {
-              variant: 'success', autoHideDuration: 1000,
-            });
-          handleClose();
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in adding property field.',
-            {
-              variant: 'error', autoHideDuration: 1000,
-            });
+      if (isExist(propertyFields, propertyFieldData.key) === 0) {
+        propertyFields.push({
+          ...propertyFieldData,
+          propertyType: propertyFieldData.propertyType.key,
+          section: propertyFieldData.section && propertyFieldData.section.key,
         });
+
+        updatePorpertyField(propertyField.id, { propertyFields })
+          .then(() => {
+            enqueueSnackbar('Property field has been added successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
+            handleClose();
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in adding property field.',
+              {
+                variant: 'error', autoHideDuration: 1500,
+              });
+          });
+      } else {
+        enqueueSnackbar('The same key is existed.',
+          {
+            variant: 'error', autoHideDuration: 1500,
+          });
+      }
     }
   };
 

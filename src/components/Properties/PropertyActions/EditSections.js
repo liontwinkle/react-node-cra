@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { tableIcons } from 'utils/constants';
 import { updatePorpertyField } from 'redux/actions/propertyFields';
+import { isExist } from '../../../utils';
 
 function EditSections(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -35,25 +36,32 @@ function EditSections(props) {
     setTimeout(() => {
       resolve();
 
-      sections.push({
-        key: newData.key,
-        label: newData.label,
-        order: newData.order,
-      });
-
-      updatePorpertyField(propertyField.id, { sections })
-        .then(() => {
-          enqueueSnackbar('Property field has been added successfully.',
-            {
-              variant: 'success', autoHideDuration: 1000,
-            });
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in adding property field.',
-            {
-              variant: 'error', autoHideDuration: 1000,
-            });
+      if (isExist(sections, newData.key) === 0) {
+        sections.push({
+          key: newData.key,
+          label: newData.label,
+          order: newData.order,
         });
+
+        updatePorpertyField(propertyField.id, { sections })
+          .then(() => {
+            enqueueSnackbar('Property field has been added successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in adding property field.',
+              {
+                variant: 'error', autoHideDuration: 1500,
+              });
+          });
+      } else {
+        enqueueSnackbar('Teh same section is exist.',
+          {
+            variant: 'error', autoHideDuration: 1500,
+          });
+      }
     }, 600);
   });
 

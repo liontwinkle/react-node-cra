@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { propertyTypes, tableIcons } from 'utils/constants';
 import { updatePorpertyField } from 'redux/actions/propertyFields';
+import { isExist } from 'utils';
 
 function EditPropertyFields(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -48,27 +49,33 @@ function EditPropertyFields(props) {
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-
-      propertyFields.push({
-        key: newData.key,
-        label: newData.label,
-        propertyType: newData.propertyType,
-        section: newData.section,
-      });
-
-      updatePorpertyField(propertyField.id, { propertyFields })
-        .then(() => {
-          enqueueSnackbar('Property field has been added successfully.',
-            {
-              variant: 'success', autoHideDuration: 1000,
-            });
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in adding property field.',
-            {
-              variant: 'error', autoHideDuration: 1000,
-            });
+      if (isExist(propertyFields, newData.key) === 0) {
+        propertyFields.push({
+          key: newData.key,
+          label: newData.label,
+          propertyType: newData.propertyType,
+          section: newData.section,
         });
+
+        updatePorpertyField(propertyField.id, { propertyFields })
+          .then(() => {
+            enqueueSnackbar('Property field has been added successfully.',
+              {
+                variant: 'success', autoHideDuration: 1000,
+              });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in adding property field.',
+              {
+                variant: 'error', autoHideDuration: 1500,
+              });
+          });
+      } else {
+        enqueueSnackbar('Error in adding property field.',
+          {
+            variant: 'error', autoHideDuration: 1500,
+          });
+      }
     }, 600);
   });
 
