@@ -133,7 +133,6 @@ function VirtualSortableTree(props) {
   };
 
   const isSelected = node => (category && category.id) === node.item.id;
-
   return (
     <SortableTree
       treeData={treeData}
