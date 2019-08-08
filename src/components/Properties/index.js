@@ -26,6 +26,8 @@ class Properties extends Component {
     properties: this.props.category.properties || {},
     sections: this.props.propertyField.sections || [],
     isUpdating: false,
+    noSectionPropertyFields:
+      this.props.propertyField.propertyFields.filter(item => item.section === null) || [],
     selectKey: '',
     isOpenSelItemModal: false,
     isOpenSelItemEditModal: false,
@@ -50,6 +52,13 @@ class Properties extends Component {
           properties: nextProps.category.properties || {},
         });
       }
+    }
+    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)) {
+      this.setState({
+        sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
+        noSectionPropertyFields:
+          nextProps.propertyField.propertyFields.filter(item => item.section === null) || [],
+      });
     }
 
     if (!isEqual(this.props.propertyField.sections, nextProps.propertyField.sections)) {
@@ -101,7 +110,8 @@ class Properties extends Component {
     const { propertyFields } = this.props.propertyField;
 
     propertyFields.forEach((p) => {
-      if (p.section === section.key) {
+      if ((section && (p.section === section.key))
+        || ((section === null) && (p.section === null))) {
         if (p.propertyType === 'input') {
           res.push(
             <CustomInput
@@ -174,8 +184,8 @@ class Properties extends Component {
       isOpenSelItemModal,
       isOpenSelItemEditModal,
       selectKey,
+      noSectionPropertyFields,
     } = this.state;
-
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
@@ -190,6 +200,13 @@ class Properties extends Component {
                 {this.renderSectionFields(section)}
               </CustomSection>
             ))}
+            {noSectionPropertyFields.length > 0
+            && (
+              <CustomSection title="No Section" key="no_section">
+                {this.renderSectionFields(null)}
+              </CustomSection>
+            )
+            }
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
