@@ -22,6 +22,7 @@ function VirtualSortableTree(props) {
     setTreeData,
     updateCategory,
     setCategory,
+    clientType,
   } = props;
 
   const handleConfirm = (node, path, title = null) => {
@@ -147,13 +148,16 @@ function VirtualSortableTree(props) {
             node={node}
             path={path}
             setTreeData={setTreeData}
+            clientType={clientType.key}
           />,
         ],
         title: (
           <input
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
             readOnly={!node.editable}
-            onDoubleClick={handleDoubleClick(node, path)}
+            onDoubleClick={
+              (clientType.key === 'virtual')
+                ? handleDoubleClick(node, path) : null}
             value={node.title}
             onBlur={handleBlur(node, path)}
             onKeyDown={handleKeyDown(node, path)}
@@ -169,6 +173,7 @@ function VirtualSortableTree(props) {
 VirtualSortableTree.propTypes = {
   categories: PropTypes.array.isRequired,
   category: PropTypes.object,
+  clientType: PropTypes.object.isRequired,
   treeData: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
@@ -182,6 +187,7 @@ VirtualSortableTree.defaultProps = {
 const mapStateToProps = store => ({
   categories: store.categoriesData.categories,
   category: store.categoriesData.category,
+  clientType: store.clientsData.type,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

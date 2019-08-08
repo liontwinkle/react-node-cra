@@ -15,7 +15,7 @@ function Home(props) {
     <div className="app-container">
       <Container>
         <Section minSize="35%" defaultSize={350}>
-          {value === 'virtual' && <VirtualTree />}
+          {(value === 'virtual' || value === 'native') && <VirtualTree />}
         </Section>
 
         <Bar className="resizer" size={8} />
@@ -23,7 +23,7 @@ function Home(props) {
         <Section minSize={600}>
           {category && (
             <Fragment>
-              {value === 'virtual' && <VirtualDetail />}
+              {(value === 'virtual' || value === 'native') && <VirtualDetail />}
             </Fragment>
           )}
         </Section>
