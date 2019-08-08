@@ -1,3 +1,4 @@
+const db = require('mongoose').connection;
 const _ = require('lodash');
 const ValidationError = require('mongoose').Error.ValidationError;
 
@@ -72,6 +73,18 @@ function removeChildren( req, id ){
   );
 }
 
+function createCollection( body ){
+  let fileName = [
+    body.code + "_virtuals",
+    body.code + "_native",
+    body.code + "_products",
+    body.code + "_attributes",
+  ];
+  fileName.forEach(item=>{
+    db.createCollection(item, function () {});
+  });
+}
+
 module.exports = {
   handleError,
   respondWith,
@@ -80,4 +93,5 @@ module.exports = {
   handleEntityNotFound,
   saveUpdates,
   removeEntity,
+  createCollection
 };

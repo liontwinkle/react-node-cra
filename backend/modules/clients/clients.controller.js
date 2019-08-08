@@ -5,7 +5,8 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
-  removeEntity
+  removeEntity,
+  createCollection
 } = require('../../utils');
 
 // Gets a list of Clients
@@ -23,6 +24,7 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
   Clients
     .createAsync(req.body)
+    .then(createCollection(req.body))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
