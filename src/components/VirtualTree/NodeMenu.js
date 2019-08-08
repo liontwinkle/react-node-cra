@@ -25,6 +25,7 @@ function NodeMenu(props) {
     setTreeData,
     createCategory,
     removeCategory,
+    editable,
   } = props;
 
   const handleMenuClick = (event) => {
@@ -128,9 +129,13 @@ function NodeMenu(props) {
           <button className="mg-button transparent" onClick={handleAdd}>
             Add Child
           </button>
-          <button className="mg-button transparent" onClick={handleEdit}>
+          {editable
+          && (
+            <button className="mg-button transparent" onClick={handleEdit}>
             Edit Category
-          </button>
+            </button>
+          )
+          }
           <button className="mg-button transparent" onClick={handleRemove}>
             Delete Category
           </button>
@@ -147,6 +152,7 @@ NodeMenu.propTypes = {
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
