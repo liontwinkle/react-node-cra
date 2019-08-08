@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core';
 
 import { updatePorpertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
+import { isExist } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -51,16 +52,31 @@ function AddSections(props) {
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { sections } = propertyField;
-      sections.push(sectionsData);
+      if (isExist(sections, sectionsData.key) === 0) {
+        sections.push(sectionsData);
 
-      updatePorpertyField(propertyField.id, { sections })
-        .then(() => {
-          enqueueSnackbar('Section has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
-          handleClose();
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in adding section.', { variant: 'error', autoHideDuration: 1000 });
-        });
+        updatePorpertyField(propertyField.id, { sections })
+          .then(() => {
+            enqueueSnackbar('Section has been added successfully.',
+              {
+                variant: 'success',
+                autoHideDuration: 1000,
+              });
+            handleClose();
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in adding section.', {
+              variant: 'error',
+              autoHideDuration: 1500,
+            });
+          });
+      } else {
+        enqueueSnackbar('The same section is exist.',
+          {
+            variant: 'error',
+            autoHideDuration: 1500,
+          });
+      }
     }
   };
 
