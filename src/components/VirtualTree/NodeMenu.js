@@ -14,6 +14,7 @@ import { useSnackbar } from 'notistack';
 import { getNodeKey } from 'utils';
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
+import DeleteConfirmDlg from './DeleteConfirmDlg';
 
 function NodeMenu(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -49,8 +50,11 @@ function NodeMenu(props) {
       parentId: node.item.id,
     })
       .then((category) => {
-        enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
-
+        enqueueSnackbar('New category has been created successfully.',
+          {
+            variant: 'success',
+            autoHideDuration: 1000,
+          });
         setTreeData(
           addNodeUnderParent({
             treeData,
@@ -66,7 +70,11 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
+        enqueueSnackbar('Error in adding category.',
+          {
+            variant: 'error',
+            autoHideDuration: 1000,
+          });
       });
     handleClose();
   };
@@ -86,12 +94,15 @@ function NodeMenu(props) {
     handleClose();
   };
 
-  const handleRemove = () => {
+  const deleteItem = () => {
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
-        enqueueSnackbar('The category has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
-
+        enqueueSnackbar('The category has been deleted successfully.',
+          {
+            variant: 'success',
+            autoHideDuration: 1000,
+          });
         setTreeData(
           removeNodeAtPath({
             treeData,
@@ -101,8 +112,36 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in deleting category.', { variant: 'error', autoHideDuration: 1000 });
+        enqueueSnackbar('Error in deleting category.',
+          {
+            variant: 'error',
+            autoHideDuration: 1000,
+          });
       });
+  };
+  const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
+  const [subCategoryNumber, setSubCategoryNumber] = useState(null);
+  const handleDeleteDlgClose = (type) => {
+    setDeleteDlgOpen(false);
+    if (type === 'yes') {
+      deleteItem();
+    }
+  };
+  const getSubItems = (nodeData) => {
+    let childLength = 0;
+    const { children } = nodeData;
+    if (children) {
+      childLength = children.length;
+      children.forEach((item) => {
+        childLength += getSubItems(item);
+      });
+    }
+    return childLength;
+  };
+  const handleRemove = () => {
+    const childNum = getSubItems(node) + 1;
+    setSubCategoryNumber(childNum);
+    setDeleteDlgOpen(true);
     handleClose();
   };
 
@@ -141,6 +180,13 @@ function NodeMenu(props) {
           </button>
         </div>
       </Popover>
+      {deleteDlgOpen && (
+        <DeleteConfirmDlg
+          open={deleteDlgOpen}
+          subCategoryNumber={subCategoryNumber}
+          handleClose={type => handleDeleteDlgClose(type)}
+        />
+      )}
     </div>
   );
 }
