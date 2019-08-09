@@ -30,7 +30,7 @@ const CustomInput = ({
         <label
           htmlFor={id}
           className={`mg-input-label inline ${labelAlignment}`}
-          style={{ width: inlineWidth }}
+          style={{ minWidth: inlineWidth }}
         >
           {label}
         </label>
@@ -83,7 +83,7 @@ CustomInput.defaultProps = {
   placeholder: '',
   min: undefined,
   inline: false,
-  inlineWidth: 88,
+  inlineWidth: 150,
   hint: '',
   value: '',
 };
