@@ -90,9 +90,11 @@ function AddPropertyFields(props) {
               });
           });
       } else {
-        enqueueSnackbar('The same key is existed.',
+        const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
+         Please update property key name.`;
+        enqueueSnackbar(errMsg,
           {
-            variant: 'error', autoHideDuration: 1500,
+            variant: 'error', autoHideDuration: 3000,
           });
       }
     }

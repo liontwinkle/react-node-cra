@@ -56,10 +56,11 @@ function EditPropertyFields(props) {
           });
         } else {
           updateFlag = false;
-          enqueueSnackbar('Item is already exist.',
+          const errMsg = `Error: Another item is using the key (${newData.key})
+           you specified.Please update item key name.`;
+          enqueueSnackbar(errMsg,
             {
-              variant: 'error',
-              autoHideDuration: 1000,
+              variant: 'error', autoHideDuration: 3000,
             });
         }
       } else {

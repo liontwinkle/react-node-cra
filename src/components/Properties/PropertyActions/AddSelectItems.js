@@ -60,7 +60,12 @@ function AddSelectItems(props) {
           selectItems.items.push(sectionsData);
         } else {
           updateFlag = false;
-          enqueueSnackbar('Item is already exist.', { variant: 'error', autoHideDuration: 1000 });
+          const errMsg = `Error: Another item is using the key (${sectionsData.key})
+           you specified.Please update item key name.`;
+          enqueueSnackbar(errMsg,
+            {
+              variant: 'error', autoHideDuration: 3000,
+            });
         }
       } else {
         selectItems.items = sectionsData;

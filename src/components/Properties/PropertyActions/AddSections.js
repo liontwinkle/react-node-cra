@@ -71,10 +71,11 @@ function AddSections(props) {
             });
           });
       } else {
-        enqueueSnackbar('The same section is exist.',
+        const errMsg = `Error: Another section is using the key (${sectionsData.key}) you specified.
+         Please update section key name.`;
+        enqueueSnackbar(errMsg,
           {
-            variant: 'error',
-            autoHideDuration: 1500,
+            variant: 'error', autoHideDuration: 3000,
           });
       }
     }
