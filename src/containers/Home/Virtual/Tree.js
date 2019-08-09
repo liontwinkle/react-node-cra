@@ -32,9 +32,7 @@ function Tree(props) {
       const { length } = categories;
       const data = categories;
       let mergeData = [];
-      console.log('equal?', isEqual(categories, oldCategory));// fixme
       if ((oldCategory.length < length) || (!isEqual(categories, oldCategory))) {
-        console.log('change');// fixme
         mergeData = _.merge(newTreeData, treeData);
         setTreeData(mergeData);
         setOldCategoryLength(data);
