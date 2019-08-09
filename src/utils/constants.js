@@ -57,7 +57,7 @@ export const ruleKeyTypes = [
 export const ruleTypes = getObjectFromArray(ruleKeyTypes);
 
 export const propertyFieldTypes = [
-  { key: 'input', label: 'Input' },
+  { key: 'string ', label: 'String' },
   { key: 'select', label: 'Select' },
   { key: 'toggle', label: 'Toggle' },
 ];

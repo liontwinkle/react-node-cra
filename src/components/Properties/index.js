@@ -112,13 +112,14 @@ class Properties extends Component {
     propertyFields.forEach((p) => {
       if ((section && (p.section === section.key))
         || ((section === null) && (p.section === null))) {
-        if (p.propertyType === 'input') {
+        if (p.propertyType === 'string') {
           res.push(
             <CustomInput
               label={p.label}
               inline
               value={properties[p.key]}
               onChange={this.changeInput(p.key)}
+              type="edit"
               key={p.key}
             />,
           );

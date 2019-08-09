@@ -38,7 +38,7 @@ function AddPropertyFields(props) {
   const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
     label: '',
-    propertyType: { key: 'input', label: 'Input' },
+    propertyType: { key: 'string', label: 'String' },
     section: null,
   });
   const handleChange = field => (e) => {
