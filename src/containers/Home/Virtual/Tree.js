@@ -12,6 +12,8 @@ import { getCategoryTree } from 'utils';
 import { createCategory } from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
+import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 function Tree(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -23,12 +25,22 @@ function Tree(props) {
   } = props;
 
   const [treeData, setTreeData] = useState([]);
-
+  const [oldCategory, setOldCategoryLength] = useState([]);
   useEffect(() => {
     if (!isFetchingList) {
-      setTreeData(getCategoryTree(categories));
+      const newTreeData = getCategoryTree(categories);
+      const { length } = categories;
+      const data = categories;
+      let mergeData = [];
+      console.log('equal?', isEqual(categories, oldCategory));// fixme
+      if ((oldCategory.length < length) || (!isEqual(categories, oldCategory))) {
+        console.log('change');// fixme
+        mergeData = _.merge(newTreeData, treeData);
+        setTreeData(mergeData);
+        setOldCategoryLength(data);
+      }
     }
-  }, [categories, isFetchingList]);
+  }, [categories, isFetchingList, oldCategory, treeData]);
 
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
