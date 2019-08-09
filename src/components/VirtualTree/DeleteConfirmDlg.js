@@ -35,7 +35,7 @@ function DeleteConfirmDlg(props) {
 
       <DialogContent className={classes.dialogContent}>
         <span>
-          { `This will also delete ${subCategoryNumber} subcategories. `}
+          { (subCategoryNumber > 0) && `This will also delete ${subCategoryNumber} subcategories. `}
         </span>
       </DialogContent>
 

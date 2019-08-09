@@ -139,7 +139,7 @@ function NodeMenu(props) {
     return childLength;
   };
   const handleRemove = () => {
-    const childNum = getSubItems(node) + 1;
+    const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);
     setDeleteDlgOpen(true);
     handleClose();
