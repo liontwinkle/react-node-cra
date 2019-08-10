@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,49 +8,30 @@ import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import { getCategoryTree } from 'utils';
-import { createCategory } from 'redux/actions/categories';
+import {
+  createCategory,
+  updateTreeData,
+} from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
-import isEqual from 'lodash/isEqual';
-import _ from 'lodash';
 
 function Tree(props) {
   const { enqueueSnackbar } = useSnackbar();
-
   const {
-    isFetchingList,
     categories,
     createCategory,
+    updateTreeData,
+    treeData,
   } = props;
 
-  const [treeData, setTreeData] = useState([]);
-  const [oldCategory, setOldCategoryLength] = useState([]);
-  useEffect(() => {
-    if (!isFetchingList) {
-      const newTreeData = getCategoryTree(categories);
-      const { length } = categories;
-      const data = categories;
-      let mergeData = [];
-      if ((oldCategory.length < length) || (!isEqual(categories, oldCategory))) {
-        mergeData = _.merge(newTreeData, treeData);
-        setTreeData(mergeData);
-        setOldCategoryLength(data);
-      }
-    }
-  }, [categories, isFetchingList, oldCategory, treeData]);
+  const setTreeData = (data) => {
+    updateTreeData(data);
+  };
 
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
-      .then((category) => {
+      .then(() => {
         enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
-        setTreeData(
-          treeData.concat({
-            title: category.name,
-            editable: false,
-            item: category,
-          }),
-        );
       })
       .catch(() => {
         enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
@@ -91,18 +72,20 @@ function Tree(props) {
 }
 
 Tree.propTypes = {
-  isFetchingList: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
+  treeData: PropTypes.array.isRequired,
   createCategory: PropTypes.func.isRequired,
+  updateTreeData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  isFetchingList: store.categoriesData.isFetchingList,
   categories: store.categoriesData.categories,
+  treeData: store.categoriesData.trees,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
+  updateTreeData,
 }, dispatch);
 
 export default connect(

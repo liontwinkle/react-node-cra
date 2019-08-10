@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import types from '../actionTypes';
+import { getCategoryTree } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -9,6 +10,7 @@ const INITIAL_STATE = {
   isDeleting: false,
 
   categories: [],
+  trees: [],
   category: null,
   errors: '',
 };
@@ -27,6 +29,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: action.payload.categories,
+        trees: getCategoryTree(action.payload.categories),
       };
     case types.CATEGORIES_GET_FAIL:
       return {
@@ -42,10 +45,12 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CATEGORY_CREATE_SUCCESS:
       categories.push(action.payload.data);
+      const treeData = _.merge(getCategoryTree(categories), state.trees);
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
+        trees: treeData,
         category: action.payload.data,
       };
     case types.CATEGORY_CREATE_FAIL:
@@ -67,10 +72,12 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         categories.push(action.payload.data);
       }
+      const newTrees = _.merge(getCategoryTree(categories), state.trees);
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
+        trees: newTrees,
         category: action.payload.data,
       };
     case types.CATEGORY_UPDATE_FAIL:
@@ -108,7 +115,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         category: action.payload.category,
       };
-
+    case types.TREE_SET:
+      return {
+        ...state,
+        trees: action.payload,
+      };
     default:
       return state;
   }

@@ -123,3 +123,10 @@ export const setCategory = category => (dispatch) => {
     payload: { category },
   });
 };
+
+export const updateTreeData = treeData => (dispatch) => {
+  dispatch({
+    type: types.TREE_SET,
+    payload: treeData,
+  });
+};

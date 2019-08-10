@@ -47,6 +47,8 @@ export default {
 
   // Set category
   CATEGORY_SET: 'CATEGORY_SET',
+  // Set category
+  TREE_SET: 'TREE_SET',
 
   // Create Propertyfields
   PROPERTYFIELD_CREATE_REQUEST: 'PROPERTYFIELD_CREATE_REQUEST',
