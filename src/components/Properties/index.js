@@ -7,9 +7,11 @@ import isEqual from 'lodash/isEqual';
 import { sortByOrder } from 'utils';
 import {
   CustomInput,
+  CustomText,
   CustomSection,
   CustomSelectWithLabel,
   CustomToggle,
+  CustomArray,
 } from 'components/elements';
 
 import './style.scss';
@@ -47,6 +49,7 @@ class Properties extends Component {
         });
 
         this.setState({ properties });
+        console.log('properties', properties);
       } else {
         this.setState({
           properties: nextProps.category.properties || {},
@@ -69,6 +72,16 @@ class Properties extends Component {
   }
 
   changeInput = field => (e) => {
+    e.persist();
+    this.setState(prevState => ({
+      properties: {
+        ...prevState.properties,
+        [field]: e.target.value,
+      },
+    }));
+  };
+
+  changeArrayInput = field => (e) => {
     e.persist();
     this.setState(prevState => ({
       properties: {
@@ -160,7 +173,6 @@ class Properties extends Component {
                 </IconButton>
               </Tooltip>
             </div>,
-
           );
         } else if (p.propertyType === 'toggle') {
           res.push(
@@ -168,6 +180,43 @@ class Properties extends Component {
               label={p.label}
               value={properties[p.key]}
               onToggle={this.toggleSwitch(p.key)}
+              key={p.key}
+            />,
+          );
+        } else if (p.propertyType === 'text') {
+          res.push(
+            <CustomText
+              label={p.label}
+              inline
+              value={properties[p.key]}
+              onChange={this.changeInput(p.key)}
+              key={p.key}
+            />,
+          );
+        } else if (p.propertyType === 'array') {
+          let value = '';
+          console.log('sss', properties[p.key]);// fixme
+          if (properties[p.key]) {
+            if (Array.isArray(properties[p.key])) {
+              properties[p.key].forEach((item, key) => {
+                if (parseInt(item, 10)) value += item;
+                else value += `"${item}"`;
+
+                if (key < (properties[p.key].length - 1)) {
+                  value += ',';
+                }
+              });
+            } else {
+              value = properties[p.key];
+            }
+          }
+          console.log('vvv', value);// fixme
+          res.push(
+            <CustomArray
+              label={p.label}
+              inline
+              value={value}
+              onChange={this.changeArrayInput(p.key)}
               key={p.key}
             />,
           );

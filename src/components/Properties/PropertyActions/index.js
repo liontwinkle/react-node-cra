@@ -41,6 +41,7 @@ function PropertyActions(props) {
 
   const setDefault = () => {
     const tempProperties = properties;
+    tempProperties.chkFlag = true;
     fields.forEach((item) => {
       if (!tempProperties[item.key]) {
         switch (item.propertyType) {
@@ -53,23 +54,87 @@ function PropertyActions(props) {
           case 'text':
             tempProperties[item.key] = 'Text';
             break;
+          case 'array':
+            tempProperties[item.key] = [
+              1, 2, 3, 4,
+            ];
+            break;
           default:
             break;
         }
+      } else if (item.propertyType === 'array') {
+        let string = '';
+        let chkFlag = true;
+        if (Array.isArray(tempProperties[item.key])) {
+          string = JSON.stringify(tempProperties[item.key]);
+        } else {
+          string = tempProperties[item.key];
+        }
+
+        const stringData = string.match((/"\w+"/g));
+        const arrayData = string.split(',');
+        console.log(arrayData);// fixme
+        const numberData = string.match((/[0-9]\w+/g));
+        console.log(stringData);
+        if (arrayData
+          && stringData
+          && (arrayData.length !== stringData.length)) {
+          chkFlag = false;
+        }
+        if (stringData) {
+          if (stringData.length > 1) {
+            const tempData = [];
+            stringData.forEach((item) => {
+              tempData.push(item.slice(1, item.length - 1));
+              if (arrayData.length !== stringData.length) {
+                chkFlag = false;
+              }
+            });
+            tempProperties[item.key] = tempData;
+          } else if (stringData.length === 1) {
+            const tempData = [stringData[0].slice(1, stringData[0].length - 1)];
+            tempProperties[item.key] = tempData;
+          }
+        } else if (arrayData) {
+          const temp = [];
+          arrayData[0] = arrayData[0].replace('[', '');
+          arrayData.forEach((item) => {
+            if (parseInt(item, 10)) {
+              temp.push(parseInt(item, 10));
+            } else {
+              chkFlag = false;
+            }
+          });
+          tempProperties[item.key] = temp;
+          console.log(numberData);
+          chkFlag = true;
+        } else {
+          chkFlag = false;
+        }
+        tempProperties.chkFlag = chkFlag;
       }
     });
     return tempProperties;
   };
+
   const saveProperties = () => {
     const saveData = setDefault();
-    if (!isUpdating) {
-      updateCategory(category.id, { properties: saveData })
-        .then(() => {
-          enqueueSnackbar('Properties has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
-        })
-        .catch(() => {
-          enqueueSnackbar('Error in updating properties.', { variant: 'error', autoHideDuration: 1000 });
-        });
+    if (saveData.chkFlag) {
+      if (!isUpdating) {
+        updateCategory(category.id, { properties: saveData })
+          .then(() => {
+            enqueueSnackbar('Properties has been updated successfully.',
+              {
+                variant: 'success',
+                autoHideDuration: 1000,
+              });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error in updating properties.', { variant: 'error', autoHideDuration: 1000 });
+          });
+      }
+    } else {
+      enqueueSnackbar('Input format is wrong.', { variant: 'error', autoHideDuration: 1000 });
     }
   };
 
