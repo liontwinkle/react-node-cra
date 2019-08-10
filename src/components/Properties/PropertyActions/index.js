@@ -73,9 +73,6 @@ function PropertyActions(props) {
 
         const stringData = string.match((/"\w+"/g));
         const arrayData = string.split(',');
-        console.log(arrayData);// fixme
-        const numberData = string.match((/[0-9]\w+/g));
-        console.log(stringData);
         if (arrayData
           && stringData
           && (arrayData.length !== stringData.length)) {
@@ -106,7 +103,6 @@ function PropertyActions(props) {
             }
           });
           tempProperties[item.key] = temp;
-          console.log(numberData);
           chkFlag = true;
         } else {
           chkFlag = false;

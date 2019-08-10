@@ -49,7 +49,6 @@ class Properties extends Component {
         });
 
         this.setState({ properties });
-        console.log('properties', properties);
       } else {
         this.setState({
           properties: nextProps.category.properties || {},
@@ -195,7 +194,6 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'array') {
           let value = '';
-          console.log('sss', properties[p.key]);// fixme
           if (properties[p.key]) {
             if (Array.isArray(properties[p.key])) {
               properties[p.key].forEach((item, key) => {
@@ -210,7 +208,6 @@ class Properties extends Component {
               value = properties[p.key];
             }
           }
-          console.log('vvv', value);// fixme
           res.push(
             <CustomArray
               label={p.label}

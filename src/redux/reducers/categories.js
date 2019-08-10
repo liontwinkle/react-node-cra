@@ -72,7 +72,8 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         categories.push(action.payload.data);
       }
-      const newTrees = _.merge(getCategoryTree(categories), state.trees);
+      const newTrees = _.merge(state.trees, getCategoryTree(categories));
+      console.log('receive', action.payload.data);// fixme
       return {
         ...state,
         isUpdating: false,
