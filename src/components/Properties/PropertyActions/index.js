@@ -23,6 +23,7 @@ function PropertyActions(props) {
     isUpdating,
     category,
     updateCategory,
+    fields,
   } = props;
 
   const [open, setOpen] = useState({
@@ -38,9 +39,31 @@ function PropertyActions(props) {
     });
   };
 
+  const setDefault = () => {
+    const tempProperties = properties;
+    fields.forEach((item) => {
+      if (!tempProperties[item.key]) {
+        switch (item.propertyType) {
+          case 'string':
+            tempProperties[item.key] = 'Name';
+            break;
+          case 'toggle':
+            tempProperties[item.key] = false;
+            break;
+          case 'text':
+            tempProperties[item.key] = 'Text';
+            break;
+          default:
+            break;
+        }
+      }
+    });
+    return tempProperties;
+  };
   const saveProperties = () => {
+    const saveData = setDefault();
     if (!isUpdating) {
-      updateCategory(category.id, { properties })
+      updateCategory(category.id, { properties: saveData })
         .then(() => {
           enqueueSnackbar('Properties has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
@@ -127,6 +150,7 @@ function PropertyActions(props) {
 
 PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
+  fields: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,

@@ -119,7 +119,7 @@ class Properties extends Component {
               inline
               value={properties[p.key]}
               onChange={this.changeInput(p.key)}
-              type="edit"
+              type="text"
               key={p.key}
             />,
           );
@@ -187,6 +187,9 @@ class Properties extends Component {
       selectKey,
       noSectionPropertyFields,
     } = this.state;
+
+    const { propertyFields } = this.props.propertyField;
+
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
@@ -229,7 +232,7 @@ class Properties extends Component {
           )}
         </div>
 
-        <PropertyActions properties={properties} />
+        <PropertyActions properties={properties} fields={propertyFields} />
       </div>
     );
   }
