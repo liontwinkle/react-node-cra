@@ -18,7 +18,6 @@ import './style.scss';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import { defaultValue } from 'utils/constants';
 import { IconButton } from '../elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
@@ -127,7 +126,7 @@ class Properties extends Component {
         || ((section === null) && (p.section === null))) {
         if (p.propertyType === 'string') {
           if (!properties[p.key]) {
-            properties[p.key] = defaultValue.string;
+            properties[p.key] = p.default;
           }
           res.push(
             <CustomInput
@@ -179,7 +178,7 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'toggle') {
           if (!properties[p.key]) {
-            properties[p.key] = defaultValue.toggle;
+            properties[p.key] = p.default;
           }
           res.push(
             <CustomToggle
@@ -191,7 +190,7 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'text') {
           if (!properties[p.key]) {
-            properties[p.key] = defaultValue.text;
+            properties[p.key] = p.default;
           }
           res.push(
             <CustomText
@@ -205,7 +204,7 @@ class Properties extends Component {
         } else if (p.propertyType === 'array') {
           let value = '';
           if (!properties[p.key]) {
-            properties[p.key] = defaultValue.array;
+            properties[p.key] = p.default;
           }
           if (properties[p.key]) {
             if (Array.isArray(properties[p.key])) {

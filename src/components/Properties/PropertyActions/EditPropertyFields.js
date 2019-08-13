@@ -32,6 +32,7 @@ function EditPropertyFields(props) {
     columns: [
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
+      { title: 'Default', field: 'default' },
       {
         title: 'Type',
         field: 'propertyType',
@@ -53,6 +54,7 @@ function EditPropertyFields(props) {
         propertyFields.push({
           key: newData.key,
           label: newData.label,
+          default: newData.default,
           propertyType: newData.propertyType,
           section: newData.section,
         });
@@ -92,6 +94,7 @@ function EditPropertyFields(props) {
         propertyFields.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
+          default: newData.default,
           propertyType: newData.propertyType,
           section: newData.section,
           _id: newData._id,

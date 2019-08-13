@@ -38,7 +38,7 @@ function AddPropertyFields(props) {
   const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
     label: '',
-    default: null,
+    default: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
   });
@@ -133,7 +133,7 @@ function AddPropertyFields(props) {
           className="mb-3"
           label="Default"
           inline
-          value={propertyFieldData.label}
+          value={propertyFieldData.default}
           onChange={handleChange('default')}
         />
         <CustomSelectWithLabel

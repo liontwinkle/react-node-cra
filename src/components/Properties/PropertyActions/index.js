@@ -10,7 +10,6 @@ import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
-import { defaultValue } from 'utils/constants';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -49,16 +48,16 @@ function PropertyActions(props) {
       if (!tempProperties[item.key]) {
         switch (item.propertyType) {
           case 'string':
-            tempProperties[item.key] = defaultValue.string;
+            tempProperties[item.key] = item.default;
             break;
           case 'toggle':
-            tempProperties[item.key] = defaultValue.toggle;
+            tempProperties[item.key] = item.default;
             break;
           case 'text':
-            tempProperties[item.key] = defaultValue.text;
+            tempProperties[item.key] = item.default;
             break;
           case 'array':
-            tempProperties[item.key] = defaultValue.array;
+            tempProperties[item.key] = item.default;
             break;
           default:
             break;
@@ -199,17 +198,6 @@ function PropertyActions(props) {
         </IconButton>
       </Tooltip>
 
-      <div className="divider" />
-
-      <Tooltip
-        title="Edit Default Fields Value"
-        position="left"
-        arrow
-      >
-        <IconButton disabled={isUpdating} onClick={handleToggle('default')}>
-          <EditIcon style={{ fontSize: 20 }} />
-        </IconButton>
-      </Tooltip>
 
       {open.add_section && (
         <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
