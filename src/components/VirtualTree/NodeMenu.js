@@ -73,7 +73,7 @@ function NodeMenu(props) {
         enqueueSnackbar('Error in adding category.',
           {
             variant: 'error',
-            autoHideDuration: 1000,
+            autoHideDuration: 4000,
           });
       });
     handleClose();
@@ -115,7 +115,7 @@ function NodeMenu(props) {
         enqueueSnackbar('Error in deleting category.',
           {
             variant: 'error',
-            autoHideDuration: 1000,
+            autoHideDuration: 4000,
           });
       });
   };

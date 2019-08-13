@@ -66,14 +66,16 @@ function ClientForm(props) {
             .catch(() => {
               enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
                 {
-                  variant: 'error', autoHideDuration: 1000,
+                  variant: 'error',
+                  autoHideDuration: 4000,
                 });
             });
         })
         .catch(() => {
           enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
             {
-              variant: 'error', autoHideDuration: 1000,
+              variant: 'error',
+              autoHideDuration: 4000,
             });
         });
     }

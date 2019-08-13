@@ -24,6 +24,7 @@ const types = [
 function ClientSelect(props) {
   const { enqueueSnackbar } = useSnackbar();
 
+  const defaultType = { key: 'virtual', label: 'Virtual' };
   const {
     clients,
     client,
@@ -38,7 +39,11 @@ function ClientSelect(props) {
   useEffect(() => {
     fetchClients()
       .catch(() => {
-        enqueueSnackbar('Error in fetching clients.', { variant: 'error', autoHideDuration: 1000 });
+        enqueueSnackbar('Error in fetching clients.',
+          {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
       });
   }, [fetchClients, enqueueSnackbar]);
 
@@ -47,17 +52,22 @@ function ClientSelect(props) {
     label: c.name,
   }));
 
+  const actionChangeType = (type, client) => {
+    setClientType(type);
+    fetchCategories(client.id, type.key);
+    fetchPropertyField(client.id, type.key);
+  };
+
+  const handleChangeType = (type) => {
+    actionChangeType(type, client);
+  };
+
   const handleChangeClient = (item) => {
     const newClient = _find(clients, { id: item.key });
     if (newClient) {
       setClient(newClient);
+      actionChangeType(defaultType, newClient);
     }
-  };
-
-  const handleChangeType = (type) => {
-    setClientType(type);
-    fetchCategories(client.id, type.key);
-    fetchPropertyField(client.id, type.key);
   };
 
   const current = client ? { key: client.id, label: client.name } : null;

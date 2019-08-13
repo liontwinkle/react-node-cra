@@ -67,7 +67,8 @@ function EditPropertyFields(props) {
           .catch(() => {
             enqueueSnackbar('Error in adding property field.',
               {
-                variant: 'error', autoHideDuration: 1500,
+                variant: 'error',
+                autoHideDuration: 4000,
               });
           });
       } else {
@@ -75,7 +76,8 @@ function EditPropertyFields(props) {
          Please update property key name.`;
         enqueueSnackbar(errMsg,
           {
-            variant: 'error', autoHideDuration: 3000,
+            variant: 'error',
+            autoHideDuration: 4000,
           });
       }
     }, 600);
@@ -103,7 +105,11 @@ function EditPropertyFields(props) {
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in updating property field.',
+              {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
           });
       }
     }, 600);
@@ -127,7 +133,8 @@ function EditPropertyFields(props) {
           .catch(() => {
             enqueueSnackbar('Error in deleting property field.',
               {
-                variant: 'error', autoHideDuration: 1000,
+                variant: 'error',
+                autoHideDuration: 4000,
               });
           });
       }

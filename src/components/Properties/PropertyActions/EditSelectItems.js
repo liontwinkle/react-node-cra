@@ -60,7 +60,8 @@ function EditPropertyFields(props) {
            you specified.Please update item key name.`;
           enqueueSnackbar(errMsg,
             {
-              variant: 'error', autoHideDuration: 3000,
+              variant: 'error',
+              autoHideDuration: 4000,
             });
         }
       } else {
@@ -76,7 +77,7 @@ function EditPropertyFields(props) {
             enqueueSnackbar('Item has been added successfully.',
               {
                 variant: 'success',
-                autoHideDuration: 1000,
+                autoHideDuration: 1500,
               });
             handleClose();
           })
@@ -84,7 +85,7 @@ function EditPropertyFields(props) {
             enqueueSnackbar('Error in adding Item.',
               {
                 variant: 'error',
-                autoHideDuration: 1000,
+                autoHideDuration: 4000,
               });
           });
       }
@@ -115,7 +116,7 @@ function EditPropertyFields(props) {
             enqueueSnackbar('Error in updating property field.',
               {
                 variant: 'error',
-                autoHideDuration: 1000,
+                autoHideDuration: 4000,
               });
           });
       }
@@ -137,14 +138,14 @@ function EditPropertyFields(props) {
                 enqueueSnackbar('Selected item has been deleted successfully.',
                   {
                     variant: 'success',
-                    autoHideDuration: 1000,
+                    autoHideDuration: 1500,
                   });
               })
               .catch(() => {
                 enqueueSnackbar('Error in deleting Property.',
                   {
                     variant: 'error',
-                    autoHideDuration: 1000,
+                    autoHideDuration: 4000,
                   });
               });
           })
@@ -152,7 +153,7 @@ function EditPropertyFields(props) {
             enqueueSnackbar('Error in deleting property field.',
               {
                 variant: 'error',
-                autoHideDuration: 1000,
+                autoHideDuration: 4000,
               });
           });
       }

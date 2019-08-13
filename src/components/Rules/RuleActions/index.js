@@ -38,7 +38,11 @@ function RuleActions(props) {
           enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating rules.', { variant: 'error', autoHideDuration: 1000 });
+          enqueueSnackbar('Error in updating rules.',
+            {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
         });
     }
   };

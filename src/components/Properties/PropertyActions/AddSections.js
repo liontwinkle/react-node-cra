@@ -67,7 +67,7 @@ function AddSections(props) {
           .catch(() => {
             enqueueSnackbar('Error in adding section.', {
               variant: 'error',
-              autoHideDuration: 1500,
+              autoHideDuration: 4000,
             });
           });
       } else {
@@ -75,7 +75,8 @@ function AddSections(props) {
          Please update section key name.`;
         enqueueSnackbar(errMsg,
           {
-            variant: 'error', autoHideDuration: 3000,
+            variant: 'error',
+            autoHideDuration: 4000,
           });
       }
     }

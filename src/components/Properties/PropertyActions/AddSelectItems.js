@@ -64,7 +64,8 @@ function AddSelectItems(props) {
            you specified.Please update item key name.`;
           enqueueSnackbar(errMsg,
             {
-              variant: 'error', autoHideDuration: 3000,
+              variant: 'error',
+              autoHideDuration: 4000,
             });
         }
       } else {
@@ -78,7 +79,11 @@ function AddSelectItems(props) {
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in adding Item.',
+              {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
           });
       }
     }

@@ -86,3 +86,10 @@ export const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <RemoveIcon {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumnIcon {...props} ref={ref} />),
 };
+
+export const defaultValue = {
+  string: 'Name',
+  toggle: false,
+  text: 'Some description',
+  array: [1, 2, 3, 4],
+};

@@ -38,6 +38,7 @@ function AddPropertyFields(props) {
   const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
     label: '',
+    default: null,
     propertyType: { key: 'string', label: 'String' },
     section: null,
   });
@@ -79,14 +80,16 @@ function AddPropertyFields(props) {
           .then(() => {
             enqueueSnackbar('Property field has been added successfully.',
               {
-                variant: 'success', autoHideDuration: 1000,
+                variant: 'success',
+                autoHideDuration: 1000,
               });
             handleClose();
           })
           .catch(() => {
             enqueueSnackbar('Error in adding property field.',
               {
-                variant: 'error', autoHideDuration: 1500,
+                variant: 'error',
+                autoHideDuration: 4000,
               });
           });
       } else {
@@ -94,7 +97,8 @@ function AddPropertyFields(props) {
          Please update property key name.`;
         enqueueSnackbar(errMsg,
           {
-            variant: 'error', autoHideDuration: 3000,
+            variant: 'error',
+            autoHideDuration: 4000,
           });
       }
     }
@@ -124,6 +128,13 @@ function AddPropertyFields(props) {
           inline
           value={propertyFieldData.label}
           onChange={handleChange('label')}
+        />
+        <CustomInput
+          className="mb-3"
+          label="Default"
+          inline
+          value={propertyFieldData.label}
+          onChange={handleChange('default')}
         />
         <CustomSelectWithLabel
           className="mb-3"

@@ -53,11 +53,19 @@ function ClientRemove(props) {
               handleOpen();
             })
             .catch(() => {
-              enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
+              enqueueSnackbar('Error in deleting client.',
+                {
+                  variant: 'error',
+                  autoHideDuration: 4000,
+                });
             });
         })
         .catch(() => {
-          enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
+          enqueueSnackbar('Error in deleting client.',
+            {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
         });
     }
   };

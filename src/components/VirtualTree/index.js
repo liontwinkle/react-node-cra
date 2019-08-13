@@ -62,7 +62,11 @@ function VirtualSortableTree(props) {
             handleConfirm(node, path);
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in adding category.',
+              {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
 
             handleConfirm(node, path, category.name);
           });
@@ -128,7 +132,11 @@ function VirtualSortableTree(props) {
         handleConfirm(node, path);
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
+        enqueueSnackbar('Error in adding category.',
+          {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         handleConfirm(node, path, category.name);
       });
   };

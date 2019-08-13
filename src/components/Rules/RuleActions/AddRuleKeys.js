@@ -66,11 +66,19 @@ function AddRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
+          enqueueSnackbar('Rule key has been added successfully.',
+            {
+              variant: 'success',
+              autoHideDuration: 1500,
+            });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule key.', { variant: 'error', autoHideDuration: 1000 });
+          enqueueSnackbar('Error in adding rule key.',
+            {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
         });
     }
   };

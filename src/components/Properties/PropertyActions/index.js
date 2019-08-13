@@ -10,10 +10,12 @@ import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
+import { defaultValue } from 'utils/constants';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
+
 
 function PropertyActions(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -31,6 +33,7 @@ function PropertyActions(props) {
     edit: false,
     add_section: false,
     edit_section: false,
+    default: false,
   });
   const handleToggle = field => () => {
     setOpen({
@@ -46,18 +49,16 @@ function PropertyActions(props) {
       if (!tempProperties[item.key]) {
         switch (item.propertyType) {
           case 'string':
-            tempProperties[item.key] = 'Name';
+            tempProperties[item.key] = defaultValue.string;
             break;
           case 'toggle':
-            tempProperties[item.key] = false;
+            tempProperties[item.key] = defaultValue.toggle;
             break;
           case 'text':
-            tempProperties[item.key] = 'Text';
+            tempProperties[item.key] = defaultValue.text;
             break;
           case 'array':
-            tempProperties[item.key] = [
-              1, 2, 3, 4,
-            ];
+            tempProperties[item.key] = defaultValue.array;
             break;
           default:
             break;
@@ -122,15 +123,23 @@ function PropertyActions(props) {
             enqueueSnackbar('Properties has been updated successfully.',
               {
                 variant: 'success',
-                autoHideDuration: 1000,
+                autoHideDuration: 1500,
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating properties.', { variant: 'error', autoHideDuration: 1000 });
+            enqueueSnackbar('Error in updating properties.',
+              {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
           });
       }
     } else {
-      enqueueSnackbar('Input format is wrong.', { variant: 'error', autoHideDuration: 1000 });
+      enqueueSnackbar('Input format is wrong.',
+        {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
     }
   };
 
@@ -187,6 +196,18 @@ function PropertyActions(props) {
       >
         <IconButton disabled={isUpdating} onClick={saveProperties}>
           <SaveIcon style={{ fontSize: 20 }} />
+        </IconButton>
+      </Tooltip>
+
+      <div className="divider" />
+
+      <Tooltip
+        title="Edit Default Fields Value"
+        position="left"
+        arrow
+      >
+        <IconButton disabled={isUpdating} onClick={handleToggle('default')}>
+          <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
 

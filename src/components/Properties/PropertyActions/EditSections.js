@@ -53,7 +53,8 @@ function EditSections(props) {
           .catch(() => {
             enqueueSnackbar('Error in adding property field.',
               {
-                variant: 'error', autoHideDuration: 1500,
+                variant: 'error',
+                autoHideDuration: 4000,
               });
           });
       } else {
@@ -61,7 +62,8 @@ function EditSections(props) {
          Please update section key name.`;
         enqueueSnackbar(errMsg,
           {
-            variant: 'error', autoHideDuration: 3000,
+            variant: 'error',
+            autoHideDuration: 4000,
           });
       }
     }, 600);
@@ -92,7 +94,7 @@ function EditSections(props) {
             enqueueSnackbar('Error in updating property field.',
               {
                 variant: 'error',
-                autoHideDuration: 1000,
+                autoHideDuration: 4000,
               });
           });
       }
@@ -119,7 +121,7 @@ function EditSections(props) {
             enqueueSnackbar('Error in deleting property field.',
               {
                 variant: 'error',
-                autoHideDuration: 1000,
+                autoHideDuration: 4000,
               });
           });
       }

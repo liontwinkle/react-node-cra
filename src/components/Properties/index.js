@@ -18,6 +18,7 @@ import './style.scss';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import { defaultValue } from 'utils/constants';
 import { IconButton } from '../elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
@@ -125,6 +126,9 @@ class Properties extends Component {
       if ((section && (p.section === section.key))
         || ((section === null) && (p.section === null))) {
         if (p.propertyType === 'string') {
+          if (!properties[p.key]) {
+            properties[p.key] = defaultValue.string;
+          }
           res.push(
             <CustomInput
               label={p.label}
@@ -174,6 +178,9 @@ class Properties extends Component {
             </div>,
           );
         } else if (p.propertyType === 'toggle') {
+          if (!properties[p.key]) {
+            properties[p.key] = defaultValue.toggle;
+          }
           res.push(
             <CustomToggle
               label={p.label}
@@ -183,6 +190,9 @@ class Properties extends Component {
             />,
           );
         } else if (p.propertyType === 'text') {
+          if (!properties[p.key]) {
+            properties[p.key] = defaultValue.text;
+          }
           res.push(
             <CustomText
               label={p.label}
@@ -194,6 +204,9 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'array') {
           let value = '';
+          if (!properties[p.key]) {
+            properties[p.key] = defaultValue.array;
+          }
           if (properties[p.key]) {
             if (Array.isArray(properties[p.key])) {
               properties[p.key].forEach((item, key) => {
