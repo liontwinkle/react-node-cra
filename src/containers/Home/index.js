@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Container, Section, Bar } from 'react-simple-resizer';
 
 import { VirtualTree, VirtualDetail } from './Virtual';
+import { ProductsTable } from './Products';
 
 import './style.scss';
 
@@ -14,8 +15,9 @@ function Home(props) {
   return (
     <div className="app-container">
       <Container>
-        <Section minSize="35%" defaultSize={350}>
+        <Section minSize={(value === 'products') ? '70%' : '35%'} defaultSize={(value === 'products') ? 700 : 350}>
           {(value === 'virtual' || value === 'native') && <VirtualTree />}
+          {(value === 'product') && <ProductsTable />}
         </Section>
 
         <Bar className="resizer" size={8} />
