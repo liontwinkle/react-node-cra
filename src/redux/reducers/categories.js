@@ -25,10 +25,27 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.CATEGORIES_GET_SUCCESS:
+      const tempDatas = action.payload.categories;
+      if (Array.isArray(tempDatas)) {
+        tempDatas.forEach((item, itemKey) => {
+          const { properties } = item;
+          if (properties) {
+            console.log('properties by get>>>>>>', properties);// fixme
+            const keys = Object.keys(properties);
+            keys.forEach((key) => {
+              if (Array.isArray(properties[key])) {
+                tempDatas[itemKey].properties[key] = JSON.stringify(tempDatas[itemKey].properties[key]);
+              }
+            });
+            console.log('values>>>>>', item);
+          }
+        });
+      }
+      console.log('tempDatas>>>>>', tempDatas);// fixme
       return {
         ...state,
         isFetchingList: false,
-        categories: action.payload.categories,
+        categories: tempDatas,
         trees: getCategoryTree(action.payload.categories),
       };
     case types.CATEGORIES_GET_FAIL:
@@ -44,7 +61,17 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.CATEGORY_CREATE_SUCCESS:
-      categories.push(action.payload.data);
+      const { data } = action.payload;
+      if (data.properties) {
+        const keys = Object.keys(data.properties);
+        keys.forEach((key) => {
+          if (Array.isArray(data.properties[key])) {
+            data.properties[key] = JSON.stringify(data.properties[key]);
+          }
+        });
+        console.log('values>>>>>', data);
+      }
+      categories.push(data);
       const treeData = _.merge(getCategoryTree(categories), state.trees);
       return {
         ...state,
@@ -66,11 +93,22 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CATEGORY_UPDATE_SUCCESS:
-      const categoryIdx = _.findIndex(categories, { id: action.payload.data.id });
+      const updateData = action.payload.data;
+      const { properties } = updateData;
+      if (properties) {
+        const keys = Object.keys(properties);
+        keys.forEach((key) => {
+          if (Array.isArray(properties[key])) {
+            updateData.properties[key] = JSON.stringify(updateData.properties[key]);
+          }
+        });
+        console.log('values>>>>>', data);
+      }
+      const categoryIdx = _.findIndex(categories, { id: updateData.id });
       if (categoryIdx > -1) {
-        categories.splice(categoryIdx, 1, action.payload.data);
+        categories.splice(categoryIdx, 1, updateData);
       } else {
-        categories.push(action.payload.data);
+        categories.push(updateData);
       }
       const newTrees = _.merge(state.trees, getCategoryTree(categories));
       return {

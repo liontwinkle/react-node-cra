@@ -82,6 +82,7 @@ class Properties extends Component {
 
   changeArrayInput = field => (e) => {
     e.persist();
+    console.log('value>>>', e.target.value);// fixme
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
@@ -178,7 +179,9 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'toggle') {
           if (!properties[p.key]) {
-            properties[p.key] = p.default;
+            properties[p.key] = (p.default === 'true');
+          } else {
+            properties[p.key] = (properties[p.key] === 'true');
           }
           res.push(
             <CustomToggle
@@ -203,23 +206,32 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'array') {
           let value = '';
-          if (!properties[p.key]) {
+          console.log('origin>>>>', properties[p.key]);// fixme
+          if (properties[p.key] === undefined) {
             properties[p.key] = p.default;
+            console.log('test>>>>', JSON.parse(p.default));// fixme
           }
-          if (properties[p.key]) {
-            if (Array.isArray(properties[p.key])) {
-              properties[p.key].forEach((item, key) => {
-                if (parseInt(item, 10)) value += item;
-                else value += `"${item}"`;
-
-                if (key < (properties[p.key].length - 1)) {
-                  value += ',';
-                }
-              });
-            } else {
-              value = properties[p.key];
-            }
+          console.log('json>>>>', properties[p.key]);// fixme
+          console.log('test>>>>', JSON.stringify(properties[p.key]));// fixme
+          if (Array.isArray(properties[p.key])) {
+            value = JSON.stringify(properties[p.key]);
+          } else {
+            value = properties[p.key];
           }
+          // if (properties[p.key]) {
+          //   if (Array.isArray(properties[p.key])) {
+          //     properties[p.key].forEach((item, key) => {
+          //       if (parseInt(item, 10)) value += item;
+          //       else value += `"${item}"`;
+          //
+          //       if (key < (properties[p.key].length - 1)) {
+          //         value += ',';
+          //       }
+          //     });
+          //   } else {
+          //     value = properties[p.key];
+          //   }
+          // }
           res.push(
             <CustomArray
               label={p.label}

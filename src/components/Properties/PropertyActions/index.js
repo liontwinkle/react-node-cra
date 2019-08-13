@@ -63,52 +63,59 @@ function PropertyActions(props) {
             break;
         }
       } else if (item.propertyType === 'array') {
-        let string = '';
         let chkFlag = true;
         if (Array.isArray(tempProperties[item.key])) {
-          string = JSON.stringify(tempProperties[item.key]);
-        } else {
-          string = tempProperties[item.key];
-        }
-
-        const stringData = string.match((/"\w+"/g));
-        const arrayData = string.split(',');
-        if (arrayData
-          && stringData
-          && (arrayData.length !== stringData.length)) {
-          chkFlag = false;
-        }
-        if (stringData) {
-          if (stringData.length > 1) {
-            const tempData = [];
-            stringData.forEach((item) => {
-              tempData.push(item.slice(1, item.length - 1));
-              if (arrayData.length !== stringData.length) {
-                chkFlag = false;
-              }
-            });
-            tempProperties[item.key] = tempData;
-          } else if (stringData.length === 1) {
-            const tempData = [stringData[0].slice(1, stringData[0].length - 1)];
-            tempProperties[item.key] = tempData;
-          }
-        } else if (arrayData) {
-          const temp = [];
-          arrayData[0] = arrayData[0].replace('[', '');
-          arrayData.forEach((item) => {
-            if (parseInt(item, 10)) {
-              temp.push(parseInt(item, 10));
-            } else {
-              chkFlag = false;
-            }
-          });
-          tempProperties[item.key] = temp;
-          chkFlag = true;
+          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+          console.log('result>>>>', tempProperties[item.key]);// fixme
         } else {
           chkFlag = false;
         }
         tempProperties.chkFlag = chkFlag;
       }
+      //   if (Array.isArray(tempProperties[item.key])) {
+      //     string = JSON.stringify(tempProperties[item.key]);
+      //   } else {
+      //     string = tempProperties[item.key];
+      //   }
+      //
+      //   const stringData = string.match((/"\w+"/g));
+      //   const arrayData = string.split(',');
+      //   if (arrayData
+      //     && stringData
+      //     && (arrayData.length !== stringData.length)) {
+      //     chkFlag = false;
+      //   }
+      //   if (stringData) {
+      //     if (stringData.length > 1) {
+      //       const tempData = [];
+      //       stringData.forEach((item) => {
+      //         tempData.push(item.slice(1, item.length - 1));
+      //         if (arrayData.length !== stringData.length) {
+      //           chkFlag = false;
+      //         }
+      //       });
+      //       tempProperties[item.key] = tempData;
+      //     } else if (stringData.length === 1) {
+      //       const tempData = [stringData[0].slice(1, stringData[0].length - 1)];
+      //       tempProperties[item.key] = tempData;
+      //     }
+      //   } else if (arrayData) {
+      //     const temp = [];
+      //     arrayData[0] = arrayData[0].replace('[', '');
+      //     arrayData.forEach((item) => {
+      //       if (parseInt(item, 10)) {
+      //         temp.push(parseInt(item, 10));
+      //       } else {
+      //         chkFlag = false;
+      //       }
+      //     });
+      //     tempProperties[item.key] = temp;
+      //     chkFlag = true;
+      //   } else {
+      //     chkFlag = false;
+      //   }
+      //   tempProperties.chkFlag = chkFlag;
+      // }
     });
     return tempProperties;
   };
