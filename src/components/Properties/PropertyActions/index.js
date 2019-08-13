@@ -64,10 +64,9 @@ function PropertyActions(props) {
         }
       } else if (item.propertyType === 'array') {
         let chkFlag = true;
-        if (Array.isArray(tempProperties[item.key])) {
+        try {
           tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
-          console.log('result>>>>', tempProperties[item.key]);// fixme
-        } else {
+        } catch (e) {
           chkFlag = false;
         }
         tempProperties.chkFlag = chkFlag;

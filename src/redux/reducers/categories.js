@@ -30,18 +30,15 @@ export default (state = INITIAL_STATE, action) => {
         tempDatas.forEach((item, itemKey) => {
           const { properties } = item;
           if (properties) {
-            console.log('properties by get>>>>>>', properties);// fixme
             const keys = Object.keys(properties);
             keys.forEach((key) => {
               if (Array.isArray(properties[key])) {
                 tempDatas[itemKey].properties[key] = JSON.stringify(tempDatas[itemKey].properties[key]);
               }
             });
-            console.log('values>>>>>', item);
           }
         });
       }
-      console.log('tempDatas>>>>>', tempDatas);// fixme
       return {
         ...state,
         isFetchingList: false,
@@ -69,7 +66,6 @@ export default (state = INITIAL_STATE, action) => {
             data.properties[key] = JSON.stringify(data.properties[key]);
           }
         });
-        console.log('values>>>>>', data);
       }
       categories.push(data);
       const treeData = _.merge(getCategoryTree(categories), state.trees);
@@ -102,7 +98,6 @@ export default (state = INITIAL_STATE, action) => {
             updateData.properties[key] = JSON.stringify(updateData.properties[key]);
           }
         });
-        console.log('values>>>>>', data);
       }
       const categoryIdx = _.findIndex(categories, { id: updateData.id });
       if (categoryIdx > -1) {
