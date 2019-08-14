@@ -4,6 +4,8 @@ import { HotTable } from '@handsontable/react';
 import 'handsontable/dist/handsontable.full.css';
 import './style.scss';
 
+import swansonData from 'data/swansonvitamins_en_products';
+
 class ProductTable extends React.Component {
   constructor(props) {
     super(props);
@@ -260,8 +262,14 @@ class ProductTable extends React.Component {
     };
   }
 
+  componentWillMount(nextState) {
+    console.log(nextState);
+    const keys = Object.keys(swansonData[0]);
+    console.log('keys>>>>', keys);// fixme
+  }
 
   render() {
+    console.log('data>>>>', swansonData);// fixme
     return (
       <div id="hot-app">
         <HotTable
