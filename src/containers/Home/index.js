@@ -17,7 +17,7 @@ function Home(props) {
       <Container>
         <Section minSize={(value === 'products') ? '70%' : '35%'} defaultSize={(value === 'products') ? 700 : 350}>
           {(value === 'virtual' || value === 'native') && <VirtualTree />}
-          {(value === 'product') && <ProductsTable />}
+          {(value === 'products') && <ProductsTable />}
         </Section>
 
         <Bar className="resizer" size={8} />
