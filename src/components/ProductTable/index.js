@@ -3,11 +3,10 @@ import { HotTable } from '@handsontable/react';
 
 import 'handsontable/dist/handsontable.full.css';
 import './style.scss';
+import axios from 'axios';
 
-import swansonData from 'data/swansonvitamins_en_products';
-// import eddieData from 'data/eddiebauer_en_products';
 import Loader from 'components/Loader';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 
@@ -25,74 +24,77 @@ class ProductTable extends React.Component {
   }
 
   componentDidMount() {
-    // const data = require(`data/${this.props.client.code}_${this.props.type}`);
-    const keys = Object.keys(swansonData[0]);
-    const values = Object.values(swansonData[0]);
-    console.log('keys>>>>', keys);// fixme
-    const headers = keys.map(key => key.toUpperCase());
-    const columns = [];
-    values.forEach((value, key) => {
-      let type = {};
-      switch (typeof value) {
-        case 'boolean':
-          type = {
-            data: keys[key],
-            type: 'checkbox',
-          };
-          break;
-        case 'number':
-          type = {
-            data: keys[key],
-            type: 'numeric',
-          };
-          break;
-        case 'date':
-          type = {
-            data: keys[key],
-            type: 'date',
-            dateFormat: 'MM/DD/YYYY',
-          };
-          break;
-        case 'object':
-        case 'string':
-          type = {
-            data: keys[key],
-            type: 'text',
-          };
-          break;
-        default:
-          type = {
-            data: keys[key],
-          };
-          break;
-      }
-      columns.push(type);
-    });
-    console.log('keys>>>>', headers);// fixme
-    const objects = [];
-    swansonData.forEach((dataObj) => {
-      const subObject = {};
-      const subKeys = Object.keys(dataObj);
-      const subValues = Object.values(dataObj);
-      subValues.forEach((dataItems, key) => {
-        let data = '';
-        if (typeof dataItems === 'object') {
-          data = JSON.stringify(dataItems);
-        } else {
-          data = dataItems;
-        }
-        subObject[subKeys[key]] = data;
+    const { client, type } = this.props;
+    axios.get(`data/${client.code}_${type.key}.json`)
+      .then((response) => {
+        const { data } = response;
+        const keys = Object.keys(data[0]);
+        const values = Object.values(data[0]);
+        const headers = keys.map(key => key.toUpperCase());
+        const columns = [];
+        values.forEach((value, key) => {
+          let type = {};
+          switch (typeof value) {
+            case 'boolean':
+              type = {
+                data: keys[key],
+                type: 'checkbox',
+              };
+              break;
+            case 'number':
+              type = {
+                data: keys[key],
+                type: 'numeric',
+              };
+              break;
+            case 'date':
+              type = {
+                data: keys[key],
+                type: 'date',
+                dateFormat: 'MM/DD/YYYY',
+              };
+              break;
+            case 'object':
+            case 'string':
+              type = {
+                data: keys[key],
+                type: 'text',
+              };
+              break;
+            default:
+              type = {
+                data: keys[key],
+              };
+              break;
+          }
+          columns.push(type);
+        });
+        const objects = [];
+        data.forEach((dataObj) => {
+          const subObject = {};
+          const subKeys = Object.keys(dataObj);
+          const subValues = Object.values(dataObj);
+          subValues.forEach((dataItems, key) => {
+            let data = '';
+            if (typeof dataItems === 'object') {
+              data = JSON.stringify(dataItems);
+            } else {
+              data = dataItems;
+            }
+            subObject[subKeys[key]] = data;
+          });
+          objects.push(subObject);
+        });
+        this.setState({
+          colHeaders: headers,
+          columns,
+          data: objects,
+          flag: false,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      objects.push(subObject);
-    });
-    console.log('columns>>>>', columns);// fixme
-    console.log('objects>>>>', objects);// fixme
-    this.setState({
-      colHeaders: headers,
-      columns,
-      data: objects,
-      flag: false,
-    });
   }
 
   render() {
@@ -114,7 +116,9 @@ class ProductTable extends React.Component {
               />
             )
             : (
-              <Loader size="big" color="dark" />
+              <div className="loader">
+                <Loader size="small" color="dark" />
+              </div>
             )
         }
       </div>
@@ -122,11 +126,10 @@ class ProductTable extends React.Component {
   }
 }
 
-// ProductTable.propTypes = {
-//   client: PropTypes.object,
-//   type: store.clientsData.type,
-//
-// };
+ProductTable.propTypes = {
+  client: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = store => ({
   client: store.clientsData.client,
