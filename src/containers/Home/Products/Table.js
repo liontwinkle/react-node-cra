@@ -4,7 +4,7 @@ import ProductTable from '../../../components/ProductTable';
 function ProductsTable() {
   return (
     <div className="app-tree-container d-flex flex-column">
-      <ProductTable />
+      <ProductTable className="product-table" />
     </div>
   );
 }
