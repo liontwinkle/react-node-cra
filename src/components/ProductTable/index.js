@@ -8,6 +8,8 @@ import axios from 'axios';
 import Loader from 'components/Loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 
 class ProductTable extends React.Component {
@@ -18,8 +20,8 @@ class ProductTable extends React.Component {
       data: [],
       columns: [],
       colHeaders: [],
-      width: window.innerWidth * parseFloat(0.7),
-      height: window.innerHeight * parseFloat(0.9),
+      // width: window.innerWidth * parseFloat(0.7),
+      // height: window.innerHeight * parseFloat(0.9),
     };
   }
 
@@ -99,29 +101,30 @@ class ProductTable extends React.Component {
 
   render() {
     return (
-      <div id="hot-app">
-        {
-          (!this.state.flag)
-            ? (
-              <HotTable
-                data={this.state.data}
-                columns={this.state.columns}
-                rowHeaders
-                autoWrapRow
-                width={this.state.width}
-                height={this.state.height}
-                manualRowResize
-                autoColumnResize
-                colHeaders={this.state.colHeaders}
-              />
-            )
-            : (
-              <div className="loader">
-                <Loader size="small" color="dark" />
-              </div>
-            )
-        }
-      </div>
+      <PerfectScrollbar>
+        <div id="hot-app">
+          {
+            (!this.state.flag)
+              ? (
+
+                <HotTable
+                  data={this.state.data}
+                  columns={this.state.columns}
+                  rowHeaders
+                  autoWrapRow
+                  manualRowResize
+                  autoColumnResize
+                  colHeaders={this.state.colHeaders}
+                />
+              )
+              : (
+                <div className="loader">
+                  <Loader size="small" color="dark" />
+                </div>
+              )
+          }
+        </div>
+      </PerfectScrollbar>
     );
   }
 }
