@@ -56,10 +56,19 @@ class Properties extends Component {
       }
     }
     if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)) {
+      const nextProperties = {};
+      this.props.propertyField.propertyFields.forEach((item, key) => {
+        if (this.state.properties[item.key] === item.default) {
+          nextProperties[item.key] = nextProps.propertyField.propertyFields[key].default;
+        } else if (this.state.properties[item.key] === (item.default === 'true')) {
+          nextProperties[item.key] = (nextProps.propertyField.propertyFields[key].default === true);
+        }
+      });
       this.setState({
         sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields:
           nextProps.propertyField.propertyFields.filter(item => item.section === null) || [],
+        properties: nextProperties,
       });
     }
 

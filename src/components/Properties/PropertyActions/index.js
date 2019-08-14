@@ -45,76 +45,18 @@ function PropertyActions(props) {
     const tempProperties = properties;
     tempProperties.chkFlag = true;
     fields.forEach((item) => {
-      if (!tempProperties[item.key]) {
-        switch (item.propertyType) {
-          case 'string':
-            tempProperties[item.key] = item.default;
-            break;
-          case 'toggle':
-            tempProperties[item.key] = item.default;
-            break;
-          case 'text':
-            tempProperties[item.key] = item.default;
-            break;
-          case 'array':
-            tempProperties[item.key] = item.default;
-            break;
-          default:
-            break;
-        }
+      if (tempProperties[item.key] === item.default || tempProperties[item.key] === (item.default === 'true')) {
+        delete tempProperties[item.key];
       } else if (item.propertyType === 'array') {
         let chkFlag = true;
         try {
-          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+          const newData = JSON.parse(tempProperties[item.key]);
+          tempProperties[item.key] = newData;
         } catch (e) {
           chkFlag = false;
         }
         tempProperties.chkFlag = chkFlag;
       }
-      //   if (Array.isArray(tempProperties[item.key])) {
-      //     string = JSON.stringify(tempProperties[item.key]);
-      //   } else {
-      //     string = tempProperties[item.key];
-      //   }
-      //
-      //   const stringData = string.match((/"\w+"/g));
-      //   const arrayData = string.split(',');
-      //   if (arrayData
-      //     && stringData
-      //     && (arrayData.length !== stringData.length)) {
-      //     chkFlag = false;
-      //   }
-      //   if (stringData) {
-      //     if (stringData.length > 1) {
-      //       const tempData = [];
-      //       stringData.forEach((item) => {
-      //         tempData.push(item.slice(1, item.length - 1));
-      //         if (arrayData.length !== stringData.length) {
-      //           chkFlag = false;
-      //         }
-      //       });
-      //       tempProperties[item.key] = tempData;
-      //     } else if (stringData.length === 1) {
-      //       const tempData = [stringData[0].slice(1, stringData[0].length - 1)];
-      //       tempProperties[item.key] = tempData;
-      //     }
-      //   } else if (arrayData) {
-      //     const temp = [];
-      //     arrayData[0] = arrayData[0].replace('[', '');
-      //     arrayData.forEach((item) => {
-      //       if (parseInt(item, 10)) {
-      //         temp.push(parseInt(item, 10));
-      //       } else {
-      //         chkFlag = false;
-      //       }
-      //     });
-      //     tempProperties[item.key] = temp;
-      //     chkFlag = true;
-      //   } else {
-      //     chkFlag = false;
-      //   }
-      //   tempProperties.chkFlag = chkFlag;
-      // }
     });
     return tempProperties;
   };
