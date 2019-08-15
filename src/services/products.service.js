@@ -1,6 +1,6 @@
 import httpService from './http.service';
 
-const getProductsRoute = (clientId, type) => `/products/${clientId}/types/${type}/categories`;
+const getProductsRoute = (clientId, type) => `/clients/${clientId}/types/${type}/products`;
 
 const fetch = (clientId, type, index) => httpService
   .get(`${getProductsRoute(clientId, type)}/${index}`)

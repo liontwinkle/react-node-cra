@@ -2,7 +2,7 @@
 import productsService from 'services/products.service';
 import types from '../actionTypes';
 
-export const fetchProducts = (clientId, type, index) => (dispatch, getState) => {
+export const fetchProducts = index => (dispatch, getState) => {
   if (getState().productsData.isFetchingList) {
     return Promise.reject();
   }
@@ -11,14 +11,13 @@ export const fetchProducts = (clientId, type, index) => (dispatch, getState) => 
     type: types.PRODUCTS_GET_DATA_REQUEST,
   });
 
-  console.log('recev request CLID>>>', clientId,
-    'recev request TYPE>>>', type,
-    'recev request>>> Index', index);// fixme
-  return productsService.fetch(clientId, type, index)
-    .then((categories) => {
+  const { client, type } = getState().clientsData;
+  console.log('recev request>>> Index', index);// fixme
+  return productsService.fetch(client.id, type.key, index)
+    .then((products) => {
       dispatch({
         type: types.PRODUCTS_GET_DATA_SUCCESS,
-        payload: { categories },
+        payload: { products },
       });
     })
     .catch((error) => {

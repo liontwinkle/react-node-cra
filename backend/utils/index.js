@@ -50,6 +50,8 @@ function saveUpdates(updates) {
     return entity.saveAsync();
   };
 }
+
+
 function removeEntity(res) {
   return entity => entity && entity.removeAsync().then(respondWith(res, 204));
 }
@@ -85,6 +87,16 @@ function createCollection( body ){
   });
 }
 
+function getProducts( req,res, query){
+  console.log("name>>>", req.params);//fixme
+  db.collection(req.category).find(query).limit(51).toArray(function (err,result) {
+    if( err ) handleError(err,500)
+    else{
+      responseWithResult( result, 200 );
+    }
+    db.close();
+  });
+}
 module.exports = {
   handleError,
   respondWith,
@@ -93,5 +105,6 @@ module.exports = {
   handleEntityNotFound,
   saveUpdates,
   removeEntity,
-  createCollection
+  createCollection,
+  getProducts
 };

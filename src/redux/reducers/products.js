@@ -10,7 +10,8 @@ const INITIAL_STATE = {
   products: [],
   columns: [],
   headers: [],
-  index: 0,
+  index: 'start',
+  prevIndex: 'start',
   errors: '',
 };
 
@@ -32,7 +33,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
       };
-    case types.CATEGORIES_GET_FAIL:
+    case types.PRODUCTS_GET_DATA_FAIL:
       return {
         ...state,
         isFetchingList: false,

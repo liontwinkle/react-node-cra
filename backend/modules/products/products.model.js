@@ -10,5 +10,15 @@ ProductsSchema.virtual('id').get(function () {
 });
 
 
-module.exports = mongoose.model('PropertyFields', ProductsSchema);
+/**
+ *
+ * @param type
+ * @returns {Model}
+ * Category collections will be changed or created dynamically
+ */
+const ProductsModel = (type = 'taxonomy') => {
+  Products = mongoose.model(type, ProductsSchema);
+  return Products;
+};
 
+module.exports = ProductsModel;

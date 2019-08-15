@@ -24,12 +24,12 @@ class ProductTable extends React.Component {
 
   componentDidMount() {
     const {
-      client, type, index, fetchProducts,
+      index, fetchProducts,
     } = this.props;
     this.setState({
       fetchingFlag: true,
     });
-    fetchProducts(client, type, index)
+    fetchProducts(index)
       .then(() => {
         this.setState({
           fetchingFlag: false,
@@ -86,19 +86,15 @@ class ProductTable extends React.Component {
 }
 
 ProductTable.propTypes = {
-  client: PropTypes.object.isRequired,
-  type: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  index: PropTypes.number.isRequired,
+  index: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = store => ({
-  client: store.clientsData.client,
-  type: store.clientsData.type,
   products: store.productsData.products,
   columns: store.productsData.columns,
   headers: store.productsData.headers,
