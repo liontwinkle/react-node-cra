@@ -51,10 +51,3 @@ export const getLength = () => (dispatch, getState) => {
       throw error;
     });
 };
-
-export const setIndex = index => (dispatch) => {
-  dispatch({
-    type: types.PRODUCTS_SET_INDEX,
-    payload: { index },
-  });
-};

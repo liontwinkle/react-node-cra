@@ -15,7 +15,6 @@ import ReactPaginate from 'react-paginate';
 import {
   fetchProducts,
   getLength,
-  setIndex,
 } from 'redux/actions/products';
 import { pagination } from 'utils/constants';
 import { CustomSelect } from '../elements';
@@ -29,6 +28,7 @@ class ProductTable extends React.Component {
         label: '50 products',
         key: 50,
       },
+      index: 0,
     };
   }
 
@@ -36,7 +36,7 @@ class ProductTable extends React.Component {
     this.setState({
       fetchingFlag: true,
     });
-    this.props.fetchProducts(this.props.index, this.state.limit.key)
+    this.props.fetchProducts(0, this.state.limit.key)
       .then(() => {
         this.props.getLength();
         this.setState({
@@ -58,10 +58,13 @@ class ProductTable extends React.Component {
   }
 
   handleChangeType = (value) => {
+    const { index, limit } = this.state;
+    const newIndex = Math.ceil(index / (value.key / limit.key));
     this.setState({
       limit: value,
+      index: newIndex,
     });
-    this.getProducts(this.props.index, value.key);
+    this.getProducts(newIndex, value.key);
   };
 
   getProducts = (index, limit) => {
@@ -86,7 +89,9 @@ class ProductTable extends React.Component {
     const { selected } = data;
     const index = Math.ceil(selected);
     const { limit } = this.state;
-    this.props.setIndex(index);
+    this.setState({
+      index,
+    });
     this.getProducts(index, limit.key);
   };
 
@@ -111,6 +116,7 @@ class ProductTable extends React.Component {
                         previousLabel="previous"
                         nextLabel="next"
                         breakLabel="..."
+                        forcePage={this.state.index}
                         breakClassName="break-me"
                         pageCount={parseInt(length, 10) / this.state.limit.key}
                         marginPagesDisplayed={2}
@@ -159,12 +165,10 @@ class ProductTable extends React.Component {
 ProductTable.propTypes = {
   fetchProducts: PropTypes.func.isRequired,
   getLength: PropTypes.func.isRequired,
-  setIndex: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
 };
 
@@ -179,7 +183,6 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
   getLength,
-  setIndex,
 }, dispatch);
 
 export default connect(

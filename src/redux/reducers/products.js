@@ -10,7 +10,6 @@ const INITIAL_STATE = {
   products: [],
   columns: [],
   headers: [],
-  index: 0,
   length: 0,
   errors: '',
 };
@@ -53,11 +52,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         errors: action.payload.error,
-      };
-    case types.PRODUCTS_SET_INDEX:
-      return {
-        ...state,
-        index: action.payload.index,
       };
     default:
       return state;
