@@ -16,8 +16,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  const { products } = state;
-
   switch (action.type) {
     case types.PRODUCTS_GET_DATA_REQUEST:
       return {
@@ -25,10 +23,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_DATA_SUCCESS:
-      console.log('recv data>>>>', action.payload.products); // fixme
       const getData = getProducts(action.payload.products);
-      console.log('current state>>>>', products);// fixme
-      console.log('update state>>>>', getData);// fixme
       return {
         ...state,
         columns: getData.columns,
@@ -48,16 +43,21 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_LENGTH_SUCCESS:
-      console.log('recv data>>>>', action.payload.length); // fixme
       return {
         ...state,
         length: action.payload.length,
+        isFetchingList: false,
       };
     case types.PRODUCTS_GET_LENGTH_FAIL:
       return {
         ...state,
         isFetchingList: false,
         errors: action.payload.error,
+      };
+    case types.PRODUCTS_SET_INDEX:
+      return {
+        ...state,
+        index: action.payload.index,
       };
     default:
       return state;

@@ -159,7 +159,6 @@ export const getObjectFromArray = (array) => {
 };
 
 export const getProducts = (products) => {
-  console.log('products data>>>', products);// fixme
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys.map(key => key.toUpperCase());

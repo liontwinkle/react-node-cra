@@ -12,7 +12,11 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { bindActionCreators } from 'redux';
 import ReactPaginate from 'react-paginate';
-import { fetchProducts, getLength } from 'redux/actions/products';
+import {
+  fetchProducts,
+  getLength,
+  setIndex,
+} from 'redux/actions/products';
 
 class ProductTable extends React.Component {
   constructor(props) {
@@ -23,17 +27,12 @@ class ProductTable extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      index,
-      fetchProducts,
-      getLength,
-    } = this.props;
     this.setState({
       fetchingFlag: true,
     });
-    fetchProducts(index)
+    this.props.fetchProducts(this.props.index)
       .then(() => {
-        getLength();
+        this.props.getLength();
         this.setState({
           fetchingFlag: false,
         });
@@ -55,20 +54,16 @@ class ProductTable extends React.Component {
   handlePageClick = (data) => {
     const { selected } = data;
     const index = Math.ceil(selected);
-    console.log('slected', selected);// fixme
+    this.props.setIndex(index);
     this.props.fetchProducts(index)
       .then(() => {
-        this.setState({
-          fetchingFlag: false,
-        });
         this.props.enqueueSnackbar('Success fetching products data.',
           {
             variant: 'success',
             autoHideDuration: 1000,
           });
       })
-      .catch((err) => {
-        console.log(err);// fixme
+      .catch(() => {
         this.props.enqueueSnackbar('Error in fetching products data.',
           {
             variant: 'error',
@@ -81,12 +76,9 @@ class ProductTable extends React.Component {
     const {
       columns,
       headers,
-      index,
       products,
       length,
     } = this.props;
-    console.log('current Index>>>>', index);// fixme
-    console.log('current length>>>>', length);// fixme
     return (
       <div id="hot-app">
         {
@@ -139,6 +131,7 @@ class ProductTable extends React.Component {
 ProductTable.propTypes = {
   fetchProducts: PropTypes.func.isRequired,
   getLength: PropTypes.func.isRequired,
+  setIndex: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
@@ -153,12 +146,12 @@ const mapStateToProps = store => ({
   headers: store.productsData.headers,
   index: store.productsData.index,
   length: store.productsData.length,
-  isFetching: store.productsData.isFetching,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
   getLength,
+  setIndex,
 }, dispatch);
 
 export default connect(

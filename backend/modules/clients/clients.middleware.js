@@ -27,8 +27,6 @@ exports.loadCategory = (req, res, next, type) => {
       req.category = CategoryModel(req.client.code + '_' + type);
     else{
       req.products = ProductsModel(req.client.code + '_' + type);
-      console.log("products?>>>>", req.products);//fixme
-
     }
     return next();
   }

@@ -11,10 +11,8 @@ export const fetchProducts = index => (dispatch, getState) => {
   });
 
   const { client, type } = getState().clientsData;
-  console.log('recev request>>> Index', index);// fixme
   return productsService.fetch(client.id, type.key, index)
     .then((products) => {
-      console.log('products>>>', products);// fixme
       dispatch({
         type: types.PRODUCTS_GET_DATA_SUCCESS,
         payload: { products },
@@ -40,7 +38,6 @@ export const getLength = () => (dispatch, getState) => {
   const { client, type } = getState().clientsData;
   return productsService.getLength(client.id, type.key)
     .then((length) => {
-      console.log('products>>>', length);// fixme
       dispatch({
         type: types.PRODUCTS_GET_LENGTH_SUCCESS,
         payload: { length },
@@ -53,4 +50,11 @@ export const getLength = () => (dispatch, getState) => {
       });
       throw error;
     });
+};
+
+export const setIndex = index => (dispatch) => {
+  dispatch({
+    type: types.PRODUCTS_SET_INDEX,
+    payload: { index },
+  });
 };
