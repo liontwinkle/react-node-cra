@@ -2,7 +2,6 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  getProducts,
 } = require('../../utils');
 
 
@@ -24,7 +23,9 @@ exports.show = (req, res) => {
     query = {"_id":req.params.index}
   }
   console.log("query>>>>", query);//fixme
-  getProducts(req,res,query)
+  req.products
+    .find(query).limit(51)
+    .execAsync()
     .then(handleEntityNotFound(res, req))
     .then(responseWithResult(res))
     .catch(handleError(res));

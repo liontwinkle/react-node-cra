@@ -1,6 +1,6 @@
 const Clients = require('./clients.model');
 const CategoryModel = require('../categories/categories.model');
-
+const ProductsModel = require('../products/products.model');
 const {
   handleEntityNotFound,
   handleError
@@ -23,7 +23,13 @@ exports.loadClient = (req, res, next, id) => {
 
 exports.loadCategory = (req, res, next, type) => {
   if (req.client) {
-    req.category = CategoryModel(req.client.code + '_' + type);
+    if( type !== 'products')
+      req.category = CategoryModel(req.client.code + '_' + type);
+    else{
+      req.products = ProductsModel(req.client.code + '_' + type);
+      console.log("products?>>>>", req.products);//fixme
+
+    }
     return next();
   }
 

@@ -19,6 +19,7 @@ exports.index = (req, res) => {
 
 // Creates a new Category in the DB
 exports.create = (req, res) => {
+  console.log("name>>>", req.category);//fixme
   req.category
     .createAsync(req.body)
     .then(responseWithResult(res, 201))
@@ -27,6 +28,7 @@ exports.create = (req, res) => {
 
 // Gets a single Category from the DB
 exports.show = (req, res) => {
+  console.log("name>>>", req.category);//fixme
   req.category
     .findById(req.params.categoryId)
     .select('-__v')
