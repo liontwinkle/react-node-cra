@@ -16,8 +16,8 @@ exports.index = (req,res) => {
 };
 // Gets a single Category from the DB
 exports.show = (req, res) => {
-  let limit = 50;
-  let skip = parseInt(req.params.index)* 50;
+  let limit = parseInt(req.params.limit);
+  let skip = parseInt(req.params.index)* limit;
   req.products
     .find({})
     .limit(limit)

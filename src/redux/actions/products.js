@@ -1,7 +1,7 @@
 import productsService from 'services/products.service';
 import types from '../actionTypes';
 
-export const fetchProducts = index => (dispatch, getState) => {
+export const fetchProducts = (index, limit) => (dispatch, getState) => {
   if (getState().productsData.isFetchingList) {
     return Promise.reject();
   }
@@ -11,7 +11,7 @@ export const fetchProducts = index => (dispatch, getState) => {
   });
 
   const { client, type } = getState().clientsData;
-  return productsService.fetch(client.id, type.key, index)
+  return productsService.fetch(client.id, type.key, index, limit)
     .then((products) => {
       dispatch({
         type: types.PRODUCTS_GET_DATA_SUCCESS,

@@ -17,12 +17,18 @@ import {
   getLength,
   setIndex,
 } from 'redux/actions/products';
+import { pagination } from 'utils/constants';
+import { CustomSelect } from '../elements';
 
 class ProductTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       fetchingFlag: true,
+      limit: {
+        label: '50 products',
+        key: 50,
+      },
     };
   }
 
@@ -30,7 +36,7 @@ class ProductTable extends React.Component {
     this.setState({
       fetchingFlag: true,
     });
-    this.props.fetchProducts(this.props.index)
+    this.props.fetchProducts(this.props.index, this.state.limit.key)
       .then(() => {
         this.props.getLength();
         this.setState({
@@ -51,11 +57,15 @@ class ProductTable extends React.Component {
       });
   }
 
-  handlePageClick = (data) => {
-    const { selected } = data;
-    const index = Math.ceil(selected);
-    this.props.setIndex(index);
-    this.props.fetchProducts(index)
+  handleChangeType = (value) => {
+    this.setState({
+      limit: value,
+    });
+    this.getProducts(this.props.index, value.key);
+  };
+
+  getProducts = (index, limit) => {
+    this.props.fetchProducts(index, limit)
       .then(() => {
         this.props.enqueueSnackbar('Success fetching products data.',
           {
@@ -70,6 +80,14 @@ class ProductTable extends React.Component {
             autoHideDuration: 4000,
           });
       });
+  }
+
+  handlePageClick = (data) => {
+    const { selected } = data;
+    const index = Math.ceil(selected);
+    const { limit } = this.state;
+    this.props.setIndex(index);
+    this.getProducts(index, limit.key);
   };
 
   render() {
@@ -79,13 +97,40 @@ class ProductTable extends React.Component {
       products,
       length,
     } = this.props;
+
     return (
       <div id="hot-app">
         {
           (!this.state.fetchingFlag)
             ? (
-              <PerfectScrollbar>
-                <Fragment>
+              <Fragment>
+                {
+                  (length > 0) && (
+                    <div className="fragPageInfo">
+                      <ReactPaginate
+                        previousLabel="previous"
+                        nextLabel="next"
+                        breakLabel="..."
+                        breakClassName="break-me"
+                        pageCount={parseInt(length, 10) / this.state.limit.key}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName="pagination"
+                        subContainerClassName="pages pagination"
+                        activeClassName="active"
+                      />
+                      <CustomSelect
+                        className="mr-3"
+                        placeholder="Select Type"
+                        value={this.state.limit}
+                        items={pagination}
+                        onChange={this.handleChangeType}
+                      />
+                    </div>
+                  )
+                }
+                <PerfectScrollbar>
                   <HotTable
                     data={products}
                     columns={columns}
@@ -96,25 +141,8 @@ class ProductTable extends React.Component {
                     autoColumnResize
                     colHeaders={headers}
                   />
-                  {
-                    (length > 0) && (
-                      <ReactPaginate
-                        previousLabel="previous"
-                        nextLabel="next"
-                        breakLabel="..."
-                        breakClassName="break-me"
-                        pageCount={parseInt(length, 10) / 50}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClick}
-                        containerClassName="pagination"
-                        subContainerClassName="pages pagination"
-                        activeClassName="active"
-                      />
-                    )
-                  }
-                </Fragment>
-              </PerfectScrollbar>
+                </PerfectScrollbar>
+              </Fragment>
 
             )
             : (

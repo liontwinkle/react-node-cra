@@ -86,3 +86,12 @@ export const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <RemoveIcon {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumnIcon {...props} ref={ref} />),
 };
+
+
+export const pagination = [
+  { key: 50, label: '50 products' },
+  { key: 100, label: '100 products' },
+  { key: 150, label: '150 products' },
+  { key: 200, label: '200 products' },
+  { key: 500, label: '500 products' },
+];
