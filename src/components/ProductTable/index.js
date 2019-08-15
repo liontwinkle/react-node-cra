@@ -20,8 +20,6 @@ class ProductTable extends React.Component {
       data: [],
       columns: [],
       colHeaders: [],
-      // width: window.innerWidth * parseFloat(0.7),
-      // height: window.innerHeight * parseFloat(0.9),
     };
   }
 
