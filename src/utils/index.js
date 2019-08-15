@@ -157,3 +157,69 @@ export const getObjectFromArray = (array) => {
 
   return res;
 };
+
+export const getProducts = (products) => {
+  console.log('products data>>>', products);// fixme
+  const keys = Object.keys(products[0]);
+  const values = Object.values(products[0]);
+  const headers = keys.map(key => key.toUpperCase());
+  const columns = [];
+  values.forEach((value, key) => {
+    let type = {};
+    switch (typeof value) {
+      case 'boolean':
+        type = {
+          data: keys[key],
+          type: 'checkbox',
+        };
+        break;
+      case 'number':
+        type = {
+          data: keys[key],
+          type: 'numeric',
+        };
+        break;
+      case 'date':
+        type = {
+          data: keys[key],
+          type: 'date',
+          dateFormat: 'MM/DD/YYYY',
+        };
+        break;
+      case 'object':
+      case 'string':
+        type = {
+          data: keys[key],
+          type: 'text',
+        };
+        break;
+      default:
+        type = {
+          data: keys[key],
+        };
+        break;
+    }
+    columns.push(type);
+  });
+  const objects = [];
+  products.forEach((dataObj) => {
+    const subObject = {};
+    const subKeys = Object.keys(dataObj);
+    const subValues = Object.values(dataObj);
+    subValues.forEach((dataItems, key) => {
+      let data = '';
+      if (typeof dataItems === 'object') {
+        data = JSON.stringify(dataItems);
+      } else {
+        data = dataItems;
+      }
+      subObject[subKeys[key]] = data;
+    });
+    objects.push(subObject);
+  });
+  return {
+    columns,
+    headers,
+    data: objects,
+  };
+};

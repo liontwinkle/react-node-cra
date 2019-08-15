@@ -3,116 +3,74 @@ import { HotTable } from '@handsontable/react';
 
 import 'handsontable/dist/handsontable.full.css';
 import './style.scss';
-import axios from 'axios';
+import { withSnackbar } from 'notistack';
 
 import Loader from 'components/Loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import { bindActionCreators } from 'redux';
+import { fetchProducts } from '../../redux/actions/products';
 
 
 class ProductTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      flag: true,
-      data: [],
-      columns: [],
-      colHeaders: [],
+      fetchingFlag: true,
     };
   }
 
   componentDidMount() {
-    const { client, type } = this.props;
-    axios.get(`data/${client.code}_${type.key}.json`)
-      .then((response) => {
-        const { data } = response;
-        const keys = Object.keys(data[0]);
-        const values = Object.values(data[0]);
-        const headers = keys.map(key => key.toUpperCase());
-        const columns = [];
-        values.forEach((value, key) => {
-          let type = {};
-          switch (typeof value) {
-            case 'boolean':
-              type = {
-                data: keys[key],
-                type: 'checkbox',
-              };
-              break;
-            case 'number':
-              type = {
-                data: keys[key],
-                type: 'numeric',
-              };
-              break;
-            case 'date':
-              type = {
-                data: keys[key],
-                type: 'date',
-                dateFormat: 'MM/DD/YYYY',
-              };
-              break;
-            case 'object':
-            case 'string':
-              type = {
-                data: keys[key],
-                type: 'text',
-              };
-              break;
-            default:
-              type = {
-                data: keys[key],
-              };
-              break;
-          }
-          columns.push(type);
-        });
-        const objects = [];
-        data.forEach((dataObj) => {
-          const subObject = {};
-          const subKeys = Object.keys(dataObj);
-          const subValues = Object.values(dataObj);
-          subValues.forEach((dataItems, key) => {
-            let data = '';
-            if (typeof dataItems === 'object') {
-              data = JSON.stringify(dataItems);
-            } else {
-              data = dataItems;
-            }
-            subObject[subKeys[key]] = data;
-          });
-          objects.push(subObject);
-        });
+    const {
+      client, type, index, fetchProducts,
+    } = this.props;
+    this.setState({
+      fetchingFlag: true,
+    });
+    fetchProducts(client, type, index)
+      .then(() => {
         this.setState({
-          colHeaders: headers,
-          columns,
-          data: objects,
-          flag: false,
+          fetchingFlag: false,
         });
+        this.props.enqueueSnackbar('Success fetching products data.',
+          {
+            variant: 'success',
+            autoHideDuration: 1000,
+          });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        this.props.enqueueSnackbar('Error in fetching products data.',
+          {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
       });
   }
 
   render() {
+    const {
+      columns,
+      headers,
+      index,
+      products,
+    } = this.props;
+    console.log('current Index>>>>', index);// fixme
     return (
       <PerfectScrollbar>
         <div id="hot-app">
           {
-            (!this.state.flag)
+            (!this.state.fetchingFlag)
               ? (
-
                 <HotTable
-                  data={this.state.data}
-                  columns={this.state.columns}
+                  data={products}
+                  columns={columns}
                   rowHeaders
                   autoWrapRow
                   manualRowResize
                   autoColumnResize
-                  colHeaders={this.state.colHeaders}
+                  colHeaders={headers}
                 />
               )
               : (
@@ -130,13 +88,29 @@ class ProductTable extends React.Component {
 ProductTable.propTypes = {
   client: PropTypes.object.isRequired,
   type: PropTypes.object.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
+  columns: PropTypes.array.isRequired,
+  headers: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = store => ({
   client: store.clientsData.client,
   type: store.clientsData.type,
+  products: store.productsData.products,
+  columns: store.productsData.columns,
+  headers: store.productsData.headers,
+  index: store.productsData.index,
+  isFetching: store.productsData.isFetching,
 });
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchProducts,
+}, dispatch);
 
 export default connect(
   mapStateToProps,
-)(ProductTable);
+  mapDispatchToProps,
+)(withSnackbar(ProductTable));

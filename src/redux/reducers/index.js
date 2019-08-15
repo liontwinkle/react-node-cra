@@ -3,6 +3,7 @@ import { connectRouter } from 'connected-react-router';
 
 import clientsData from './clients';
 import categoriesData from './categories';
+import productsData from './products';
 import propertyFieldsData from './propertyFields';
 
 export default history => combineReducers({
@@ -10,4 +11,5 @@ export default history => combineReducers({
   clientsData,
   categoriesData,
   propertyFieldsData,
+  productsData,
 });
