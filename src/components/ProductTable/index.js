@@ -59,7 +59,7 @@ class ProductTable extends React.Component {
 
   handleChangeType = (value) => {
     const { index, limit } = this.state;
-    const newIndex = Math.ceil(index / (value.key / limit.key));
+    const newIndex = Math.floor(index / (value.key / limit.key));
     this.setState({
       limit: value,
       index: newIndex,
