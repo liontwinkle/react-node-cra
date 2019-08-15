@@ -4,8 +4,12 @@ const router = express.Router();
 
 const controller = require('./clients.controller');
 const { loadClient, loadCategory } = require('./clients.middleware');
-const { validateType } = require('../validation/validation.controller');
+const {
+  validateCategoryType,
+  validateProductType,
+} = require('../validation/validation.controller');
 const categoriesRoute = require('../categories/categories.route');
+const productsRoute = require('../products/products.route');
 
 // Request to get list of Clients
 router.get('/', controller.index);
@@ -23,7 +27,8 @@ router.put('/:id', controller.update);
 router.delete('/:id', controller.remove);
 
 // Categories route
-router.use('/:id/types/:type/categories', validateType, categoriesRoute);
+router.use('/:id/types/:type/categories', validateCategoryType, categoriesRoute);
+router.use('/:id/types/:type/products', validateProductType, productsRoute);
 
 router.param('id', loadClient);
 router.param('type', loadCategory);
