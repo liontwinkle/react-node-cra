@@ -11,3 +11,27 @@
   top:50%;
   left:30%;
 }
+
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.pagination li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #83bef9;
+  border-radius: 18px;
+  min-width: 73px;
+  min-height: 34px;
+  cursor: pointer;
+}
+
+.pagination .active{
+  background: #CCD7E6;
+  cursor: pointer;
+}
