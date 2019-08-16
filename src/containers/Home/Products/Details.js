@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { CustomSection } from 'components/elements';
 import ExportDataSection from 'components/ProductDetail/exportData';
@@ -6,7 +8,11 @@ import './style.scss';
 import CalcAverage from 'components/ProductDetail/calcAverage';
 import ShowFields from 'components/ProductDetail/showFields';
 
-function ProductsDetail() {
+function ProductsDetail(props) {
+  const {
+    headers,
+  } = props;
+
   return (
     <PerfectScrollbar
       options={{
@@ -18,15 +24,23 @@ function ProductsDetail() {
         <CustomSection title="Export and Save" key="export_save">
           <ExportDataSection />
         </CustomSection>
-        <CustomSection title="Export and Save" key="export_save">
-          <CalcAverage />
+        <CustomSection title="Show Setting" key="show_setting">
+          <ShowFields fields={headers} />
         </CustomSection>
-        <CustomSection title="Export and Save" key="export_save">
-          <ShowFields />
+        <CustomSection title="Calculation Average" key="calc_average">
+          <CalcAverage />
         </CustomSection>
       </div>
     </PerfectScrollbar>
   );
 }
 
-export default ProductsDetail;
+ProductsDetail.propTypes = {
+  headers: PropTypes.array.isRequired,
+};
+const mapStateToProps = store => ({
+  headers: store.productsData.headers,
+});
+export default connect(
+  mapStateToProps,
+)(ProductsDetail);

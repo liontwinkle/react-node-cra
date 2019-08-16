@@ -2,4 +2,10 @@
   width:100%;
   display: flex;
   justify-content: space-around;
+  .show-field-item{
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
 }
