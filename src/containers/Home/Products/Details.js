@@ -13,6 +13,13 @@ function ProductsDetail(props) {
     headers,
   } = props;
 
+  const numberHeaders = [
+    { key: 'aa', label: 'AA' },
+    { key: 'bb', label: 'BB' },
+    { key: 'cc', label: 'CC' },
+    { key: 'dd', label: 'DD' },
+  ];// fixme
+
   return (
     <PerfectScrollbar
       options={{
@@ -24,11 +31,11 @@ function ProductsDetail(props) {
         <CustomSection title="Export and Save" key="export_save">
           <ExportDataSection />
         </CustomSection>
+        <CustomSection title="Calculation Average" key="calc_average">
+          <CalcAverage numberFields={numberHeaders} />
+        </CustomSection>
         <CustomSection title="Show Setting" key="show_setting">
           <ShowFields fields={headers} />
-        </CustomSection>
-        <CustomSection title="Calculation Average" key="calc_average">
-          <CalcAverage />
         </CustomSection>
       </div>
     </PerfectScrollbar>
