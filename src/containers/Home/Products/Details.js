@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -20,6 +20,14 @@ function ProductsDetail(props) {
     { key: 'dd', label: 'DD' },
   ];// fixme
 
+  const [numfield, setNumberField] = useState({
+    key: '',
+    label: '',
+  });
+
+  const handleAverage = (numberfield) => {
+    setNumberField(numberfield);
+  };
   return (
     <PerfectScrollbar
       options={{
@@ -31,8 +39,8 @@ function ProductsDetail(props) {
         <CustomSection title="Export and Save" key="export_save">
           <ExportDataSection />
         </CustomSection>
-        <CustomSection title="Calculation Average" key="calc_average">
-          <CalcAverage numberFields={numberHeaders} />
+        <CustomSection title="Calculation Average" key="calc_averag  e">
+          <CalcAverage value={numfield} onChange={handleAverage} numberFields={numberHeaders} />
         </CustomSection>
         <CustomSection title="Show Setting" key="show_setting">
           <ShowFields fields={headers} />

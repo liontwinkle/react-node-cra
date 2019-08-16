@@ -6,21 +6,24 @@ import CustomSelect from 'components/elements/CustomSelect';
 function CalcAverage(props) {
   const {
     numberFields,
-    // value,
+    value,
+    onChange,
   } = props;
   const handleChange = (val) => {
     console.log('change field>>>>>', val);
+    onChange(val);
   };
   return (
     <div className="calc-container">
-      <CustomSelect items={numberFields} onChange={handleChange} />
+      <CustomSelect value={value} items={numberFields} onChange={handleChange} />
     </div>
   );
 }
 
 CalcAverage.propTypes = {
   numberFields: PropTypes.array.isRequired,
-  // value: PropTypes.object
+  value: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default CalcAverage;

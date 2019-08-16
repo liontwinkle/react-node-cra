@@ -2,4 +2,12 @@
   width: 100%;
   display: flex;
   justify-content: space-around;
+  button{
+    background: #1CA1C1;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 3px;
+    padding:10px;
+    cursor: pointer;
+  }
 }
