@@ -10,7 +10,6 @@ const INITIAL_STATE = {
   products: [],
   columns: [],
   headers: [],
-  length: 0,
   errors: '',
 };
 
@@ -31,23 +30,6 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: false,
       };
     case types.PRODUCTS_GET_DATA_FAIL:
-      return {
-        ...state,
-        isFetchingList: false,
-        errors: action.payload.error,
-      };
-    case types.PRODUCTS_GET_LENGTH_REQUEST:
-      return {
-        ...state,
-        isFetchingList: true,
-      };
-    case types.PRODUCTS_GET_LENGTH_SUCCESS:
-      return {
-        ...state,
-        length: action.payload.length,
-        isFetchingList: false,
-      };
-    case types.PRODUCTS_GET_LENGTH_FAIL:
       return {
         ...state,
         isFetchingList: false,
