@@ -1,20 +1,31 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './style.scss';
 
-function ExportDataSection() {
+function ExportDataSection(props) {
+  const {
+    onExportCsv,
+    onExportStr,
+    onSaveData,
+  } = props;
   return (
     <div className="export-button">
-      <button id="export-csv">
+      <button id="export-csv" onClick={onExportCsv}>
         Export to a .csv file
       </button>
-      <button id="export-json">
+      <button id="export-json" onClick={onExportStr}>
         Export to string
       </button>
-      <button id="update_db">
+      <button id="update_db" onClick={onSaveData}>
         Update Database
       </button>
     </div>
   );
 }
 
+ExportDataSection.propTypes = {
+  onExportCsv: PropTypes.func.isRequired,
+  onExportStr: PropTypes.func.isRequired,
+  onSaveData: PropTypes.func.isRequired,
+};
 export default ExportDataSection;

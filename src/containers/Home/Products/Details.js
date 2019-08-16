@@ -28,6 +28,18 @@ function ProductsDetail(props) {
   const handleAverage = (numberfield) => {
     setNumberField(numberfield);
   };
+
+  const handleExportCsv = () => {
+    console.log('csv');// fixme
+  };
+
+  const handleExportStr = () => {
+    console.log('str');
+  };
+
+  const handleSaveData = () => {
+    console.log('save');
+  };
   return (
     <PerfectScrollbar
       options={{
@@ -37,7 +49,11 @@ function ProductsDetail(props) {
     >
       <div className="product-details">
         <CustomSection title="Export and Save" key="export_save">
-          <ExportDataSection />
+          <ExportDataSection
+            onExportCsv={handleExportCsv}
+            onExportStr={handleExportStr}
+            onSaveData={handleSaveData}
+          />
         </CustomSection>
         <CustomSection title="Calculation Average" key="calc_averag  e">
           <CalcAverage value={numfield} onChange={handleAverage} numberFields={numberHeaders} />
