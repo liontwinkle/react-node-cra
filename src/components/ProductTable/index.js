@@ -62,14 +62,34 @@ class ProductTable extends React.Component {
                 <HotTable
                   data={products}
                   columns={columns}
-                  rowHeaders
                   autoWrapRow
                   manualRowResize
+                  manualColumnMove
+                  manualRowMove
                   autoColumnResize
-                  colHeaders={headers}
+                  headerTooltips
+                  colHeaders
+                  nestedHeaders={headers}
+                  rowHeaders
+                  stretchH="all"
+                  contextMenu
+                  exportFile
+                  collapsibleColumns
+                  multiColumnSorting={{
+                    indicator: true,
+                  }}
+                  fixedRowsBottom={2}
+                  fixedRowsTop={2}
+                  dropdownMenu
+                  filters
+                  // columnSorting={
+                  //   {
+                  //     indicator: true,
+                  //   }
+                  // }
+                  hiddenColumns
                 />
               </PerfectScrollbar>
-
             )
             : (
               <div className="loader">
