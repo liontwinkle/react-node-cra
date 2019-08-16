@@ -64,17 +64,17 @@ class ProductTable extends React.Component {
                   columns={columns}
                   autoWrapRow
                   manualRowResize
+                  manualColumnResize
                   manualColumnMove
                   manualRowMove
                   autoColumnResize
                   headerTooltips
-                  colHeaders
-                  nestedHeaders={headers}
+                  colHeaders={headers}
                   rowHeaders
                   stretchH="all"
                   contextMenu
                   exportFile
-                  collapsibleColumns
+                  // collapsibleColumns
                   multiColumnSorting={{
                     indicator: true,
                   }}
@@ -82,11 +82,6 @@ class ProductTable extends React.Component {
                   fixedRowsTop={2}
                   dropdownMenu
                   filters
-                  // columnSorting={
-                  //   {
-                  //     indicator: true,
-                  //   }
-                  // }
                   hiddenColumns
                 />
               </PerfectScrollbar>
