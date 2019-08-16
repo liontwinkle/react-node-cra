@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container, Section, Bar } from 'react-simple-resizer';
 
 import { VirtualTree, VirtualDetail } from './Virtual';
-import { ProductsTable } from './Products';
+import { ProductsTable, ProductsDetail } from './Products';
 
 import './style.scss';
 
@@ -22,12 +22,13 @@ function Home(props) {
 
         <Bar className="resizer" size={8} />
 
-        <Section minSize={600}>
-          {category && (
-            <Fragment>
-              {(value === 'virtual' || value === 'native') && <VirtualDetail />}
-            </Fragment>
-          )}
+        <Section minSize={(value === 'products') ? '30%' : '65%'}>
+          <Fragment>
+            {(value === 'products') && <ProductsDetail />}
+            {category && (
+              (value === 'virtual' || value === 'native') && <VirtualDetail />
+            )}
+          </Fragment>
         </Section>
       </Container>
     </div>
