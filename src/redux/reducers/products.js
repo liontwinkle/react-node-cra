@@ -8,6 +8,7 @@ import {
 const INITIAL_STATE = {
   isFetchingList: false,
   products: [],
+  originProducts: [],
   columns: [],
   headers: [],
   numbers: [],
@@ -22,13 +23,14 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_DATA_SUCCESS:
-      const getData = getProducts(action.payload.products);
+      const data = getProducts(action.payload.products);
       return {
         ...state,
-        columns: getData.columns,
-        headers: getData.headers,
-        numbers: getData.numbers,
-        products: getData.data,
+        columns: data.columns,
+        headers: data.headers,
+        numbers: data.numbers,
+        products: data.data,
+        originProducts: action.payload.products,
         isFetchingList: false,
       };
     case types.PRODUCTS_GET_DATA_FAIL:
