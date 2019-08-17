@@ -5,10 +5,10 @@ import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 
 import { removeRecursive } from 'utils';
-import Toggle from './Toggle';
-import Rule from './Rule';
+import Toggle from '../CustomToggle';
+import Rule from '../../Rules';
 
-import './style.scss';
+import '../../Properties/style.scss';
 
 class RuleBuilder extends Component {
   renderRuleGroup = ({

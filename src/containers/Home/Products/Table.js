@@ -1,16 +1,10 @@
 import React from 'react';
 import ProductTable from '../../../components/ProductTable';
 
-function ProductsTable() {
-  return (
-    <div className="app-tree-container d-flex flex-column">
-      <ProductTable className="product-table" />
-    </div>
-  );
-}
-
-ProductsTable.propTypes = {
-};
-
+const ProductsTable = React.forwardRef((props, ref) => (
+  <div className="app-tree-container d-flex flex-column">
+    <ProductTable tableRef={ref} className="product-table" />
+  </div>
+));
 
 export default ProductsTable;

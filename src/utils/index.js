@@ -162,6 +162,7 @@ export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys.map(key => key.toUpperCase());
+  const numbers = [];
   const columns = [];
   values.forEach((value, key) => {
     let type = {};
@@ -173,6 +174,10 @@ export const getProducts = (products) => {
         };
         break;
       case 'number':
+        numbers.push({
+          key: keys[key],
+          label: keys[key].toUpperCase(),
+        });
         type = {
           data: keys[key],
           type: 'numeric',
@@ -219,6 +224,7 @@ export const getProducts = (products) => {
   return {
     columns,
     headers,
+    numbers,
     data: objects,
   };
 };
