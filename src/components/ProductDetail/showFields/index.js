@@ -13,10 +13,7 @@ function ShowFields(props) {
   const fields1 = fields.slice(0, unit - 1);
   const fields2 = fields.slice(unit, length - 1);
   const handleChange = value => (e) => {
-    // console.log('change field>>>>>', e.target.checked);
-    console.log('value>>>>', value);
     const index = fields.indexOf(value);
-    console.log('index>>>>', index);
     onChange(index, e.target.checked);
   };
   return (

@@ -13,14 +13,10 @@ function ProductsDetail(props) {
     tableRef,
   } = props;
   const handleExportCsv = () => {
-    console.log(tableRef);// fixme
-    console.log('csv');// fixme
-
     tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
   };
 
   const handleExportStr = () => {
-    console.log('str');
     console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
   };
 
@@ -29,7 +25,6 @@ function ProductsDetail(props) {
   };
 
   const handleShow = (index, value) => {
-    console.log(value, 'Sdfsdf', index); // fixme
     const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
     if (value) {
       showPlugin.hideColumn(index);
