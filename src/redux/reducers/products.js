@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   products: [],
   columns: [],
   headers: [],
+  numbers: [],
   errors: '',
 };
 
@@ -26,6 +27,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         columns: getData.columns,
         headers: getData.headers,
+        numbers: getData.numbers,
         products: getData.data,
         isFetchingList: false,
       };

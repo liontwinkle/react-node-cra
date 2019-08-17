@@ -11,15 +11,11 @@ import ShowFields from 'components/ProductDetail/showFields';
 function ProductsDetail(props) {
   const {
     headers,
+    numbers,
+    tableRef,
   } = props;
 
-  const numberHeaders = [
-    { key: 'aa', label: 'AA' },
-    { key: 'bb', label: 'BB' },
-    { key: 'cc', label: 'CC' },
-    { key: 'dd', label: 'DD' },
-  ];// fixme
-
+  // const hot = new Handsontable();
   const [numfield, setNumberField] = useState({
     key: '',
     label: '',
@@ -27,18 +23,23 @@ function ProductsDetail(props) {
 
   const handleAverage = (numberfield) => {
     setNumberField(numberfield);
+    tableRef.current.calculateAverage(numberfield.label);
   };
 
   const handleExportCsv = () => {
+    console.log(tableRef);// fixme
     console.log('csv');// fixme
+
+    tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
   };
 
   const handleExportStr = () => {
     console.log('str');
+    console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
   };
 
   const handleSaveData = () => {
-    console.log('save');
+    console.log(tableRef.current.hotInstance.getData());
   };
   return (
     <PerfectScrollbar
@@ -56,7 +57,7 @@ function ProductsDetail(props) {
           />
         </CustomSection>
         <CustomSection title="Calculation Average" key="calc_averag  e">
-          <CalcAverage value={numfield} onChange={handleAverage} numberFields={numberHeaders} />
+          <CalcAverage value={numfield} onChange={handleAverage} numberFields={numbers} />
         </CustomSection>
         <CustomSection title="Show Setting" key="show_setting">
           <ShowFields fields={headers} />
@@ -68,9 +69,12 @@ function ProductsDetail(props) {
 
 ProductsDetail.propTypes = {
   headers: PropTypes.array.isRequired,
+  numbers: PropTypes.array.isRequired,
+  tableRef: PropTypes.object.isRequired,
 };
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
+  numbers: store.productsData.numbers,
 });
 export default connect(
   mapStateToProps,

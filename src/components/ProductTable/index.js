@@ -52,6 +52,7 @@ class ProductTable extends React.Component {
       columns,
       headers,
       products,
+      tableRef,
     } = this.props;
     return (
       <div id="hot-app">
@@ -60,29 +61,33 @@ class ProductTable extends React.Component {
             ? (
               <PerfectScrollbar>
                 <HotTable
-                  data={products}
-                  columns={columns}
-                  autoWrapRow
-                  manualRowResize
-                  manualColumnResize
-                  manualColumnMove
-                  manualRowMove
-                  autoColumnResize
-                  headerTooltips
-                  colHeaders={headers}
-                  rowHeaders
-                  stretchH="all"
-                  contextMenu
-                  exportFile
-                  // collapsibleColumns
-                  multiColumnSorting={{
-                    indicator: true,
+                  ref={tableRef}
+                  root="hot"
+                  settings={{
+                    data: products,
+                    columns,
+                    autoWrapRow: true,
+                    manualRowResize: true,
+                    manualColumnResize: true,
+                    manualColumnMove: true,
+                    manualRowMove: true,
+                    autoColumnResize: true,
+                    headerTooltips: true,
+                    colHeaders: headers,
+                    rowHeaders: true,
+                    stretchH: 'all',
+                    contextMenu: true,
+                    exportFile: true,
+                    // collapsibleColumns
+                    multiColumnSorting: {
+                      indicator: true,
+                    },
+                    fixedRowsBottom: 2,
+                    fixedRowsTop: 2,
+                    dropdownMenu: true,
+                    filters: true,
+                    hiddenColumns: true,
                   }}
-                  fixedRowsBottom={2}
-                  fixedRowsTop={2}
-                  dropdownMenu
-                  filters
-                  hiddenColumns
                 />
               </PerfectScrollbar>
             )
@@ -100,6 +105,7 @@ class ProductTable extends React.Component {
 ProductTable.propTypes = {
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
+  tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
