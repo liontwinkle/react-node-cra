@@ -37,7 +37,6 @@ export const updateProducts = updateData => (dispatch, getState) => {
     type: types.PRODUCTS_UPDATE_REQUEST,
   });
 
-  console.log('send data>>>>', updateData);// fixme
   const { client, type } = getState().clientsData;
   return productsService.update(client.id, type.key, updateData)
     .then((products) => {

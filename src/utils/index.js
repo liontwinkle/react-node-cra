@@ -191,6 +191,18 @@ export const getProducts = (products) => {
         };
         break;
       case 'object':
+
+        type = {
+          data: keys[key],
+          type: 'dropdown',
+        };
+        break;
+      case 'array':
+        type = {
+          data: keys[key],
+          type: 'dropdown',
+        };
+        break;
       case 'string':
         type = {
           data: keys[key],

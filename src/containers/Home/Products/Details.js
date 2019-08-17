@@ -30,7 +30,6 @@ function ProductsDetail(props) {
   const handleSaveData = () => {
     const diffArray = [];
     const originArray = getProducts(originProducts).data;
-    console.log('origin>>>>', originArray);// fixme
     products.forEach((item, key) => {
       const original = Object.values(originArray[key]);
       const current = Object.values(item);
@@ -48,7 +47,6 @@ function ProductsDetail(props) {
     } else {
       console.log('no data');// fixme
     }
-    console.log('difference>>>>', diffArray);// fixme
   };
 
   const handleShow = (index, value) => {

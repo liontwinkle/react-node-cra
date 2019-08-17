@@ -50,9 +50,7 @@ export default (state = INITIAL_STATE, action) => {
       const orgProducts = state.originProducts;
       const updateData = action.payload.products[0];
       const orgProductsIdx = _.findIndex(orgProducts, { _id: updateData._id });
-      console.log('idx>>>', orgProductsIdx);// fixme
       orgProducts[orgProductsIdx] = updateData;
-      console.log('data>>>', orgProducts);// fixme
       return {
         ...state,
         originProducts: orgProducts,
