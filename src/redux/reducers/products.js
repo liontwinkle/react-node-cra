@@ -1,5 +1,6 @@
 // import _ from 'lodash';
 
+import _ from 'lodash';
 import types from '../actionTypes';
 import {
   getProducts,
@@ -7,6 +8,7 @@ import {
 
 const INITIAL_STATE = {
   isFetchingList: false,
+  isUpdatingList: false,
   products: [],
   originProducts: [],
   columns: [],
@@ -37,6 +39,29 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetchingList: false,
+        errors: action.payload.error,
+      };
+    case types.PRODUCTS_UPDATE_REQUEST:
+      return {
+        ...state,
+        isUpdatingList: true,
+      };
+    case types.PRODUCTS_UPDATE_SUCCESS:
+      const orgProducts = state.originProducts;
+      const updateData = action.payload.products[0];
+      const orgProductsIdx = _.findIndex(orgProducts, { _id: updateData._id });
+      console.log('idx>>>', orgProductsIdx);// fixme
+      orgProducts[orgProductsIdx] = updateData;
+      console.log('data>>>', orgProducts);// fixme
+      return {
+        ...state,
+        originProducts: orgProducts,
+        isUpdatingList: false,
+      };
+    case types.PRODUCTS_UPDATE_FAIL:
+      return {
+        ...state,
+        isUpdatingList: false,
         errors: action.payload.error,
       };
     default:

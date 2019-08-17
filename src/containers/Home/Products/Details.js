@@ -7,6 +7,8 @@ import { CustomSection } from 'components/elements';
 import ExportDataSection from 'components/ProductDetail/exportData';
 import './style.scss';
 import ShowFields from 'components/ProductDetail/showFields';
+import { bindActionCreators } from 'redux';
+import { updateProducts } from 'redux/actions/products';
 import { getProducts } from '../../../utils';
 
 function ProductsDetail(props) {
@@ -15,6 +17,7 @@ function ProductsDetail(props) {
     products,
     originProducts,
     tableRef,
+    updateProducts,
   } = props;
   const handleExportCsv = () => {
     tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
@@ -25,29 +28,26 @@ function ProductsDetail(props) {
   };
 
   const handleSaveData = () => {
-    // const currentData = tableRef.current.hotInstance.getData();
-    // let diffNum = 0;
-    // console.log('current Data>>>', currentData);// fixme
-    // currentData.forEach((item, key) => {
-    //   const compare = Object.values(products[key]);
-    //   const diffFilter = _.remove(_.differenceWith(item, compare), null);
-    //   if (diffFilter.length > 0) {
-    //     diffNum++;
-    //   }
-    // });
-    // console.log('diff_num>>>', diffNum);// fixme
-    // console.log(products);
     const diffArray = [];
-    console.log('current>>>', products);// fixme
-    console.log('original>>>', originProducts);// fixme
     const originArray = getProducts(originProducts).data;
+    console.log('origin>>>>', originArray);// fixme
     products.forEach((item, key) => {
       const original = Object.values(originArray[key]);
       const current = Object.values(item);
-      const diff = _.remove(_.difference(original, current), null);
-      if (diff.length > 0) diffArray.push(item);
-      console.log('difference>>>>', diff);// fixme
+      const diffres = _.isEqual(original.sort(), current.sort());
+      if (!diffres) diffArray.push(item);
     });
+    if (diffArray.length > 0) {
+      updateProducts(diffArray)
+        .then(() => {
+          console.log('success');
+        })
+        .catch(() => {
+          console.log('error');
+        });
+    } else {
+      console.log('no data');// fixme
+    }
     console.log('difference>>>>', diffArray);// fixme
   };
 
@@ -90,6 +90,7 @@ ProductsDetail.propTypes = {
   products: PropTypes.array.isRequired,
   originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
+  updateProducts: PropTypes.func.isRequired,
 };
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
@@ -97,6 +98,11 @@ const mapStateToProps = store => ({
   products: store.productsData.products,
   originProducts: store.productsData.originProducts,
 });
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateProducts,
+}, dispatch);
+
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(ProductsDetail);

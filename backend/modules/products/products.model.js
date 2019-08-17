@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProductsSchema = new Schema({
   _id: String,
-}, { toJSON: { virtuals: true }, timestamps: true });
+}, { toJSON: { virtuals: true },strict:false, timestamps: true });
 
 
 

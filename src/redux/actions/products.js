@@ -27,3 +27,30 @@ export const fetchProducts = () => (dispatch, getState) => {
       throw error;
     });
 };
+
+export const updateProducts = updateData => (dispatch, getState) => {
+  if (getState().productsData.isUpdatingList) {
+    return Promise.reject();
+  }
+
+  dispatch({
+    type: types.PRODUCTS_UPDATE_REQUEST,
+  });
+
+  console.log('send data>>>>', updateData);// fixme
+  const { client, type } = getState().clientsData;
+  return productsService.update(client.id, type.key, updateData)
+    .then((products) => {
+      dispatch({
+        type: types.PRODUCTS_UPDATE_SUCCESS,
+        payload: { products },
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.PRODUCTS_UPDATE_FAIL,
+        payload: { error },
+      });
+      throw error;
+    });
+};
