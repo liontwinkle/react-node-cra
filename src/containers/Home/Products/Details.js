@@ -9,6 +9,7 @@ import './style.scss';
 import ShowFields from 'components/ProductDetail/showFields';
 import { bindActionCreators } from 'redux';
 import { updateProducts } from 'redux/actions/products';
+import { useSnackbar } from 'notistack';
 import { getProducts } from '../../../utils';
 
 function ProductsDetail(props) {
@@ -19,6 +20,7 @@ function ProductsDetail(props) {
     tableRef,
     updateProducts,
   } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const handleExportCsv = () => {
     tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
   };
@@ -39,13 +41,27 @@ function ProductsDetail(props) {
     if (diffArray.length > 0) {
       updateProducts(diffArray)
         .then(() => {
-          console.log('success');
+          enqueueSnackbar('The data is saved successfly.',
+            {
+              variant: 'success',
+              autoHideDuration: 1500,
+            });
         })
         .catch(() => {
-          console.log('error');
+          const errMsg = 'Error is detected to save the table data1';
+          enqueueSnackbar(errMsg,
+            {
+              variant: 'error',
+              autoHideDuration: 3000,
+            });
         });
     } else {
-      console.log('no data');// fixme
+      const errMsg = 'There is no updated data.';
+      enqueueSnackbar(errMsg,
+        {
+          variant: 'warning',
+          autoHideDuration: 3000,
+        });
     }
   };
 
