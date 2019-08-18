@@ -1,7 +1,7 @@
+@import "scss/mixin.scss";
 .export-button{
   width: 100%;
-  display: flex;
-  justify-content: space-around;
+  @include justify-row-around;
   button{
     background: #1CA1C1;
     color: #FFFFFF;
