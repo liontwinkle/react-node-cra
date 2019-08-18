@@ -53,3 +53,10 @@ export const updateProducts = updateData => (dispatch, getState) => {
       throw error;
     });
 };
+
+export const setProducts = updateData => (dispatch) => {
+  dispatch({
+    type: types.PRODUCTS_SET_PRODUCTS,
+    payload: { updateData },
+  });
+};

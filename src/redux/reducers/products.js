@@ -71,6 +71,11 @@ export default (state = INITIAL_STATE, action) => {
         isUpdatingList: false,
         errors: action.payload.error,
       };
+    case types.PRODUCTS_SET_PRODUCTS:
+      return {
+        ...state,
+        products: action.payload.updateData,
+      };
     default:
       return state;
   }

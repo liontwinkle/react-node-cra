@@ -8,7 +8,7 @@ import ExportDataSection from 'components/ProductDetail/exportData';
 import './style.scss';
 import ShowFields from 'components/ProductDetail/showFields';
 import { bindActionCreators } from 'redux';
-import { updateProducts } from 'redux/actions/products';
+import { updateProducts, setProducts } from 'redux/actions/products';
 import { useSnackbar } from 'notistack';
 import { getProducts } from '../../../utils';
 
@@ -19,6 +19,7 @@ function ProductsDetail(props) {
     originProducts,
     tableRef,
     updateProducts,
+    setProducts,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const handleExportCsv = () => {
@@ -39,22 +40,35 @@ function ProductsDetail(props) {
       if (!diffres) diffArray.push(item);
     });
     if (diffArray.length > 0) {
-      updateProducts(diffArray)
-        .then(() => {
-          enqueueSnackbar('The data is saved successfly.',
-            {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
-        })
-        .catch(() => {
-          const errMsg = 'Error is detected to save the table data1';
-          enqueueSnackbar(errMsg,
-            {
-              variant: 'error',
-              autoHideDuration: 3000,
-            });
-        });
+      let duplicateFlag = false;
+      diffArray.forEach((item) => {
+        const duplicate = _.filter(products, { _id: item._id });
+        if (duplicate.length > 1) duplicateFlag = true;
+      });
+      if (!duplicateFlag) {
+        updateProducts(diffArray)
+          .then(() => {
+            enqueueSnackbar('The data is saved successfly.',
+              {
+                variant: 'success',
+                autoHideDuration: 1500,
+              });
+          })
+          .catch(() => {
+            const errMsg = 'Error is detected to save the table data1';
+            enqueueSnackbar(errMsg,
+              {
+                variant: 'error',
+                autoHideDuration: 3000,
+              });
+          });
+      } else {
+        enqueueSnackbar('The ID is duplicated',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+          });
+      }
     } else {
       const errMsg = 'There is no updated data.';
       enqueueSnackbar(errMsg,
@@ -63,6 +77,9 @@ function ProductsDetail(props) {
           autoHideDuration: 3000,
         });
     }
+    tableRef.current.hotInstance.loadData(originArray);
+    setProducts(originArray);
+    tableRef.current.hotInstance.render();
   };
 
   const handleShow = (index, value) => {
@@ -105,6 +122,7 @@ ProductsDetail.propTypes = {
   originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
 };
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
@@ -114,6 +132,7 @@ const mapStateToProps = store => ({
 });
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateProducts,
+  setProducts,
 }, dispatch);
 
 export default connect(
