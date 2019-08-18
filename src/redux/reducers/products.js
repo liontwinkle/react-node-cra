@@ -48,12 +48,21 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.PRODUCTS_UPDATE_SUCCESS:
       const orgProducts = state.originProducts;
-      const updateData = action.payload.products[0];
-      const orgProductsIdx = _.findIndex(orgProducts, { _id: updateData._id });
-      orgProducts[orgProductsIdx] = updateData;
+      const newProducts = state.products;
+      const updatedData = action.payload.products;
+      updatedData.forEach((newItem) => {
+        const orgProductsIdx = _.findIndex(orgProducts, { _id: newItem._id });
+        orgProducts[orgProductsIdx] = newItem;
+      });
+      const newData = getProducts(action.payload.products);
+      newData.data.forEach((newItem) => {
+        const orgProductsIdx = _.findIndex(orgProducts, { _id: newItem._id });
+        newProducts[orgProductsIdx] = newItem;
+      });
       return {
         ...state,
         originProducts: orgProducts,
+        products: newProducts,
         isUpdatingList: false,
       };
     case types.PRODUCTS_UPDATE_FAIL:

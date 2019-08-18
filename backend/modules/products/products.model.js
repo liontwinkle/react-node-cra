@@ -8,7 +8,6 @@ const ProductsSchema = new Schema({
 
 
 /**
- *
  * @param type
  * @returns {Model}
  * Category collections will be changed or created dynamically
