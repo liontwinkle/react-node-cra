@@ -2,7 +2,7 @@ import productsFieldsService from 'services/productsFields.service';
 import types from '../actionTypes';
 
 export const fetchProductsField = () => (dispatch, getState) => {
-  if (getState().categoriesData.isFetchingList) {
+  if (getState().productsFieldsData.isFetchingList) {
     return Promise.reject();
   }
   const { client } = getState().clientsData;
@@ -26,7 +26,7 @@ export const fetchProductsField = () => (dispatch, getState) => {
 };
 
 export const updateProductsField = updatedData => (dispatch, getState) => {
-  if (getState().categoriesData.isUpdating) {
+  if (getState().productsFieldsData.isUpdating) {
     return;
   }
   const { client } = getState().clientsData;
@@ -51,7 +51,7 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
 };
 
 export const removeProductsField = () => (dispatch, getState) => {
-  if (getState().categoriesData.isDeleting) {
+  if (getState().productsFieldsData.isDeleting) {
     return;
   }
   const { client } = getState().clientsData;

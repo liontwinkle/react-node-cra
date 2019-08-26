@@ -1,6 +1,5 @@
 // import _ from 'lodash';
 import types from '../actionTypes';
-import { sortByOrder } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -19,12 +18,13 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_FIELDS_SUCCESS:
-      const data = action.payload.productsField[0];
-      const fields = data.fields.sort(sortByOrder);
+      const data = (action.payload.productsField.length > 0)
+        ? action.payload.productsField[0].fields : {};
+      console.log('data>>>>', data);// fixme
       return {
         ...state,
         isFetchingList: false,
-        productsField: fields,
+        productsField: data,
       };
     case types.PRODUCTS_GET_FIELDS_FAIL:
       return {
@@ -38,11 +38,11 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
-      console.log('Fields>>>>>', action.payload.data.fields);// fixme
+      console.log('Fields>>>>>', action.payload.data[0]);// fixme
       return {
         ...state,
         isUpdating: false,
-        productsField: action.payload.data.fields,
+        productsField: action.payload.data[0].fields || action.payload.data.fields,
       };
     case types.PRODUCTS_UPDATE_FIELDS_FAIL:
       return {

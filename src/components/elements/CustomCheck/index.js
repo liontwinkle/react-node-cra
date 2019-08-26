@@ -5,11 +5,13 @@ import './style.scss';
 const CustomCheck = ({
   value,
   onChange,
+  insertValue,
 }) => (
   <div className="custom-check-container">
     <input
       type="checkbox"
       id={value}
+      checked={insertValue}
       onChange={onChange}
     />
     <label>{value}</label>
@@ -19,9 +21,11 @@ const CustomCheck = ({
 CustomCheck.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  insertValue: PropTypes.bool,
 };
 
 CustomCheck.defaultProps = {
   value: '_id',
+  insertValue: true,
 };
 export default CustomCheck;

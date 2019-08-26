@@ -14,7 +14,6 @@ const {
 exports.show = (req, res) => {
   ProductsField
     .find({clientId:req.params.clientId})
-    // .select('id name code url createdAt')
     .execAsync()
     .then(handleEntityNotFound(res, req))
     .then(responseWithResult(res))
@@ -25,7 +24,7 @@ exports.show = (req, res) => {
 exports.update = (req, res) => {
   let newData = {
     clientId: req.params.clientId,
-    fields: req.body.data,
+    fields: req.body,
   };
   ProductsField
     .find({clientId:req.params.clientId})

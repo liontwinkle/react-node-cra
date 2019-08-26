@@ -13,6 +13,7 @@ import {
 import { fetchCategories } from 'redux/actions/categories';
 import { CustomSelect } from 'components/elements';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
+import { fetchProductsField } from 'redux/actions/productsFields';
 
 const types = [
   { key: 'virtual', label: 'Virtual' },
@@ -34,6 +35,7 @@ function ClientSelect(props) {
     setClientType,
     fetchCategories,
     fetchPropertyField,
+    fetchProductsField,
   } = props;
 
   useEffect(() => {
@@ -57,6 +59,7 @@ function ClientSelect(props) {
     if (type.key !== 'products') {
       fetchCategories(client.id, type.key);
       fetchPropertyField(client.id, type.key);
+      fetchProductsField();
     }
   };
 
@@ -108,6 +111,7 @@ ClientSelect.propTypes = {
   setClientType: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchPropertyField: PropTypes.func.isRequired,
+  fetchProductsField: PropTypes.func.isRequired,
 };
 
 ClientSelect.defaultProps = {
@@ -127,6 +131,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setClientType,
   fetchCategories,
   fetchPropertyField,
+  fetchProductsField,
 }, dispatch);
 
 export default connect(

@@ -97,7 +97,7 @@ function ProductsDetail(props) {
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
       if (key !== index) {
-        newFieldData[item] = (newFieldData[item]) ? newFieldData[item] : false;
+        newFieldData[item] = (newFieldData[item]) ? newFieldData[item] : true;
       } else {
         newFieldData[item] = value;
       }
@@ -134,7 +134,7 @@ function ProductsDetail(props) {
         <CustomSection title="Show Setting" key="show_setting">
           <ShowFields
             fields={headers}
-            chkValue={productsField}
+            chkValue={fieldData}
             onChange={handleShow}
           />
         </CustomSection>

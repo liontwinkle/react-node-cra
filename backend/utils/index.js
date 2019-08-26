@@ -51,19 +51,18 @@ function handleExistingRemove( collection, req, newData) {
         console.log("here delete>>>");//fixme
         collection.deleteMany({clientId: req.params.clientId},function (err, result) {
           console.log('insert section>>>');//fixme
-          collection.insert(newData, function (err, insertResult) {
+          collection.create(newData, function (err, insertResult) {
             if( !err ){
               console.log('inserted>>>', insertResult);//fixme
-              responseWithResult(insertResult);
               return insertResult;
             }
           })
         });
-      }else{
-        collection.insert(newData, function (err, insertResult) {
+      }
+      else{
+        collection.create(newData, function (err, insertResult) {
           if( !err ){
             console.log('inserted>>>', insertResult);//fixme
-            responseWithResult(insertResult);
             return insertResult;
           }
         })
