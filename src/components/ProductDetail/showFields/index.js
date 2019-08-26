@@ -7,7 +7,9 @@ function ShowFields(props) {
   const {
     fields,
     onChange,
+    chkValue,
   } = props;
+  console.log('check Value>>>>', chkValue);// fixme
   const { length } = fields;
   const unit = Math.ceil(parseInt(length / 2, 10));
   const fields1 = fields.slice(0, unit - 1);
@@ -39,6 +41,7 @@ function ShowFields(props) {
 ShowFields.propTypes = {
   fields: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  chkValue: PropTypes.array.isRequired,
 };
 
 export default ShowFields;

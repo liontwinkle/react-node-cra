@@ -109,7 +109,12 @@ function ProductsDetail(props) {
           />
         </CustomSection>
         <CustomSection title="Show Setting" key="show_setting">
-          <ShowFields fields={headers} onChange={handleShow} />
+          <ShowFields
+            fields={headers}
+            chkValue={tableRef.current
+              ? headers.map(item => (tableRef.current.hotInstance.isHidden(item))) : []}
+            onChange={handleShow}
+          />
         </CustomSection>
       </div>
     </PerfectScrollbar>
