@@ -6,5 +6,4 @@ const ProductsTable = React.forwardRef((props, ref) => (
     <ProductTable tableRef={ref} className="product-table" />
   </div>
 ));
-
 export default ProductsTable;

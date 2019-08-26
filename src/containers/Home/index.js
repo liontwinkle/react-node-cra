@@ -24,7 +24,8 @@ function Home(props) {
 
         <Section minSize={(value === 'products') ? '30%' : '65%'}>
           <Fragment>
-            {(value === 'products') && <ProductsDetail tableRef={tableRef} />}
+            {(value === 'products')
+            && <ProductsDetail tableRef={tableRef} />}
             {category && (
               (value === 'virtual' || value === 'native') && <VirtualDetail />
             )}
