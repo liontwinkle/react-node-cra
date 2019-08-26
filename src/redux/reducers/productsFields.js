@@ -38,11 +38,10 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
-      console.log('Fields>>>>>', action.payload.data[0]);// fixme
       return {
         ...state,
         isUpdating: false,
-        productsField: action.payload.data[0].fields || action.payload.data.fields,
+        productsField: action.payload.data.fields,
       };
     case types.PRODUCTS_UPDATE_FIELDS_FAIL:
       return {

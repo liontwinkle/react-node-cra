@@ -15,6 +15,7 @@ import { Tooltip } from 'react-tippy';
 import { removeClient } from 'redux/actions/clients';
 import { IconButton } from 'components/elements';
 import { removePorpertyField } from 'redux/actions/propertyFields';
+import { removeProductsField } from 'redux/actions/productsFields';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -32,6 +33,7 @@ function ClientRemove(props) {
     client,
     removeClient,
     removePorpertyField,
+    removeProductsField,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -43,14 +45,24 @@ function ClientRemove(props) {
     if (!isDeleting) {
       removePorpertyField()
         .then(() => {
-          removeClient(client.id)
+          removeProductsField()
             .then(() => {
-              enqueueSnackbar('The client has been deleted successfully.',
-                {
-                  variant: 'success',
-                  autoHideDuration: 1000,
+              removeClient(client.id)
+                .then(() => {
+                  enqueueSnackbar('The client has been deleted successfully.',
+                    {
+                      variant: 'success',
+                      autoHideDuration: 1000,
+                    });
+                  handleOpen();
+                })
+                .catch(() => {
+                  enqueueSnackbar('Error in deleting client.',
+                    {
+                      variant: 'error',
+                      autoHideDuration: 4000,
+                    });
                 });
-              handleOpen();
             })
             .catch(() => {
               enqueueSnackbar('Error in deleting client.',
@@ -125,6 +137,7 @@ ClientRemove.propTypes = {
   client: PropTypes.object,
   removeClient: PropTypes.func.isRequired,
   removePorpertyField: PropTypes.func.isRequired,
+  removeProductsField: PropTypes.func.isRequired,
 };
 
 ClientRemove.defaultProps = {
@@ -139,6 +152,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   removeClient,
   removePorpertyField,
+  removeProductsField,
 }, dispatch);
 
 export default connect(

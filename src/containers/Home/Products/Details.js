@@ -86,18 +86,19 @@ function ProductsDetail(props) {
     tableRef.current.hotInstance.render();
   };
 
+
   const handleShow = (index, value) => {
     const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
     if (value) {
-      showPlugin.hideColumn(index);
-    } else {
       showPlugin.showColumn(index);
+    } else {
+      showPlugin.hideColumn(index);
     }
     tableRef.current.hotInstance.render();
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
       if (key !== index) {
-        newFieldData[item] = (newFieldData[item]) ? newFieldData[item] : true;
+        newFieldData[item] = (newFieldData[item] === undefined) ? true : newFieldData[item];
       } else {
         newFieldData[item] = value;
       }

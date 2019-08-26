@@ -28,8 +28,7 @@ exports.update = (req, res) => {
   };
   ProductsField
     .find({clientId:req.params.clientId})
-    .then(handleExistingRemove(ProductsField,req, newData))
-    .then(responseWithResult(res))
+    .then(handleExistingRemove(ProductsField,req, newData, res))
     .catch(handleError(res))
 };
 

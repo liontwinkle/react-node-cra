@@ -21,11 +21,10 @@ const CustomCheck = ({
 CustomCheck.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  insertValue: PropTypes.bool,
+  insertValue: PropTypes.bool.isRequired,
 };
 
 CustomCheck.defaultProps = {
   value: '_id',
-  insertValue: true,
 };
 export default CustomCheck;

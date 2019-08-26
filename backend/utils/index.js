@@ -42,19 +42,19 @@ function handleEntityNotFound(res, req) {
   };
 }
 
-function handleExistingRemove( collection, req, newData) {
+function handleExistingRemove( collection, req, newData, res) {
   console.log('prepare>>>>', newData);//fixme
-  collection.find({clientId: req.params.clientId},function (err, res) {
+  collection.find({clientId: req.params.clientId},function (err, findRes) {
     if( !err ){
-      console.log('response>>>>', res);//fixme
-      if (res.length > 0 ) {
+      console.log('response>>>>', findRes);//fixme
+      if (findRes.length > 0 ) {
         console.log("here delete>>>");//fixme
-        collection.deleteMany({clientId: req.params.clientId},function (err, result) {
+        collection.deleteMany({clientId: req.params.clientId},function () {
           console.log('insert section>>>');//fixme
           collection.create(newData, function (err, insertResult) {
             if( !err ){
               console.log('inserted>>>', insertResult);//fixme
-              return insertResult;
+              res.status(200).json(insertResult);
             }
           })
         });
@@ -63,7 +63,7 @@ function handleExistingRemove( collection, req, newData) {
         collection.create(newData, function (err, insertResult) {
           if( !err ){
             console.log('inserted>>>', insertResult);//fixme
-            return insertResult;
+            res.status(200).json(insertResult);
           }
         })
       }
