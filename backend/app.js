@@ -29,6 +29,7 @@ dotenv.config({ path: '.env' });
  */
 const clientsRoute = require('./modules/clients/clients.route');
 const propertyFieldsRoute = require('./modules/property_fields/property_fields.route');
+const ProductsFieldsRoute = require('./modules/products_fields/products_fields.route');
 /**
  * Create Express server.
  */
@@ -84,6 +85,7 @@ app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 3155760000
  */
 app.use('/api/clients', clientsRoute);
 app.use('/api/property_fields', propertyFieldsRoute);
+app.use('/api/products_fields', ProductsFieldsRoute);
 
 /**
  * Error Handler.

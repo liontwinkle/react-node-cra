@@ -41,7 +41,7 @@ function ShowFields(props) {
 ShowFields.propTypes = {
   fields: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
-  chkValue: PropTypes.array.isRequired,
+  chkValue: PropTypes.object.isRequired,
 };
 
 export default ShowFields;

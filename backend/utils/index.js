@@ -42,6 +42,36 @@ function handleEntityNotFound(res, req) {
   };
 }
 
+function handleExistingRemove( collection, req, newData) {
+  console.log('prepare>>>>', newData);//fixme
+  collection.find({clientId: req.params.clientId},function (err, res) {
+    if( !err ){
+      console.log('response>>>>', res);//fixme
+      if (res.length > 0 ) {
+        console.log("here delete>>>");//fixme
+        collection.deleteMany({clientId: req.params.clientId},function (err, result) {
+          console.log('insert section>>>');//fixme
+          collection.insert(newData, function (err, insertResult) {
+            if( !err ){
+              console.log('inserted>>>', insertResult);//fixme
+              responseWithResult(insertResult);
+              return insertResult;
+            }
+          })
+        });
+      }else{
+        collection.insert(newData, function (err, insertResult) {
+          if( !err ){
+            console.log('inserted>>>', insertResult);//fixme
+            responseWithResult(insertResult);
+            return insertResult;
+          }
+        })
+      }
+    }
+  });
+}
+
 function saveUpdates(updates) {
   return entity => {
     if (updates) {
@@ -96,4 +126,5 @@ module.exports = {
   saveUpdates,
   removeEntity,
   createCollection,
+  handleExistingRemove,
 };
