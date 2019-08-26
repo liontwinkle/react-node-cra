@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import './style.scss';
 import ShowFields from 'components/ProductDetail/showFields';
 import { bindActionCreators } from 'redux';
 import { updateProducts, setProducts } from 'redux/actions/products';
+import { updateProductsField } from 'redux/actions/productsFields';
 import { useSnackbar } from 'notistack';
 import { getProducts } from '../../../utils';
 
@@ -20,8 +21,11 @@ function ProductsDetail(props) {
     tableRef,
     updateProducts,
     setProducts,
+    productsField,
+    updateProductsField,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const [fieldData, setFieldData] = useState(productsField);
   const handleExportCsv = () => {
     tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
   };
@@ -90,6 +94,25 @@ function ProductsDetail(props) {
       showPlugin.showColumn(index);
     }
     tableRef.current.hotInstance.render();
+    const newFieldData = fieldData;
+    headers.forEach((item, key) => {
+      if (key !== index) {
+        newFieldData[item] = (newFieldData[item]) ? newFieldData[item] : false;
+      } else {
+        newFieldData[item] = value;
+      }
+    });
+    updateProductsField(newFieldData)
+      .then(() => {
+        setFieldData(newFieldData);
+      })
+      .catch(() => {
+        enqueueSnackbar('Fields fetching error.',
+          {
+            variant: 'warning',
+            autoHideDuration: 3000,
+          });
+      });
   };
   return (
     <PerfectScrollbar
@@ -111,8 +134,7 @@ function ProductsDetail(props) {
         <CustomSection title="Show Setting" key="show_setting">
           <ShowFields
             fields={headers}
-            chkValue={tableRef.current
-              ? headers.map(item => (tableRef.current.hotInstance.isHidden(item))) : []}
+            chkValue={productsField}
             onChange={handleShow}
           />
         </CustomSection>
@@ -128,16 +150,20 @@ ProductsDetail.propTypes = {
   tableRef: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
+  productsField: PropTypes.object.isRequired,
+  updateProductsField: PropTypes.func.isRequired,
 };
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
   numbers: store.productsData.numbers,
   products: store.productsData.products,
+  productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
 });
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateProducts,
   setProducts,
+  updateProductsField,
 }, dispatch);
 
 export default connect(
