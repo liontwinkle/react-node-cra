@@ -63,6 +63,7 @@ class ProductTable extends React.Component {
                 <HotTable
                   ref={tableRef}
                   root="hot"
+                  licenseKey="non-commercial-and-evaluation"
                   settings={{
                     data: products,
                     columns,
