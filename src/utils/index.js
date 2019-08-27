@@ -167,12 +167,6 @@ export const getProducts = (products) => {
   values.forEach((value, key) => {
     let type = {};
     switch (typeof value) {
-      case 'boolean':
-        type = {
-          data: keys[key],
-          type: 'checkbox',
-        };
-        break;
       case 'number':
         numbers.push({
           key: keys[key],
