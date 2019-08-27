@@ -20,7 +20,6 @@ export default (state = INITIAL_STATE, action) => {
     case types.PRODUCTS_GET_FIELDS_SUCCESS:
       const data = (action.payload.productsField.length > 0)
         ? action.payload.productsField[0].fields : {};
-      console.log('data>>>>', data);// fixme
       return {
         ...state,
         isFetchingList: false,

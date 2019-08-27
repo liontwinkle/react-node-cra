@@ -116,7 +116,6 @@ const mapStateToProps = store => ({
   products: store.productsData.products,
   columns: store.productsData.columns,
   headers: store.productsData.headers,
-  productsField: store.productsFieldsData.productsField,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

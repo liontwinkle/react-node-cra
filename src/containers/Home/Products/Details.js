@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -26,6 +26,21 @@ function ProductsDetail(props) {
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const tableObj = tableRef.current;
+      if (tableObj !== null) {
+        clearInterval(interval);
+        const showPlugin = tableObj.hotInstance.getPlugin('hiddenColumns');
+        const hiddenColumns = [];
+        headers.forEach((item, key) => {
+          if (!fieldData[item] && (fieldData[item] !== undefined)) hiddenColumns.push(key);
+        });
+        showPlugin.hideColumns(hiddenColumns);
+        tableObj.hotInstance.render();
+      }
+    }, 1000);
+  }, [fieldData, headers, tableRef]);
   const handleExportCsv = () => {
     tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
   };
@@ -89,7 +104,6 @@ function ProductsDetail(props) {
 
   const handleShow = (index, value) => {
     const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-    console.log('check>>>>', value);// fixme
     if (value) {
       showPlugin.showColumn(index);
     } else {
