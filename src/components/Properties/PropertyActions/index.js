@@ -45,7 +45,11 @@ function PropertyActions(props) {
     const tempProperties = properties;
     tempProperties.chkFlag = true;
     fields.forEach((item) => {
-      if (tempProperties[item.key] === item.default || tempProperties[item.key] === (item.default === 'true')) {
+      if (
+        tempProperties[item.key] === item.default
+        || tempProperties[item.key] === (item.default === 'true')
+        || tempProperties[item.key] === ''
+      ) {
         delete tempProperties[item.key];
       } else if (item.propertyType === 'array') {
         let chkFlag = true;

@@ -133,15 +133,18 @@ class Properties extends Component {
     propertyFields.forEach((p) => {
       if ((section && (p.section === section.key))
         || ((section === null) && (p.section === null))) {
+        let value = '';
         if (p.propertyType === 'string') {
-          if (!properties[p.key]) {
-            properties[p.key] = p.default;
+          if (properties[p.key] === undefined) {
+            value = p.default;
+          } else {
+            value = properties[p.key];
           }
           res.push(
             <CustomInput
               label={p.label}
               inline
-              value={properties[p.key]}
+              value={value}
               onChange={this.changeInput(p.key)}
               type="text"
               key={p.key}
@@ -186,28 +189,32 @@ class Properties extends Component {
             </div>,
           );
         } else if (p.propertyType === 'toggle') {
+          let value = true;
           if (!properties[p.key]) {
-            properties[p.key] = (p.default === 'true');
+            value = (p.default === 'true');
           } else {
-            properties[p.key] = (properties[p.key] === 'true');
+            value = (properties[p.key] === 'true');
           }
           res.push(
             <CustomToggle
               label={p.label}
-              value={properties[p.key]}
+              value={value}
               onToggle={this.toggleSwitch(p.key)}
               key={p.key}
             />,
           );
         } else if (p.propertyType === 'text') {
-          if (!properties[p.key]) {
-            properties[p.key] = p.default;
+          let value = '';
+          if (properties[p.key] === undefined) {
+            value = p.default;
+          } else {
+            value = properties[p.key];
           }
           res.push(
             <CustomText
               label={p.label}
               inline
-              value={properties[p.key]}
+              value={value}
               onChange={this.changeInput(p.key)}
               key={p.key}
             />,
@@ -215,7 +222,11 @@ class Properties extends Component {
         } else if (p.propertyType === 'array') {
           let value = '';
           if (properties[p.key] === undefined) {
-            properties[p.key] = p.default;
+            this.setState({
+              properties: {
+                [p.key]: p.default,
+              },
+            });
           }
           if (Array.isArray(properties[p.key])) {
             value = JSON.stringify(properties[p.key]);
