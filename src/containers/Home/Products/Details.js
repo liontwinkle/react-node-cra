@@ -143,12 +143,10 @@ function ProductsDetail(props) {
       const values = Object.values(item);
       const subData = {};
       values.forEach((subItem, subKey) => {
-        if (subItem === 'null' || subItem === null || subItem === '') {
-          if (type === 'strType') {
-            subData[keys[subKey]] = '""';
-          } else if (type === 'nullType') {
-            subData[keys[subKey]] = '';
-          }
+        if (type === 'strType' && subItem === '') {
+          subData[keys[subKey]] = '""';
+        } else if (type === 'nullType' && (subItem === 'null' || subItem === null)) {
+          subData[keys[subKey]] = '';
         } else {
           subData[keys[subKey]] = subItem;
         }
