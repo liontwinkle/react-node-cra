@@ -83,8 +83,6 @@ class ProductTable extends React.Component {
                     multiColumnSorting: {
                       indicator: true,
                     },
-                    fixedRowsBottom: 2,
-                    fixedRowsTop: 2,
                     dropdownMenu: true,
                     filters: true,
                     hiddenColumns: true,

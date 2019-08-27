@@ -9,7 +9,10 @@ const INITIAL_STATE = {
   isUpdating: false,
   isDeleting: false,
 
-  propertyField: null,
+  propertyField: {
+    sections: [],
+    propertyFields: [],
+  },
   errors: '',
 };
 
@@ -21,9 +24,13 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PROPERTYFIELD_GET_SUCCESS:
-      const data = action.payload.propertyField[0];
-      const section = data.sections.sort(sortByOrder);
-      data.sections = section;
+      let data = action.payload.propertyField[0];
+      if (data !== undefined) {
+        const section = data.sections.sort(sortByOrder);
+        data.sections = section;
+      } else {
+        data = state.propertyField;
+      }
       return {
         ...state,
         isFetchingList: false,
