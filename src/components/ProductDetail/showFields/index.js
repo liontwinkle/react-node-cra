@@ -23,14 +23,24 @@ function ShowFields(props) {
       <div className="show-field-item">
         {
           fields1.map(item => (
-            <CustomCheck key={item} insertValue={chkValue[item]} value={item} onChange={handleChange(item)} />
+            <CustomCheck
+              key={item}
+              insertValue={(chkValue[item] === undefined) ? true : chkValue[item]}
+              value={item}
+              onChange={handleChange(item)}
+            />
           ))
         }
       </div>
       <div className="show-field-item">
         {
           fields2.map(item => (
-            <CustomCheck key={item} insertValue={chkValue[item]} value={item} onChange={handleChange(item)} />
+            <CustomCheck
+              key={item}
+              insertValue={(chkValue[item] === undefined) ? true : chkValue[item]}
+              value={item}
+              onChange={handleChange(item)}
+            />
           ))
         }
       </div>

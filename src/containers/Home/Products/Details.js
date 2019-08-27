@@ -89,6 +89,7 @@ function ProductsDetail(props) {
 
   const handleShow = (index, value) => {
     const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+    console.log('check>>>>', value);// fixme
     if (value) {
       showPlugin.showColumn(index);
     } else {

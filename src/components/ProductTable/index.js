@@ -37,16 +37,6 @@ class ProductTable extends React.Component {
             variant: 'success',
             autoHideDuration: 1000,
           });
-        const showPlugin = this.props.tableRef.current.hotInstance.getPlugin('hiddenColumns');
-        const hiddenValue = [];
-        this.props.headers.forEach((item, key) => {
-          if (!this.props.productsField[item]) {
-            console.log('initial>>>>', this.props.productsField[item], 'key>>>', key);// fixme
-            hiddenValue.push(key);
-          }
-        });
-        showPlugin.hideColumns(hiddenValue);
-        this.props.tableRef.current.hotInstance.render();
       })
       .catch(() => {
         this.props.enqueueSnackbar('Error in fetching products data.',
@@ -120,7 +110,6 @@ ProductTable.propTypes = {
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  productsField: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({

@@ -60,6 +60,8 @@ function ClientSelect(props) {
       fetchCategories(client.id, type.key);
       fetchPropertyField(client.id, type.key);
       fetchProductsField();
+    } else {
+      fetchProductsField();
     }
   };
 
