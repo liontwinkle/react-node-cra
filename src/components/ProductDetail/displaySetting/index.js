@@ -9,7 +9,6 @@ function DisplaySetting(props) {
     nullType,
     strType,
   } = props;
-  console.log(nullType);// fixme
   return (
     <div className="export-button">
       <CustomToggle
