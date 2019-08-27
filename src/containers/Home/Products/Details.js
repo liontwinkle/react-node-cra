@@ -136,13 +136,44 @@ function ProductsDetail(props) {
       });
   };
 
+  const setEmpty = (updateData, type) => {
+    const updatedData = [];
+    updateData.forEach((item) => {
+      const keys = Object.keys(item);
+      const values = Object.values(item);
+      const subData = {};
+      values.forEach((subItem, subKey) => {
+        if (subItem === 'null' || subItem === null || subItem === '') {
+          if (type === 'strType') {
+            subData[keys[subKey]] = '""';
+          } else if (type === 'nullType') {
+            subData[keys[subKey]] = '';
+          }
+        } else {
+          subData[keys[subKey]] = subItem;
+        }
+      });
+      updatedData.push(subData);
+    });
+    return updatedData;
+  };
   const toggleSwitch = field => () => {
-    console.log(field);// fixme
-    const newDisplaySetting = displayFlag;
-    console.log(newDisplaySetting);// fixme
-    newDisplaySetting[field] = !newDisplaySetting[field];
+    let updateData = products;
+    const newDisplaySetting = {
+      ...displayFlag,
+      [field]: !displayFlag[field],
+    };
     setDisplayFlag(newDisplaySetting);
-    console.log(displayFlag);// fixme
+    if (newDisplaySetting.nullType) {
+      updateData = setEmpty(updateData, 'nullType');
+    }
+
+    if (newDisplaySetting.strType) {
+      updateData = setEmpty(updateData, 'strType');
+    }
+    tableRef.current.hotInstance.loadData(updateData);
+    tableRef.current.hotInstance.render();
+    // tableRef.current.hotInstance.loadData(originArray);
   };
 
   return (
