@@ -168,12 +168,11 @@ function ProductsDetail(props) {
       updateData = setEmpty(updateData, 'nullType');
     }
 
-    if (newDisplaySetting.strType) {
+    if (!newDisplaySetting.strType) {
       updateData = setEmpty(updateData, 'strType');
     }
     tableRef.current.hotInstance.loadData(updateData);
     tableRef.current.hotInstance.render();
-    // tableRef.current.hotInstance.loadData(originArray);
   };
 
   return (
