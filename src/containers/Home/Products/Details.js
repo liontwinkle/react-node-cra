@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { CustomSection } from 'components/elements';
 import ExportDataSection from 'components/ProductDetail/exportData';
+import DisplaySetting from 'components/ProductDetail/displaySetting';
 import './style.scss';
 import ShowFields from 'components/ProductDetail/showFields';
 import { bindActionCreators } from 'redux';
@@ -26,6 +27,10 @@ function ProductsDetail(props) {
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
+  const [displayFlag, setDisplayFlag] = useState({
+    nullType: false,
+    strType: false,
+  });
   useEffect(() => {
     const interval = setInterval(() => {
       const tableObj = tableRef.current;
@@ -130,6 +135,16 @@ function ProductsDetail(props) {
           });
       });
   };
+
+  const toggleSwitch = field => () => {
+    console.log(field);// fixme
+    const newDisplaySetting = displayFlag;
+    console.log(newDisplaySetting);// fixme
+    newDisplaySetting[field] = !newDisplaySetting[field];
+    setDisplayFlag(newDisplaySetting);
+    console.log(displayFlag);// fixme
+  };
+
   return (
     <PerfectScrollbar
       options={
@@ -147,7 +162,14 @@ function ProductsDetail(props) {
             onSaveData={handleSaveData}
           />
         </CustomSection>
-        <CustomSection title="Show Setting" key="show_setting">
+        <CustomSection title="Display Setting" key="display_setting">
+          <DisplaySetting
+            nullType={displayFlag.nullType}
+            strType={displayFlag.strType}
+            onChangeHandle={toggleSwitch}
+          />
+        </CustomSection>
+        <CustomSection title="Show Column Setting" key="show_setting">
           <ShowFields
             fields={headers}
             chkValue={fieldData}
