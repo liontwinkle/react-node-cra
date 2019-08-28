@@ -1,0 +1,10 @@
+@import 'scss/mixin.scss';
+.mg-rules-container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .mg-rule-content{
+    margin-top: 30px;
+    width:90%;
+  }
+}
