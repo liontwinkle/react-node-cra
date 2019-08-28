@@ -161,7 +161,7 @@ export const getObjectFromArray = (array) => {
 export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
-  const headers = keys.map(key => key.toLowerCase());
+  const headers = keys;
   const numbers = [];
   const columns = [];
   values.forEach((value, key) => {
