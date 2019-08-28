@@ -1,9 +1,15 @@
+@import "scss/mixin.scss";
 .mg-rule-actions{
   table{
     width:100%;
     border:1px solid #5e5e5e;
     th,td{
       border:1px solid #5e5e5e;
+    }
+    td{
+      .rule_value{
+        @include justify-row-between;
+      }
     }
   }
 }
