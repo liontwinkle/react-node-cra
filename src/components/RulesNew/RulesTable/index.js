@@ -92,6 +92,12 @@ function RulesTable(props) {
       key: '==',
     },
   ];
+  const scope = [
+    {
+      label: '- All Categories -',
+      key: '0',
+    },
+  ];
   const {
     rules,
     // isUpdating,
@@ -105,6 +111,7 @@ function RulesTable(props) {
   const [valueDetailItem, setValueDetails] = useState(valueDetails[0]);
   const [matchItem, setMatch] = useState(match[0]);
   const [value, setValue] = useState('');
+  const [scopeItem, setscopeItem] = useState(scope[0]);
   // const [open, setOpen] = useState({ add: false, edit: false });
   // const handleToggle = field => () => {
   //   setOpen({
@@ -146,7 +153,10 @@ function RulesTable(props) {
     console.log('matchItem>>>>', item);// fixme
     setMatch(item);
   };
-
+  const handleChangeScope = (item) => {
+    console.log('scopeItem>>>>', item);// fixme
+    setscopeItem(item);
+  };
   const handleChangeValue = (value) => {
     console.log('value>>>>', value);
     setValue(value);
@@ -195,19 +205,19 @@ function RulesTable(props) {
                   onChange={handleChangeMatch}
                 />
                 <CustomInput
-                  className="mb-3"
                   inline
                   value={value}
+                  placeholder="Input the value"
                   onChange={handleChangeValue}
                 />
               </div>
             </td>
             <td>
               <CustomSelect
-                placeholder="Select Refer of Rule"
-                value={matchItem}
-                items={match}
-                onChange={handleChangeMatch}
+                placeholder="Select Scope of Rule"
+                value={scopeItem}
+                items={scope}
+                onChange={handleChangeScope}
               />
             </td>
           </tr>
