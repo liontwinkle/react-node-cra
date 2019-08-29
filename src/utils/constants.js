@@ -141,6 +141,14 @@ export const valueDetails = [
     label: 'By Color Map',
     key: 'color_map',
   },
+  {
+    label: 'By Category Parent',
+    key: 'category_parent',
+  },
+  {
+    label: 'By Category Root',
+    key: 'category_root',
+  },
 ];
 export const match = [
   {

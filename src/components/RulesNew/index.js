@@ -26,11 +26,12 @@ class NewRules extends Component {
   }
 
   AnaylsisDetails = (valueStr) => {
-    const partValue = valueStr.split(' ');
-    const detailKey = partValue[0].replace('[', '');
-    const matchKey = partValue[1].replace(']', '');
-    const valueKey = partValue[2];
-    const detailObj = valueDetails.find(valueDetailsItem => (valueDetailsItem.key === detailKey));
+    const partValue = valueStr.split(']');
+    const detailValue = partValue[0].split(':');
+    const detailKey = detailValue[0].replace('[', '');
+    const matchKey = `:${detailValue[1]}`;
+    const valueKey = partValue[1];
+    const detailObj = valueDetails.find(valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')));
     const matchObj = match.find(matchItem => (matchItem.key === matchKey));
     return {
       detailObj,
