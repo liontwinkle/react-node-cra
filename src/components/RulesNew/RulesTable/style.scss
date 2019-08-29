@@ -3,9 +3,17 @@
   width: fit-content;
   table{
     width:100%;
+    padding: 0;
+    border-spacing: 0;
     border:1px solid #5e5e5e;
+    thead{
+      background: #475466;
+    }
     th,td{
       border:1px solid #5e5e5e;
+    }
+    th{
+      color:#c9dde2;
     }
     td{
       .mg-select-current{
