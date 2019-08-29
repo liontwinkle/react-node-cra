@@ -66,14 +66,9 @@ class NewRules extends Component {
 
     return (
       <div className="mg-rules-container d-flex">
+
         <div className="mg-rule-content">
-          <PerfectScrollbar
-            options={{
-              suppressScrollX: true,
-              suppressScrollY: true,
-              minScrollbarLength: 50,
-            }}
-          >
+          <PerfectScrollbar>
             <RulesTable rules={newRules} />
           </PerfectScrollbar>
         </div>

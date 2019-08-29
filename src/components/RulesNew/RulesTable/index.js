@@ -216,6 +216,7 @@ function RulesTable(props) {
         </tbody>
       </table>
     </div>
+
   );
 }
 

@@ -174,14 +174,7 @@ function ProductsDetail(props) {
   };
 
   return (
-    <PerfectScrollbar
-      options={
-        {
-          suppressScrollX: true,
-          minScrollbarLength: 50,
-        }
-      }
-    >
+    <PerfectScrollbar>
       <div className="product-details">
         <CustomSection title="Export and Save" key="export_save">
           <ExportDataSection
