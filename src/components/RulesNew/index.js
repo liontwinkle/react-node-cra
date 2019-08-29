@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import RulesTable from './RulesTable';
 import './style.scss';
@@ -34,7 +35,15 @@ class NewRules extends Component {
     return (
       <div className="mg-rules-container d-flex">
         <div className="mg-rule-content">
-          <RulesTable rules={ruleKeys} />
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              suppressScrollY: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            <RulesTable rules={ruleKeys} />
+          </PerfectScrollbar>
         </div>
       </div>
     );
