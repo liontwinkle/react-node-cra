@@ -8,96 +8,12 @@ import { updateCategory } from 'redux/actions/categories';
 
 import './style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
+import {
+  basis, refer, valueDetails, match, scope,
+} from 'utils/constants';
 
 function RulesTable(props) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const basis = [
-    {
-      label: 'Includes categories or products',
-      key: 'include',
-    },
-    {
-      label: 'Excludes categories or products',
-      key: 'exclude',
-    },
-  ];
-  const refer = [
-    {
-      label: 'Refer to product details',
-      key: 'product_detail',
-    },
-  ];
-  const valueDetails = [
-    {
-      label: 'By All',
-      key: '*',
-    },
-    {
-      label: 'By Name',
-      key: 'name',
-    },
-    {
-      label: 'By Description',
-      key: 'description',
-    },
-    {
-      label: 'By Description Html',
-      key: 'description_html',
-    },
-    {
-      label: 'By Feature',
-      key: 'feature',
-    },
-    {
-      label: 'By Color',
-      key: 'color',
-    },
-    {
-      label: 'By Color Map',
-      key: 'color_map',
-    },
-  ];
-  const match = [
-    {
-      label: 'Exact(text)',
-      key: ':=',
-    },
-    {
-      label: 'Literal(text)',
-      key: '::',
-    },
-    {
-      label: 'Contains(text)',
-      key: ':',
-    },
-    {
-      label: 'Lower or equals(number)',
-      key: '<=',
-    },
-    {
-      label: 'Greater or equals(number',
-      key: '>=',
-    },
-    {
-      label: 'Lower',
-      key: '<',
-    },
-    {
-      label: 'Greater',
-      key: '>',
-    },
-    {
-      label: 'Equals',
-      key: '==',
-    },
-  ];
-  const scope = [
-    {
-      label: '- All Categories -',
-      key: '0',
-    },
-  ];
   const {
     rules,
     isUpdating,
@@ -112,14 +28,7 @@ function RulesTable(props) {
   const [value, setValue] = useState('');
   const [scopeItem, setScopeItem] = useState(scope[0]);
   const [rulesState, setRulesState] = useState(rules);
-  // const [open, setOpen] = useState({ add: false, edit: false });
-  // const handleToggle = field => () => {
-  //   setOpen({
-  //     ...open,
-  //     [field]: !open[field],
-  //   });
-  // };
-  //
+
   const saveRules = (updatedState) => {
     console.log('rulesState>>>>>>', updatedState);// fixme
     const updatedData = [];

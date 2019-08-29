@@ -95,3 +95,90 @@ export const pagination = [
   { key: 200, label: '200 products' },
   { key: 500, label: '500 products' },
 ];
+
+export const basis = [
+  {
+    label: 'Includes categories or products',
+    key: 'include',
+  },
+  {
+    label: 'Excludes categories or products',
+    key: 'exclude',
+  },
+];
+export const refer = [
+  {
+    label: 'Refer to product details',
+    key: 'product_detail',
+  },
+];
+export const valueDetails = [
+  {
+    label: 'By All',
+    key: '*',
+  },
+  {
+    label: 'By Name',
+    key: 'name',
+  },
+  {
+    label: 'By Description',
+    key: 'description',
+  },
+  {
+    label: 'By Description Html',
+    key: 'description_html',
+  },
+  {
+    label: 'By Feature',
+    key: 'feature',
+  },
+  {
+    label: 'By Color',
+    key: 'color',
+  },
+  {
+    label: 'By Color Map',
+    key: 'color_map',
+  },
+];
+export const match = [
+  {
+    label: 'Exact(text)',
+    key: ':=',
+  },
+  {
+    label: 'Literal(text)',
+    key: '::',
+  },
+  {
+    label: 'Contains(text)',
+    key: ':',
+  },
+  {
+    label: 'Lower or equals(number)',
+    key: '<=',
+  },
+  {
+    label: 'Greater or equals(number',
+    key: '>=',
+  },
+  {
+    label: 'Lower',
+    key: '<',
+  },
+  {
+    label: 'Greater',
+    key: '>',
+  },
+  {
+    label: 'Equals',
+    key: '==',
+  },
+];
+export const scope = [
+  {
+    label: '- All Categories -',
+    key: '0',
+  },
+];

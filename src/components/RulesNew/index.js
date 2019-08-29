@@ -4,12 +4,15 @@ import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
+import {
+  basis, refer, valueDetails, match, scope,
+} from 'utils/constants';
 import RulesTable from './RulesTable';
 import './style.scss';
 
 class NewRules extends Component {
   state = {
-    ruleKeys: [],
+    newRules: [],
   };
 
   componentDidMount() {
@@ -22,15 +25,43 @@ class NewRules extends Component {
     }
   }
 
+  AnaylsisDetails = (valueStr) => {
+    const partValue = valueStr.split(' ');
+    const detailKey = partValue[0].replace('[', '');
+    const matchKey = partValue[1].replace(']', '');
+    const valueKey = partValue[2];
+    const detailObj = valueDetails.find(valueDetailsItem => (valueDetailsItem.key === detailKey));
+    const matchObj = match.find(matchItem => (matchItem.key === matchKey));
+    return {
+      detailObj,
+      matchObj,
+      valueKey,
+    };
+  };
+
   setMap = (category) => {
-    const ruleKeys = category.ruleKeys || [];
+    const recvNewRules = category.newRules || [];
+    const newRules = [];
+    recvNewRules.forEach((item) => {
+      const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
+      const referObj = refer.find(referItem => (referItem.key === item.refer));
+      const otherObj = this.AnaylsisDetails(item.value);
+      newRules.push({
+        basis: basisObj,
+        refer: referObj,
+        detail: otherObj.detailObj,
+        match: otherObj.matchObj,
+        value: otherObj.valueKey,
+        scope: scope[0],
+      });
+    });
     this.setState({
-      ruleKeys,
+      newRules,
     });
   };
 
   render() {
-    const { ruleKeys } = this.state;
+    const { newRules } = this.state;
 
     return (
       <div className="mg-rules-container d-flex">
@@ -42,7 +73,7 @@ class NewRules extends Component {
               minScrollbarLength: 50,
             }}
           >
-            <RulesTable rules={ruleKeys} />
+            <RulesTable rules={newRules} />
           </PerfectScrollbar>
         </div>
       </div>
