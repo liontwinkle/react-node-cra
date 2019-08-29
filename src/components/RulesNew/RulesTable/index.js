@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -21,16 +21,12 @@ function RulesTable(props) {
     updateCategory,
   } = props;
 
-  const [basisItem, setBasis] = useState(basis[0]);
-  const [referItem, setRefer] = useState(refer[0]);
-  const [valueDetailItem, setValueDetails] = useState(valueDetails[0]);
-  const [matchItem, setMatch] = useState(match[0]);
-  const [value, setValue] = useState('');
-  const [scopeItem, setScopeItem] = useState(scope[0]);
   const [rulesState, setRulesState] = useState(rules);
 
+  useEffect(() => {
+    setRulesState(rules);
+  }, [rules]);
   const saveRules = (updatedState) => {
-    console.log('rulesState>>>>>>', updatedState);// fixme
     const updatedData = [];
     updatedState.forEach((item) => {
       const value = `[${item.detail.key} ${item.match.key}] ${item.value}`;
@@ -41,7 +37,6 @@ function RulesTable(props) {
         scope: 0,
       });
     });
-    console.log('updatedData>>>>', updatedData);// fixme
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .catch(() => {
@@ -55,34 +50,32 @@ function RulesTable(props) {
   };
 
   const handleChange = (type, key) => (item) => {
-    const updatedState = (rules.length > 0) ? rules : [{
-      basis: rulesState[0] ? rulesState[0].basis : basis[0],
-      refer: rulesState[0] ? rulesState[0].refer : refer[0],
-      detail: rulesState[0] ? rulesState[0].detail : valueDetails[0],
-      match: rulesState[0] ? rulesState[0].match : match[0],
-      scope: rulesState[0] ? rulesState[0].scope : scope[0],
-      value: rulesState[0] ? rulesState[0].value : '',
-    }];
     const index = (key !== -1) ? key : rules.length;
+    const updatedState = rules;
+    if (!rulesState[index]) {
+      updatedState.push({
+        basis: basis[0],
+        refer: refer[0],
+        detail: valueDetails[0],
+        match: match[0],
+        scope: scope[0],
+        value: '',
+      });
+    }
     switch (type) {
       case 'basis':
-        setBasis(item);
         updatedState[index].basis = item;
         break;
       case 'refer':
-        setRefer(item);
         updatedState[index].refer = item;
         break;
       case 'detail':
-        setValueDetails(item);
         updatedState[index].detail = item;
         break;
       case 'match':
-        setMatch(item);
         updatedState[index].match = item;
         break;
       case 'scope':
-        setScopeItem(item);
         updatedState[index].scope = item;
         break;
       default:
@@ -92,18 +85,20 @@ function RulesTable(props) {
     saveRules(updatedState);
   };
   const handleChangeValue = key => (e) => {
-    const updatedState = (rules.length > 0) ? rules : [{
-      basis: rulesState[0] ? rulesState[0].basis : basis[0],
-      refer: rulesState[0] ? rulesState[0].refer : refer[0],
-      detail: rulesState[0] ? rulesState[0].detail : valueDetails[0],
-      match: rulesState[0] ? rulesState[0].match : match[0],
-      scope: rulesState[0] ? rulesState[0].scope : scope[0],
-      value: rulesState[0] ? rulesState[0].value : '',
-    }];
     const index = (key !== -1) ? key : rules.length;
+    const updatedState = rules;
+    if (!rulesState[index]) {
+      updatedState.push({
+        basis: basis[0],
+        refer: refer[0],
+        detail: valueDetails[0],
+        match: match[0],
+        scope: scope[0],
+        value: '',
+      });
+    }
     updatedState[index].value = e.target.value;
     setRulesState(updatedState);
-    setValue(e.target.value);
     saveRules(updatedState);
   };
   return (
@@ -120,7 +115,7 @@ function RulesTable(props) {
         <tbody>
           {
             rules.map((item, key) => (
-              <tr key={parseInt(key + 1, 10)}>
+              <tr key={parseInt(key, 10)}>
                 <td>
                   <CustomSelect
                     placeholder="Select Basis of Rule"
@@ -174,7 +169,7 @@ function RulesTable(props) {
             <td>
               <CustomSelect
                 placeholder="Select Basis of Rule"
-                value={basisItem}
+                value={basis[0]}
                 items={basis}
                 onChange={handleChange('basis', -1)}
               />
@@ -182,7 +177,7 @@ function RulesTable(props) {
             <td>
               <CustomSelect
                 placeholder="Select Refer of Rule"
-                value={referItem}
+                value={refer[0]}
                 items={refer}
                 onChange={handleChange('refer', -1)}
               />
@@ -191,19 +186,19 @@ function RulesTable(props) {
               <div className="rule_value">
                 <CustomSelect
                   placeholder="Select Detail of Rule"
-                  value={valueDetailItem}
+                  value={valueDetails[0]}
                   items={valueDetails}
                   onChange={handleChange('detail', -1)}
                 />
                 <CustomSelect
                   placeholder="Select matches of Rule"
-                  value={matchItem}
+                  value={match[0]}
                   items={match}
                   onChange={handleChange('match', -1)}
                 />
                 <CustomInput
                   inline
-                  value={value}
+                  value=""
                   placeholder="Input the value"
                   onChange={handleChangeValue(-1)}
                 />
@@ -212,7 +207,7 @@ function RulesTable(props) {
             <td>
               <CustomSelect
                 placeholder="Select Scope of Rule"
-                value={scopeItem}
+                value={scope[0]}
                 items={scope}
                 onChange={handleChange('scope', -1)}
               />
