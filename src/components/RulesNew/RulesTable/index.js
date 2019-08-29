@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import { useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 import { updateCategory } from 'redux/actions/categories';
 
@@ -10,7 +10,7 @@ import './style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
 
 function RulesTable(props) {
-  // const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const basis = [
     {
@@ -100,9 +100,9 @@ function RulesTable(props) {
   ];
   const {
     rules,
-    // isUpdating,
-    // category,
-    // updateCategory,
+    isUpdating,
+    category,
+    updateCategory,
   } = props;
 
   const [basisItem, setBasis] = useState(basis[0]);
@@ -120,21 +120,21 @@ function RulesTable(props) {
   //   });
   // };
   //
-  // const saveRules = () => {
-  //   if (!isUpdating) {
-  //     updateCategory(category.id, { rules })
-  //       .then(() => {
-  //         enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
-  //       })
-  //       .catch(() => {
-  //         enqueueSnackbar('Error in updating rules.',
-  //           {
-  //             variant: 'error',
-  //             autoHideDuration: 4000,
-  //           });
-  //       });
-  //   }
-  // };
+  const saveRules = () => {
+    if (!isUpdating) {
+      updateCategory(category.id, { rules })
+        .then(() => {
+          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
+        })
+        .catch(() => {
+          enqueueSnackbar('Error in updating rules.',
+            {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
+        });
+    }
+  };
 
   const handleChange = (type, key) => (item) => {
     const updatedState = (rules.length > 0) ? rules : [{
@@ -171,6 +171,7 @@ function RulesTable(props) {
         break;
     }
     setRulesState(updatedState);
+    saveRules();
   };
   const handleChangeValue = key => (e) => {
     const updatedState = (rules.length > 0) ? rules : [{
@@ -185,6 +186,7 @@ function RulesTable(props) {
     updatedState[index].value = e.target.value;
     setRulesState(updatedState);
     setValue(e.target.value);
+    saveRules();
   };
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
@@ -305,10 +307,10 @@ function RulesTable(props) {
 }
 
 RulesTable.propTypes = {
-  // isUpdating: PropTypes.bool.isRequired,
-  // category: PropTypes.object.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+  category: PropTypes.object.isRequired,
   rules: PropTypes.array.isRequired,
-  // updateCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
