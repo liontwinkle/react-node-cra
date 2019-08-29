@@ -6,9 +6,11 @@
   justify-content: center;
   .mg-rule-content{
     margin-top: 30px;
-    overflow: auto;
+    overflow: hidden;
+
     height:calc(100% - 30px);
     width: 100%;
+    padding: 10px;
     .scrollbar-container {
       height: 100%;
       width:fit-content;

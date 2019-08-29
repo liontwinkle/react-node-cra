@@ -149,8 +149,6 @@ function RulesTable(props) {
     switch (type) {
       case 'basis':
         setBasis(item);
-        console.log('what?', updatedState);// fixme
-        console.log('whatIndex?', index);// fixme
         updatedState[index].basis = item;
         break;
       case 'refer':
@@ -173,7 +171,6 @@ function RulesTable(props) {
         break;
     }
     setRulesState(updatedState);
-    console.log(rulesState);// fixme
   };
   const handleChangeValue = key => (e) => {
     const updatedState = (rules.length > 0) ? rules : [{
@@ -185,7 +182,6 @@ function RulesTable(props) {
       value: rulesState[0] ? rulesState[0].value : '',
     }];
     const index = (key !== -1) ? key : rules.length;
-    console.log(index);// fixme
     updatedState[index].value = e.target.value;
     setRulesState(updatedState);
     setValue(e.target.value);
