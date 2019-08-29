@@ -120,14 +120,23 @@ function RulesTable(props) {
   //   });
   // };
   //
-  const saveRules = () => {
+  const saveRules = (updatedState) => {
+    console.log('rulesState>>>>>>', updatedState);// fixme
+    const updatedData = [];
+    updatedState.forEach((item) => {
+      const value = `[${item.detail.key} ${item.match.key}] ${item.value}`;
+      updatedData.push({
+        basis: item.basis.key,
+        refer: item.refer.key,
+        value,
+        scope: 0,
+      });
+    });
+    console.log('updatedData>>>>', updatedData);// fixme
     if (!isUpdating) {
-      updateCategory(category.id, { rules })
-        .then(() => {
-          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
-        })
+      updateCategory(category.id, { newRules: updatedData })
         .catch(() => {
-          enqueueSnackbar('Error in updating rules.',
+          enqueueSnackbar('Error in updating new rules.',
             {
               variant: 'error',
               autoHideDuration: 4000,
@@ -138,11 +147,11 @@ function RulesTable(props) {
 
   const handleChange = (type, key) => (item) => {
     const updatedState = (rules.length > 0) ? rules : [{
-      basis: rulesState[0] ? rulesState[0].basis : {},
-      refer: rulesState[0] ? rulesState[0].refer : {},
-      detail: rulesState[0] ? rulesState[0].detail : {},
-      match: rulesState[0] ? rulesState[0].match : {},
-      scope: rulesState[0] ? rulesState[0].scope : {},
+      basis: rulesState[0] ? rulesState[0].basis : basis[0],
+      refer: rulesState[0] ? rulesState[0].refer : refer[0],
+      detail: rulesState[0] ? rulesState[0].detail : valueDetails[0],
+      match: rulesState[0] ? rulesState[0].match : match[0],
+      scope: rulesState[0] ? rulesState[0].scope : scope[0],
       value: rulesState[0] ? rulesState[0].value : '',
     }];
     const index = (key !== -1) ? key : rules.length;
@@ -171,22 +180,22 @@ function RulesTable(props) {
         break;
     }
     setRulesState(updatedState);
-    saveRules();
+    saveRules(updatedState);
   };
   const handleChangeValue = key => (e) => {
     const updatedState = (rules.length > 0) ? rules : [{
-      basis: rulesState[0] ? rulesState[0].basis : {},
-      refer: rulesState[0] ? rulesState[0].refer : {},
-      detail: rulesState[0] ? rulesState[0].detail : {},
-      match: rulesState[0] ? rulesState[0].match : {},
-      scope: rulesState[0] ? rulesState[0].scope : {},
+      basis: rulesState[0] ? rulesState[0].basis : basis[0],
+      refer: rulesState[0] ? rulesState[0].refer : refer[0],
+      detail: rulesState[0] ? rulesState[0].detail : valueDetails[0],
+      match: rulesState[0] ? rulesState[0].match : match[0],
+      scope: rulesState[0] ? rulesState[0].scope : scope[0],
       value: rulesState[0] ? rulesState[0].value : '',
     }];
     const index = (key !== -1) ? key : rules.length;
     updatedState[index].value = e.target.value;
     setRulesState(updatedState);
     setValue(e.target.value);
-    saveRules();
+    saveRules(updatedState);
   };
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">

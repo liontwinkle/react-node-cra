@@ -9,6 +9,12 @@ const CategorySchema = new Schema({
   },
   properties: Object,
   rules: Object,
+  newRules: [{
+    basis : String,
+    refer : String,
+    value : String,
+    scope : Number
+  }],
   ruleKeys: [{
     key: String,
     label: String,
