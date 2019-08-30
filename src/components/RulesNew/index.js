@@ -12,6 +12,7 @@ import './style.scss';
 import { bindActionCreators } from 'redux';
 import { fetchProducts } from 'redux/actions/products';
 import RulesTable from './RulesTable';
+import RulesAction from './RulesAction';
 
 class NewRules extends Component {
   state = {
@@ -86,6 +87,7 @@ class NewRules extends Component {
 
     return (
       <div className="mg-rules-container d-flex">
+        <RulesAction className="mg-rules-actions" />
         <div className="mg-rule-content">
           <PerfectScrollbar>
             <RulesTable rules={newRules} />
