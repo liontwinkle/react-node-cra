@@ -107,10 +107,12 @@ function RulesTable(props) {
       <table>
         <thead>
           <tr>
-            <th>Rule`s basis:</th>
-            <th>Rule`s refer:</th>
-            <th>Rule`s value:</th>
-            <th>Rule`s scope:</th>
+            <th>Rule`s Basis</th>
+            <th>Rule`s Refer</th>
+            <th>Search By Key</th>
+            <th>Rule`s Value</th>
+            <th>Rule`s Criteria</th>
+            <th>Rule`s Scope</th>
           </tr>
         </thead>
         <tbody>
