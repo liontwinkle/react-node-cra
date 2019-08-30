@@ -15,12 +15,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function DeleteConfirmDlg(props) {
+function CustomConfirmDlg(props) {
   const classes = useStyles();
   const {
     open,
     subCategoryNumber,
     handleClose,
+    msg,
   } = props;
 
   return (
@@ -30,7 +31,7 @@ function DeleteConfirmDlg(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Are you sure you want to delete this category?
+        {msg}
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
@@ -57,10 +58,14 @@ function DeleteConfirmDlg(props) {
   );
 }
 
-DeleteConfirmDlg.propTypes = {
+CustomConfirmDlg.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  subCategoryNumber: PropTypes.number.isRequired,
+  msg: PropTypes.string.isRequired,
+  subCategoryNumber: PropTypes.number,
 };
 
-export default DeleteConfirmDlg;
+CustomConfirmDlg.defaultProps = {
+  subCategoryNumber: 0,
+};
+export default CustomConfirmDlg;

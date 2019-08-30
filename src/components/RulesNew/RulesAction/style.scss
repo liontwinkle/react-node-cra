@@ -2,4 +2,27 @@
   .icon-button{
     margin-left: 10px;
   }
+  .mg-edit-rule-content {
+    width: 100%;
+  }
+}
+.MuiDialog-root {
+  width:100%;
+  max-width: unset !important;
+  .MuiDialog-paperWidthSm {
+    max-width: unset !important;
+  }
+  .MuiPaper-root {
+    box-shadow: none;
+
+    .MuiToolbar-root {
+      padding: 0;
+    }
+
+    .MuiTableFooter-root {
+      .MuiTableCell-root {
+        border-bottom: 0;
+      }
+    }
+  }
 }

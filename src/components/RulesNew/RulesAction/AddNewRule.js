@@ -105,7 +105,7 @@ function AddNewRule(props) {
       rules.push(ruleData);
       saveRules(rules);
     } else {
-      enqueueSnackbar('Please fill the required inputs.',
+      enqueueSnackbar('Please fill the Criteria field.',
         {
           variant: 'error',
           autoHideDuration: 4000,
@@ -183,7 +183,7 @@ function AddNewRule(props) {
         </button>
         <button
           className="mg-button primary"
-          disabled={isUpdating || disabled}
+          disabled={isUpdating}
           onClick={handleSubmit}
         >
           Save

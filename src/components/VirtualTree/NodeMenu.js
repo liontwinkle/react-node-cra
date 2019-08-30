@@ -14,7 +14,7 @@ import { useSnackbar } from 'notistack';
 import { getNodeKey } from 'utils';
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
-import DeleteConfirmDlg from './DeleteConfirmDlg';
+import CustomConfirmDlg from '../elements/CustomConfirmDlg';
 
 function NodeMenu(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -181,10 +181,11 @@ function NodeMenu(props) {
         </div>
       </Popover>
       {deleteDlgOpen && (
-        <DeleteConfirmDlg
+        <CustomConfirmDlg
           open={deleteDlgOpen}
           subCategoryNumber={subCategoryNumber}
           handleClose={type => handleDeleteDlgClose(type)}
+          msg="Are you sure you want to delete this category?"
         />
       )}
     </div>

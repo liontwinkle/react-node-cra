@@ -14,6 +14,7 @@ import {
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { getObjectFromArray } from '../../../utils';
+import './style.scss';
 
 function EditRules(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -149,7 +150,7 @@ function EditRules(props) {
         Edit Property Fields
       </DialogTitle>
 
-      <DialogContent className="mg-edit-properties-content">
+      <DialogContent className="mg-edit-rule-content">
         <MaterialTable
           title=""
           icons={tableIcons}
