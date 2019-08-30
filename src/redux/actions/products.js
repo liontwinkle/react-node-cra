@@ -11,8 +11,8 @@ export const fetchProducts = () => (dispatch, getState) => {
     type: types.PRODUCTS_GET_DATA_REQUEST,
   });
 
-  const { client, type } = getState().clientsData;
-  return productsService.fetch(client.id, type.key)
+  const { client } = getState().clientsData;
+  return productsService.fetch(client.id, 'products')
     .then((products) => {
       dispatch({
         type: types.PRODUCTS_GET_DATA_SUCCESS,

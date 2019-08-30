@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
+import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import {
   basis, refer, valueDetails, match, scope,
 } from 'utils/constants';
-import RulesTable from './RulesTable';
 import './style.scss';
+import { bindActionCreators } from 'redux';
+import { fetchProducts } from 'redux/actions/products';
+import RulesTable from './RulesTable';
 
 class NewRules extends Component {
   state = {
@@ -16,7 +19,23 @@ class NewRules extends Component {
   };
 
   componentDidMount() {
-    this.setMap(this.props.category);
+    this.props.fetchProducts()
+      .then(() => {
+        this.setMap(this.props.category);
+        console.log('thisProps>>>>', this.props.headers);// fixme
+        this.props.enqueueSnackbar('Success to collect the Rule keys.',
+          {
+            variant: 'success',
+            autoHideDuration: 1000,
+          });
+      })
+      .catch(() => {
+        this.props.enqueueSnackbar('Error to collect the Rule Keys.',
+          {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,10 +98,21 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
+  headers: PropTypes.array.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
+  headers: store.productsData.headers,
 });
 
-export default connect(mapStateToProps)(NewRules);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchProducts,
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withSnackbar(NewRules));

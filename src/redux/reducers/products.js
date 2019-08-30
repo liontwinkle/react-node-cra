@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   columns: [],
   headers: [],
   numbers: [],
+  valueDetails: [],
   errors: '',
 };
 
