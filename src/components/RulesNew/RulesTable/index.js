@@ -116,6 +116,56 @@ function RulesTable(props) {
           </tr>
         </thead>
         <tbody>
+          <tr key="new">
+            <td>
+              <CustomSelect
+                placeholder="Select Basis of Rule"
+                value={basis[0]}
+                items={basis}
+                onChange={handleChange('basis', -1)}
+              />
+            </td>
+            <td>
+              <CustomSelect
+                placeholder="Select Refer of Rule"
+                value={refer[0]}
+                items={refer}
+                onChange={handleChange('refer', -1)}
+              />
+            </td>
+            <td>
+              <CustomSelect
+                placeholder="Select Detail of Rule"
+                value={valueDetails[0]}
+                items={valueDetails}
+                onChange={handleChange('detail', -1)}
+              />
+            </td>
+            <td>
+              <CustomSelect
+                placeholder="Select matches of Rule"
+                value={match[0]}
+                items={match}
+                onChange={handleChange('match', -1)}
+              />
+            </td>
+            <td>
+              <CustomInput
+                inline
+                value=""
+                placeholder="Input the value"
+                onChange={handleChangeValue(-1)}
+              />
+            </td>
+            <td>
+              <CustomSelect
+                placeholder="Select Scope of Rule"
+                value={scope[0]}
+                items={scope}
+                onChange={handleChange('scope', -1)}
+              />
+            </td>
+          </tr>
           {
             rules.map((item, key) => (
               <tr key={parseInt(key, 10)}>
@@ -136,26 +186,28 @@ function RulesTable(props) {
                   />
                 </td>
                 <td>
-                  <div className="rule_value">
-                    <CustomSelect
-                      placeholder="Select Detail of Rule"
-                      value={item.detail}
-                      items={valueDetails}
-                      onChange={handleChange('detail', key)}
-                    />
-                    <CustomSelect
-                      placeholder="Select matches of Rule"
-                      value={item.match}
-                      items={match}
-                      onChange={handleChange('match', key)}
-                    />
-                    <CustomInput
-                      inline
-                      value={item.value}
-                      placeholder="Input the value"
-                      onChange={handleChangeValue(key)}
-                    />
-                  </div>
+                  <CustomSelect
+                    placeholder="Select Detail of Rule"
+                    value={item.detail}
+                    items={valueDetails}
+                    onChange={handleChange('detail', key)}
+                  />
+                </td>
+                <td>
+                  <CustomSelect
+                    placeholder="Select matches of Rule"
+                    value={item.match}
+                    items={match}
+                    onChange={handleChange('match', key)}
+                  />
+                </td>
+                <td>
+                  <CustomInput
+                    inline
+                    value={item.value}
+                    placeholder="Input the value"
+                    onChange={handleChangeValue(key)}
+                  />
                 </td>
                 <td>
                   <CustomSelect
@@ -168,54 +220,6 @@ function RulesTable(props) {
               </tr>
             ))
           }
-          <tr key="new">
-            <td>
-              <CustomSelect
-                placeholder="Select Basis of Rule"
-                value={basis[0]}
-                items={basis}
-                onChange={handleChange('basis', -1)}
-              />
-            </td>
-            <td>
-              <CustomSelect
-                placeholder="Select Refer of Rule"
-                value={refer[0]}
-                items={refer}
-                onChange={handleChange('refer', -1)}
-              />
-            </td>
-            <td>
-              <div className="rule_value">
-                <CustomSelect
-                  placeholder="Select Detail of Rule"
-                  value={valueDetails[0]}
-                  items={valueDetails}
-                  onChange={handleChange('detail', -1)}
-                />
-                <CustomSelect
-                  placeholder="Select matches of Rule"
-                  value={match[0]}
-                  items={match}
-                  onChange={handleChange('match', -1)}
-                />
-                <CustomInput
-                  inline
-                  value=""
-                  placeholder="Input the value"
-                  onChange={handleChangeValue(-1)}
-                />
-              </div>
-            </td>
-            <td>
-              <CustomSelect
-                placeholder="Select Scope of Rule"
-                value={scope[0]}
-                items={scope}
-                onChange={handleChange('scope', -1)}
-              />
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>

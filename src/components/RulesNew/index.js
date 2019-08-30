@@ -86,7 +86,6 @@ class NewRules extends Component {
 
     return (
       <div className="mg-rules-container d-flex">
-
         <div className="mg-rule-content">
           <PerfectScrollbar>
             <RulesTable rules={newRules} />

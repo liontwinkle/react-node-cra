@@ -19,13 +19,6 @@
       .mg-select-current{
         font-size: 12px;
       }
-      .rule_value{
-        @include justify-row-between;
-        align-items: center;
-        .mg-select-control{
-          margin-right: 3px;
-        }
-      }
     }
   }
 }
