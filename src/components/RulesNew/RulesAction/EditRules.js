@@ -13,6 +13,7 @@ import {
   basis, refer, match, scope, tableIcons,
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
+import { getObjectFromArray } from '../../../utils';
 
 function EditRules(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -27,34 +28,33 @@ function EditRules(props) {
     valueDetails,
   } = props;
 
-  console.log('rules>>>>', rules);// fixme
   const tableData = {
     columns: [
       {
         title: 'Basis',
         field: 'basis',
-        lookup: basis,
+        lookup: getObjectFromArray(basis),
       },
       {
         title: 'Detail',
         field: 'detail',
-        lookup: valueDetails,
+        lookup: getObjectFromArray(valueDetails),
       },
       {
         title: 'Refer',
         field: 'refer',
-        lookup: refer,
+        lookup: getObjectFromArray(refer),
       },
       {
         title: 'Match',
         field: 'match',
-        lookup: match,
+        lookup: getObjectFromArray(match),
       },
       { title: 'Value', field: 'value' },
       {
         title: 'Scope',
         field: 'scope',
-        lookup: scope,
+        lookup: getObjectFromArray(scope),
       },
     ],
     data: rules,
@@ -63,16 +63,24 @@ function EditRules(props) {
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
+      const value = `[${item.detail}${item.match}]${item.value}`;
       updatedData.push({
-        basis: item.basis.key,
-        refer: item.refer.key,
+        _id: item._id,
+        basis: item.basis,
+        refer: item.refer,
         value,
         scope: 0,
       });
     });
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
+        .then(() => {
+          enqueueSnackbar('Success Updating the Rules.',
+            {
+              variant: 'success',
+              autoHideDuration: 1500,
+            });
+        })
         .catch(() => {
           enqueueSnackbar('Error in updating new rules.',
             {
@@ -83,13 +91,16 @@ function EditRules(props) {
     }
   };
   const handleAdd = newData => new Promise((resolve) => {
-    console.log('newData>>>', newData);// fixme
     setTimeout(() => {
       resolve();
       rules.push({
-        key: newData.key,
-        label: newData.label,
-        order: newData.order,
+        _id: newData._id,
+        basis: newData.basis,
+        refer: newData.refer,
+        detail: newData.detail,
+        value: newData.value,
+        match: newData.match,
+        scope: newData.scope,
       });
       saveRules(rules);
     },
@@ -103,10 +114,13 @@ function EditRules(props) {
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
-          key: newData.key,
-          label: newData.label,
-          order: newData.order,
           _id: newData._id,
+          basis: newData.basis,
+          refer: newData.refer,
+          detail: newData.detail,
+          value: newData.value,
+          match: newData.match,
+          scope: newData.scope,
         });
         saveRules(rules);
       }

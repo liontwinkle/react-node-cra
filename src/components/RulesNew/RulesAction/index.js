@@ -15,6 +15,7 @@ import EditRules from './EditRules';
 function RulesAction(props) {
   const {
     rules,
+    newRules,
   } = props;
   const [open, setOpen] = useState({
     add_rule: false,
@@ -47,7 +48,7 @@ function RulesAction(props) {
         </IconButton>
       </Tooltip>
       {open.add_rule && (
-        <AddNewRule open={open.add_rule} handleClose={handleToggle('add_rule')} />
+        <AddNewRule open={open.add_rule} handleClose={handleToggle('add_rule')} rules={newRules} />
       )}
 
       {open.edit_rules && (
@@ -59,5 +60,6 @@ function RulesAction(props) {
 
 RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
+  newRules: PropTypes.array.isRequired,
 };
 export default RulesAction;

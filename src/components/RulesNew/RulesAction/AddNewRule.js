@@ -35,6 +35,7 @@ function AddNewRule(props) {
     updateCategory,
     valueDetails,
     category,
+    rules,
   } = props;
 
   const [ruleData, setRuleData] = useState({
@@ -87,6 +88,7 @@ function AddNewRule(props) {
               variant: 'success',
               autoHideDuration: 1500,
             });
+          handleClose();
         })
         .catch(() => {
           enqueueSnackbar('Error in updating new rules.',
@@ -100,7 +102,8 @@ function AddNewRule(props) {
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      saveRules(ruleData);
+      rules.push(ruleData);
+      saveRules(rules);
     } else {
       enqueueSnackbar('Please fill the required inputs.',
         {
@@ -197,6 +200,7 @@ AddNewRule.propTypes = {
   category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  rules: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({

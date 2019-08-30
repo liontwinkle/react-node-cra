@@ -112,44 +112,6 @@ export const refer = [
     key: 'product_detail',
   },
 ];
-export const valueDetails = [
-  {
-    label: 'By All',
-    key: '*',
-  },
-  {
-    label: 'By Name',
-    key: 'name',
-  },
-  {
-    label: 'By Description',
-    key: 'description',
-  },
-  {
-    label: 'By Description Html',
-    key: 'description_html',
-  },
-  {
-    label: 'By Feature',
-    key: 'feature',
-  },
-  {
-    label: 'By Color',
-    key: 'color',
-  },
-  {
-    label: 'By Color Map',
-    key: 'color_map',
-  },
-  {
-    label: 'By Category Parent',
-    key: 'category_parent',
-  },
-  {
-    label: 'By Category Root',
-    key: 'category_root',
-  },
-];
 export const match = [
   {
     label: 'Exact(text)',

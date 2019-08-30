@@ -100,7 +100,7 @@ class NewRules extends Component {
 
     return (
       <div className="mg-rules-container d-flex">
-        <RulesAction className="mg-rules-actions" rules={editRules} />
+        <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
         <div className="divider" />
         <div className="mg-rule-content">
           <PerfectScrollbar>
