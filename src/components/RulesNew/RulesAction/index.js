@@ -8,6 +8,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { Tooltip } from 'react-tippy';
 
 import { IconButton } from 'components/elements';
+import './style.scss';
 
 function RulesAction() {
   return (
