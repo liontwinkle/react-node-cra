@@ -120,7 +120,7 @@ function AddNewRule(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Add Sections
+        Add Rule
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>

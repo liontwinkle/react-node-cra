@@ -147,7 +147,7 @@ function EditRules(props) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Edit Property Fields
+        Edit Rules
       </DialogTitle>
 
       <DialogContent className="mg-edit-rule-content">
