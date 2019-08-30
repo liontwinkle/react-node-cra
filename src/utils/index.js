@@ -158,19 +158,17 @@ export const getObjectFromArray = (array) => {
   return res;
 };
 
-const converKey = key => `BY ${key.charAt(0).toUpperCase() + key.slice(1)}`;
-
 const getRulesKey = (keys) => {
   const ruleKeys = [
     {
-      label: 'By All',
+      label: 'All',
       key: '*',
     },
   ];
   keys.forEach((keyItem) => {
     ruleKeys.push(
       {
-        label: converKey(keyItem),
+        label: keyItem,
         key: keyItem,
       },
     );
@@ -181,7 +179,6 @@ export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys;
-  keys.sort();
   const valueDetails = getRulesKey(keys);
   const numbers = [];
   const columns = [];
