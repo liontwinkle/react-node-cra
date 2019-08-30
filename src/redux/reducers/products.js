@@ -33,6 +33,7 @@ export default (state = INITIAL_STATE, action) => {
         headers: data.headers,
         numbers: data.numbers,
         products: data.data,
+        valueDetails: data.valueDetails,
         originProducts: action.payload.products,
         isFetchingList: false,
       };

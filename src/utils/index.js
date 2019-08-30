@@ -158,36 +158,30 @@ export const getObjectFromArray = (array) => {
   return res;
 };
 
-const converKey = (key) => {
-  const string = key;
-  let updateLavel = 'By';
-  console.log('result>>>>', updateLavel);// fixme
-  string.replace(/_/g, ' ');
-  console.log('convert>>>>', string);// fixme
-  const strArray = string.split(' ');
-  strArray.forEach((strItem) => {
-    const capitalize = strItem.charAt(0).toUpperCase() + strItem.slice(1);
-    updateLavel += (` ${capitalize}`);
-  });
-  console.log('result>>>>', updateLavel);// fixme
-};
+const converKey = key => `BY ${key.charAt(0).toUpperCase() + key.slice(1)}`;
+
 const getRulesKey = (keys) => {
-  console.log('keys>>>>', keys);
-  // const ruleKeys = [
-  //   {
-  //     label: 'By All',
-  //     key: '*',
-  //   },
-  // ];
+  const ruleKeys = [
+    {
+      label: 'By All',
+      key: '*',
+    },
+  ];
   keys.forEach((keyItem) => {
-    converKey(keyItem);// fixme
+    ruleKeys.push(
+      {
+        label: converKey(keyItem),
+        key: keyItem,
+      },
+    );
   });
+  return ruleKeys;
 };
 export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys;
-  getRulesKey(keys);// fixme
+  const valueDetails = getRulesKey(keys);
   const numbers = [];
   const columns = [];
   values.forEach((value, key) => {
@@ -257,6 +251,7 @@ export const getProducts = (products) => {
     columns,
     headers,
     numbers,
+    valueDetails,
     data: objects,
   };
 };

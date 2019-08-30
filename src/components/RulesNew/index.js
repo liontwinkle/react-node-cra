@@ -6,7 +6,7 @@ import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import {
-  basis, refer, valueDetails, match, scope,
+  basis, refer, match, scope,
 } from 'utils/constants';
 import './style.scss';
 import { bindActionCreators } from 'redux';
@@ -22,7 +22,6 @@ class NewRules extends Component {
     this.props.fetchProducts()
       .then(() => {
         this.setMap(this.props.category);
-        console.log('thisProps>>>>', this.props.headers);// fixme
         this.props.enqueueSnackbar('Success to collect the Rule keys.',
           {
             variant: 'success',
@@ -50,7 +49,9 @@ class NewRules extends Component {
     const detailKey = detailValue[0].replace('[', '');
     const matchKey = `:${detailValue[1]}`;
     const valueKey = partValue[1];
-    const detailObj = valueDetails.find(valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')));
+    const detailObj = this.props.valueDetails.find(
+      valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
+    );
     const matchObj = match.find(matchItem => (matchItem.key === matchKey));
     return {
       detailObj,
@@ -98,14 +99,14 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
-  headers: PropTypes.array.isRequired,
+  valueDetails: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
-  headers: store.productsData.headers,
+  valueDetails: store.productsData.valueDetails,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

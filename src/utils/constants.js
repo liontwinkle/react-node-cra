@@ -165,23 +165,23 @@ export const match = [
   },
   {
     label: 'Lower or equals(number)',
-    key: '<=',
+    key: ':<=',
   },
   {
     label: 'Greater or equals(number',
-    key: '>=',
+    key: ':>=',
   },
   {
     label: 'Lower',
-    key: '<',
+    key: ':<',
   },
   {
     label: 'Greater',
-    key: '>',
+    key: ':>',
   },
   {
     label: 'Equals',
-    key: '==',
+    key: ':==',
   },
 ];
 export const scope = [

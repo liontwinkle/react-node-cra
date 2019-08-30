@@ -9,7 +9,7 @@ import { updateCategory } from 'redux/actions/categories';
 import './style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
 import {
-  basis, refer, valueDetails, match, scope,
+  basis, refer, match, scope,
 } from 'utils/constants';
 
 function RulesTable(props) {
@@ -19,6 +19,7 @@ function RulesTable(props) {
     isUpdating,
     category,
     updateCategory,
+    valueDetails,
   } = props;
 
   const [rulesState, setRulesState] = useState(rules);
@@ -225,11 +226,13 @@ RulesTable.propTypes = {
   category: PropTypes.object.isRequired,
   rules: PropTypes.array.isRequired,
   updateCategory: PropTypes.func.isRequired,
+  valueDetails: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
   category: store.categoriesData.category,
+  valueDetails: store.productsData.valueDetails,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
