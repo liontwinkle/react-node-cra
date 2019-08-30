@@ -181,6 +181,7 @@ export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys;
+  keys.sort();
   const valueDetails = getRulesKey(keys);
   const numbers = [];
   const columns = [];
