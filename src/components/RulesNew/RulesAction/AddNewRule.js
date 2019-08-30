@@ -127,7 +127,7 @@ function AddNewRule(props) {
           placeholder="Select Basis of Rule"
           value={ruleData.basis}
           items={basis}
-          onChange={handleSelectChange('basis', -1)}
+          onChange={handleSelectChange('basis')}
         />
         <CustomSelect
           className="mb-3"
@@ -135,7 +135,7 @@ function AddNewRule(props) {
           placeholder="Select Refer of Rule"
           value={ruleData.refer}
           items={refer}
-          onChange={handleChange('refer', -1)}
+          onChange={handleSelectChange('refer')}
         />
         <CustomSelect
           className="mb-3"
@@ -143,7 +143,7 @@ function AddNewRule(props) {
           placeholder="Select Detail of Rule"
           value={ruleData.detail}
           items={valueDetails}
-          onChange={handleChange('detail', -1)}
+          onChange={handleSelectChange('detail')}
         />
         <CustomSelect
           className="mb-3"
@@ -151,14 +151,22 @@ function AddNewRule(props) {
           placeholder="Select matches of Rule"
           value={ruleData.match}
           items={match}
-          onChange={handleChange('match', -1)}
+          onChange={handleSelectChange('match')}
         />
         <CustomInput
           className="mb-3"
           label="Criteria"
           inline
           value={ruleData.value}
-          onChange={handleChange('order')}
+          onChange={handleChange}
+        />
+        <CustomSelect
+          className="mb-3"
+          label="Scope"
+          placeholder="Select Scope of Rule"
+          value={ruleData.scope}
+          items={scope}
+          onChange={handleSelectChange('scope')}
         />
       </DialogContent>
 

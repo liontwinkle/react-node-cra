@@ -8,10 +8,14 @@ import { Tooltip } from 'react-tippy';
 
 import { IconButton } from 'components/elements';
 import './style.scss';
-import AddSections from '../../Properties/PropertyActions/AddSections';
-import EditSections from '../../Properties/PropertyActions/EditSections';
+import PropTypes from 'prop-types';
+import AddNewRule from './AddNewRule';
+import EditRules from './EditRules';
 
-function RulesAction() {
+function RulesAction(props) {
+  const {
+    rules,
+  } = props;
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
@@ -43,14 +47,17 @@ function RulesAction() {
         </IconButton>
       </Tooltip>
       {open.add_rule && (
-        <AddSections open={open.add_rule} handleClose={handleToggle('add_rule')} />
+        <AddNewRule open={open.add_rule} handleClose={handleToggle('add_rule')} />
       )}
 
       {open.edit_rules && (
-        <EditSections open={open.edit_rules} handleClose={handleToggle('edit_rules')} />
+        <EditRules open={open.edit_rules} handleClose={handleToggle('edit_rules')} rules={rules} />
       )}
     </div>
   );
 }
 
+RulesAction.propTypes = {
+  rules: PropTypes.array.isRequired,
+};
 export default RulesAction;

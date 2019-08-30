@@ -17,6 +17,7 @@ import RulesAction from './RulesAction';
 class NewRules extends Component {
   state = {
     newRules: [],
+    editRules: [],
   };
 
   componentDidMount() {
@@ -64,11 +65,13 @@ class NewRules extends Component {
   setMap = (category) => {
     const recvNewRules = category.newRules || [];
     const newRules = [];
+    const editRules = [];
     recvNewRules.forEach((item) => {
       const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
       const referObj = refer.find(referItem => (referItem.key === item.refer));
       const otherObj = this.AnaylsisDetails(item.value);
       newRules.push({
+        _id: item._id,
         basis: basisObj,
         refer: referObj,
         detail: otherObj.detailObj,
@@ -76,18 +79,28 @@ class NewRules extends Component {
         value: otherObj.valueKey,
         scope: scope[0],
       });
+      editRules.push({
+        _id: item._id,
+        basis: basisObj.key,
+        refer: referObj.key,
+        detail: otherObj.detailObj.key,
+        match: otherObj.matchObj.key,
+        value: otherObj.valueKey,
+        scope: scope[0].key,
+      });
     });
     this.setState({
       newRules,
+      editRules,
     });
   };
 
   render() {
-    const { newRules } = this.state;
+    const { newRules, editRules } = this.state;
 
     return (
       <div className="mg-rules-container d-flex">
-        <RulesAction className="mg-rules-actions" />
+        <RulesAction className="mg-rules-actions" rules={editRules} />
         <div className="divider" />
         <div className="mg-rule-content">
           <PerfectScrollbar>
