@@ -10,11 +10,13 @@ import { IconButton } from 'components/elements';
 import './style.scss';
 import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
+import { useSnackbar } from 'notistack';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
 
 function RulesAction(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     rules,
     newRules,
@@ -102,16 +104,26 @@ function RulesAction(props) {
       getProducts(field, match, value, filterProducts);
     });
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
+    return filterProducts.length;
   };
 
   const handleToggle = field => () => {
+    let displayLength = 0;
     if (field === 'preview_products') {
-      filterProducts();
+      displayLength = filterProducts();
     }
-    setOpen({
-      ...open,
-      [field]: !open[field],
-    });
+    if (displayLength === 0 && field === 'preview_products') {
+      enqueueSnackbar('Matching Data is not exists.',
+        {
+          variant: 'info',
+          autoHideDuration: 4000,
+        });
+    } else {
+      setOpen({
+        ...open,
+        [field]: !open[field],
+      });
+    }
   };
   return (
     <div className="mg-rules-actions d-flex flex-column align-items-center">

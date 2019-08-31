@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import isEqual from 'lodash/isEqual';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -39,9 +38,9 @@ class NewRules extends Component {
       });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.category, nextProps.category)) {
-      this.setMap(nextProps.category);
+  componentDidUpdate(prevProps) {
+    if (this.props.category !== prevProps.category) {
+      this.setMap(this.props.category);
     }
   }
 
@@ -97,7 +96,6 @@ class NewRules extends Component {
 
   render() {
     const { newRules, editRules } = this.state;
-
     return (
       <div className="mg-rules-container d-flex">
         <div className="mg-rule-content">
