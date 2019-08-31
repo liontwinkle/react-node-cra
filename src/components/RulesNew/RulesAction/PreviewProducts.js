@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { tableIcons } from 'utils/constants';
 import './style.scss';
+import { HotTable } from '@handsontable/react';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+
 
 function PreviewProducts(props) {
   const {
@@ -17,26 +18,11 @@ function PreviewProducts(props) {
     // products,
     filterProducts,
     headers,
+    columns,
   } = props;
 
   console.log(headers);// fixme
   console.log(filterProducts);// fixme
-  const tableData = {
-    columns: headers.map(item => ({
-      title: item,
-      field: item,
-      cellStyle: {
-        maxWidth: 500,
-        width: 500,
-      },
-      headerStyle: {
-        maxWidth: 500,
-        width: 500,
-      },
-    })),
-    data: filterProducts,
-  };
-
   return (
     <Dialog
       open={open}
@@ -48,17 +34,35 @@ function PreviewProducts(props) {
       </DialogTitle>
 
       <DialogContent className="mg-edit-rule-content">
-        <MaterialTable
-          title=""
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          options={{
-            actionsColumnIndex: -1,
-            showTitle: false,
-            search: false,
-          }}
-        />
+        <div id="hot-app">
+          <HotTable
+            root="hot"
+            licenseKey="non-commercial-and-evaluation"
+            settings={{
+              data: filterProducts,
+              columns,
+              autoWrapRow: true,
+              manualRowResize: true,
+              manualColumnResize: true,
+              manualColumnMove: true,
+              manualRowMove: true,
+              autoColumnResize: true,
+              headerTooltips: true,
+              colHeaders: headers,
+              rowHeaders: true,
+              stretchH: 'all',
+              contextMenu: true,
+              exportFile: true,
+              // collapsibleColumns
+              multiColumnSorting: {
+                indicator: true,
+              },
+              dropdownMenu: true,
+              filters: true,
+              hiddenColumns: true,
+            }}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -67,14 +71,15 @@ function PreviewProducts(props) {
 PreviewProducts.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  // products: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
   filterProducts: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
   products: store.productsData.products,
+  columns: store.productsData.columns,
   headers: store.productsData.headers,
 });
 
