@@ -14,12 +14,13 @@ function PreviewProducts(props) {
   const {
     open,
     handleClose,
-    products,
+    // products,
+    filterProducts,
     headers,
   } = props;
 
   console.log(headers);// fixme
-  console.log(products);// fixme
+  console.log(filterProducts);// fixme
   const tableData = {
     columns: headers.map(item => ({
       title: item,
@@ -33,7 +34,7 @@ function PreviewProducts(props) {
         width: 500,
       },
     })),
-    data: products,
+    data: filterProducts,
   };
 
   return (
@@ -66,8 +67,9 @@ function PreviewProducts(props) {
 PreviewProducts.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  products: PropTypes.array.isRequired,
+  // products: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
+  filterProducts: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({

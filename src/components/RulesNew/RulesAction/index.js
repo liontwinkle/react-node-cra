@@ -18,6 +18,7 @@ function RulesAction(props) {
   const {
     rules,
     newRules,
+    products,
   } = props;
   const [open, setOpen] = useState({
     add_rule: false,
@@ -25,9 +26,76 @@ function RulesAction(props) {
     preview_products: false,
   });
 
-  // const [previewProducts, setProducts] = useState([]);
+  const [previewProducts, setProducts] = useState([]);
+
   const getProducts = (field, match, value, store) => {
     console.log(field, ',', match, ',', value, ',>>>>> \n', store);// fixme
+    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseSensitiveMatch = new RegExp(`${value}`);
+    products.forEach((productItem) => {
+      switch (match) {
+        case ':=':
+          if (caseItensitiveMatch.test(productItem[field])) {
+            console.log('intensive');// fixme
+            store.push(productItem);
+          }
+          break;
+        case '::':
+        case ':':
+          if (caseSensitiveMatch.test(productItem[field])) {
+            console.log('sensetive');// fixme
+            store.push(productItem);
+          }
+          break;
+        case ':<=':
+          console.log('smaller eq');// fixme
+          if (typeof productItem[field]) {
+            const checkVal = parseInt(productItem[field], 10);
+            if (checkVal <= value) {
+              store.push(productItem);
+            }
+          }
+          break;
+        case ':>=':
+          console.log('greater eq');// fixme
+          if (typeof productItem[field]) {
+            const checkVal = parseInt(productItem[field], 10);
+            if (checkVal >= value) {
+              store.push(productItem);
+            }
+          }
+          break;
+        case ':<':
+          console.log('smaller');// fixme
+          if (typeof productItem[field]) {
+            const checkVal = parseInt(productItem[field], 10);
+            if (checkVal < value) {
+              store.push(productItem);
+            }
+          }
+          break;
+        case ':>':
+          console.log('greater');// fixme
+          if (typeof productItem[field]) {
+            const checkVal = parseInt(productItem[field], 10);
+            if (checkVal > value) {
+              store.push(productItem);
+            }
+          }
+          break;
+        case ':==':
+          console.log('equal');// fixme
+          if (typeof productItem[field]) {
+            const checkVal = parseInt(productItem[field], 10);
+            if (checkVal === value) {
+              store.push(productItem);
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    });
   };
   const filterProducts = () => {
     const filterProducts = [];
@@ -37,6 +105,8 @@ function RulesAction(props) {
       const { value } = item;
       getProducts(field, match, value, filterProducts);
     });
+    console.log('filterProducts>>>', filterProducts);// fixme
+    setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
   };
 
   const handleToggle = field => () => {
@@ -87,7 +157,11 @@ function RulesAction(props) {
       )}
 
       {open.preview_products && (
-        <PreviewProducts open={open.preview_products} handleClose={handleToggle('preview_products')} rules={rules} />
+        <PreviewProducts
+          open={open.preview_products}
+          handleClose={handleToggle('preview_products')}
+          filterProducts={previewProducts}
+        />
       )}
     </div>
   );
@@ -96,6 +170,7 @@ function RulesAction(props) {
 RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
