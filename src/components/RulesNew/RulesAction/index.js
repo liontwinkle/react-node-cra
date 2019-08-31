@@ -9,8 +9,10 @@ import { Tooltip } from 'react-tippy';
 import { IconButton } from 'components/elements';
 import './style.scss';
 import PropTypes from 'prop-types';
+import connect from 'react-redux/es/connect/connect';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
+import PreviewProducts from './PreviewProducts';
 
 function RulesAction(props) {
   const {
@@ -20,8 +22,27 @@ function RulesAction(props) {
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
+    preview_products: false,
   });
+
+  // const [previewProducts, setProducts] = useState([]);
+  const getProducts = (field, match, value, store) => {
+    console.log(field, ',', match, ',', value, ',>>>>> \n', store);// fixme
+  };
+  const filterProducts = () => {
+    const filterProducts = [];
+    rules.forEach((item) => {
+      const field = item.detail;
+      const { match } = item;
+      const { value } = item;
+      getProducts(field, match, value, filterProducts);
+    });
+  };
+
   const handleToggle = field => () => {
+    if (field === 'preview_products') {
+      filterProducts();
+    }
     setOpen({
       ...open,
       [field]: !open[field],
@@ -54,7 +75,7 @@ function RulesAction(props) {
         arrow
       >
         <IconButton>
-          <SaveIcon style={{ fontSize: 20 }} />
+          <SaveIcon style={{ fontSize: 20 }} onClick={handleToggle('preview_products')} />
         </IconButton>
       </Tooltip>
       {open.add_rule && (
@@ -64,6 +85,10 @@ function RulesAction(props) {
       {open.edit_rules && (
         <EditRules open={open.edit_rules} handleClose={handleToggle('edit_rules')} rules={rules} />
       )}
+
+      {open.preview_products && (
+        <PreviewProducts open={open.preview_products} handleClose={handleToggle('preview_products')} rules={rules} />
+      )}
     </div>
   );
 }
@@ -72,4 +97,11 @@ RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
 };
-export default RulesAction;
+
+const mapStateToProps = store => ({
+  products: store.productsData.products,
+});
+
+export default connect(
+  mapStateToProps,
+)(RulesAction);
