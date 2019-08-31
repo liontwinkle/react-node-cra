@@ -96,11 +96,16 @@ function RulesAction(props) {
     });
   };
   const filterProducts = () => {
-    const filterProducts = [];
+    let filterProducts = [];
     rules.forEach((item) => {
       const field = item.detail;
       const { match } = item;
       const { value } = item;
+      if (field === '*') {
+        filterProducts = products;
+        setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
+        return filterProducts.length;
+      }
       getProducts(field, match, value, filterProducts);
     });
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
@@ -147,7 +152,7 @@ function RulesAction(props) {
       </Tooltip>
       <div className="divider" />
       <Tooltip
-        title="Save Properties"
+        title="Preview Products for All Rules"
         position="left"
         arrow
       >

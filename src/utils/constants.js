@@ -118,12 +118,12 @@ export const match = [
     key: ':=',
   },
   {
-    label: 'Literal(text)',
-    key: '::',
-  },
-  {
     label: 'Contains(text)',
     key: ':',
+  },
+  {
+    label: 'Literal(text)',
+    key: '::',
   },
   {
     label: 'Lower or equals(number)',
