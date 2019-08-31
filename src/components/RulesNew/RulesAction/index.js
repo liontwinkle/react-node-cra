@@ -35,12 +35,17 @@ function RulesAction(props) {
     products.forEach((productItem) => {
       switch (match) {
         case ':=':
+          console.log('exact');// fixme
+          if (productItem[field] === value) {
+            store.push(productItem);
+          }
+          break;
+        case '::':
           if (caseItensitiveMatch.test(productItem[field])) {
             console.log('intensive');// fixme
             store.push(productItem);
           }
           break;
-        case '::':
         case ':':
           if (caseSensitiveMatch.test(productItem[field])) {
             console.log('sensetive');// fixme

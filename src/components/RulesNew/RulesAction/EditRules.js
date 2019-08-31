@@ -37,14 +37,14 @@ function EditRules(props) {
         lookup: getObjectFromArray(basis),
       },
       {
-        title: 'Detail',
-        field: 'detail',
-        lookup: getObjectFromArray(valueDetails),
-      },
-      {
         title: 'Refer',
         field: 'refer',
         lookup: getObjectFromArray(refer),
+      },
+      {
+        title: 'Detail',
+        field: 'detail',
+        lookup: getObjectFromArray(valueDetails),
       },
       {
         title: 'Match',
