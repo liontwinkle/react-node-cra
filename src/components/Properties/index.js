@@ -37,7 +37,8 @@ class Properties extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.category.properties, nextProps.category.properties)) {
+    if (!isEqual(this.props.category.properties, nextProps.category.properties)
+      && nextProps.category.properties.length > 0) {
       if (this.props.category.id === nextProps.category.id) {
         const properties = {};
         const keys = Object.keys(this.state.properties);
@@ -56,7 +57,8 @@ class Properties extends Component {
         });
       }
     }
-    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)) {
+    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)
+      && nextProps.propertyField.propertyFields.length > 0) {
       const nextProperties = {};
       this.props.propertyField.propertyFields.forEach((item, key) => {
         if (this.state.properties[item.key] === item.default) {

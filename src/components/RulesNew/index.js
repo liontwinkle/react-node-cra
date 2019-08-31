@@ -39,7 +39,8 @@ class NewRules extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.category !== prevProps.category) {
+    if (this.props.category
+      && (this.props.category !== prevProps.category)) {
       this.setMap(this.props.category);
     }
   }
