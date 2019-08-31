@@ -40,7 +40,7 @@ function RulesTable(props) {
           }
           break;
         case ':<=':
-          if (typeof productItem[field]) {
+          if (typeof productItem[field] === 'number') {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal <= value) {
               store.push(productItem);
@@ -48,7 +48,7 @@ function RulesTable(props) {
           }
           break;
         case ':>=':
-          if (typeof productItem[field]) {
+          if (typeof productItem[field] === 'number') {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal >= value) {
               store.push(productItem);
@@ -56,7 +56,7 @@ function RulesTable(props) {
           }
           break;
         case ':<':
-          if (typeof productItem[field]) {
+          if (typeof productItem[field] === 'number') {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal < value) {
               store.push(productItem);
@@ -64,7 +64,7 @@ function RulesTable(props) {
           }
           break;
         case ':>':
-          if (typeof productItem[field]) {
+          if (typeof productItem[field] === 'number') {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal > value) {
               store.push(productItem);
@@ -72,11 +72,94 @@ function RulesTable(props) {
           }
           break;
         case ':==':
-          if (typeof productItem[field]) {
+          if (typeof productItem[field] === 'number') {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal === value) {
               store.push(productItem);
             }
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  };
+
+  const getAllmatched = (match, value, store) => {
+    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseSensitiveMatch = new RegExp(`${value}`);
+    let checkValue = [];
+    products.forEach((proItem) => {
+      const values = Object.values(proItem);
+      switch (match) {
+        case ':=':
+          if (values.filter(item => (item === value)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case '::':
+          if (values.filter(item => caseItensitiveMatch.test(item)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':':
+          if (values.filter(item => caseSensitiveMatch.test(item)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':<=':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item <= value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':>=':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item >= value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':<':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item < value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':>':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item > value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':==':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item === value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
           }
           break;
         default:
@@ -90,7 +173,11 @@ function RulesTable(props) {
     const field = rules[key].detail.key;
     const match = rules[key].match.key;
     const { value } = rules[key];
-    getProducts(field, match, value, filter);
+    if (field === '*') {
+      getAllmatched(match, value, filter);
+    } else {
+      getProducts(field, match, value, filter);
+    }
     setProducts(filter);
     return filter.length;
   };

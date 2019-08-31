@@ -95,18 +95,100 @@ function RulesAction(props) {
       }
     });
   };
+
+  const getAllmatched = (match, value, store) => {
+    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseSensitiveMatch = new RegExp(`${value}`);
+    let checkValue = [];
+    products.forEach((proItem) => {
+      const values = Object.values(proItem);
+      switch (match) {
+        case ':=':
+          if (values.filter(item => (item === value)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case '::':
+          if (values.filter(item => caseItensitiveMatch.test(item)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':':
+          if (values.filter(item => caseSensitiveMatch.test(item)).length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':<=':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item <= value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':>=':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item >= value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':<':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item < value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':>':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item > value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        case ':==':
+          checkValue = values.filter((item) => {
+            if (typeof item === 'number') {
+              return item === value;
+            }
+            return false;
+          });
+          if (checkValue.length > 0) {
+            store.push(proItem);
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  };
   const filterProducts = () => {
-    let filterProducts = [];
+    const filterProducts = [];
     rules.forEach((item) => {
       const field = item.detail;
       const { match } = item;
       const { value } = item;
       if (field === '*') {
-        filterProducts = products;
-        setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
-        return filterProducts.length;
+        getAllmatched(match, value, filterProducts);
+      } else {
+        getProducts(field, match, value, filterProducts);
       }
-      getProducts(field, match, value, filterProducts);
     });
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
     return filterProducts.length;

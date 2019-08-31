@@ -134,15 +134,15 @@ export const match = [
     key: ':>=',
   },
   {
-    label: 'Lower',
+    label: 'Lower(number)',
     key: ':<',
   },
   {
-    label: 'Greater',
+    label: 'Greater(number)',
     key: ':>',
   },
   {
-    label: 'Equals',
+    label: 'Equals(number)',
     key: ':==',
   },
 ];
