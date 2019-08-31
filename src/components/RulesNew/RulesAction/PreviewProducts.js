@@ -21,8 +21,6 @@ function PreviewProducts(props) {
     columns,
   } = props;
 
-  console.log(headers);// fixme
-  console.log(filterProducts);// fixme
   return (
     <Dialog
       open={open}

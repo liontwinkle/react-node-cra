@@ -29,31 +29,26 @@ function RulesAction(props) {
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value, store) => {
-    console.log(field, ',', match, ',', value, ',>>>>> \n', store);// fixme
     const caseItensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     products.forEach((productItem) => {
       switch (match) {
         case ':=':
-          console.log('exact');// fixme
           if (productItem[field] === value) {
             store.push(productItem);
           }
           break;
         case '::':
           if (caseItensitiveMatch.test(productItem[field])) {
-            console.log('intensive');// fixme
             store.push(productItem);
           }
           break;
         case ':':
           if (caseSensitiveMatch.test(productItem[field])) {
-            console.log('sensetive');// fixme
             store.push(productItem);
           }
           break;
         case ':<=':
-          console.log('smaller eq');// fixme
           if (typeof productItem[field]) {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal <= value) {
@@ -62,7 +57,6 @@ function RulesAction(props) {
           }
           break;
         case ':>=':
-          console.log('greater eq');// fixme
           if (typeof productItem[field]) {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal >= value) {
@@ -71,7 +65,6 @@ function RulesAction(props) {
           }
           break;
         case ':<':
-          console.log('smaller');// fixme
           if (typeof productItem[field]) {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal < value) {
@@ -80,7 +73,6 @@ function RulesAction(props) {
           }
           break;
         case ':>':
-          console.log('greater');// fixme
           if (typeof productItem[field]) {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal > value) {
@@ -89,7 +81,6 @@ function RulesAction(props) {
           }
           break;
         case ':==':
-          console.log('equal');// fixme
           if (typeof productItem[field]) {
             const checkVal = parseInt(productItem[field], 10);
             if (checkVal === value) {
@@ -110,7 +101,6 @@ function RulesAction(props) {
       const { value } = item;
       getProducts(field, match, value, filterProducts);
     });
-    console.log('filterProducts>>>', filterProducts);// fixme
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
   };
 

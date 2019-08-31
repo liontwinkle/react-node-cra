@@ -130,7 +130,7 @@ export const match = [
     key: ':<=',
   },
   {
-    label: 'Greater or equals(number',
+    label: 'Greater or equals(number)',
     key: ':>=',
   },
   {
