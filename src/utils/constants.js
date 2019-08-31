@@ -148,7 +148,7 @@ export const match = [
 ];
 export const scope = [
   {
-    label: '- All Categories -',
+    label: 'All Categories',
     key: '0',
   },
 ];
