@@ -166,6 +166,13 @@ function EditRules(props) {
             showTitle: false,
             searchFieldAlignment: 'left',
           }}
+          localization={{
+            body: {
+              editRow: {
+                deleteText: 'Are you sure you want to delete this rule?',
+              },
+            },
+          }}
         />
       </DialogContent>
     </Dialog>
