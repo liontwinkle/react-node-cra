@@ -200,7 +200,7 @@ function RulesAction(props) {
       displayLength = filterProducts();
     }
     if (displayLength === 0 && field === 'preview_products') {
-      enqueueSnackbar('Matching Data is not exists.',
+      enqueueSnackbar('No Products match this rule.',
         {
           variant: 'info',
           autoHideDuration: 4000,

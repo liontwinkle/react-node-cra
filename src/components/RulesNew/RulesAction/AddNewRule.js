@@ -102,8 +102,19 @@ function AddNewRule(props) {
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      rules.push(ruleData);
-      saveRules(rules);
+      if (!rules.find(item => (
+        item.detail.key === ruleData.detail.key
+        && item.match.key === ruleData.match.key
+      && item.value === ruleData.value))) {
+        rules.push(ruleData);
+        saveRules(rules);
+      } else {
+        enqueueSnackbar('The search key is duplicated.',
+          {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
+      }
     } else {
       enqueueSnackbar('Please fill the Criteria field.',
         {

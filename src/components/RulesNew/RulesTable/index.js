@@ -184,7 +184,7 @@ function RulesTable(props) {
 
   const handleToggle = (key) => {
     if (key !== 'close' && filterProducts(key) === 0) {
-      enqueueSnackbar('Matching Data is not exists.',
+      enqueueSnackbar('No Products match this rule.',
         {
           variant: 'info',
           autoHideDuration: 4000,
@@ -207,7 +207,7 @@ function RulesTable(props) {
                 <th>Rule`s Value</th>
                 <th>Rule`s Criteria</th>
                 <th>Rule`s Scope</th>
-                <th>Project`s Preview</th>
+                <th>Preview Marches</th>
               </tr>
             </thead>
             <tbody>
