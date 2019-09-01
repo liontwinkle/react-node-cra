@@ -35,7 +35,7 @@ class Properties extends Component {
     isOpenSelItemEditModal: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
     this.setState({
       noSectionPropertyFields: nonSection || [],
@@ -44,12 +44,12 @@ class Properties extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.category.properties, nextProps.category.properties)) {
-      if (this.props.category.id === nextProps.category.id) {
+  componentDidUpdate(prevProps) {
+    if (!isEqual(this.props.category.properties, prevProps.category.properties)) {
+      if (this.props.category.id === prevProps.category.id) {
         const properties = {};
         const keys = Object.keys(this.state.properties);
-        const propKeys = Object.keys(nextProps.category.properties);
+        const propKeys = Object.keys(this.props.category.properties);
 
         keys.forEach((key) => {
           if (propKeys.indexOf(key) > -1) {
@@ -57,36 +57,40 @@ class Properties extends Component {
           }
         });
 
-        this.setState({ properties });
+        this.updateState({ properties });
       } else {
-        this.setState({
-          properties: nextProps.category.properties || {},
+        this.updateState({
+          properties: this.props.category.properties || {},
         });
       }
     }
-    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)) {
+    if (!isEqual(this.props.propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nextProperties = {};
       this.props.propertyField.propertyFields.forEach((item, key) => {
         if (this.state.properties[item.key] === item.default) {
-          nextProperties[item.key] = nextProps.propertyField.propertyFields[key].default;
+          nextProperties[item.key] = this.props.propertyField.propertyFields[key].default;
         } else if (this.state.properties[item.key] === (item.default === 'true')) {
-          nextProperties[item.key] = (nextProps.propertyField.propertyFields[key].default === true);
+          nextProperties[item.key] = (this.props.propertyField.propertyFields[key].default === true);
         }
       });
-      const nonSection = nextProps.propertyField.propertyFields.filter(item => item.section === null);
-      this.setState({
-        sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
+      const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+      this.updateState({
+        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
         properties: nextProperties,
       });
     }
 
-    if (!isEqual(this.props.propertyField.sections, nextProps.propertyField.sections)) {
-      this.setState({
-        sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
+    if (!isEqual(this.props.propertyField.sections, this.props.propertyField.sections)) {
+      this.updateState({
+        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
       });
     }
   }
+
+  updateState = (data) => {
+    this.setState(data);
+  };
 
   changeInput = field => (e) => {
     e.persist();
@@ -231,11 +235,6 @@ class Properties extends Component {
         } else if (p.propertyType === 'array') {
           let value = '';
           if (properties[p.key] === undefined) {
-            // this.setState({
-            //   properties: {
-            //     [p.key]: p.default,
-            //   },
-            // });
             value = p.default;
           } else if (Array.isArray(properties[p.key])) {
             value = JSON.stringify(properties[p.key]);
@@ -272,50 +271,45 @@ class Properties extends Component {
 
     return (
       <div className="mg-properties-container d-flex">
-        {
-          properties
-          && (
-            <div className="mg-properties-content">
-              <PerfectScrollbar
-                options={{
-                  suppressScrollX: true,
-                  minScrollbarLength: 50,
-                }}
-              >
-                {sections.map(section => (
-                  <CustomSection title={section.label} key={section.key}>
-                    {this.renderSectionFields(section)}
-                  </CustomSection>
-                ))}
-                {noSectionPropertyFields.length > 0
+        <div className="mg-properties-content">
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            {sections.map(section => (
+              <CustomSection title={section.label} key={section.key}>
+                {this.renderSectionFields(section)}
+              </CustomSection>
+            ))}
+            {noSectionPropertyFields.length > 0
                 && (
                   <CustomSection title="No Section" key="no_section">
                     {this.renderSectionFields(null)}
                   </CustomSection>
                 )
-                }
-              </PerfectScrollbar>
-              {isOpenSelItemModal && (
-                <AddSelectItems
-                  selectKey={selectKey}
-                  open={isOpenSelItemModal}
-                  handleClose={
-                    this.handleSelItemToggle('isOpenSelItemModal')
-                  }
-                />
-              )}
-              {isOpenSelItemEditModal && (
-                <EditSelectItems
-                  selectKey={selectKey}
-                  open={isOpenSelItemEditModal}
-                  handleClose={
-                    this.handleSelItemToggle('isOpenSelItemEditModal')
-                  }
-                />
-              )}
-            </div>
-          )
-        }
+            }
+          </PerfectScrollbar>
+          {isOpenSelItemModal && (
+            <AddSelectItems
+              selectKey={selectKey}
+              open={isOpenSelItemModal}
+              handleClose={
+                this.handleSelItemToggle('isOpenSelItemModal')
+              }
+            />
+          )}
+          {isOpenSelItemEditModal && (
+            <EditSelectItems
+              selectKey={selectKey}
+              open={isOpenSelItemEditModal}
+              handleClose={
+                this.handleSelItemToggle('isOpenSelItemEditModal')
+              }
+            />
+          )}
+        </div>
         <PropertyActions properties={properties} fields={propertyFields} />
       </div>
     );
