@@ -15,7 +15,6 @@ function PreviewProducts(props) {
   const {
     open,
     handleClose,
-    // products,
     filterProducts,
     headers,
     columns,
@@ -51,7 +50,6 @@ function PreviewProducts(props) {
               stretchH: 'all',
               contextMenu: true,
               exportFile: true,
-              // collapsibleColumns
               multiColumnSorting: {
                 indicator: true,
               },
@@ -76,7 +74,6 @@ PreviewProducts.propTypes = {
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
-  products: store.productsData.products,
   columns: store.productsData.columns,
   headers: store.productsData.headers,
 });

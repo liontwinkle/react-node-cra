@@ -51,41 +51,36 @@ function RulesAction(props) {
           }
           break;
         case ':<=':
-          if (typeof productItem[field]) {
-            const checkVal = parseInt(productItem[field], 10);
-            if (checkVal <= value) {
+          if (typeof productItem[field] === 'number') {
+            if (productItem[field] <= value) {
               store.push(productItem);
             }
           }
           break;
         case ':>=':
-          if (typeof productItem[field]) {
-            const checkVal = parseInt(productItem[field], 10);
-            if (checkVal >= value) {
+          if (typeof productItem[field] === 'number') {
+            if (productItem[field] >= value) {
               store.push(productItem);
             }
           }
           break;
         case ':<':
-          if (typeof productItem[field]) {
-            const checkVal = parseInt(productItem[field], 10);
-            if (checkVal < value) {
+          if (typeof productItem[field] === 'number') {
+            if (productItem[field] < value) {
               store.push(productItem);
             }
           }
           break;
         case ':>':
-          if (typeof productItem[field]) {
-            const checkVal = parseInt(productItem[field], 10);
-            if (checkVal > value) {
+          if (typeof productItem[field] === 'number') {
+            if (productItem[field] > value) {
               store.push(productItem);
             }
           }
           break;
         case ':==':
-          if (typeof productItem[field]) {
-            const checkVal = parseInt(productItem[field], 10);
-            if (checkVal === value) {
+          if (typeof productItem[field] === 'number') {
+            if (productItem[field] === value) {
               store.push(productItem);
             }
           }
