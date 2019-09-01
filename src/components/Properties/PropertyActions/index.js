@@ -49,6 +49,7 @@ function PropertyActions(props) {
         tempProperties[item.key] === item.default
         || tempProperties[item.key] === (item.default === 'true')
         || tempProperties[item.key] === ''
+        || tempProperties[item.key] === undefined
       ) {
         delete tempProperties[item.key];
       } else if (item.propertyType === 'array') {

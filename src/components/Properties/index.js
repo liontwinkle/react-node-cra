@@ -45,8 +45,7 @@ class Properties extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.category.properties, nextProps.category.properties)
-      && nextProps.category.properties.length > 0) {
+    if (!isEqual(this.props.category.properties, nextProps.category.properties)) {
       if (this.props.category.id === nextProps.category.id) {
         const properties = {};
         const keys = Object.keys(this.state.properties);
@@ -65,8 +64,7 @@ class Properties extends Component {
         });
       }
     }
-    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)
-      && nextProps.propertyField.propertyFields.length > 0) {
+    if (!isEqual(this.props.propertyField.propertyFields, nextProps.propertyField.propertyFields)) {
       const nextProperties = {};
       this.props.propertyField.propertyFields.forEach((item, key) => {
         if (this.state.properties[item.key] === item.default) {
@@ -233,13 +231,13 @@ class Properties extends Component {
         } else if (p.propertyType === 'array') {
           let value = '';
           if (properties[p.key] === undefined) {
-            this.setState({
-              properties: {
-                [p.key]: p.default,
-              },
-            });
-          }
-          if (Array.isArray(properties[p.key])) {
+            // this.setState({
+            //   properties: {
+            //     [p.key]: p.default,
+            //   },
+            // });
+            value = p.default;
+          } else if (Array.isArray(properties[p.key])) {
             value = JSON.stringify(properties[p.key]);
           } else {
             value = properties[p.key];
