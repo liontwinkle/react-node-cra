@@ -26,15 +26,23 @@ import EditSelectItems from './PropertyActions/EditSelectItems';
 
 class Properties extends Component {
   state = {
-    properties: this.props.category.properties || {},
-    sections: this.props.propertyField.sections || [],
+    properties: {},
+    sections: [],
     isUpdating: false,
-    noSectionPropertyFields:
-      this.props.propertyField.propertyFields.filter(item => item.section === null) || [],
+    noSectionPropertyFields: [],
     selectKey: '',
     isOpenSelItemModal: false,
     isOpenSelItemEditModal: false,
   };
+
+  componentWillMount() {
+    const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+    this.setState({
+      noSectionPropertyFields: nonSection || [],
+      properties: this.props.category.properties || {},
+      sections: this.props.propertyField.sections || [],
+    });
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.category.properties, nextProps.category.properties)
@@ -67,10 +75,10 @@ class Properties extends Component {
           nextProperties[item.key] = (nextProps.propertyField.propertyFields[key].default === true);
         }
       });
+      const nonSection = nextProps.propertyField.propertyFields.filter(item => item.section === null);
       this.setState({
         sections: nextProps.propertyField.sections.sort(sortByOrder) || [],
-        noSectionPropertyFields:
-          nextProps.propertyField.propertyFields.filter(item => item.section === null) || [],
+        noSectionPropertyFields: nonSection,
         properties: nextProperties,
       });
     }
@@ -266,46 +274,50 @@ class Properties extends Component {
 
     return (
       <div className="mg-properties-container d-flex">
-        <div className="mg-properties-content">
-          <PerfectScrollbar
-            options={{
-              suppressScrollX: true,
-              minScrollbarLength: 50,
-            }}
-          >
-            {sections.map(section => (
-              <CustomSection title={section.label} key={section.key}>
-                {this.renderSectionFields(section)}
-              </CustomSection>
-            ))}
-            {noSectionPropertyFields.length > 0
-            && (
-              <CustomSection title="No Section" key="no_section">
-                {this.renderSectionFields(null)}
-              </CustomSection>
-            )
-            }
-          </PerfectScrollbar>
-          {isOpenSelItemModal && (
-            <AddSelectItems
-              selectKey={selectKey}
-              open={isOpenSelItemModal}
-              handleClose={
-                this.handleSelItemToggle('isOpenSelItemModal')
-              }
-            />
-          )}
-          {isOpenSelItemEditModal && (
-            <EditSelectItems
-              selectKey={selectKey}
-              open={isOpenSelItemEditModal}
-              handleClose={
-                this.handleSelItemToggle('isOpenSelItemEditModal')
-              }
-            />
-          )}
-        </div>
-
+        {
+          properties
+          && (
+            <div className="mg-properties-content">
+              <PerfectScrollbar
+                options={{
+                  suppressScrollX: true,
+                  minScrollbarLength: 50,
+                }}
+              >
+                {sections.map(section => (
+                  <CustomSection title={section.label} key={section.key}>
+                    {this.renderSectionFields(section)}
+                  </CustomSection>
+                ))}
+                {noSectionPropertyFields.length > 0
+                && (
+                  <CustomSection title="No Section" key="no_section">
+                    {this.renderSectionFields(null)}
+                  </CustomSection>
+                )
+                }
+              </PerfectScrollbar>
+              {isOpenSelItemModal && (
+                <AddSelectItems
+                  selectKey={selectKey}
+                  open={isOpenSelItemModal}
+                  handleClose={
+                    this.handleSelItemToggle('isOpenSelItemModal')
+                  }
+                />
+              )}
+              {isOpenSelItemEditModal && (
+                <EditSelectItems
+                  selectKey={selectKey}
+                  open={isOpenSelItemEditModal}
+                  handleClose={
+                    this.handleSelItemToggle('isOpenSelItemEditModal')
+                  }
+                />
+              )}
+            </div>
+          )
+        }
         <PropertyActions properties={properties} fields={propertyFields} />
       </div>
     );
