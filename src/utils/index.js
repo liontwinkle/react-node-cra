@@ -175,14 +175,17 @@ const getRulesKey = (keys) => {
   });
   return ruleKeys;
 };
+
 export const getProducts = (products) => {
   const keys = Object.keys(products[0]);
   const values = Object.values(products[0]);
   const headers = keys;
   keys.sort();
+
   const valueDetails = getRulesKey(keys);
   const numbers = [];
   const columns = [];
+
   values.forEach((value, key) => {
     let type = {};
     switch (typeof value) {
@@ -230,6 +233,7 @@ export const getProducts = (products) => {
     }
     columns.push(type);
   });
+
   const objects = [];
   products.forEach((dataObj) => {
     const subObject = {};
@@ -246,6 +250,7 @@ export const getProducts = (products) => {
     });
     objects.push(subObject);
   });
+
   return {
     columns,
     headers,

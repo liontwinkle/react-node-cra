@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
+import { isExist } from 'utils';
+import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
-import { updatePorpertyField } from 'redux/actions/propertyFields';
-import { isExist } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -22,18 +24,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddSelectItems(props) {
+function AddSelectItems({
+  open,
+  isUpdating,
+  propertyField,
+  handleClose,
+  selectKey,
+  updatePropertyField,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    isUpdating,
-    propertyField,
-    handleClose,
-    selectKey,
-    updatePorpertyField,
-  } = props;
 
   const [sectionsData, setSectionsData] = useState({
     key: '',
@@ -49,12 +49,12 @@ function AddSelectItems(props) {
 
   const disabled = !(sectionsData.key && sectionsData.label);
 
-
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { propertyFields } = propertyField;
       const selectItems = propertyFields.filter(item => (item.key === selectKey))[0];
       let updateFlag = true;
+
       if (selectItems.items) {
         if (isExist(selectItems.items, sectionsData.key) === 0) {
           selectItems.items.push(sectionsData);
@@ -62,28 +62,29 @@ function AddSelectItems(props) {
           updateFlag = false;
           const errMsg = `Error: Another item is using the key (${sectionsData.key})
            you specified.Please update item key name.`;
-          enqueueSnackbar(errMsg,
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar(errMsg, {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         }
       } else {
         selectItems.items = sectionsData;
       }
 
       if (updateFlag) {
-        updatePorpertyField(propertyField.id, { propertyFields })
+        updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Item has been added successfully.', { variant: 'success', autoHideDuration: 1000 });
+            enqueueSnackbar('Item has been added successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in adding Item.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       }
     }
@@ -142,7 +143,7 @@ AddSelectItems.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updatePorpertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -151,7 +152,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updatePorpertyField,
+  updatePropertyField,
 }, dispatch);
 
 export default connect(

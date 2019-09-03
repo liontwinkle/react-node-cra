@@ -2,32 +2,25 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  addNodeUnderParent,
-  changeNodeAtPath,
-  removeNodeAtPath,
-} from 'react-sortable-tree';
+import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useSnackbar } from 'notistack';
 
 import { getNodeKey } from 'utils';
 import { createCategory, removeCategory } from 'redux/actions/categories';
-import { IconButton } from 'components/elements';
-import CustomConfirmDlg from '../elements/CustomConfirmDlg';
+import { CustomConfirmDlg, IconButton } from 'components/elements';
 
-function NodeMenu(props) {
+function NodeMenu({
+  treeData,
+  node,
+  path,
+  setTreeData,
+  createCategory,
+  removeCategory,
+  editable,
+}) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    treeData,
-    node,
-    path,
-    setTreeData,
-    createCategory,
-    removeCategory,
-    editable,
-  } = props;
 
   const handleMenuClick = (event) => {
     event.preventDefault();
@@ -50,11 +43,11 @@ function NodeMenu(props) {
       parentId: node.item.id,
     })
       .then((category) => {
-        enqueueSnackbar('New category has been created successfully.',
-          {
-            variant: 'success',
-            autoHideDuration: 1000,
-          });
+        enqueueSnackbar('New category has been created successfully.', {
+          variant: 'success',
+          autoHideDuration: 1000,
+        });
+
         setTreeData(
           addNodeUnderParent({
             treeData,
@@ -70,11 +63,10 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar('Error in adding category.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
     handleClose();
   };
@@ -98,11 +90,11 @@ function NodeMenu(props) {
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
-        enqueueSnackbar('The category has been deleted successfully.',
-          {
-            variant: 'success',
-            autoHideDuration: 1000,
-          });
+        enqueueSnackbar('The category has been deleted successfully.', {
+          variant: 'success',
+          autoHideDuration: 1000,
+        });
+
         setTreeData(
           removeNodeAtPath({
             treeData,
@@ -112,32 +104,37 @@ function NodeMenu(props) {
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in deleting category.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar('Error in deleting category.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
   };
+
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
-  const handleDeleteDlgClose = (type) => {
+
+  const handleDelete = () => {
+    deleteItem();
     setDeleteDlgOpen(false);
-    if (type === 'yes') {
-      deleteItem();
-    }
   };
-  const getSubItems = (nodeData) => {
+  const handleDeleteDlgClose = () => {
+    setDeleteDlgOpen(false);
+  };
+
+  const getSubItems = ({ children }) => {
     let childLength = 0;
-    const { children } = nodeData;
+
     if (children) {
       childLength = children.length;
       children.forEach((item) => {
         childLength += getSubItems(item);
       });
     }
+
     return childLength;
   };
+
   const handleRemove = () => {
     const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);
@@ -146,7 +143,10 @@ function NodeMenu(props) {
   };
 
   return (
-    <div className="tree-node-menu" onClick={handleMenuClick}>
+    <div
+      className="tree-node-menu"
+      onClick={handleMenuClick}
+    >
       <IconButton onClick={handleClick}>
         <MoreIcon />
       </IconButton>
@@ -168,24 +168,26 @@ function NodeMenu(props) {
           <button className="mg-button transparent" onClick={handleAdd}>
             Add Child
           </button>
-          {editable
-          && (
+
+          {editable && (
             <button className="mg-button transparent" onClick={handleEdit}>
-            Edit Category
+              Edit Category
             </button>
-          )
-          }
+          )}
+
           <button className="mg-button transparent" onClick={handleRemove}>
             Delete Category
           </button>
         </div>
       </Popover>
+
       {deleteDlgOpen && (
         <CustomConfirmDlg
           open={deleteDlgOpen}
           subCategoryNumber={subCategoryNumber}
-          handleClose={type => handleDeleteDlgClose(type)}
           msg="Are you sure you want to delete this category?"
+          handleDelete={handleDelete}
+          handleClose={handleDeleteDlgClose}
         />
       )}
     </div>

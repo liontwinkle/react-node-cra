@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
-import { updatePorpertyField } from 'redux/actions/propertyFields';
+import { isExist } from 'utils';
+import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
-import { isExist } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -22,23 +24,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddSections(props) {
+function AddSections({
+  open,
+  isUpdating,
+  propertyField,
+  handleClose,
+  updatePropertyField,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    isUpdating,
-    propertyField,
-    handleClose,
-    updatePorpertyField,
-  } = props;
 
   const [sectionsData, setSectionsData] = useState({
     key: '',
     label: '',
     order: 0,
   });
+
   const handleChange = field => (e) => {
     const newClient = {
       ...sectionsData,
@@ -52,16 +53,16 @@ function AddSections(props) {
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { sections } = propertyField;
+
       if (isExist(sections, sectionsData.key) === 0) {
         sections.push(sectionsData);
 
-        updatePorpertyField(propertyField.id, { sections })
+        updatePropertyField(propertyField.id, { sections })
           .then(() => {
-            enqueueSnackbar('Section has been added successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Section has been added successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
             handleClose();
           })
           .catch(() => {
@@ -73,11 +74,10 @@ function AddSections(props) {
       } else {
         const errMsg = `Error: Another section is using the key (${sectionsData.key}) you specified.
          Please update section key name.`;
-        enqueueSnackbar(errMsg,
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar(errMsg, {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       }
     }
   };
@@ -143,7 +143,7 @@ AddSections.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updatePorpertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -152,7 +152,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updatePorpertyField,
+  updatePropertyField,
 }, dispatch);
 
 export default connect(

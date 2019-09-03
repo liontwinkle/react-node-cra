@@ -1,7 +1,8 @@
-import _ from 'lodash';
+import _merge from 'lodash/merge';
+import _findIndex from 'lodash/findIndex';
 
+import { getCategoryTree } from 'utils';
 import types from '../actionTypes';
-import { getCategoryTree } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -68,7 +69,7 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       categories.push(data);
-      const treeData = _.merge(getCategoryTree(categories), state.trees);
+      const treeData = _merge(getCategoryTree(categories), state.trees);
       return {
         ...state,
         isCreating: false,
@@ -99,13 +100,13 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      const categoryIdx = _.findIndex(categories, { id: updateData.id });
+      const categoryIdx = _findIndex(categories, { id: updateData.id });
       if (categoryIdx > -1) {
         categories.splice(categoryIdx, 1, updateData);
       } else {
         categories.push(updateData);
       }
-      const newTrees = _.merge(state.trees, getCategoryTree(categories));
+      const newTrees = _merge(state.trees, getCategoryTree(categories));
       return {
         ...state,
         isUpdating: false,
@@ -126,7 +127,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CATEGORY_DELETE_SUCCESS:
-      const index = _.findIndex(categories, { id: action.payload.id });
+      const index = _findIndex(categories, { id: action.payload.id });
       if (index > -1) {
         categories.splice(index, 1);
       }
@@ -148,11 +149,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         category: action.payload.category,
       };
+
     case types.TREE_SET:
       return {
         ...state,
         trees: action.payload,
       };
+
     default:
       return state;
   }

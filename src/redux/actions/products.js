@@ -12,6 +12,7 @@ export const fetchProducts = () => (dispatch, getState) => {
   });
 
   const { client } = getState().clientsData;
+
   return productsService.fetch(client.id, 'products')
     .then((products) => {
       dispatch({
@@ -38,6 +39,7 @@ export const updateProducts = updateData => (dispatch, getState) => {
   });
 
   const { client, type } = getState().clientsData;
+
   return productsService.update(client.id, type.key, updateData)
     .then((products) => {
       dispatch({

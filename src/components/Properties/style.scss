@@ -1,4 +1,5 @@
 @import "scss/mixin.scss";
+
 .mg-properties-container {
   @include full_width_height;
   margin: 0;
@@ -7,9 +8,11 @@
   .mg-properties-content {
     //padding: 1rem;
     flex: 1;
-    .mg-select-section{
+
+    .mg-select-section {
       @include justify-row-between;
     }
+
     .scrollbar-container {
       height: 100%;
 

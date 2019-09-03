@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
+import { isExist } from 'utils';
+import { updatePropertyField } from 'redux/actions/propertyFields';
 import { propertyFieldTypes } from 'utils/constants';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
-import { isExist } from 'utils';
-import { updatePorpertyField } from '../../../redux/actions/propertyFields';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -23,17 +25,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddPropertyFields(props) {
+function AddPropertyFields({
+  open,
+  isUpdating,
+  handleClose,
+  propertyField,
+  updatePropertyField,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    isUpdating,
-    handleClose,
-    propertyField,
-    updatePorpertyField,
-  } = props;
 
   const [propertyFieldData, setPropertyFieldData] = useState({
     key: '',
@@ -42,6 +42,7 @@ function AddPropertyFields(props) {
     propertyType: { key: 'string', label: 'String' },
     section: null,
   });
+
   const handleChange = field => (e) => {
     const newClient = {
       ...propertyFieldData,
@@ -49,6 +50,7 @@ function AddPropertyFields(props) {
     };
     setPropertyFieldData(newClient);
   };
+
   const handleChangeType = (propertyType) => {
     const newClient = {
       ...propertyFieldData,
@@ -56,6 +58,7 @@ function AddPropertyFields(props) {
     };
     setPropertyFieldData(newClient);
   };
+
   const handleChangeSection = (section) => {
     const newClient = {
       ...propertyFieldData,
@@ -76,30 +79,27 @@ function AddPropertyFields(props) {
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
 
-        updatePorpertyField(propertyField.id, { propertyFields })
+        updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been added successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Property field has been added successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding property field.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in adding property field.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       } else {
         const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
-        enqueueSnackbar(errMsg,
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar(errMsg, {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       }
     }
   };
@@ -177,7 +177,7 @@ AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  updatePorpertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
   propertyField: PropTypes.object.isRequired,
 };
 
@@ -187,7 +187,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updatePorpertyField,
+  updatePropertyField,
 }, dispatch);
 
 export default connect(

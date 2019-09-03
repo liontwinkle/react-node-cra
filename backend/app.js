@@ -28,8 +28,8 @@ dotenv.config({ path: '.env' });
  * Controllers (route handlers).
  */
 const clientsRoute = require('./modules/clients/clients.route');
-const propertyFieldsRoute = require('./modules/property_fields/property_fields.route');
-const ProductsFieldsRoute = require('./modules/products_fields/products_fields.route');
+const propertyFieldsRoute = require('./modules/property-fields/property-fields.route');
+const ProductsFieldsRoute = require('./modules/products-fields/products-fields.route');
 /**
  * Create Express server.
  */
@@ -84,8 +84,8 @@ app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 3155760000
  * Notes routes.
  */
 app.use('/api/clients', clientsRoute);
-app.use('/api/property_fields', propertyFieldsRoute);
-app.use('/api/products_fields', ProductsFieldsRoute);
+app.use('/api/property-fields', propertyFieldsRoute);
+app.use('/api/products-fields', ProductsFieldsRoute);
 
 /**
  * Error Handler.

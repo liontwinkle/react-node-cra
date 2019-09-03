@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import isEqual from 'lodash/isEqual';
+import { Tooltip } from 'react-tippy';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { sortByOrder } from 'utils';
 import {
@@ -13,16 +15,13 @@ import {
   CustomSelectWithLabel,
   CustomToggle,
   CustomArray,
+  IconButton,
 } from 'components/elements';
-
-import './style.scss';
-import { Tooltip } from 'react-tippy';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import { IconButton } from '../elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
+
+import './style.scss';
 
 class Properties extends Component {
   state = {

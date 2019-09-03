@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -15,14 +17,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CustomConfirmDlg(props) {
+function CustomConfirmDlg({
+  open,
+  msg,
+  subCategoryNumber,
+  handleDelete,
+  handleClose,
+}) {
   const classes = useStyles();
-  const {
-    open,
-    subCategoryNumber,
-    handleClose,
-    msg,
-  } = props;
 
   return (
     <Dialog
@@ -36,20 +38,20 @@ function CustomConfirmDlg(props) {
 
       <DialogContent className={classes.dialogContent}>
         <span>
-          { (subCategoryNumber > 0) && `This will also delete ${subCategoryNumber} subcategories. `}
+          {(subCategoryNumber > 0) && `This will also delete ${subCategoryNumber} subcategories.`}
         </span>
       </DialogContent>
 
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
-          onClick={() => handleClose('no')}
+          onClick={handleClose}
         >
           Cancel
         </button>
         <button
           className="mg-button primary"
-          onClick={() => handleClose('yes')}
+          onClick={handleDelete}
         >
           Delete
         </button>
@@ -60,12 +62,14 @@ function CustomConfirmDlg(props) {
 
 CustomConfirmDlg.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
   msg: PropTypes.string.isRequired,
   subCategoryNumber: PropTypes.number,
+  handleDelete: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 CustomConfirmDlg.defaultProps = {
   subCategoryNumber: 0,
 };
+
 export default CustomConfirmDlg;

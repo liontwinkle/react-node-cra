@@ -1,85 +1,100 @@
 import React, { useEffect, useState } from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { CustomSection } from 'components/elements';
-import ExportDataSection from 'components/ProductDetail/exportData';
-import DisplaySetting from 'components/ProductDetail/displaySetting';
-import './style.scss';
-import ShowFields from 'components/ProductDetail/showFields';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import _isEqual from 'lodash/isEqual';
+import _filter from 'lodash/filter';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useSnackbar } from 'notistack';
+
+import { getProducts } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField } from 'redux/actions/productsFields';
-import { useSnackbar } from 'notistack';
-import { getProducts } from '../../../utils';
+import { CustomSection } from 'components/elements';
+import { DisplaySetting, ExportDataSection, ShowFields } from 'components/ProductDetail';
 
-function ProductsDetail(props) {
-  const {
-    headers,
-    products,
-    originProducts,
-    tableRef,
-    updateProducts,
-    setProducts,
-    productsField,
-    updateProductsField,
-  } = props;
+import './style.scss';
+
+function ProductsDetail({
+  headers,
+  products,
+  originProducts,
+  tableRef,
+  updateProducts,
+  setProducts,
+  productsField,
+  updateProductsField,
+}) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
   const [displayFlag, setDisplayFlag] = useState({
     nullType: false,
     strType: false,
   });
+
   useEffect(() => {
     const interval = setInterval(() => {
       const tableObj = tableRef.current;
       if (tableObj !== null) {
         clearInterval(interval);
+
         const showPlugin = tableObj.hotInstance.getPlugin('hiddenColumns');
         const hiddenColumns = [];
         headers.forEach((item, key) => {
           if (!fieldData[item] && (fieldData[item] !== undefined)) hiddenColumns.push(key);
         });
         showPlugin.hideColumns(hiddenColumns);
+
         tableObj.hotInstance.render();
       }
     }, 1000);
   }, [fieldData, headers, tableRef]);
+
   const handleExportCsv = () => {
-    tableRef.current.hotInstance.getPlugin('exportFile').downloadFile('csv', { filename: 'CSV Export File' });
+    tableRef.current.hotInstance
+      .getPlugin('exportFile')
+      .downloadFile('csv', { filename: 'CSV Export File' });
   };
 
   const handleExportStr = () => {
-    console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
+    // console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
   };
 
   const handleSaveData = () => {
     const diffArray = [];
     const originArray = getProducts(originProducts).data;
+
     products.forEach((item, key) => {
       const original = Object.values(originArray[key]);
       const current = Object.values(item);
-      const diffres = _.isEqual(original.sort(), current.sort());
-      if (!diffres) diffArray.push(item);
+      const diffres = _isEqual(original.sort(), current.sort());
+
+      if (!diffres) {
+        diffArray.push(item);
+      }
     });
+
     if (diffArray.length > 0) {
       let duplicateFlag = false;
+
       diffArray.forEach((item) => {
-        const duplicate = _.filter(products, { _id: item._id });
-        if (duplicate.length > 1) duplicateFlag = true;
+        const duplicate = _filter(products, { _id: item._id });
+        if (duplicate.length > 1) {
+          duplicateFlag = true;
+        }
       });
+
       if (!duplicateFlag) {
         updateProducts(diffArray)
           .then(() => {
-            enqueueSnackbar('The data is saved successfly.',
+            enqueueSnackbar('The data is saved successfully.',
               {
                 variant: 'success',
                 autoHideDuration: 1500,
               });
           })
           .catch(() => {
-            const errMsg = 'Error is detected to save the table data1';
+            const errMsg = 'Error is detected to save the table data1.';
             enqueueSnackbar(errMsg,
               {
                 variant: 'error',
@@ -87,7 +102,7 @@ function ProductsDetail(props) {
               });
           });
       } else {
-        enqueueSnackbar('The ID is duplicated',
+        enqueueSnackbar('The ID is duplicated.',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -101,20 +116,24 @@ function ProductsDetail(props) {
           autoHideDuration: 3000,
         });
     }
-    tableRef.current.hotInstance.loadData(originArray);
+
     setProducts(originArray);
+
+    tableRef.current.hotInstance.loadData(originArray);
     tableRef.current.hotInstance.render();
   };
 
-
   const handleShow = (index, value) => {
     const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+
     if (value) {
       showPlugin.showColumn(index);
     } else {
       showPlugin.hideColumn(index);
     }
+
     tableRef.current.hotInstance.render();
+
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
       if (key !== index) {
@@ -123,6 +142,7 @@ function ProductsDetail(props) {
         newFieldData[item] = value;
       }
     });
+
     updateProductsField(newFieldData)
       .then(() => {
         setFieldData(newFieldData);
@@ -138,10 +158,12 @@ function ProductsDetail(props) {
 
   const setEmpty = (updateData, type) => {
     const updatedData = [];
+
     updateData.forEach((item) => {
       const keys = Object.keys(item);
       const values = Object.values(item);
       const subData = {};
+
       values.forEach((subItem, subKey) => {
         if (type === 'strType' && subItem === '') {
           subData[keys[subKey]] = '""';
@@ -151,17 +173,22 @@ function ProductsDetail(props) {
           subData[keys[subKey]] = subItem;
         }
       });
+
       updatedData.push(subData);
     });
+
     return updatedData;
   };
+
   const toggleSwitch = field => () => {
     let updateData = products;
+
     const newDisplaySetting = {
       ...displayFlag,
       [field]: !displayFlag[field],
     };
     setDisplayFlag(newDisplaySetting);
+
     if (newDisplaySetting.nullType) {
       updateData = setEmpty(updateData, 'nullType');
     }
@@ -169,6 +196,7 @@ function ProductsDetail(props) {
     if (!newDisplaySetting.strType) {
       updateData = setEmpty(updateData, 'strType');
     }
+
     tableRef.current.hotInstance.loadData(updateData);
     tableRef.current.hotInstance.render();
   };
@@ -212,6 +240,7 @@ ProductsDetail.propTypes = {
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
 };
+
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
   numbers: store.productsData.numbers,
@@ -219,6 +248,7 @@ const mapStateToProps = store => ({
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
 });
+
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateProducts,
   setProducts,

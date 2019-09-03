@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
-
+import PropTypes from 'prop-types';
+import connect from 'react-redux/es/connect/connect';
+import { useSnackbar } from 'notistack';
+import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Filter';
 
-import { Tooltip } from 'react-tippy';
-
 import { IconButton } from 'components/elements';
-import './style.scss';
-import PropTypes from 'prop-types';
-import connect from 'react-redux/es/connect/connect';
-import { useSnackbar } from 'notistack';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
 
-function RulesAction(props) {
+import './style.scss';
+
+function RulesAction({ rules, newRules, products }) {
   const { enqueueSnackbar } = useSnackbar();
-  const {
-    rules,
-    newRules,
-    products,
-  } = props;
+
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
@@ -31,7 +26,7 @@ function RulesAction(props) {
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value, store) => {
-    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     products.forEach((productItem) => {
       switch (match) {
@@ -41,7 +36,7 @@ function RulesAction(props) {
           }
           break;
         case '::':
-          if (caseItensitiveMatch.test(productItem[field])) {
+          if (caseInsensitiveMatch.test(productItem[field])) {
             store.push(productItem);
           }
           break;
@@ -92,7 +87,7 @@ function RulesAction(props) {
   };
 
   const getAllmatched = (match, value, store) => {
-    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     let checkValue = [];
     products.forEach((proItem) => {
@@ -104,7 +99,7 @@ function RulesAction(props) {
           }
           break;
         case '::':
-          if (values.filter(item => caseItensitiveMatch.test(item)).length > 0) {
+          if (values.filter(item => caseInsensitiveMatch.test(item)).length > 0) {
             store.push(proItem);
           }
           break;
@@ -173,6 +168,7 @@ function RulesAction(props) {
       }
     });
   };
+
   const filterProducts = () => {
     const filterProducts = [];
     rules.forEach((item) => {
@@ -185,21 +181,24 @@ function RulesAction(props) {
         getProducts(field, match, value, filterProducts);
       }
     });
+
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
+
     return filterProducts.length;
   };
 
   const handleToggle = field => () => {
     let displayLength = 0;
+
     if (field === 'preview_products') {
       displayLength = filterProducts();
     }
+
     if (displayLength === 0 && field === 'preview_products') {
-      enqueueSnackbar('No Products match this rule.',
-        {
-          variant: 'info',
-          autoHideDuration: 4000,
-        });
+      enqueueSnackbar('No Products match this rule.', {
+        variant: 'info',
+        autoHideDuration: 4000,
+      });
     } else {
       setOpen({
         ...open,
@@ -207,6 +206,7 @@ function RulesAction(props) {
       });
     }
   };
+
   return (
     <div className="mg-rules-actions d-flex flex-column align-items-center">
       <Tooltip
@@ -218,6 +218,7 @@ function RulesAction(props) {
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
       <Tooltip
         title="Edit Rules"
         position="left"
@@ -227,7 +228,9 @@ function RulesAction(props) {
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
+
       <div className="divider" />
+
       <Tooltip
         title="Preview Products for All Rules"
         position="left"
@@ -237,6 +240,7 @@ function RulesAction(props) {
           <SaveIcon style={{ fontSize: 20 }} onClick={handleToggle('preview_products')} />
         </IconButton>
       </Tooltip>
+
       {open.add_rule && (
         <AddNewRule open={open.add_rule} handleClose={handleToggle('add_rule')} rules={newRules} />
       )}

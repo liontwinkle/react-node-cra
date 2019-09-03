@@ -1,6 +1,6 @@
 import httpService from './http.service';
 
-const basePropertyFiledsRoute = '/property_fields';
+const basePropertyFiledsRoute = '/property-fields';
 
 const fetch = (clientId, type) => httpService
   .get(`${basePropertyFiledsRoute}/${clientId}/${type}`)

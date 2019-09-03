@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const controller = require('./products_fields.controller');
+const controller = require('./products-fields.controller');
 
 // Request to get a Category
 router.get('/:clientId', controller.show);

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _findIndex from 'lodash/findIndex';
 
 import types from '../actionTypes';
 
@@ -61,7 +61,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CLIENT_UPDATE_SUCCESS:
-      const clientIdx = _.findIndex(clients, { id: action.payload.data.id });
+      const clientIdx = _findIndex(clients, { id: action.payload.data.id });
       if (clientIdx > -1) {
         clients.splice(clientIdx, 1, action.payload.data);
       } else {
@@ -86,7 +86,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CLIENT_DELETE_SUCCESS:
-      const index = _.findIndex(clients, { id: action.payload.id });
+      const index = _findIndex(clients, { id: action.payload.id });
       if (index > -1) {
         clients.splice(index, 1);
       }

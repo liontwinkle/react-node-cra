@@ -1,10 +1,7 @@
-// import _ from 'lodash';
+import _findIndex from 'lodash/findIndex';
 
-import _ from 'lodash';
+import { getProducts } from 'utils';
 import types from '../actionTypes';
-import {
-  getProducts,
-} from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -43,6 +40,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: false,
         errors: action.payload.error,
       };
+
     case types.PRODUCTS_UPDATE_REQUEST:
       return {
         ...state,
@@ -53,12 +51,12 @@ export default (state = INITIAL_STATE, action) => {
       const newProducts = state.products;
       const updatedData = action.payload.products;
       updatedData.forEach((newItem) => {
-        const orgProductsIdx = _.findIndex(orgProducts, { _id: newItem._id });
+        const orgProductsIdx = _findIndex(orgProducts, { _id: newItem._id });
         orgProducts[orgProductsIdx] = newItem;
       });
       const newData = getProducts(action.payload.products);
       newData.data.forEach((newItem) => {
-        const orgProductsIdx = _.findIndex(orgProducts, { _id: newItem._id });
+        const orgProductsIdx = _findIndex(orgProducts, { _id: newItem._id });
         newProducts[orgProductsIdx] = newItem;
       });
       return {
@@ -73,11 +71,13 @@ export default (state = INITIAL_STATE, action) => {
         isUpdatingList: false,
         errors: action.payload.error,
       };
+
     case types.PRODUCTS_SET_PRODUCTS:
       return {
         ...state,
         products: action.payload.updateData,
       };
+
     default:
       return state;
   }

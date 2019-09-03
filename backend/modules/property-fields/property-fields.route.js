@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const controller = require('./property_fields.controller');
+const controller = require('./property-fields.controller');
 
 // Request to get list of Properties
 router.get('/', controller.index);

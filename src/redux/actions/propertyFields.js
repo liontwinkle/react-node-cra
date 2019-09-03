@@ -7,19 +7,19 @@ export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
   }
 
   dispatch({
-    type: types.PROPERTYFIELD_GET_REQUEST,
+    type: types.PROPERTY_FIELD_GET_REQUEST,
   });
 
   return propertyFieldsService.fetch(clientId, type)
     .then((propertyField) => {
       dispatch({
-        type: types.PROPERTYFIELD_GET_SUCCESS,
+        type: types.PROPERTY_FIELD_GET_SUCCESS,
         payload: { propertyField },
       });
     })
     .catch((error) => {
       dispatch({
-        type: types.PROPERTYFIELD_GET_FAIL,
+        type: types.PROPERTY_FIELD_GET_FAIL,
         payload: { error },
       });
 
@@ -27,7 +27,7 @@ export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createPorpertyField = clientData => (dispatch, getState) => {
+export const createPropertyField = clientData => (dispatch, getState) => {
   if (getState().propertyFieldsData.isCreating) {
     return;
   }
@@ -42,20 +42,22 @@ export const createPorpertyField = clientData => (dispatch, getState) => {
       type: item,
     });
   });
+
   dispatch({
-    type: types.PROPERTYFIELD_CREATE_REQUEST,
+    type: types.PROPERTY_FIELD_CREATE_REQUEST,
   });
+
   return propertyFieldsService.create(propertyFields)
     .then((data) => {
       dispatch({
-        type: types.PROPERTYFIELD_CREATE_SUCCESS,
+        type: types.PROPERTY_FIELD_CREATE_SUCCESS,
         payload: { data },
       });
       return data;
     })
     .catch((error) => {
       dispatch({
-        type: types.PROPERTYFIELD_CREATE_FAIL,
+        type: types.PROPERTY_FIELD_CREATE_FAIL,
         payload: { error },
       });
 
@@ -63,7 +65,7 @@ export const createPorpertyField = clientData => (dispatch, getState) => {
     });
 };
 
-export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => {
+export const updatePropertyField = (id, updatedData) => (dispatch, getState) => {
   if (getState().propertyFieldsData.isUpdating) {
     return;
   }
@@ -71,13 +73,13 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
   const { client, type } = getState().clientsData;
 
   dispatch({
-    type: types.PROPERTYFIELD_UPDATE_REQUEST,
+    type: types.PROPERTY_FIELD_UPDATE_REQUEST,
   });
 
   return propertyFieldsService.update(client.id, type.key, id, updatedData)
     .then((data) => {
       dispatch({
-        type: types.PROPERTYFIELD_UPDATE_SUCCESS,
+        type: types.PROPERTY_FIELD_UPDATE_SUCCESS,
         payload: { data },
       });
 
@@ -85,7 +87,7 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
     })
     .catch((error) => {
       dispatch({
-        type: types.PROPERTYFIELD_UPDATE_FAIL,
+        type: types.PROPERTY_FIELD_UPDATE_FAIL,
         payload: { error },
       });
 
@@ -93,7 +95,7 @@ export const updatePorpertyField = (id, updatedData) => (dispatch, getState) => 
     });
 };
 
-export const removePorpertyField = () => (dispatch, getState) => {
+export const removePropertyField = () => (dispatch, getState) => {
   if (getState().propertyFieldsData.isDeleting) {
     return;
   }
@@ -101,20 +103,20 @@ export const removePorpertyField = () => (dispatch, getState) => {
   const { client } = getState().clientsData;
 
   dispatch({
-    type: types.PROPERTYFIELD_DELETE_REQUEST,
+    type: types.PROPERTY_FIELD_DELETE_REQUEST,
   });
 
   return propertyFieldsService.remove(client.id)
     .then(() => {
       dispatch({
-        type: types.PROPERTYFIELD_DELETE_SUCCESS,
+        type: types.PROPERTY_FIELD_DELETE_SUCCESS,
       });
 
       return 'success';
     })
     .catch((error) => {
       dispatch({
-        type: types.PROPERTYFIELD_DELETE_FAIL,
+        type: types.PROPERTY_FIELD_DELETE_FAIL,
         payload: { error },
       });
 

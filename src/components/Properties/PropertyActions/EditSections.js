@@ -8,19 +8,17 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import { isExist } from 'utils';
 import { tableIcons } from 'utils/constants';
-import { updatePorpertyField } from 'redux/actions/propertyFields';
-import { isExist } from '../../../utils';
+import { updatePropertyField } from 'redux/actions/propertyFields';
 
-function EditSections(props) {
+function EditSections({
+  open,
+  propertyField,
+  updatePropertyField,
+  handleClose,
+}) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    propertyField,
-    updatePorpertyField,
-    handleClose,
-  } = props;
 
   const { sections } = propertyField;
   const tableData = {
@@ -43,28 +41,26 @@ function EditSections(props) {
           order: newData.order,
         });
 
-        updatePorpertyField(propertyField.id, { sections })
+        updatePropertyField(propertyField.id, { sections })
           .then(() => {
-            enqueueSnackbar('Property field has been added successfully.',
-              {
-                variant: 'success', autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Property field has been added successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding property field.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in adding property field.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       } else {
         const errMsg = `Error: Another section is using the key (${newData.key}) you specified.
          Please update section key name.`;
-        enqueueSnackbar(errMsg,
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar(errMsg, {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       }
     }, 600);
   });
@@ -82,20 +78,18 @@ function EditSections(props) {
           _id: newData._id,
         });
 
-        updatePorpertyField(propertyField.id, { sections })
+        updatePropertyField(propertyField.id, { sections })
           .then(() => {
-            enqueueSnackbar('Property field has been updated successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Property field has been updated successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in updating property field.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       }
     }, 600);
@@ -109,20 +103,18 @@ function EditSections(props) {
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1);
 
-        updatePorpertyField(propertyField.id, { sections })
+        updatePropertyField(propertyField.id, { sections })
           .then(() => {
-            enqueueSnackbar('Property field has been deleted successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Property field has been deleted successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property field.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in deleting property field.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       }
     }, 600);
@@ -163,7 +155,7 @@ function EditSections(props) {
 EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
-  updatePorpertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 
@@ -172,7 +164,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updatePorpertyField,
+  updatePropertyField,
 }, dispatch);
 
 export default connect(

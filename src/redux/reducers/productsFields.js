@@ -1,4 +1,3 @@
-// import _ from 'lodash';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -31,6 +30,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: false,
         errors: action.payload.error,
       };
+
     case types.PRODUCTS_UPDATE_FIELDS_REQUEST:
       return {
         ...state,
@@ -66,8 +66,8 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: false,
         errors: action.payload.error,
       };
+
     default:
       return state;
   }
-// eslint-disable-next-line linebreak-style
 };

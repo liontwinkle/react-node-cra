@@ -1,21 +1,25 @@
 @import 'scss/mixin.scss';
-.mg-rules-container{
+
+.mg-rules-container {
   width: 100%;
-  height:100%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  .mg-rules-actions{
+
+  .mg-rules-actions {
     margin-left: 10px;
   }
+
   .divider {
     width: 100%;
     height: 1px;
     background-color: #ddd;
   }
-  .mg-rule-content{
+
+  .mg-rule-content {
     margin-top: 30px;
     overflow: auto;
-    height:calc(100% - 30px);
+    height: calc(100% - 30px);
     width: 100%;
     padding: 10px;
     display: flex;

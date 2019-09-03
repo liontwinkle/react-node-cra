@@ -18,24 +18,24 @@ exports.show = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  let query = [];
+  const query = [];
   req.body.forEach((item) => {
-    query.push(item._id)
+    query.push(item._id);
   });
 
   // delete section
   req.products
-    .deleteMany({_id:{$in:query}}, function (err) {
+    .deleteMany({ _id: { $in: query } }, (err) => {
       if (err) {
         handleError(err);
       }
     });
   req.products
-    .insertMany(req.body, function( err, result ){
-      if( err ){
-        handleError(res)
-      }else{
+    .insertMany(req.body, (err, result) => {
+      if (err) {
+        handleError(res);
+      } else {
         res.status(201).json(result);
       }
-    })
+    });
 };

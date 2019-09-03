@@ -55,18 +55,18 @@ function VirtualSortableTree(props) {
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
-            enqueueSnackbar('Category name has been updated successfully.',
-              {
-                variant: 'success', autoHideDuration: 1000,
-              });
+            enqueueSnackbar('Category name has been updated successfully.', {
+              variant: 'success',
+              autoHideDuration: 1000,
+            });
+
             handleConfirm(node, path);
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding category.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in adding category.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
 
             handleConfirm(node, path, category.name);
           });
@@ -117,13 +117,11 @@ function VirtualSortableTree(props) {
   };
 
   const handleMoveTree = (data) => {
-    const { node } = data;
-    const { path } = data;
+    const { node, path } = data;
     const currentParentNode = data.nextParentNode;
     const movedNodeItemName = node.item.name;
     const currentParentItemName = (currentParentNode) ? currentParentNode.item.name : 'root';
     const currentParentItemId = (currentParentNode) ? currentParentNode.item._id : '';
-
 
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
@@ -132,17 +130,17 @@ function VirtualSortableTree(props) {
         handleConfirm(node, path);
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar('Error in adding category.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
         handleConfirm(node, path, category.name);
       });
   };
 
   const isSelected = node => (category && category.id) === node.item.id;
   const editable = (clientType.key === 'virtual');
+
   return (
     <SortableTree
       treeData={treeData}
@@ -165,9 +163,7 @@ function VirtualSortableTree(props) {
           <input
             className={`tree-node-input${node.editable ? ' editable' : ''}`}
             readOnly={!node.editable}
-            onDoubleClick={
-              (editable)
-                ? handleDoubleClick(node, path) : null}
+            onDoubleClick={editable ? handleDoubleClick(node, path) : null}
             value={node.title}
             onBlur={handleBlur(node, path)}
             onKeyDown={handleKeyDown(node, path)}

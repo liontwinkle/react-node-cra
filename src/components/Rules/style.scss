@@ -1,8 +1,10 @@
 @import 'scss/mixin.scss';
+
 .mg-rules-container {
   @include full_width_height;
   margin: 0;
   white-space: nowrap;
+
   .mg-rule-content {
     padding: 1rem;
     flex: 1;

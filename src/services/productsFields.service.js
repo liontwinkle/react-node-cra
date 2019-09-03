@@ -1,6 +1,6 @@
 import httpService from './http.service';
 
-const getCategoryRoute = '/products_fields';
+const getCategoryRoute = '/products-fields';
 
 const fetch = clientId => httpService
   .get(`${getCategoryRoute}/${clientId}`)

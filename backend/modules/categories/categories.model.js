@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   name: String,
@@ -10,10 +11,10 @@ const CategorySchema = new Schema({
   properties: Object,
   rules: Object,
   newRules: [{
-    basis : String,
-    refer : String,
-    value : String,
-    scope : Number
+    basis: String,
+    refer: String,
+    value: String,
+    scope: Number
   }],
   ruleKeys: [{
     key: String,
@@ -22,9 +23,7 @@ const CategorySchema = new Schema({
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 
-CategorySchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
+CategorySchema.virtual('id').get(() => this._id.toHexString());
 
 let Categories = mongoose.model('Categories', CategorySchema);
 

@@ -1,8 +1,10 @@
 @import 'scss/mixin.scss';
-.show-filed-container{
-  width:100%;
+
+.show-filed-container {
+  width: 100%;
   @include justify-row-around;
-  .show-field-item{
+
+  .show-field-item {
     width: 100%;
     display: flex;
     align-items: flex-start;

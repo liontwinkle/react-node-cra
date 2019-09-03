@@ -12,6 +12,7 @@ function Home(props) {
   const { type, category } = props;
   const value = type && type.key;
   const tableRef = React.createRef();
+
   return (
     <div className="app-container">
       <Container>
@@ -24,10 +25,11 @@ function Home(props) {
 
         <Section minSize={(value === 'products') ? '30%' : '65%'}>
           <Fragment>
-            {(value === 'products')
-            && <ProductsDetail tableRef={tableRef} />}
-            {category && (
-              (value === 'virtual' || value === 'native') && <VirtualDetail />
+            {value === 'products' && (
+              <ProductsDetail tableRef={tableRef} />
+            )}
+            {category && (value === 'virtual' || value === 'native') && (
+              <VirtualDetail />
             )}
           </Fragment>
         </Section>

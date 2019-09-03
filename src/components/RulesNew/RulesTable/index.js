@@ -1,27 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
-
-import './style.scss';
-import { IconButton } from 'components/elements';
-import SaveIcon from '@material-ui/icons/Filter';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
+import SaveIcon from '@material-ui/icons/Filter';
+
+import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 
-function RulesTable(props) {
+import './style.scss';
+
+function RulesTable({ rules, products }) {
   const { enqueueSnackbar } = useSnackbar();
-  const {
-    rules,
-    products,
-  } = props;
 
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value, store) => {
-    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
+
     products.forEach((productItem) => {
       switch (match) {
         case ':=':
@@ -30,7 +28,7 @@ function RulesTable(props) {
           }
           break;
         case '::':
-          if (caseItensitiveMatch.test(productItem[field])) {
+          if (caseInsensitiveMatch.test(productItem[field])) {
             store.push(productItem);
           }
           break;
@@ -86,7 +84,7 @@ function RulesTable(props) {
   };
 
   const getAllmatched = (match, value, store) => {
-    const caseItensitiveMatch = new RegExp(`${value}`, 'i');
+    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     let checkValue = [];
     products.forEach((proItem) => {
@@ -98,7 +96,7 @@ function RulesTable(props) {
           }
           break;
         case '::':
-          if (values.filter(item => caseItensitiveMatch.test(item)).length > 0) {
+          if (values.filter(item => caseInsensitiveMatch.test(item)).length > 0) {
             store.push(proItem);
           }
           break;
@@ -182,90 +180,86 @@ function RulesTable(props) {
     return filter.length;
   };
 
-  const handleToggle = (key) => {
+  const handleToggle = key => () => {
     if (key !== 'close' && filterProducts(key) === 0) {
-      enqueueSnackbar('No Products match this rule.',
-        {
-          variant: 'info',
-          autoHideDuration: 4000,
-        });
+      enqueueSnackbar('No Products match this rule.', {
+        variant: 'info',
+        autoHideDuration: 4000,
+      });
     } else {
       setPreViewState(!preViewState);
     }
   };
+
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
-      {
-        (rules.length > 0)
-        && (
-          <table>
-            <thead>
-              <tr>
-                <th>Rule`s Basis</th>
-                <th>Rule`s Refer</th>
-                <th>Search By Key</th>
-                <th>Rule`s Value</th>
-                <th>Rule`s Criteria</th>
-                <th>Rule`s Scope</th>
-                <th>Preview Marches</th>
+      {(rules.length > 0) && (
+        <table>
+          <thead>
+            <tr>
+              <th>Rule`s Basis</th>
+              <th>Rule`s Refer</th>
+              <th>Search By Key</th>
+              <th>Rule`s Value</th>
+              <th>Rule`s Criteria</th>
+              <th>Rule`s Scope</th>
+              <th>Preview Marches</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rules.map((item, i) => (
+              <tr key={parseInt(i, 10)}>
+                <td>
+                  <label className="item">
+                    {item.basis.label}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.refer.label}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.detail.label}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.match.label}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.value}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.scope.label}
+                  </label>
+                </td>
+                <td>
+                  <Tooltip
+                    title="Preview Products for Current Rule"
+                    position="right"
+                    arrow
+                  >
+                    <IconButton>
+                      <SaveIcon style={{ fontSize: 20 }} onClick={handleToggle(i)} />
+                    </IconButton>
+                  </Tooltip>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {
-                rules.map((item, i) => (
-                  <tr key={parseInt(i, 10)}>
-                    <td>
-                      <label className="item">
-                        {item.basis.label}
-                      </label>
-                    </td>
-                    <td>
-                      <label className="item">
-                        {item.refer.label}
-                      </label>
-                    </td>
-                    <td>
-                      <label className="item">
-                        {item.detail.label}
-                      </label>
-                    </td>
-                    <td>
-                      <label className="item">
-                        {item.match.label}
-                      </label>
-                    </td>
-                    <td>
-                      <label className="item">
-                        {item.value}
-                      </label>
-                    </td>
-                    <td>
-                      <label className="item">
-                        {item.scope.label}
-                      </label>
-                    </td>
-                    <td>
-                      <Tooltip
-                        title="Preview Products for Current Rule"
-                        position="right"
-                        arrow
-                      >
-                        <IconButton>
-                          <SaveIcon style={{ fontSize: 20 }} onClick={() => handleToggle(i)} />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        )
-      }
+            ))}
+          </tbody>
+        </table>
+      )}
+
       {preViewState && (
         <PreviewProducts
           open={preViewState}
-          handleClose={() => handleToggle('close')}
+          handleClose={handleToggle('close')}
           filterProducts={previewProducts}
         />
       )}

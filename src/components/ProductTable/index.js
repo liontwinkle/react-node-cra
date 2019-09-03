@@ -1,49 +1,41 @@
-import React from 'react';
-import { HotTable } from '@handsontable/react';
-
-import 'handsontable/dist/handsontable.full.css';
-import './style.scss';
-import { withSnackbar } from 'notistack';
-
-import Loader from 'components/Loader';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import { bindActionCreators } from 'redux';
-import {
-  fetchProducts,
-} from 'redux/actions/products';
+import { withSnackbar } from 'notistack';
+import { HotTable } from '@handsontable/react';
 
-class ProductTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fetchingFlag: true,
-    };
-  }
+import { fetchProducts } from 'redux/actions/products';
+import Loader from 'components/Loader';
+
+import './style.scss';
+
+class ProductTable extends Component {
+  state = {
+    fetchingFlag: true,
+  };
 
   componentDidMount() {
     this.setState({
       fetchingFlag: true,
     });
+
     this.props.fetchProducts()
       .then(() => {
         this.setState({
           fetchingFlag: false,
         });
-        this.props.enqueueSnackbar('Success fetching products data.',
-          {
-            variant: 'success',
-            autoHideDuration: 1000,
-          });
+        this.props.enqueueSnackbar('Success fetching products data.', {
+          variant: 'success',
+          autoHideDuration: 1000,
+        });
       })
       .catch(() => {
-        this.props.enqueueSnackbar('Error in fetching products data.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        this.props.enqueueSnackbar('Error in fetching products data.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
   }
 
@@ -54,47 +46,46 @@ class ProductTable extends React.Component {
       products,
       tableRef,
     } = this.props;
+
     return (
       <div id="hot-app">
-        {
-          (!this.state.fetchingFlag)
-            ? (
-              <PerfectScrollbar>
-                <HotTable
-                  ref={tableRef}
-                  root="hot"
-                  licenseKey="non-commercial-and-evaluation"
-                  settings={{
-                    data: products,
-                    columns,
-                    autoWrapRow: true,
-                    manualRowResize: true,
-                    manualColumnResize: true,
-                    manualColumnMove: true,
-                    manualRowMove: true,
-                    autoColumnResize: true,
-                    headerTooltips: true,
-                    colHeaders: headers,
-                    rowHeaders: true,
-                    stretchH: 'all',
-                    contextMenu: true,
-                    exportFile: true,
-                    // collapsibleColumns
-                    multiColumnSorting: {
-                      indicator: true,
-                    },
-                    dropdownMenu: true,
-                    filters: true,
-                    hiddenColumns: true,
-                  }}
-                />
-              </PerfectScrollbar>
-            )
-            : (
-              <div className="loader">
-                <Loader size="small" color="dark" />
-              </div>
-            )
+        {(!this.state.fetchingFlag)
+          ? (
+            <PerfectScrollbar>
+              <HotTable
+                ref={tableRef}
+                root="hot"
+                licenseKey="non-commercial-and-evaluation"
+                settings={{
+                  data: products,
+                  columns,
+                  autoWrapRow: true,
+                  manualRowResize: true,
+                  manualColumnResize: true,
+                  manualColumnMove: true,
+                  manualRowMove: true,
+                  autoColumnResize: true,
+                  headerTooltips: true,
+                  colHeaders: headers,
+                  rowHeaders: true,
+                  stretchH: 'all',
+                  contextMenu: true,
+                  exportFile: true,
+                  // collapsibleColumns
+                  multiColumnSorting: {
+                    indicator: true,
+                  },
+                  dropdownMenu: true,
+                  filters: true,
+                  hiddenColumns: true,
+                }}
+              />
+            </PerfectScrollbar>
+          ) : (
+            <div className="loader">
+              <Loader size="small" color="dark" />
+            </div>
+          )
         }
       </div>
     );
@@ -102,12 +93,12 @@ class ProductTable extends React.Component {
 }
 
 ProductTable.propTypes = {
-  fetchProducts: PropTypes.func.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired,
   tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({

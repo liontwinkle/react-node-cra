@@ -3,17 +3,22 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
+import {
+  basis,
+  refer,
+  match,
+  scope,
+} from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelect } from 'components/elements';
-import {
-  basis, refer, match, scope,
-} from 'utils/constants';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -24,19 +29,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddNewRule(props) {
+function AddNewRule({
+  open,
+  isUpdating,
+  handleClose,
+  updateCategory,
+  valueDetails,
+  category,
+  rules,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    isUpdating,
-    handleClose,
-    updateCategory,
-    valueDetails,
-    category,
-    rules,
-  } = props;
 
   const [ruleData, setRuleData] = useState({
     basis: basis[0],
@@ -63,11 +66,13 @@ function AddNewRule(props) {
     setRuleData(newClient);
   };
 
-  const disabled = !(ruleData.basis
+  const disabled = !(
+    ruleData.basis
     && ruleData.refer
     && ruleData.scope
     && ruleData.match
-    && (ruleData.value !== ''));
+    && (ruleData.value !== '')
+  );
 
   const saveRules = (updatedState) => {
     const updatedData = [];
@@ -80,22 +85,21 @@ function AddNewRule(props) {
         scope: 0,
       });
     });
+
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
-          enqueueSnackbar('Success creating the Rule.',
-            {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+          enqueueSnackbar('Success creating the Rule.', {
+            variant: 'success',
+            autoHideDuration: 1500,
+          });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating new rules.',
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar('Error in updating new rules.', {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         });
     }
   };
@@ -105,22 +109,21 @@ function AddNewRule(props) {
       if (!rules.find(item => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
-      && item.value === ruleData.value))) {
+        && item.value === ruleData.value
+      ))) {
         rules.push(ruleData);
         saveRules(rules);
       } else {
-        enqueueSnackbar('The search key is duplicated.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
-      }
-    } else {
-      enqueueSnackbar('Please fill the Criteria field.',
-        {
+        enqueueSnackbar('The search key is duplicated.', {
           variant: 'error',
           autoHideDuration: 4000,
         });
+      }
+    } else {
+      enqueueSnackbar('Please fill the Criteria field.', {
+        variant: 'error',
+        autoHideDuration: 4000,
+      });
     }
   };
 

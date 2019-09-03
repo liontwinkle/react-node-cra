@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
 import { createClient, updateClient } from 'redux/actions/clients';
-import { createPorpertyField, updatePorpertyField } from 'redux/actions/propertyFields';
+import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 
 const useStyles = makeStyles(theme => ({
@@ -19,20 +21,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ClientForm(props) {
+function ClientForm({
+  status,
+  isSaving,
+  client,
+  createClient,
+  updateClient,
+  createPropertyField,
+  updatePropertyField,
+  handleClose,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    status,
-    isSaving,
-    client,
-    createClient,
-    updateClient,
-    createPorpertyField,
-    updatePorpertyField,
-    handleClose,
-  } = props;
 
   const isAdd = status.type === 'Add';
   const [clientData, setClientData] = useState({
@@ -52,31 +52,30 @@ function ClientForm(props) {
   const handleSubmit = () => {
     if (!isSaving && !disabled) {
       const actionClient = isAdd ? createClient : updateClient;
-      const actionPropertyField = isAdd ? createPorpertyField : updatePorpertyField;
+      const actionPropertyField = isAdd ? createPropertyField : updatePropertyField;
+
       actionClient(clientData)
         .then(() => {
           actionPropertyField(clientData)
             .then(() => {
-              enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`,
-                {
-                  variant: 'success', autoHideDuration: 1000,
-                });
+              enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`, {
+                variant: 'success',
+                autoHideDuration: 1000,
+              });
               handleClose();
             })
             .catch(() => {
-              enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
-                {
-                  variant: 'error',
-                  autoHideDuration: 4000,
-                });
+              enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`, {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
             });
         })
         .catch(() => {
-          enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`,
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`, {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         });
     }
   };
@@ -141,8 +140,8 @@ ClientForm.propTypes = {
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-  createPorpertyField: PropTypes.func.isRequired,
-  updatePorpertyField: PropTypes.func.isRequired,
+  createPropertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
 };
 
 ClientForm.defaultProps = {
@@ -157,8 +156,8 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   createClient,
   updateClient,
-  createPorpertyField,
-  updatePorpertyField,
+  createPropertyField,
+  updatePropertyField,
 }, dispatch);
 
 export default connect(

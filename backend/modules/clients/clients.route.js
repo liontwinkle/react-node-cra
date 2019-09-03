@@ -4,10 +4,7 @@ const router = express.Router();
 
 const controller = require('./clients.controller');
 const { loadClient, loadCategory } = require('./clients.middleware');
-const {
-  validateCategoryType,
-  validateProductType,
-} = require('../validation/validation.controller');
+const { validateCategoryType, validateProductType } = require('../validation/validation.controller');
 const categoriesRoute = require('../categories/categories.route');
 const productsRoute = require('../products/products.route');
 

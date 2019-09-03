@@ -15,17 +15,14 @@ import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
 
-
-function PropertyActions(props) {
+function PropertyActions({
+  properties,
+  isUpdating,
+  category,
+  updateCategory,
+  fields,
+}) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    properties,
-    isUpdating,
-    category,
-    updateCategory,
-    fields,
-  } = props;
 
   const [open, setOpen] = useState({
     add: false,
@@ -34,6 +31,7 @@ function PropertyActions(props) {
     edit_section: false,
     default: false,
   });
+
   const handleToggle = field => () => {
     setOpen({
       ...open,
@@ -55,8 +53,7 @@ function PropertyActions(props) {
       } else if (item.propertyType === 'array') {
         let chkFlag = true;
         try {
-          const newData = JSON.parse(tempProperties[item.key]);
-          tempProperties[item.key] = newData;
+          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
         } catch (e) {
           chkFlag = false;
         }
@@ -72,26 +69,23 @@ function PropertyActions(props) {
       if (!isUpdating) {
         updateCategory(category.id, { properties: saveData })
           .then(() => {
-            enqueueSnackbar('Properties has been updated successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1500,
-              });
+            enqueueSnackbar('Properties has been updated successfully.', {
+              variant: 'success',
+              autoHideDuration: 1500,
+            });
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating properties.',
-              {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+            enqueueSnackbar('Error in updating properties.', {
+              variant: 'error',
+              autoHideDuration: 4000,
+            });
           });
       }
     } else {
-      enqueueSnackbar('Input format is wrong.',
-        {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+      enqueueSnackbar('Input format is wrong.', {
+        variant: 'error',
+        autoHideDuration: 4000,
+      });
     }
   };
 
@@ -150,7 +144,6 @@ function PropertyActions(props) {
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
-
 
       {open.add_section && (
         <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />

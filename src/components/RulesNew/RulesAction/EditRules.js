@@ -6,28 +6,30 @@ import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import { getObjectFromArray } from 'utils';
 import {
-  basis, refer, match, scope, tableIcons,
+  basis,
+  refer,
+  match,
+  scope,
+  tableIcons,
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
-import { getObjectFromArray } from '../../../utils';
+
 import './style.scss';
 
-function EditRules(props) {
+function EditRules({
+  open,
+  rules,
+  updateCategory,
+  handleClose,
+  isUpdating,
+  category,
+  valueDetails,
+}) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    open,
-    rules,
-    updateCategory,
-    handleClose,
-    isUpdating,
-    category,
-    valueDetails,
-  } = props;
 
   const tableData = {
     columns: [
@@ -73,27 +75,28 @@ function EditRules(props) {
         scope: 0,
       });
     });
+
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
-          enqueueSnackbar('Success Updating the Rules.',
-            {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+          enqueueSnackbar('Success Updating the Rules.', {
+            variant: 'success',
+            autoHideDuration: 1500,
+          });
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating new rules.',
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar('Error in updating new rules.', {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         });
     }
   };
+
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
+
       rules.push({
         _id: newData._id,
         basis: newData.basis,
@@ -103,6 +106,7 @@ function EditRules(props) {
         match: newData.match,
         scope: newData.scope,
       });
+
       saveRules(rules);
     },
     600);
@@ -123,6 +127,7 @@ function EditRules(props) {
           match: newData.match,
           scope: newData.scope,
         });
+
         saveRules(rules);
       }
     }, 600);

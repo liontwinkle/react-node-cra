@@ -1,19 +1,17 @@
-const ProductsField = require('./products_fields.model');
+const ProductsField = require('./products-fields.model');
 
 const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
   respondWith,
-  removeEntity,
   handleExistingRemove,
 } = require('../../utils');
 
 // Gets a single Category from the DB
 exports.show = (req, res) => {
   ProductsField
-    .find({clientId:req.params.clientId})
+    .find({ clientId: req.params.clientId })
     .execAsync()
     .then(handleEntityNotFound(res, req))
     .then(responseWithResult(res))
@@ -22,26 +20,25 @@ exports.show = (req, res) => {
 
 // Updates an existing Category in the DB
 exports.update = (req, res) => {
-  let newData = {
+  const newData = {
     clientId: req.params.clientId,
     fields: req.body,
   };
   ProductsField
-    .find({clientId:req.params.clientId})
-    .then(handleExistingRemove(ProductsField,req, newData, res))
-    .catch(handleError(res))
+    .find({ clientId: req.params.clientId })
+    .then(handleExistingRemove(ProductsField, req, newData, res))
+    .catch(handleError(res));
 };
 
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   ProductsField
-    .deleteMany({clientId:req.params.clientId}, function (err, result) {
-      if( err ){
+    .deleteMany({ clientId: req.params.clientId }, (err) => {
+      if (err) {
         handleError(res);
-      }
-      else{
+      } else {
         respondWith(res, 204);
       }
     })
-    .then(respondWith(res,204))
+    .then(respondWith(res, 204));
 };

@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 
 import { ruleKeyTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
@@ -66,19 +68,17 @@ function AddRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.',
-            {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+          enqueueSnackbar('Rule key has been added successfully.', {
+            variant: 'success',
+            autoHideDuration: 1500,
+          });
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule key.',
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar('Error in adding rule key.', {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         });
     }
   };

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import './style.scss';
 
 const CustomCheck = ({
@@ -27,4 +28,5 @@ CustomCheck.propTypes = {
 CustomCheck.defaultProps = {
   value: '_id',
 };
+
 export default CustomCheck;

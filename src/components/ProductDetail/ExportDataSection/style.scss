@@ -1,13 +1,15 @@
 @import "scss/mixin.scss";
-.export-button{
+
+.export-button {
   width: 100%;
   @include justify-row-around;
-  button{
+
+  button {
+    padding: 10px;
     background: #1CA1C1;
-    color: #FFFFFF;
     border: none;
     border-radius: 3px;
-    padding:10px;
+    color: #FFFFFF;
     cursor: pointer;
   }
 }

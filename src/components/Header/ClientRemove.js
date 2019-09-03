@@ -3,19 +3,21 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Tooltip } from 'react-tippy';
 
 import { removeClient } from 'redux/actions/clients';
-import { IconButton } from 'components/elements';
-import { removePorpertyField } from 'redux/actions/propertyFields';
+import { removePropertyField } from 'redux/actions/propertyFields';
 import { removeProductsField } from 'redux/actions/productsFields';
+import { IconButton } from 'components/elements';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -24,17 +26,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ClientRemove(props) {
+function ClientRemove({
+  isDeleting,
+  client,
+  removeClient,
+  removePropertyField,
+  removeProductsField,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    isDeleting,
-    client,
-    removeClient,
-    removePorpertyField,
-    removeProductsField,
-  } = props;
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -43,41 +43,37 @@ function ClientRemove(props) {
 
   const handleRemove = () => {
     if (!isDeleting) {
-      removePorpertyField()
+      removePropertyField()
         .then(() => {
           removeProductsField()
             .then(() => {
               removeClient(client.id)
                 .then(() => {
-                  enqueueSnackbar('The client has been deleted successfully.',
-                    {
-                      variant: 'success',
-                      autoHideDuration: 1000,
-                    });
+                  enqueueSnackbar('The client has been deleted successfully.', {
+                    variant: 'success',
+                    autoHideDuration: 1000,
+                  });
                   handleOpen();
                 })
                 .catch(() => {
-                  enqueueSnackbar('Error in deleting client.',
-                    {
-                      variant: 'error',
-                      autoHideDuration: 4000,
-                    });
+                  enqueueSnackbar('Error in deleting client.', {
+                    variant: 'error',
+                    autoHideDuration: 4000,
+                  });
                 });
             })
             .catch(() => {
-              enqueueSnackbar('Error in deleting client.',
-                {
-                  variant: 'error',
-                  autoHideDuration: 4000,
-                });
+              enqueueSnackbar('Error in deleting client.', {
+                variant: 'error',
+                autoHideDuration: 4000,
+              });
             });
         })
         .catch(() => {
-          enqueueSnackbar('Error in deleting client.',
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          enqueueSnackbar('Error in deleting client.', {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
         });
     }
   };
@@ -136,7 +132,7 @@ ClientRemove.propTypes = {
   isDeleting: PropTypes.bool.isRequired,
   client: PropTypes.object,
   removeClient: PropTypes.func.isRequired,
-  removePorpertyField: PropTypes.func.isRequired,
+  removePropertyField: PropTypes.func.isRequired,
   removeProductsField: PropTypes.func.isRequired,
 };
 
@@ -151,7 +147,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   removeClient,
-  removePorpertyField,
+  removePropertyField,
   removeProductsField,
 }, dispatch);
 

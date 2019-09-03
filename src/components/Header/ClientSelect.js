@@ -5,15 +5,11 @@ import { connect } from 'react-redux';
 import _find from 'lodash/find';
 import { useSnackbar } from 'notistack';
 
-import {
-  fetchClients,
-  setClient,
-  setClientType,
-} from 'redux/actions/clients';
+import { fetchClients, setClient, setClientType } from 'redux/actions/clients';
 import { fetchCategories } from 'redux/actions/categories';
-import { CustomSelect } from 'components/elements';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
+import { CustomSelect } from 'components/elements';
 
 const types = [
   { key: 'virtual', label: 'Virtual' },
@@ -22,30 +18,28 @@ const types = [
   { key: 'attributes', label: 'Attributes' },
 ];
 
-function ClientSelect(props) {
+function ClientSelect({
+  clients,
+  client,
+  type,
+  fetchClients,
+  setClient,
+  setClientType,
+  fetchCategories,
+  fetchPropertyField,
+  fetchProductsField,
+}) {
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultType = { key: 'virtual', label: 'Virtual' };
-  const {
-    clients,
-    client,
-    type,
-    fetchClients,
-    setClient,
-    setClientType,
-    fetchCategories,
-    fetchPropertyField,
-    fetchProductsField,
-  } = props;
 
   useEffect(() => {
     fetchClients()
       .catch(() => {
-        enqueueSnackbar('Error in fetching clients.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar('Error in fetching clients.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
   }, [fetchClients, enqueueSnackbar]);
 

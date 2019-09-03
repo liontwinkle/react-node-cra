@@ -1,4 +1,4 @@
-const PropertyFields = require('./property_fields.model');
+const PropertyFields = require('./property-fields.model');
 
 const {
   handleError,
@@ -6,7 +6,6 @@ const {
   handleEntityNotFound,
   saveUpdates,
   respondWith,
-  createProperty,
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -22,19 +21,19 @@ exports.index = (req, res) => {
 // Creates a new Category in the DB
 exports.create = (req, res) => {
   PropertyFields
-    .insertMany(req.body.propertyField, function( err, result ){
-      if( err ){
-        handleError(res)
-      }else{
+    .insertMany(req.body.propertyField, (err, result) => {
+      if (err) {
+        handleError(res);
+      } else {
         res.status(201).json(result);
       }
-    })
+    });
 };
 
 // Gets a single Category from the DB
 exports.show = (req, res) => {
   PropertyFields
-    .find({clientId:req.params.clientId, type: req.params.type})
+    .find({ clientId: req.params.clientId, type: req.params.type })
     // .select('id name code url createdAt')
     .execAsync()
     .then(handleEntityNotFound(res, req))
@@ -59,13 +58,12 @@ exports.update = (req, res) => {
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   PropertyFields
-    .deleteMany({clientId:req.params.clientId}, function (err, result) {
-      if( err ){
+    .deleteMany({ clientId: req.params.clientId }, (err) => {
+      if (err) {
         handleError(res);
-      }
-      else{
+      } else {
         respondWith(res, 204);
       }
     })
-    .then(respondWith(res,204))
+    .then(respondWith(res, 204));
 };

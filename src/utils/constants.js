@@ -87,7 +87,6 @@ export const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumnIcon {...props} ref={ref} />),
 };
 
-
 export const pagination = [
   { key: 50, label: '50 products' },
   { key: 100, label: '100 products' },
@@ -106,12 +105,14 @@ export const basis = [
     key: 'exclude',
   },
 ];
+
 export const refer = [
   {
     label: 'Refer to product details',
     key: 'product_detail',
   },
 ];
+
 export const match = [
   {
     label: 'Exact(text)',
@@ -146,6 +147,7 @@ export const match = [
     key: ':==',
   },
 ];
+
 export const scope = [
   {
     label: 'All Categories',

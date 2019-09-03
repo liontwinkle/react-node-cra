@@ -8,10 +8,7 @@ import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import {
-  createCategory,
-  updateTreeData,
-} from 'redux/actions/categories';
+import { createCategory, updateTreeData } from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
 
@@ -31,14 +28,16 @@ function Tree(props) {
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
       .then(() => {
-        enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
+        enqueueSnackbar('New category has been created successfully.', {
+          variant: 'success',
+          autoHideDuration: 1000,
+        });
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        enqueueSnackbar('Error in adding category.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
   };
 

@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import {
-  basis, refer, match, scope,
+  basis,
+  refer,
+  match,
+  scope,
 } from 'utils/constants';
-import './style.scss';
-import { bindActionCreators } from 'redux';
 import { fetchProducts } from 'redux/actions/products';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
+
+import './style.scss';
 
 class NewRules extends Component {
   state = {
@@ -23,24 +27,21 @@ class NewRules extends Component {
     this.props.fetchProducts()
       .then(() => {
         this.setMap(this.props.category);
-        this.props.enqueueSnackbar('Success to collect the Rule keys.',
-          {
-            variant: 'success',
-            autoHideDuration: 1000,
-          });
+        this.props.enqueueSnackbar('Success to collect the Rule keys.', {
+          variant: 'success',
+          autoHideDuration: 1000,
+        });
       })
       .catch(() => {
-        this.props.enqueueSnackbar('Error to collect the Rule Keys.',
-          {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+        this.props.enqueueSnackbar('Error to collect the Rule Keys.', {
+          variant: 'error',
+          autoHideDuration: 4000,
+        });
       });
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.category
-      && (this.props.category !== prevProps.category)) {
+    if (this.props.category && (this.props.category !== prevProps.category)) {
       this.setMap(this.props.category);
     }
   }

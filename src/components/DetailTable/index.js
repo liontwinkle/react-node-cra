@@ -9,9 +9,7 @@ import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
-function DetailTable(props) {
-  const { categories, category } = props;
-
+function DetailTable({ categories, category }) {
   const parentId = category ? category.id : '';
   const childrenCategories = categories.filter(c => c.parentId === parentId);
 
