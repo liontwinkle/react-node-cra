@@ -5,8 +5,6 @@ const ProductsSchema = new Schema({
   _id: String,
 }, { toJSON: { virtuals: true },strict:false, timestamps: true });
 
-
-
 /**
  * @param type
  * @returns {Model}
