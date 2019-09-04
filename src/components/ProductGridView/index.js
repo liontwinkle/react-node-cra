@@ -3,27 +3,23 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import LazyLoad from 'react-lazyload';
 import { withSnackbar } from 'notistack';
 
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
-import lozad from 'lozad';
 import './style.scss';
 
 class ProductGridView extends Component {
-  observer = lozad();
-
   constructor() {
     super();
     this.state = {
       fetchingFlag: true,
+      detail: {},
     };
   }
 
   componentDidMount() {
-    this.observer.observe();
-
-
     this.setState({
       fetchingFlag: true,
     });
@@ -45,6 +41,13 @@ class ProductGridView extends Component {
       });
   }
 
+  displayDetail = (key) => {
+    this.setState({
+      detail: this.props.products[key],
+    });
+    console.log(this.state.detail);// fixme
+  };
+
   render() {
     const {
       products,
@@ -61,17 +64,19 @@ class ProductGridView extends Component {
               }}
             >
               <div className="grid-view-content">
-                {
-                  products.map((item, key) => (
-                    <img
-                      key={parseInt(key, 10)}
-                      className="lozad"
-                      // data-src={item.image}
-                      src={item.image}
-                      alt="product"
-                    />
-                  ))
-                }
+                <LazyLoad height={200}>
+                  {
+                    products.map((item, key) => (
+                      <img
+                        key={parseInt(key, 10)}
+                        src={item.image}
+                        alt="product"
+                        className="grid-item"
+                        onClick={() => this.displayDetail(key)}
+                      />
+                    ))
+                  }
+                </LazyLoad>
               </div>
             </PerfectScrollbar>
           ) : (
@@ -86,9 +91,6 @@ class ProductGridView extends Component {
 }
 
 ProductGridView.propTypes = {
-  // tableRef: PropTypes.object.isRequired,
-  // columns: PropTypes.array.isRequired,
-  // headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -96,8 +98,6 @@ ProductGridView.propTypes = {
 
 const mapStateToProps = store => ({
   products: store.productsData.products,
-  // columns: store.productsData.columns,
-  // headers: store.productsData.headers,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
