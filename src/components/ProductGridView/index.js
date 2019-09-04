@@ -11,20 +11,21 @@ import lozad from 'lozad';
 import './style.scss';
 
 class ProductGridView extends Component {
-  state = {
-    fetchingFlag: true,
-  };
+  constructor() {
+    super();
+    this.observer = lozad();
+    this.state = {
+      fetchingFlag: true,
+    };
+  }
 
   componentDidMount() {
+    this.observer.observe();
+
+
     this.setState({
       fetchingFlag: true,
     });
-
-    const observer = lozad(this.img, {
-      rootMargin: '10px 0px',
-      threshold: 0.1,
-    });
-    observer.observe();
     this.props.fetchProducts()
       .then(() => {
         this.setState({
