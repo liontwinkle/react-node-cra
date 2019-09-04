@@ -8,6 +8,7 @@ import { withSnackbar } from 'notistack';
 
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
+import GridDetail from './GridDetail';
 import './style.scss';
 
 class ProductGridView extends Component {
@@ -16,6 +17,7 @@ class ProductGridView extends Component {
     this.state = {
       fetchingFlag: true,
       detail: {},
+      viewDetailFlag: false,
     };
   }
 
@@ -44,18 +46,30 @@ class ProductGridView extends Component {
   displayDetail = (key) => {
     this.setState({
       detail: this.props.products[key],
+      viewDetailFlag: true,
     });
-    console.log(this.state.detail);// fixme
+  };
+
+  handleClose = () => {
+    this.setState({
+      viewDetailFlag: false,
+    });
   };
 
   render() {
     const {
       products,
+      headers,
     } = this.props;
 
+    const {
+      viewDetailFlag,
+      fetchingFlag,
+      detail,
+    } = this.state;
     return (
       <div className="grid-view-container">
-        {(!this.state.fetchingFlag)
+        {(!fetchingFlag)
           ? (
             <PerfectScrollbar
               options={{
@@ -85,6 +99,14 @@ class ProductGridView extends Component {
             </div>
           )
         }
+        {viewDetailFlag && (
+          <GridDetail
+            open={viewDetailFlag}
+            handleClose={this.handleClose}
+            product={detail}
+            keys={headers}
+          />
+        )}
       </div>
     );
   }
@@ -92,12 +114,14 @@ class ProductGridView extends Component {
 
 ProductGridView.propTypes = {
   products: PropTypes.array.isRequired,
+  headers: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   products: store.productsData.products,
+  headers: store.productsData.headers,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
