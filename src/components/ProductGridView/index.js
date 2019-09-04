@@ -11,9 +11,10 @@ import lozad from 'lozad';
 import './style.scss';
 
 class ProductGridView extends Component {
+  observer = lozad();
+
   constructor() {
     super();
-    this.observer = lozad();
     this.state = {
       fetchingFlag: true,
     };
@@ -65,7 +66,7 @@ class ProductGridView extends Component {
                     <img
                       key={parseInt(key, 10)}
                       className="lozad"
-                      data-src={item.image}
+                      // data-src={item.image}
                       src={item.image}
                       alt="product"
                     />
