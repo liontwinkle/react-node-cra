@@ -10,6 +10,7 @@ import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 import GridDetail from './GridDetail';
 import './style.scss';
+import { confirmMessage } from '../../utils';
 
 class ProductGridView extends Component {
   constructor() {
@@ -30,16 +31,10 @@ class ProductGridView extends Component {
         this.setState({
           fetchingFlag: false,
         });
-        this.props.enqueueSnackbar('Success fetching products data.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
+        confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
       })
       .catch(() => {
-        this.props.enqueueSnackbar('Error in fetching products data.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
       });
   }
 
@@ -113,10 +108,10 @@ class ProductGridView extends Component {
 }
 
 ProductGridView.propTypes = {
+  enqueueSnackbar: PropTypes.func.isRequired,
   products: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
