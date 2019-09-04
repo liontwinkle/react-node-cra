@@ -6,7 +6,7 @@ import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
 import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
-import { getNodeKey } from 'utils';
+import { confirmMessage, getNodeKey } from 'utils';
 import { updateCategory, setCategory } from 'redux/actions/categories';
 import TreeNodeMenu from './NodeMenu';
 
@@ -55,19 +55,11 @@ function VirtualSortableTree(props) {
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
-            enqueueSnackbar('Category name has been updated successfully.', {
-              variant: 'success',
-              autoHideDuration: 1000,
-            });
-
+            confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
             handleConfirm(node, path);
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding category.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
-
+            confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
             handleConfirm(node, path, category.name);
           });
       } else {
@@ -126,14 +118,11 @@ function VirtualSortableTree(props) {
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
         const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
-        enqueueSnackbar(string, { variant: 'success', autoHideDuration: 1000 });
+        confirmMessage(enqueueSnackbar, string, 'success');
         handleConfirm(node, path);
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
         handleConfirm(node, path, category.name);
       });
   };

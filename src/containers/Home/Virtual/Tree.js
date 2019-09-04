@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import { createCategory, updateTreeData } from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
+import { confirmMessage } from '../../../utils';
 
 function Tree(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -28,16 +29,10 @@ function Tree(props) {
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
       .then(() => {
-        enqueueSnackbar('New category has been created successfully.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
+        confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
       });
   };
 

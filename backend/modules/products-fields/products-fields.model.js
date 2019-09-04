@@ -8,6 +8,8 @@ const ProductsFieldsSchema = new Schema({
   fields: {},
 }, { toJSON: { virtuals: true }, strict: false, timestamps: true });
 
-ProductsFieldsSchema.virtual('id').get(() => this._id.toHexString());
+ProductsFieldsSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
 
 module.exports = mongoose.model('ProductsFields', ProductsFieldsSchema);

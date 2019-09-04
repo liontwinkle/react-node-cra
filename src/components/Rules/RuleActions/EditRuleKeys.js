@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { ruleTypes, tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
+import { confirmMessage } from '../../../utils';
 
 function EditRuleKeys(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -47,16 +48,10 @@ function EditRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.', {
-            variant: 'success',
-            autoHideDuration: 1500,
-          });
+          confirmMessage(enqueueSnackbar, 'Rule key has been added successfully.', 'success');
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule key.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, 'Error in adding rule key.', 'error');
         });
     }, 600);
   });
@@ -76,16 +71,10 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule key has been updated successfully.', {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+            confirmMessage(enqueueSnackbar, 'Rule key has been updated successfully.', 'success');
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating rule key.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in updating rule key.', 'error');
           });
       }
     }, 600);
@@ -101,16 +90,10 @@ function EditRuleKeys(props) {
 
         updateCategory(category.id, { ruleKeys })
           .then(() => {
-            enqueueSnackbar('Rule key has been deleted successfully.', {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+            confirmMessage(enqueueSnackbar, 'Rule key has been deleted successfully.', 'success');
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting rule key.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in deleting rule key.', 'error');
           });
       }
     }, 600);

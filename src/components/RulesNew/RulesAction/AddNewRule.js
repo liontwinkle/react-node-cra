@@ -19,6 +19,7 @@ import {
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelect } from 'components/elements';
+import { confirmMessage } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -89,17 +90,11 @@ function AddNewRule({
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
-          enqueueSnackbar('Success creating the Rule.', {
-            variant: 'success',
-            autoHideDuration: 1500,
-          });
+          confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating new rules.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, 'Error in updating new rules.', 'error');
         });
     }
   };
@@ -114,16 +109,10 @@ function AddNewRule({
         rules.push(ruleData);
         saveRules(rules);
       } else {
-        enqueueSnackbar('The search key is duplicated.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');
       }
     } else {
-      enqueueSnackbar('Please fill the Criteria field.', {
-        variant: 'error',
-        autoHideDuration: 4000,
-      });
+      confirmMessage(enqueueSnackbar, 'Please fill the Criteria field.', 'error');
     }
   };
 

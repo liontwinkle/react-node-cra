@@ -18,6 +18,7 @@ import { removeClient } from 'redux/actions/clients';
 import { removePropertyField } from 'redux/actions/propertyFields';
 import { removeProductsField } from 'redux/actions/productsFields';
 import { IconButton } from 'components/elements';
+import { confirmMessage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -49,31 +50,19 @@ function ClientRemove({
             .then(() => {
               removeClient(client.id)
                 .then(() => {
-                  enqueueSnackbar('The client has been deleted successfully.', {
-                    variant: 'success',
-                    autoHideDuration: 1000,
-                  });
+                  confirmMessage(enqueueSnackbar, 'The client has been deleted successfully.', 'success');
                   handleOpen();
                 })
                 .catch(() => {
-                  enqueueSnackbar('Error in deleting client.', {
-                    variant: 'error',
-                    autoHideDuration: 4000,
-                  });
+                  confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
                 });
             })
             .catch(() => {
-              enqueueSnackbar('Error in deleting client.', {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+              confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
             });
         })
         .catch(() => {
-          enqueueSnackbar('Error in deleting client.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
         });
     }
   };

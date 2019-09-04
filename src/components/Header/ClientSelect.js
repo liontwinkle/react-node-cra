@@ -10,6 +10,7 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
 import { CustomSelect } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 const types = [
   { key: 'virtual', label: 'Virtual' },
@@ -36,10 +37,7 @@ function ClientSelect({
   useEffect(() => {
     fetchClients()
       .catch(() => {
-        enqueueSnackbar('Error in fetching clients.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'Error in fetching clients.', 'error');
       });
   }, [fetchClients, enqueueSnackbar]);
 

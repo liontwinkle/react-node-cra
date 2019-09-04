@@ -16,6 +16,7 @@ import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 
 import './style.scss';
+import { confirmMessage } from '../../utils';
 
 class NewRules extends Component {
   state = {
@@ -27,16 +28,10 @@ class NewRules extends Component {
     this.props.fetchProducts()
       .then(() => {
         this.setMap(this.props.category);
-        this.props.enqueueSnackbar('Success to collect the Rule keys.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
+        confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
       })
       .catch(() => {
-        this.props.enqueueSnackbar('Error to collect the Rule Keys.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
       });
   }
 

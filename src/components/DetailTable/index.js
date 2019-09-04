@@ -41,8 +41,6 @@ function DetailTable({ categories, category }) {
           options={{
             actionsColumnIndex: -1,
             paging: false,
-            // search: false,
-            // showTitle: false,
             toolbar: false,
           }}
         />

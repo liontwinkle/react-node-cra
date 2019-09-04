@@ -23,7 +23,9 @@ const CategorySchema = new Schema({
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 
-CategorySchema.virtual('id').get(() => this._id.toHexString());
+CategorySchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
 
 let Categories = mongoose.model('Categories', CategorySchema);
 

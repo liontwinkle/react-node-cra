@@ -14,6 +14,7 @@ import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
+import { confirmMessage } from '../../../utils';
 
 function PropertyActions({
   properties,
@@ -69,23 +70,14 @@ function PropertyActions({
       if (!isUpdating) {
         updateCategory(category.id, { properties: saveData })
           .then(() => {
-            enqueueSnackbar('Properties has been updated successfully.', {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+            confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating properties.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in updating properties.', 'error');
           });
       }
     } else {
-      enqueueSnackbar('Input format is wrong.', {
-        variant: 'error',
-        autoHideDuration: 4000,
-      });
+      confirmMessage(enqueueSnackbar, 'Input format is wrong.', 'error');
     }
   };
 

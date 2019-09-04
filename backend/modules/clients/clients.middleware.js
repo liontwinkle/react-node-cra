@@ -18,8 +18,9 @@ exports.loadClient = (req, res, next, id) => Clients
 
 exports.loadCategory = (req, res, next, type) => {
   if (req.client) {
-    if (type !== 'products') req.category = CategoryModel(`${req.client.code}_${type}`);
-    else {
+    if (type !== 'products') {
+      req.category = CategoryModel(`${req.client.code}_${type}`);
+    } else {
       req.products = ProductsModel(`${req.client.code}_${type}`);
     }
     return next();

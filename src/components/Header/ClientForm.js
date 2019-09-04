@@ -14,6 +14,7 @@ import {
 import { createClient, updateClient } from 'redux/actions/clients';
 import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -58,24 +59,16 @@ function ClientForm({
         .then(() => {
           actionPropertyField(clientData)
             .then(() => {
-              enqueueSnackbar(`The client has been ${isAdd ? 'created' : 'updated'} successfully.`, {
-                variant: 'success',
-                autoHideDuration: 1000,
-              });
+              confirmMessage(enqueueSnackbar,
+                `The client has been ${isAdd ? 'created' : 'updated'} successfully.`, 'success');
               handleClose();
             })
             .catch(() => {
-              enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`, {
-                variant: 'error',
-                autoHideDuration: 4000,
-              });
+              confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
             });
         })
         .catch(() => {
-          enqueueSnackbar(`Error in ${status.type.toLowerCase()}ing client.`, {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
         });
     }
   };

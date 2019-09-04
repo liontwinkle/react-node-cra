@@ -7,7 +7,7 @@ import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useSnackbar } from 'notistack';
 
-import { getNodeKey } from 'utils';
+import { confirmMessage, getNodeKey } from 'utils';
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 
@@ -43,11 +43,7 @@ function NodeMenu({
       parentId: node.item.id,
     })
       .then((category) => {
-        enqueueSnackbar('New category has been created successfully.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
-
+        confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
         setTreeData(
           addNodeUnderParent({
             treeData,
@@ -63,10 +59,7 @@ function NodeMenu({
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in adding category.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
       });
     handleClose();
   };
@@ -90,11 +83,7 @@ function NodeMenu({
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
-        enqueueSnackbar('The category has been deleted successfully.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
-
+        confirmMessage(enqueueSnackbar, 'The category has been deleted successfully.', 'success');
         setTreeData(
           removeNodeAtPath({
             treeData,
@@ -104,10 +93,7 @@ function NodeMenu({
         );
       })
       .catch(() => {
-        enqueueSnackbar('Error in deleting category.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, 'Error in deleting category.', 'error');
       });
   };
 

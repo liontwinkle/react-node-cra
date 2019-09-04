@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { getObjectFromArray } from 'utils';
+import { confirmMessage, getObjectFromArray } from 'utils';
 import {
   basis,
   refer,
@@ -79,16 +79,10 @@ function EditRules({
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
-          enqueueSnackbar('Success Updating the Rules.', {
-            variant: 'success',
-            autoHideDuration: 1500,
-          });
+          confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success');
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating new rules.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, 'Error in updating new rules.', 'error');
         });
     }
   };

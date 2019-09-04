@@ -11,7 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { isExist } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 
@@ -59,25 +59,16 @@ function AddSections({
 
         updatePropertyField(propertyField.id, { sections })
           .then(() => {
-            enqueueSnackbar('Section has been added successfully.', {
-              variant: 'success',
-              autoHideDuration: 1000,
-            });
+            confirmMessage(enqueueSnackbar, 'Section has been added successfully.', 'success');
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding section.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in adding section.', 'error');
           });
       } else {
         const errMsg = `Error: Another section is using the key (${sectionsData.key}) you specified.
          Please update section key name.`;
-        enqueueSnackbar(errMsg, {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }
   };

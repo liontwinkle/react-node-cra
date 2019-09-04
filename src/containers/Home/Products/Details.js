@@ -7,7 +7,7 @@ import _filter from 'lodash/filter';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useSnackbar } from 'notistack';
 
-import { getProducts } from 'utils';
+import { confirmMessage, getProducts } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField } from 'redux/actions/productsFields';
 import { CustomSection } from 'components/elements';
@@ -87,34 +87,18 @@ function ProductsDetail({
       if (!duplicateFlag) {
         updateProducts(diffArray)
           .then(() => {
-            enqueueSnackbar('The data is saved successfully.',
-              {
-                variant: 'success',
-                autoHideDuration: 1500,
-              });
+            confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
           })
           .catch(() => {
             const errMsg = 'Error is detected to save the table data1.';
-            enqueueSnackbar(errMsg,
-              {
-                variant: 'error',
-                autoHideDuration: 3000,
-              });
+            confirmMessage(enqueueSnackbar, errMsg, 'error');
           });
       } else {
-        enqueueSnackbar('The ID is duplicated.',
-          {
-            variant: 'error',
-            autoHideDuration: 3000,
-          });
+        confirmMessage(enqueueSnackbar, 'The ID is duplicated.', 'error');
       }
     } else {
       const errMsg = 'There is no updated data.';
-      enqueueSnackbar(errMsg,
-        {
-          variant: 'warning',
-          autoHideDuration: 3000,
-        });
+      confirmMessage(enqueueSnackbar, errMsg, 'error');
     }
 
     setProducts(originArray);
@@ -148,11 +132,7 @@ function ProductsDetail({
         setFieldData(newFieldData);
       })
       .catch(() => {
-        enqueueSnackbar('Fields fetching error.',
-          {
-            variant: 'warning',
-            autoHideDuration: 3000,
-          });
+        confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
       });
   };
 

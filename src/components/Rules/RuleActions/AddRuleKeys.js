@@ -14,6 +14,7 @@ import {
 import { ruleKeyTypes } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -68,17 +69,11 @@ function AddRuleKeys(props) {
 
       updateCategory(category.id, { ruleKeys })
         .then(() => {
-          enqueueSnackbar('Rule key has been added successfully.', {
-            variant: 'success',
-            autoHideDuration: 1500,
-          });
+          confirmMessage(enqueueSnackbar, 'Rule key has been added successfully.', 'success');
           handleClose();
         })
         .catch(() => {
-          enqueueSnackbar('Error in adding rule key.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, 'Error in adding rule key.', 'error');
         });
     }
   };

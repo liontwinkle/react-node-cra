@@ -18,6 +18,14 @@ const getSubTree = (list, parentId) => {
   return subTree;
 };
 
+export const confirmMessage = (func, msg, type) => {
+  const duration = (type === 'success' || type === 'info') ? 1000 : 4000;
+  func(msg, {
+    variant: type,
+    autoHideDuration: duration,
+  });
+};
+
 export const getCategoryTree = (categories) => {
   const parentId = '';
   const list = categories || [];

@@ -15,6 +15,8 @@ const ClientsSchema = new Schema({
   geography: String,
 }, { toJSON: { virtuals: true }, timestamps: true });
 
-ClientsSchema.virtual('id').get(() => this._id.toHexString());
+ClientsSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
 
 module.exports = mongoose.model('Clients', ClientsSchema);

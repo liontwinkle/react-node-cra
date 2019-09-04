@@ -11,7 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { isExist } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { propertyFieldTypes } from 'utils/constants';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements';
@@ -81,25 +81,16 @@ function AddPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been added successfully.', {
-              variant: 'success',
-              autoHideDuration: 1000,
-            });
+            confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding property field.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
           });
       } else {
         const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
-        enqueueSnackbar(errMsg, {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+        confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }
   };

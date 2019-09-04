@@ -11,7 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { isExist } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 
@@ -62,10 +62,7 @@ function AddSelectItems({
           updateFlag = false;
           const errMsg = `Error: Another item is using the key (${sectionsData.key})
            you specified.Please update item key name.`;
-          enqueueSnackbar(errMsg, {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
         }
       } else {
         selectItems.items = sectionsData;
@@ -74,17 +71,11 @@ function AddSelectItems({
       if (updateFlag) {
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Item has been added successfully.', {
-              variant: 'success',
-              autoHideDuration: 1000,
-            });
+            confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in adding Item.', 'error');
           });
       }
     }

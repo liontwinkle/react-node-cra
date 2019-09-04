@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { isExist } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateCategory } from 'redux/actions/categories';
@@ -57,10 +57,7 @@ function EditPropertyFields({
           updateFlag = false;
           const errMsg = `Error: Another item is using the key (${newData.key})
            you specified.Please update item key name.`;
-          enqueueSnackbar(errMsg, {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
         }
       } else {
         selectItems.items = {
@@ -72,17 +69,11 @@ function EditPropertyFields({
       if (updateFlag) {
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Item has been added successfully.', {
-              variant: 'success',
-              autoHideDuration: 1500,
-            });
+            confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();
           })
           .catch(() => {
-            enqueueSnackbar('Error in adding Item.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in adding Item.', 'error');
           });
       }
     }, 600);
@@ -103,16 +94,10 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            enqueueSnackbar('Property field has been updated successfully.', {
-              variant: 'success',
-              autoHideDuration: 1000,
-            });
+            confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
           })
           .catch(() => {
-            enqueueSnackbar('Error in updating property field.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
           });
       }
     }, 600);
@@ -135,23 +120,14 @@ function EditPropertyFields({
           .then(() => {
             updateCategory(category.id, { properties })
               .then(() => {
-                enqueueSnackbar('Selected item has been deleted successfully.', {
-                  variant: 'success',
-                  autoHideDuration: 1500,
-                });
+                confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
               })
               .catch(() => {
-                enqueueSnackbar('Error in deleting Property.', {
-                  variant: 'error',
-                  autoHideDuration: 4000,
-                });
+                confirmMessage(enqueueSnackbar, 'Error in deleting Property.', 'error');
               });
           })
           .catch(() => {
-            enqueueSnackbar('Error in deleting property field.', {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+            confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
           });
       }
     }, 600);

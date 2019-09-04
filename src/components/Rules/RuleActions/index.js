@@ -12,6 +12,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements';
 import AddRuleKeys from './AddRuleKeys';
 import EditRuleKeys from './EditRuleKeys';
+import { confirmMessage } from '../../../utils';
 
 function RuleActions(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -35,14 +36,10 @@ function RuleActions(props) {
     if (!isUpdating) {
       updateCategory(category.id, { rules })
         .then(() => {
-          enqueueSnackbar('Rules has been updated successfully.', { variant: 'success', autoHideDuration: 1000 });
+          confirmMessage(enqueueSnackbar, 'Rules has been updated successfully.', 'success');
         })
         .catch(() => {
-          enqueueSnackbar('Error in updating rules.',
-            {
-              variant: 'error',
-              autoHideDuration: 4000,
-            });
+          confirmMessage(enqueueSnackbar, 'Error in updating rules.', 'error');
         });
     }
   };
