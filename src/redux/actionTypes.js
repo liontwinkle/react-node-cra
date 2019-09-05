@@ -25,6 +25,9 @@ export default {
   // Set client type
   CLIENT_SET_TYPE: 'CLIENT_SET_TYPE',
 
+  // Set client product view type
+  CLIENT_SET_PRODUCT_VIEW_TYPE: 'CLIENT_SET_PRODUCT_VIEW_TYPE',
+
   // Fetch categories
   CATEGORIES_GET_REQUEST: 'CATEGORIES_GET_REQUEST',
   CATEGORIES_GET_SUCCESS: 'CATEGORIES_GET_SUCCESS',

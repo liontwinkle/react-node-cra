@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import LazyLoad from 'react-lazyload';
-import { fetchProducts } from 'redux/actions/products';
 import { withSnackbar } from 'notistack';
+import $ from 'jquery';
+import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
-import DetailView from './detail_view';
 import './style.scss';
+import DetailView from './detail_view';
 
 class ProductGridView extends Component {
   constructor() {
@@ -60,6 +60,7 @@ class ProductGridView extends Component {
   render() {
     const {
       products,
+      filterProducts,
       headers,
     } = this.props;
 
@@ -70,15 +71,22 @@ class ProductGridView extends Component {
       pointX,
       pointY,
     } = this.state;
+
+    const data = (filterProducts.length > 0) ? filterProducts : products;
     return (
       <div className="grid-view-container">
         {(!fetchingFlag)
           ? (
-            <PerfectScrollbar>
+            <PerfectScrollbar
+              options={{
+                suppressScrollX: true,
+                minScrollbarLength: 50,
+              }}
+            >
               <div className="grid-view-content">
                 <LazyLoad height={200}>
                   {
-                    products.map((item, key) => (
+                    data.map((item, key) => (
                       <img
                         key={parseInt(key, 10)}
                         src={item.image}
@@ -100,9 +108,9 @@ class ProductGridView extends Component {
         {viewDetailFlag && (
           <DetailView
             pointX={pointX}
-            pointY={pointY}
             headers={headers}
             detail={detail}
+            pointY={pointY}
           />
         )}
       </div>
@@ -113,8 +121,13 @@ class ProductGridView extends Component {
 ProductGridView.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
   products: PropTypes.array.isRequired,
+  filterProducts: PropTypes.array,
   headers: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+};
+
+ProductGridView.defaultProps = {
+  filterProducts: [],
 };
 
 const mapStateToProps = store => ({

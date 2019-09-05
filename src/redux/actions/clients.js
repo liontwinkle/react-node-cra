@@ -124,3 +124,9 @@ export const setClientType = type => (dispatch) => {
     payload: { type },
   });
 };
+export const setProductViewType = productViewType => (dispatch) => {
+  dispatch({
+    type: types.CLIENT_SET_PRODUCT_VIEW_TYPE,
+    payload: { productViewType },
+  });
+};

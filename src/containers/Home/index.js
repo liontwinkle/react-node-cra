@@ -8,8 +8,11 @@ import { ProductsTable, ProductsDetail } from './Products';
 
 import './style.scss';
 
-function Home(props) {
-  const { type, category } = props;
+function Home({
+  type,
+  category,
+  productViewType,
+}) {
   const value = type && type.key;
   const tableRef = React.createRef();
 
@@ -18,7 +21,7 @@ function Home(props) {
       <Container>
         <Section minSize={(value === 'products') ? '70%' : '35%'} defaultSize={(value === 'products') ? 700 : 350}>
           {(value === 'virtual' || value === 'native') && <VirtualTree />}
-          {(value === 'products') && <ProductsTable ref={tableRef} />}
+          {(value === 'products') && <ProductsTable ref={tableRef} productViewType={productViewType} />}
         </Section>
 
         <Bar className="resizer" size={8} />
@@ -40,16 +43,19 @@ function Home(props) {
 
 Home.propTypes = {
   type: PropTypes.object,
+  productViewType: PropTypes.object,
   category: PropTypes.object,
 };
 
 Home.defaultProps = {
   type: null,
+  productViewType: null,
   category: null,
 };
 
 const mapStateToProps = store => ({
   type: store.clientsData.type,
+  productViewType: store.clientsData.productViewType,
   category: store.categoriesData.category,
 });
 

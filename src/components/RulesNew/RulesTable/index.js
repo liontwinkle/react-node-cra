@@ -7,10 +7,11 @@ import SaveIcon from '@material-ui/icons/Filter';
 
 import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
+import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
-function RulesTable({ rules, products }) {
+function RulesTable({ rules, products, productViewType }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [preViewState, setPreViewState] = useState(false);
@@ -257,11 +258,21 @@ function RulesTable({ rules, products }) {
       )}
 
       {preViewState && (
-        <PreviewProducts
-          open={preViewState}
-          handleClose={handleToggle('close')}
-          filterProducts={previewProducts}
-        />
+        (productViewType.key === 'grid')
+          ? (
+            <PreviewGrid
+              open={preViewState}
+              handleClose={handleToggle('close')}
+              filterProducts={previewProducts}
+            />
+          )
+          : (
+            <PreviewProducts
+              open={preViewState}
+              handleClose={handleToggle('close')}
+              filterProducts={previewProducts}
+            />
+          )
       )}
     </div>
   );
@@ -270,9 +281,11 @@ function RulesTable({ rules, products }) {
 RulesTable.propTypes = {
   rules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  productViewType: PropTypes.object.isRequired,
 };
 const mapStateToProps = store => ({
   products: store.productsData.products,
+  productViewType: store.clientsData.productViewType,
 });
 export default connect(
   mapStateToProps,

@@ -5,11 +5,17 @@ import { connect } from 'react-redux';
 import _find from 'lodash/find';
 import { useSnackbar } from 'notistack';
 
-import { fetchClients, setClient, setClientType } from 'redux/actions/clients';
+import {
+  fetchClients,
+  setClient,
+  setClientType,
+  setProductViewType,
+} from 'redux/actions/clients';
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
 import { CustomSelect } from 'components/elements';
+import { productViewTypes } from 'utils/constants';
 import { confirmMessage } from 'utils';
 
 const types = [
@@ -23,9 +29,11 @@ function ClientSelect({
   clients,
   client,
   type,
+  productViewType,
   fetchClients,
   setClient,
   setClientType,
+  setProductViewType,
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,
@@ -61,6 +69,9 @@ function ClientSelect({
     actionChangeType(type, client);
   };
 
+  const handleChangeProductViewType = (productViewType) => {
+    setProductViewType(productViewType);
+  };
   const handleChangeClient = (item) => {
     const newClient = _find(clients, { id: item.key });
     if (newClient) {
@@ -84,13 +95,22 @@ function ClientSelect({
       )}
 
       {client && (
-        <CustomSelect
-          className="mr-3"
-          placeholder="Select Type"
-          value={type}
-          items={types}
-          onChange={handleChangeType}
-        />
+        <Fragment>
+          <CustomSelect
+            className="mr-3"
+            placeholder="Select Type"
+            value={type}
+            items={types}
+            onChange={handleChangeType}
+          />
+          <CustomSelect
+            className="mr-3"
+            placeholder="Select View Method"
+            value={productViewType}
+            items={productViewTypes}
+            onChange={handleChangeProductViewType}
+          />
+        </Fragment>
       )}
     </Fragment>
   );
@@ -100,9 +120,11 @@ ClientSelect.propTypes = {
   clients: PropTypes.array.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
+  productViewType: PropTypes.object,
   fetchClients: PropTypes.func.isRequired,
   setClient: PropTypes.func.isRequired,
   setClientType: PropTypes.func.isRequired,
+  setProductViewType: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchPropertyField: PropTypes.func.isRequired,
   fetchProductsField: PropTypes.func.isRequired,
@@ -111,18 +133,21 @@ ClientSelect.propTypes = {
 ClientSelect.defaultProps = {
   client: null,
   type: null,
+  productViewType: null,
 };
 
 const mapStateToProps = store => ({
   clients: store.clientsData.clients,
   client: store.clientsData.client,
   type: store.clientsData.type,
+  productViewType: store.clientsData.productViewType,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchClients,
   setClient,
   setClientType,
+  setProductViewType,
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,

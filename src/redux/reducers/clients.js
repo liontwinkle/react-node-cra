@@ -1,5 +1,6 @@
 import _findIndex from 'lodash/findIndex';
 
+import { productViewTypes } from 'utils/constants';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -11,6 +12,7 @@ const INITIAL_STATE = {
   clients: [],
   client: null,
   type: null,
+  productViewType: productViewTypes[0],
   errors: '',
 };
 
@@ -116,6 +118,11 @@ export default (state = INITIAL_STATE, action) => {
         type: action.payload.type,
       };
 
+    case types.CLIENT_SET_PRODUCT_VIEW_TYPE:
+      return {
+        ...state,
+        productViewType: action.payload.productViewType,
+      };
     default:
       return state;
   }
