@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import LazyLoad from 'react-lazyload';
 import { withSnackbar } from 'notistack';
-
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
-import GridDetail from './GridDetail';
+import { confirmMessage } from 'utils';
 import './style.scss';
-import { confirmMessage } from '../../utils';
 
 class ProductGridView extends Component {
   constructor() {
@@ -19,6 +17,8 @@ class ProductGridView extends Component {
       fetchingFlag: true,
       detail: {},
       viewDetailFlag: false,
+      pointX: 0,
+      pointY: 0,
     };
   }
 
@@ -38,10 +38,13 @@ class ProductGridView extends Component {
       });
   }
 
-  displayDetail = (key) => {
+  displayDetail = key => (e) => {
+    console.log('event>>>>', e.target.offset);// fixme
     this.setState({
       detail: this.props.products[key],
       viewDetailFlag: true,
+      pointX: e.nativeEvent.screenX,
+      pointY: e.nativeEvent.screenY,
     });
   };
 
@@ -61,6 +64,8 @@ class ProductGridView extends Component {
       viewDetailFlag,
       fetchingFlag,
       detail,
+      pointX,
+      pointY,
     } = this.state;
     return (
       <div className="grid-view-container">
@@ -81,7 +86,7 @@ class ProductGridView extends Component {
                         src={item.image}
                         alt="product"
                         className="grid-item"
-                        onClick={() => this.displayDetail(key)}
+                        onMouseEnter={this.displayDetail(key)}
                       />
                     ))
                   }
@@ -95,12 +100,16 @@ class ProductGridView extends Component {
           )
         }
         {viewDetailFlag && (
-          <GridDetail
-            open={viewDetailFlag}
-            handleClose={this.handleClose}
-            product={detail}
-            keys={headers}
-          />
+          <div className="info-product" style={{ top: `${pointY}px`, left: `${pointX}px` }}>
+            {
+              headers.map(itemKey => (
+                <span key={itemKey}>
+                  <label>{`${itemKey}:  `}</label>
+                  <label>{`${detail[itemKey]}`}</label>
+                </span>
+              ))
+            }
+          </div>
         )}
       </div>
     );

@@ -19,3 +19,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.info-product {
+  position: absolute;
+  top:10px;
+  display: flex;
+  flex-direction: column;
+  width:30%;
+  height: 10vh;
+  overflow: auto;
+}
