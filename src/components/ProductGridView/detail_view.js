@@ -7,6 +7,7 @@ function DetailView({
   detail,
   pointX,
   pointY,
+  close,
 }) {
   return (
     <div
@@ -15,6 +16,7 @@ function DetailView({
         top: `${pointY}px`,
         left: `${pointX}px`,
       }}
+      onMouseLeave={close}
     >
       {
         <PerfectScrollbar>
@@ -47,6 +49,7 @@ DetailView.propTypes = {
   detail: PropTypes.object.isRequired,
   pointX: PropTypes.number.isRequired,
   pointY: PropTypes.number.isRequired,
+  close: PropTypes.func.isRequired,
 };
 
 export default DetailView;

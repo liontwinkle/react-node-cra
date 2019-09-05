@@ -21,7 +21,9 @@ const PreviewGrid = ({
       Preview Products
     </DialogTitle>
 
-    <DialogContent className="mg-edit-rule-content" style={{ width: '1330px', height: '600px', overflow: 'hidden' }}>
+    <DialogContent
+      className="preview-image"
+    >
       <ProductGridView filterProducts={filterProducts} />
     </DialogContent>
   </Dialog>

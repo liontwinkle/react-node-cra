@@ -51,8 +51,8 @@ class ProductGridView extends Component {
       topOffset += 100;
       leftOffset += 100;
     } else {
-      topOffset -= 100;
-      leftOffset -= 100;
+      topOffset -= 20;
+      leftOffset -= 20;
     }
     this.setState({
       detail: this.props.products[key],
@@ -122,6 +122,7 @@ class ProductGridView extends Component {
             headers={headers}
             detail={detail}
             pointY={pointY}
+            close={this.handleClose}
           />
         )}
       </div>
