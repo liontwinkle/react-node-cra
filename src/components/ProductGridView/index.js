@@ -50,6 +50,9 @@ class ProductGridView extends Component {
     if (this.props.filterProducts.length === 0) {
       topOffset += 100;
       leftOffset += 100;
+    } else {
+      topOffset -= 100;
+      leftOffset -= 100;
     }
     this.setState({
       detail: this.props.products[key],
