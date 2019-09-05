@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import LazyLoad from 'react-lazyload';
-import { withSnackbar } from 'notistack';
 import { fetchProducts } from 'redux/actions/products';
+import { withSnackbar } from 'notistack';
 import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
+import DetailView from './detail_view';
 import './style.scss';
 
 class ProductGridView extends Component {
@@ -38,13 +40,14 @@ class ProductGridView extends Component {
       });
   }
 
-  displayDetail = key => (e) => {
-    console.log('event>>>>', e.target.offset);// fixme
+  displayDetail = (key) => {
+    const { top, left } = $(`.grid-item-${key}`)
+      .offset();
     this.setState({
       detail: this.props.products[key],
       viewDetailFlag: true,
-      pointX: e.nativeEvent.screenX,
-      pointY: e.nativeEvent.screenY,
+      pointX: left + 100,
+      pointY: top + 100,
     });
   };
 
@@ -71,12 +74,7 @@ class ProductGridView extends Component {
       <div className="grid-view-container">
         {(!fetchingFlag)
           ? (
-            <PerfectScrollbar
-              options={{
-                suppressScrollX: true,
-                minScrollbarLength: 50,
-              }}
-            >
+            <PerfectScrollbar>
               <div className="grid-view-content">
                 <LazyLoad height={200}>
                   {
@@ -85,8 +83,8 @@ class ProductGridView extends Component {
                         key={parseInt(key, 10)}
                         src={item.image}
                         alt="product"
-                        className="grid-item"
-                        onMouseEnter={this.displayDetail(key)}
+                        className={`grid-item-${key}`}
+                        onMouseEnter={() => this.displayDetail(key)}
                       />
                     ))
                   }
@@ -100,16 +98,12 @@ class ProductGridView extends Component {
           )
         }
         {viewDetailFlag && (
-          <div className="info-product" style={{ top: `${pointY}px`, left: `${pointX}px` }}>
-            {
-              headers.map(itemKey => (
-                <span key={itemKey}>
-                  <label>{`${itemKey}:  `}</label>
-                  <label>{`${detail[itemKey]}`}</label>
-                </span>
-              ))
-            }
-          </div>
+          <DetailView
+            pointX={pointX}
+            pointY={pointY}
+            headers={headers}
+            detail={detail}
+          />
         )}
       </div>
     );

@@ -19,7 +19,7 @@ import {
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelect } from 'components/elements';
-import { confirmMessage } from '../../../utils';
+import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
