@@ -9,14 +9,15 @@ import $ from 'jquery';
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
-import './style.scss';
 import DetailView from './detail_view';
+
+import './style.scss';
 
 class ProductGridView extends Component {
   constructor() {
     super();
     this.state = {
-      fetchingFlag: true,
+      fetchingFlag: false,
       detail: {},
       viewDetailFlag: false,
       pointX: 0,
@@ -25,29 +26,36 @@ class ProductGridView extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      fetchingFlag: true,
-    });
-    this.props.fetchProducts()
-      .then(() => {
-        this.setState({
-          fetchingFlag: false,
-        });
-        confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
+    if (this.props.filterProducts.length === 0) {
+      this.setState({
+        fetchingFlag: true,
       });
+      this.props.fetchProducts()
+        .then(() => {
+          this.setState({
+            fetchingFlag: false,
+          });
+          confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
+        });
+    }
   }
 
   displayDetail = (key) => {
-    const { top, left } = $(`.grid-item-${key}`)
-      .offset();
+    const { top, left } = $(`.grid-item-${key}`).offset();
+    let topOffset = top;
+    let leftOffset = left;
+    if (this.props.filterProducts.length === 0) {
+      topOffset += 100;
+      leftOffset += 100;
+    }
     this.setState({
       detail: this.props.products[key],
       viewDetailFlag: true,
-      pointX: left + 100,
-      pointY: top + 100,
+      pointX: leftOffset,
+      pointY: topOffset,
     });
   };
 
