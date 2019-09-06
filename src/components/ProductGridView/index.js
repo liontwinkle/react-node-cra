@@ -96,19 +96,18 @@ class ProductGridView extends Component {
               }}
             >
               <div className="grid-view-content">
-                <LazyLoad height={200}>
-                  {
-                    data.map((item, key) => (
+                {
+                  data.map((item, key) => (
+                    <LazyLoad key={parseInt(key, 10)} height={100} once scroll>
                       <img
-                        key={parseInt(key, 10)}
                         src={item.image}
                         alt="product"
                         className={`grid-item-${key}`}
                         onMouseEnter={() => this.displayDetail(key)}
                       />
-                    ))
-                  }
-                </LazyLoad>
+                    </LazyLoad>
+                  ))
+                }
               </div>
             </PerfectScrollbar>
           ) : (
