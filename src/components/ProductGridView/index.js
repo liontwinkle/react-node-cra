@@ -98,7 +98,7 @@ class ProductGridView extends Component {
               <div className="grid-view-content">
                 {
                   data.map((item, key) => (
-                    <LazyLoad key={parseInt(key, 10)} height={100} once scroll>
+                    <LazyLoad key={parseInt(key, 10)} height={200} overflow throttle={100} once>
                       <img
                         src={item.image}
                         alt="product"
