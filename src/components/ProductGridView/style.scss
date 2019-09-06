@@ -1,6 +1,8 @@
 .grid-view-container{
+  height: 100%;
   .grid-view-content {
-    height: calc(100vh - 100px);
+    padding: 20px;
+    height: calc(100% - 100px);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -25,8 +27,8 @@
   top: 10px;
   display: flex;
   flex-direction: column;
-  width: 30%;
-  height: 20vh;
+  width: 300px;
+  height: 150px;
   background: #2d2828ad;
   border-radius: 10px;
   z-index: 1000;

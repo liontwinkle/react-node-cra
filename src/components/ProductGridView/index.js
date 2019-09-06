@@ -51,8 +51,8 @@ class ProductGridView extends Component {
       topOffset += 100;
       leftOffset += 100;
     } else {
-      topOffset -= 20;
-      leftOffset -= 20;
+      topOffset -= 50;
+      leftOffset -= 150;
     }
     this.setState({
       detail: this.props.products[key],
@@ -93,6 +93,9 @@ class ProductGridView extends Component {
               options={{
                 suppressScrollX: true,
                 minScrollbarLength: 50,
+              }}
+              style={{
+                height: 'calc(100% - 100px)',
               }}
             >
               <div className="grid-view-content">

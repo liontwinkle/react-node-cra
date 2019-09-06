@@ -25,19 +25,21 @@ function DetailView({
             <table>
               <tbody>
                 {headers.map(itemKey => (
-                  productsField[itemKey].grid === (undefined || true) ? (
-                    <tr key={itemKey}>
-                      <td>
-                        {`${itemKey} `}
-                      </td>
-                      <td>
+                  ((productsField[itemKey] === undefined)
+                  || productsField[itemKey].grid === (undefined || true))
+                    ? (
+                      <tr key={itemKey}>
+                        <td>
+                          {`${itemKey} `}
+                        </td>
+                        <td>
                           :
-                      </td>
-                      <td>
-                        {`${detail[itemKey]}`}
-                      </td>
-                    </tr>
-                  ) : null
+                        </td>
+                        <td>
+                          {`${detail[itemKey]}`}
+                        </td>
+                      </tr>
+                    ) : null
                 ))}
               </tbody>
             </table>
