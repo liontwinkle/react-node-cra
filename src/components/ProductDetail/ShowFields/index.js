@@ -1,11 +1,16 @@
 import React, {} from 'react';
 import PropTypes from 'prop-types';
 
-import CustomCheck from 'components/elements/CustomCheck';
+import CustomCheck from 'components/elements/CustomCheck/index';
 
-import './style.scss';
+import '../../../style.scss';
 
-function ShowFields({ fields, onChange, chkValue }) {
+function ShowFields({
+  fields,
+  onChange,
+  chkValue,
+  type,
+}) {
   const { length } = fields;
   const unit = Math.ceil(parseInt(length / 2, 10));
   const fields1 = fields.slice(0, unit - 1);
@@ -21,7 +26,11 @@ function ShowFields({ fields, onChange, chkValue }) {
         {fields1.map(item => (
           <CustomCheck
             key={item}
-            insertValue={(chkValue[item] === undefined) ? true : chkValue[item]}
+            insertValue={
+              (chkValue[item] === undefined || chkValue[item][type] === undefined)
+                ? true
+                : chkValue[item][type]
+            }
             value={item}
             onChange={handleChange(item)}
           />
@@ -32,7 +41,11 @@ function ShowFields({ fields, onChange, chkValue }) {
         {fields2.map(item => (
           <CustomCheck
             key={item}
-            insertValue={(chkValue[item] === undefined) ? true : chkValue[item]}
+            insertValue={
+              (chkValue[item] === undefined || chkValue[item][type] === undefined)
+                ? true
+                : chkValue[item][type]
+            }
             value={item}
             onChange={handleChange(item)}
           />
@@ -44,6 +57,7 @@ function ShowFields({ fields, onChange, chkValue }) {
 
 ShowFields.propTypes = {
   fields: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   chkValue: PropTypes.object.isRequired,
 };

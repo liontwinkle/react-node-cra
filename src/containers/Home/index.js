@@ -29,7 +29,7 @@ function Home({
         <Section minSize={(value === 'products') ? '30%' : '65%'}>
           <Fragment>
             {value === 'products' && (
-              <ProductsDetail tableRef={tableRef} />
+              <ProductsDetail ref={tableRef} productViewType={productViewType} />
             )}
             {category && (value === 'virtual' || value === 'native') && (
               <VirtualDetail />
