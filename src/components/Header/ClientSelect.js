@@ -138,6 +138,7 @@ ClientSelect.defaultProps = {
 
 const mapStateToProps = store => ({
   clients: store.clientsData.clients,
+  categories: store.categoriesData.categories,
   client: store.clientsData.client,
   type: store.clientsData.type,
   productViewType: store.clientsData.productViewType,

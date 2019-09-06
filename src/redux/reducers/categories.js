@@ -44,6 +44,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
+        category: null,
         trees: getCategoryTree(action.payload.categories),
       };
     case types.CATEGORIES_GET_FAIL:

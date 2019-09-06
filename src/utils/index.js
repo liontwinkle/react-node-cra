@@ -185,80 +185,85 @@ const getRulesKey = (keys) => {
 };
 
 export const getProducts = (products) => {
-  const keys = Object.keys(products[0]);
-  const values = Object.values(products[0]);
-  const headers = keys;
-  keys.sort();
-
-  const valueDetails = getRulesKey(keys);
   const numbers = [];
   const columns = [];
-
-  values.forEach((value, key) => {
-    let type = {};
-    switch (typeof value) {
-      case 'number':
-        numbers.push({
-          key: keys[key],
-          label: keys[key].toUpperCase(),
-        });
-        type = {
-          data: keys[key],
-          type: 'numeric',
-        };
-        break;
-      case 'date':
-        type = {
-          data: keys[key],
-          type: 'date',
-          dateFormat: 'MM/DD/YYYY',
-        };
-        break;
-      case 'object':
-
-        type = {
-          data: keys[key],
-          type: 'dropdown',
-        };
-        break;
-      case 'array':
-        type = {
-          data: keys[key],
-          type: 'dropdown',
-        };
-        break;
-      case 'string':
-        type = {
-          data: keys[key],
-          type: 'text',
-        };
-        break;
-      default:
-        type = {
-          data: keys[key],
-        };
-        break;
-    }
-    columns.push(type);
-  });
-
   const objects = [];
-  products.forEach((dataObj) => {
-    const subObject = {};
-    const subKeys = Object.keys(dataObj);
-    const subValues = Object.values(dataObj);
-    subValues.forEach((dataItems, key) => {
-      let data = '';
-      if (typeof dataItems === 'object') {
-        data = JSON.stringify(dataItems);
-      } else {
-        data = dataItems;
-      }
-      subObject[subKeys[key]] = data;
-    });
-    objects.push(subObject);
-  });
+  let headers = [];
+  let valueDetails = [];
 
+  if (products.length > 0) {
+    const keys = Object.keys(products[0]);
+    const values = Object.values(products[0]);
+    headers = keys;
+    keys.sort();
+
+    valueDetails = getRulesKey(keys);
+
+
+    values.forEach((value, key) => {
+      let type = {};
+      switch (typeof value) {
+        case 'number':
+          numbers.push({
+            key: keys[key],
+            label: keys[key].toUpperCase(),
+          });
+          type = {
+            data: keys[key],
+            type: 'numeric',
+          };
+          break;
+        case 'date':
+          type = {
+            data: keys[key],
+            type: 'date',
+            dateFormat: 'MM/DD/YYYY',
+          };
+          break;
+        case 'object':
+
+          type = {
+            data: keys[key],
+            type: 'dropdown',
+          };
+          break;
+        case 'array':
+          type = {
+            data: keys[key],
+            type: 'dropdown',
+          };
+          break;
+        case 'string':
+          type = {
+            data: keys[key],
+            type: 'text',
+          };
+          break;
+        default:
+          type = {
+            data: keys[key],
+          };
+          break;
+      }
+      columns.push(type);
+    });
+
+    products.forEach((dataObj) => {
+      const subObject = {};
+      const subKeys = Object.keys(dataObj);
+      const subValues = Object.values(dataObj);
+      subValues.forEach((dataItems, key) => {
+        let data = '';
+        if (typeof dataItems === 'object') {
+          data = JSON.stringify(dataItems);
+        } else {
+          data = dataItems;
+        }
+        subObject[subKeys[key]] = data;
+      });
+      objects.push(subObject);
+    });
+  }
   return {
     columns,
     headers,
