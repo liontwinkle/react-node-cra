@@ -122,19 +122,24 @@ function ProductsDataDetail({
 
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
-      if (newFieldData[item] === undefined) {
+      if (
+        newFieldData[item] === undefined
+        || (newFieldData[item].data === undefined
+        && newFieldData[item].grid === undefined)
+      ) {
         newFieldData[item] = {
           data: true,
           grid: true,
+        };
+      } else if (newFieldData[item].data === undefined) {
+        newFieldData[item] = {
+          data: true,
+          grid: newFieldData[item].grid,
         };
       } else if (newFieldData[item].grid === undefined) {
         newFieldData[item] = {
-          data: true,
+          data: newFieldData[item].data,
           grid: true,
-        };
-      } else {
-        newFieldData[item] = {
-          data: true,
         };
       }
       if (key === index) {

@@ -4,6 +4,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 function DetailView({
   headers,
+  productsField,
   detail,
   pointX,
   pointY,
@@ -24,17 +25,19 @@ function DetailView({
             <table>
               <tbody>
                 {headers.map(itemKey => (
-                  <tr key={itemKey}>
-                    <td>
-                      {`${itemKey} `}
-                    </td>
-                    <td>
-                    :
-                    </td>
-                    <td>
-                      {`${detail[itemKey]}`}
-                    </td>
-                  </tr>
+                  productsField[itemKey].grid === (undefined || true) ? (
+                    <tr key={itemKey}>
+                      <td>
+                        {`${itemKey} `}
+                      </td>
+                      <td>
+                          :
+                      </td>
+                      <td>
+                        {`${detail[itemKey]}`}
+                      </td>
+                    </tr>
+                  ) : null
                 ))}
               </tbody>
             </table>
@@ -46,6 +49,7 @@ function DetailView({
 
 DetailView.propTypes = {
   headers: PropTypes.array.isRequired,
+  productsField: PropTypes.object.isRequired,
   detail: PropTypes.object.isRequired,
   pointX: PropTypes.number.isRequired,
   pointY: PropTypes.number.isRequired,

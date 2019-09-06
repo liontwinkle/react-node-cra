@@ -24,7 +24,11 @@ function ProductsGridDetail({
   const handleShow = (index, value) => {
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
-      if (newFieldData[item] === undefined) {
+      if (
+        newFieldData[item] === undefined
+        || (newFieldData[item].data === undefined
+        && newFieldData[item].grid === undefined)
+      ) {
         newFieldData[item] = {
           data: true,
           grid: true,
@@ -32,10 +36,11 @@ function ProductsGridDetail({
       } else if (newFieldData[item].data === undefined) {
         newFieldData[item] = {
           data: true,
-          grid: true,
+          grid: newFieldData[item].grid,
         };
-      } else {
+      } else if (newFieldData[item].grid === undefined) {
         newFieldData[item] = {
+          data: newFieldData[item].data,
           grid: true,
         };
       }

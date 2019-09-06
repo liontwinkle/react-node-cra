@@ -71,6 +71,7 @@ class ProductGridView extends Component {
   render() {
     const {
       products,
+      productsField,
       filterProducts,
       headers,
     } = this.props;
@@ -120,6 +121,7 @@ class ProductGridView extends Component {
           <DetailView
             pointX={pointX}
             headers={headers}
+            productsField={productsField}
             detail={detail}
             pointY={pointY}
             close={this.handleClose}
@@ -133,6 +135,7 @@ class ProductGridView extends Component {
 ProductGridView.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
   products: PropTypes.array.isRequired,
+  productsField: PropTypes.object.isRequired,
   filterProducts: PropTypes.array,
   headers: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
@@ -144,6 +147,7 @@ ProductGridView.defaultProps = {
 
 const mapStateToProps = store => ({
   products: store.productsData.products,
+  productsField: store.productsFieldsData.productsField,
   headers: store.productsData.headers,
 });
 
