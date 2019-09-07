@@ -31,37 +31,21 @@ class ProductGridView extends Component {
     this.setState({
       fetchingFlag: true,
     });
-    let data = [];
-    const {
-      imageKey,
-      filterProducts,
-      fetchProducts,
-      products,
-      enqueueSnackbar,
-    } = this.props;
-    if (imageKey !== '') {
-      if (filterProducts.length === 0) {
-        fetchProducts()
+    if (this.props.imageKey !== '') {
+      if (this.props.filterProducts.length === 0) {
+        this.props.fetchProducts()
           .then(() => {
-            data = this.fetchData(products);
-            this.setState({
-              fetchingFlag: false,
-              data,
-            });
-            confirmMessage(enqueueSnackbar, 'Success fetching products data.', 'success');
+            console.log(this.props.products);// fixme
+            this.fetchData(this.props.products);
           })
           .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in fetching products data.', 'error');
+            confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
           });
       } else {
-        data = this.fetchData(filterProducts);
-        this.setState({
-          fetchingFlag: false,
-          data,
-        });
+        this.fetchData(this.props.filterProducts);
       }
     } else {
-      confirmMessage(enqueueSnackbar, 'Please set the ImageKey at the Table data.', 'error');
+      confirmMessage(this.props.enqueueSnackbar, 'Please set the ImageKey at the Table data.', 'error');
     }
   }
 
@@ -77,11 +61,12 @@ class ProductGridView extends Component {
         temp.push(item);
       }
     });
-    if (temp.length > 0) {
-      data.push(temp);
-      temp = [];
-    }
-    return data;
+    console.log(data);// fixme
+    this.setState({
+      fetchingFlag: false,
+      data,
+    });
+    confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
   };
 
   displayDetail = (key) => {
@@ -122,7 +107,7 @@ class ProductGridView extends Component {
       {this.state.data[rowIndex][columnIndex] && (
         <img
           className={`grid-item-${key}`}
-          src={this.state.data[rowIndex][columnIndex].image}
+          src={this.state.data[rowIndex][columnIndex][this.props.imageKey]}
           alt="products"
           onMouseEnter={() => this.displayDetail(key)}
         />

@@ -21,22 +21,26 @@ function handleError(res, statusCode = 500) {
 
 function respondWith(res, statusCode = 200) {
   return () => {
-    res.status(statusCode).end();
+    res.status(statusCode)
+      .end();
   };
 }
 
 function responseWithResult(res, statusCode = 200) {
   return (entity) => {
     if (entity) {
-      res.status(statusCode).json(entity);
+      res.status(statusCode)
+        .json(entity);
     }
   };
 }
 
-function handleEntityNotFound(res) {
+function handleEntityNotFound(res, req) {
+  console.log(req);
   return (entity) => {
     if (!entity) {
-      res.status(404).end();
+      res.status(404)
+        .end();
       return Promise.reject(entity);
     }
     return entity;
@@ -50,14 +54,16 @@ function handleExistingRemove(collection, req, newData, res) {
         collection.deleteMany({ clientId: req.params.clientId }, () => {
           collection.create(newData, (err, insertResult) => {
             if (!err) {
-              res.status(200).json(insertResult);
+              res.status(200)
+                .json(insertResult);
             }
           });
         });
       } else {
         collection.create(newData, (err, insertResult) => {
           if (!err) {
-            res.status(200).json(insertResult);
+            res.status(200)
+              .json(insertResult);
           }
         });
       }
@@ -76,24 +82,32 @@ function saveUpdates(updates) {
 
 
 function removeEntity(res) {
-  return entity => entity && entity.removeAsync().then(respondWith(res, 204));
+  return entity => entity && entity.removeAsync()
+    .then(respondWith(res, 204));
 }
 
 function removeChildren(req, id) {
-  req.category.find({ parentId: id }).then((result) => {
-    req.category
-      .deleteMany({ parentId: id }, () => {
-      });
-    if (result.length > 0) {
-      result.forEach((item) => {
-        removeChildren(req, item._id);
-      });
-    } else {
+  req.category.find({ parentId: id })
+    .then((result) => {
       req.category
-        .deleteOne({ parentId: id }, () => {
+        .deleteMany({ parentId: id }, (err, result) => {
+          if (!result) {
+            console.log(err);
+          }
         });
-    }
-  });
+      if (result.length > 0) {
+        result.forEach((item) => {
+          removeChildren(req, item._id);
+        });
+      } else {
+        req.category
+          .deleteOne({ parentId: id }, (err, result) => {
+            if (!result) {
+              console.log(err);
+            }
+          });
+      }
+    });
 }
 
 function createCollection(body) {
@@ -104,7 +118,8 @@ function createCollection(body) {
     `${body.code}_attributes`,
   ];
   fileName.forEach((item) => {
-    db.createCollection(item, () => {});
+    db.createCollection(item, () => {
+    });
   });
 }
 
