@@ -60,6 +60,9 @@ class ProductGridView extends Component {
         temp.push(item);
       }
     });
+    if (temp.length > 0) {
+      data.push(temp);
+    }
     this.setState({
       fetchingFlag: false,
       data,
