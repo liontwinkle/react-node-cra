@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const ProductsFieldsSchema = new Schema({
   clientId: String,
   type: String,
+  imageKey: String,
   fields: {},
 }, { toJSON: { virtuals: true }, strict: false, timestamps: true });
 

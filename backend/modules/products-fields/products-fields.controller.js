@@ -22,7 +22,8 @@ exports.show = (req, res) => {
 exports.update = (req, res) => {
   const newData = {
     clientId: req.params.clientId,
-    fields: req.body,
+    imageKey: req.body.imageKey,
+    fields: req.body.fields,
   };
   ProductsField
     .find({ clientId: req.params.clientId })
@@ -30,6 +31,18 @@ exports.update = (req, res) => {
     .catch(handleError(res));
 };
 
+// Update an existing ImageKey in the DB
+exports.updateImageKey = (req, res) => {
+  const newData = {
+    clientId: req.params.clientId,
+    imageKey: req.body.imageKey,
+    fields: req.body.fields,
+  };
+  ProductsField
+    .find({ clientId: req.params.clientId })
+    .then(handleExistingRemove(ProductsField, req, newData, res))
+    .catch(handleError(res));
+};
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   ProductsField

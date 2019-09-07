@@ -39,7 +39,11 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
     type: types.PRODUCTS_UPDATE_FIELDS_REQUEST,
   });
 
-  return productsFieldsService.update(client.id, updatedData)
+  const data = {
+    imageKey: getState().productsFieldsData.imageKey,
+    fields: updatedData,
+  };
+  return productsFieldsService.update(client.id, data)
     .then((data) => {
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
@@ -78,6 +82,37 @@ export const removeProductsField = () => (dispatch, getState) => {
       dispatch({
         type: types.PRODUCTS_DELETE_FIELDS_FAIL,
         payload: { error },
+      });
+      throw error;
+    });
+};
+
+export const setImageKey = imageKey => (dispatch, getState) => {
+  if (getState().productsFieldsData.isUpdating) {
+    return Promise.reject();
+  }
+
+  dispatch({
+    type: types.PRODUCTS_SET_IMAGEKEY_REQEUST,
+  });
+
+  const { client } = getState().clientsData;
+
+  const data = {
+    imageKey,
+    fields: getState().productsFieldsData.productsField,
+  };
+  return productsFieldsService.updateImageKey(client.id, data)
+    .then((data) => {
+      dispatch({
+        type: types.PRODUCTS_SET_IMAGEKEY_SUCCESS,
+        payload: { data },
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.PRODUCTS_SET_IMAGEKEY_ERROR,
+        payload: { imageKey },
       });
       throw error;
     });

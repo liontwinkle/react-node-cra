@@ -32,25 +32,36 @@ class ProductGridView extends Component {
       fetchingFlag: true,
     });
     let data = [];
-    if (this.props.filterProducts.length === 0) {
-      this.props.fetchProducts()
-        .then(() => {
-          data = this.fetchData(this.props.products);
-          this.setState({
-            fetchingFlag: false,
-            data,
+    const {
+      imageKey,
+      filterProducts,
+      fetchProducts,
+      products,
+      enqueueSnackbar,
+    } = this.props;
+    if (imageKey !== '') {
+      if (filterProducts.length === 0) {
+        fetchProducts()
+          .then(() => {
+            data = this.fetchData(products);
+            this.setState({
+              fetchingFlag: false,
+              data,
+            });
+            confirmMessage(enqueueSnackbar, 'Success fetching products data.', 'success');
+          })
+          .catch(() => {
+            confirmMessage(enqueueSnackbar, 'Error in fetching products data.', 'error');
           });
-          confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
-        })
-        .catch(() => {
-          confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
+      } else {
+        data = this.fetchData(filterProducts);
+        this.setState({
+          fetchingFlag: false,
+          data,
         });
+      }
     } else {
-      data = this.fetchData(this.props.filterProducts);
-      this.setState({
-        fetchingFlag: false,
-        data,
-      });
+      confirmMessage(enqueueSnackbar, 'Please set the ImageKey at the Table data.', 'error');
     }
   }
 
@@ -71,7 +82,7 @@ class ProductGridView extends Component {
       temp = [];
     }
     return data;
-  }
+  };
 
   displayDetail = (key) => {
     const { top, left } = $(`.grid-item-${key}`)
@@ -171,6 +182,7 @@ class ProductGridView extends Component {
 
 ProductGridView.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
+  imageKey: PropTypes.string.isRequired,
   products: PropTypes.array.isRequired,
   productsField: PropTypes.object.isRequired,
   filterProducts: PropTypes.array,
@@ -186,6 +198,7 @@ const mapStateToProps = store => ({
   products: store.productsData.products,
   productsField: store.productsFieldsData.productsField,
   headers: store.productsData.headers,
+  imageKey: store.productsFieldsData.imageKey,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

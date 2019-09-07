@@ -156,6 +156,6 @@ export const scope = [
 ];
 
 export const productViewTypes = [
-  { key: 'grid', label: 'Product Image' },
   { key: 'data', label: 'Product Table' },
+  { key: 'grid', label: 'Product Image' },
 ];

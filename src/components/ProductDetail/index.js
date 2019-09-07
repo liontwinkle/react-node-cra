@@ -9,21 +9,27 @@ import { useSnackbar } from 'notistack';
 
 import { confirmMessage, getProducts } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
-import { updateProductsField } from 'redux/actions/productsFields';
-import { CustomSection } from 'components/elements';
+import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
+import { CustomInput, CustomSection } from 'components/elements';
+import SaveIcon from '@material-ui/icons/Save';
+import { Tooltip } from 'react-tippy';
 import DisplaySetting from './DisplaySetting';
 import ExportDataSection from './ExportDataSection';
 import ShowFields from './ShowFields';
 
 import './style.scss';
+import IconButton from '../elements/IconButton';
+
 
 function ProductsDataDetail({
   headers,
   products,
+  imageKey,
   originProducts,
   tableRef,
   updateProducts,
   setProducts,
+  setImageKey,
   productsField,
   updateProductsField,
 }) {
@@ -33,7 +39,7 @@ function ProductsDataDetail({
     nullType: false,
     strType: false,
   });
-
+  const [imageKeySet, setImageKeySet] = useState(imageKey);
   useEffect(() => {
     const interval = setInterval(() => {
       const tableObj = tableRef.current;
@@ -201,6 +207,24 @@ function ProductsDataDetail({
     tableRef.current.hotInstance.render();
   };
 
+  const handleImageKeyChange = (event) => {
+    setImageKeySet(event.target.value);
+  };
+
+  const handleSaveImageKey = () => {
+    const caseInsensitiveMatch = new RegExp('http', 'i');
+    if (products[0][imageKeySet] && caseInsensitiveMatch.test(products[0][imageKeySet])) {
+      setImageKey(imageKeySet)
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'Success to save the Image Key', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error to save the Image Key', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, 'This field does not include the Image URL', 'error');
+    }
+  };
   return (
     <PerfectScrollbar>
       <div className="product-details">
@@ -218,6 +242,26 @@ function ProductsDataDetail({
             onChangeHandle={toggleSwitch}
           />
         </CustomSection>
+        <CustomSection title="Setting the ImageKey" key="image_key">
+          <div className="set_imageKey">
+            <CustomInput
+              className="mb-3"
+              label="Image Key"
+              inline
+              value={imageKeySet}
+              onChange={handleImageKeyChange}
+            />
+            <Tooltip
+              title="Preview Products for Current Rule"
+              position="right"
+              arrow
+            >
+              <IconButton>
+                <SaveIcon style={{ fontSize: 20 }} onClick={handleSaveImageKey} />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </CustomSection>
         <CustomSection title="Show Column Setting" key="show_setting">
           <ShowFields
             fields={headers}
@@ -234,10 +278,12 @@ function ProductsDataDetail({
 ProductsDataDetail.propTypes = {
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  imageKey: PropTypes.string.isRequired,
   originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
+  setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
 };
@@ -248,11 +294,13 @@ const mapStateToProps = store => ({
   products: store.productsData.products,
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
+  imageKey: store.productsFieldsData.imageKey,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateProducts,
   setProducts,
+  setImageKey,
   updateProductsField,
 }, dispatch);
 

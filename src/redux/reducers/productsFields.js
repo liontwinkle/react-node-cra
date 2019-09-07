@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 
   productsField: {},
   errors: '',
+  imageKey: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -17,12 +18,15 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_FIELDS_SUCCESS:
-      const data = (action.payload.productsField.length > 0)
+      const data = (action.payload.productsField.length > 0 && action.payload.productsField[0].fields)
         ? action.payload.productsField[0].fields : {};
+      const imageKey = (action.payload.productsField.length > 0 && action.payload.productsField[0].imageKey)
+        ? action.payload.productsField[0].imageKey : '';
       return {
         ...state,
         isFetchingList: false,
         productsField: data,
+        imageKey,
       };
     case types.PRODUCTS_GET_FIELDS_FAIL:
       return {
@@ -66,7 +70,23 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: false,
         errors: action.payload.error,
       };
-
+    case types.PRODUCTS_SET_IMAGEKEY_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+        imageKey: action.payload.data.imageKey,
+      };
+    case types.PRODUCTS_SET_IMAGEKEY_REQEUST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.PRODUCTS_SET_IMAGEKEY_ERROR:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
+      };
     default:
       return state;
   }
