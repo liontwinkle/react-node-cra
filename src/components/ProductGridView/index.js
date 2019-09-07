@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import LazyLoad from 'react-lazyload';
 import { withSnackbar } from 'notistack';
 import $ from 'jquery';
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
+import { Grid } from 'react-virtualized';
 import DetailView from './detail_view';
 
 import './style.scss';
+
+const MAX_LENGTH_NUM = 6;
 
 class ProductGridView extends Component {
   constructor() {
@@ -22,29 +23,59 @@ class ProductGridView extends Component {
       viewDetailFlag: false,
       pointX: 0,
       pointY: 0,
+      data: [],
     };
   }
 
   componentDidMount() {
+    this.setState({
+      fetchingFlag: true,
+    });
+    let data = [];
     if (this.props.filterProducts.length === 0) {
-      this.setState({
-        fetchingFlag: true,
-      });
       this.props.fetchProducts()
         .then(() => {
+          data = this.fetchData(this.props.products);
           this.setState({
             fetchingFlag: false,
+            data,
           });
           confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
         })
         .catch(() => {
           confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
         });
+    } else {
+      data = this.fetchData(this.props.filterProducts);
+      this.setState({
+        fetchingFlag: false,
+        data,
+      });
     }
   }
 
+  fetchData = (getData) => {
+    let temp = [];
+    const data = [];
+    getData.forEach((item, key) => {
+      if (key % MAX_LENGTH_NUM === MAX_LENGTH_NUM - 1) {
+        temp.push(item);
+        data.push(temp);
+        temp = [];
+      } else {
+        temp.push(item);
+      }
+    });
+    if (temp.length > 0) {
+      data.push(temp);
+      temp = [];
+    }
+    return data;
+  }
+
   displayDetail = (key) => {
-    const { top, left } = $(`.grid-item-${key}`).offset();
+    const { top, left } = $(`.grid-item-${key}`)
+      .offset();
     let topOffset = top;
     let leftOffset = left;
     if (this.props.filterProducts.length === 0) {
@@ -54,8 +85,10 @@ class ProductGridView extends Component {
       topOffset -= 50;
       leftOffset -= 150;
     }
+    const keys = key.split('-');
+    const index = parseInt(keys[0], 10) * MAX_LENGTH_NUM + parseInt(keys[1], 10);
     this.setState({
-      detail: this.props.products[key],
+      detail: this.props.products[index],
       viewDetailFlag: true,
       pointX: leftOffset,
       pointY: topOffset,
@@ -68,11 +101,27 @@ class ProductGridView extends Component {
     });
   };
 
+  cellRenderer = ({
+    columnIndex, key, rowIndex, style,
+  }) => (
+    <div
+      key={key}
+      style={style}
+    >
+      {this.state.data[rowIndex][columnIndex] && (
+        <img
+          className={`grid-item-${key}`}
+          src={this.state.data[rowIndex][columnIndex].image}
+          alt="products"
+          onMouseEnter={() => this.displayDetail(key)}
+        />
+      )}
+    </div>
+  );
+
   render() {
     const {
-      products,
       productsField,
-      filterProducts,
       headers,
     } = this.props;
 
@@ -82,37 +131,23 @@ class ProductGridView extends Component {
       detail,
       pointX,
       pointY,
+      data,
     } = this.state;
-
-    const data = (filterProducts.length > 0) ? filterProducts : products;
     return (
       <div className="grid-view-container">
         {(!fetchingFlag)
           ? (
-            <PerfectScrollbar
-              options={{
-                suppressScrollX: true,
-                minScrollbarLength: 50,
-              }}
-              style={{
-                height: 'calc(100% - 100px)',
-              }}
-            >
-              <div className="grid-view-content">
-                {
-                  data.map((item, key) => (
-                    <LazyLoad key={parseInt(key, 10)} height={200} overflow throttle={100} once>
-                      <img
-                        src={item.image}
-                        alt="product"
-                        className={`grid-item-${key}`}
-                        onMouseEnter={() => this.displayDetail(key)}
-                      />
-                    </LazyLoad>
-                  ))
-                }
-              </div>
-            </PerfectScrollbar>
+            <div className="grid-view-content">
+              <Grid
+                cellRenderer={this.cellRenderer}
+                columnCount={MAX_LENGTH_NUM}
+                columnWidth={200}
+                rowCount={data.length}
+                rowHeight={200}
+                height={1000}
+                width={1200}
+              />
+            </div>
           ) : (
             <div className="loader">
               <Loader size="small" color="dark" />

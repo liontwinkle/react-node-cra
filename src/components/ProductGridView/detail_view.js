@@ -27,6 +27,7 @@ function DetailView({
                 {headers.map(itemKey => (
                   ((productsField[itemKey] === undefined)
                   || productsField[itemKey].grid === (undefined || true))
+                  && detail[itemKey] !== undefined
                     ? (
                       <tr key={itemKey}>
                         <td>
