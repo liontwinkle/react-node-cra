@@ -35,7 +35,6 @@ class ProductGridView extends Component {
       if (this.props.filterProducts.length === 0) {
         this.props.fetchProducts()
           .then(() => {
-            console.log(this.props.products);// fixme
             this.fetchData(this.props.products);
           })
           .catch(() => {
@@ -61,7 +60,6 @@ class ProductGridView extends Component {
         temp.push(item);
       }
     });
-    console.log(data);// fixme
     this.setState({
       fetchingFlag: false,
       data,
