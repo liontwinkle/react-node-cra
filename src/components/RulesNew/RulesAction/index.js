@@ -25,58 +25,69 @@ function RulesAction({ rules, newRules, products }) {
 
   const [previewProducts, setProducts] = useState([]);
 
-  const getProducts = (field, match, value, store) => {
+  const getProducts = (field, match, value) => {
     const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
+    const returnValue = [];
+    let index = 0;
+
     products.forEach((productItem) => {
       switch (match) {
         case ':=':
           if (productItem[field] === value) {
-            store.push(productItem);
+            returnValue[index] = productItem;
+            index++;
           }
           break;
         case '::':
           if (caseInsensitiveMatch.test(productItem[field])) {
-            store.push(productItem);
+            returnValue[index] = productItem;
+            index++;
           }
           break;
         case ':':
           if (caseSensitiveMatch.test(productItem[field])) {
-            store.push(productItem);
+            returnValue[index] = productItem;
+            index++;
           }
           break;
         case ':<=':
           if (typeof productItem[field] === 'number') {
             if (productItem[field] <= value) {
-              store.push(productItem);
+              returnValue[index] = productItem;
+              index++;
             }
           }
           break;
         case ':>=':
           if (typeof productItem[field] === 'number') {
             if (productItem[field] >= value) {
-              store.push(productItem);
+              returnValue[index] = productItem;
+              index++;
             }
           }
           break;
         case ':<':
           if (typeof productItem[field] === 'number') {
             if (productItem[field] < value) {
-              store.push(productItem);
+              returnValue[index] = productItem;
+              index++;
             }
           }
           break;
         case ':>':
           if (typeof productItem[field] === 'number') {
             if (productItem[field] > value) {
-              store.push(productItem);
+              returnValue[index] = productItem;
+              index++;
             }
           }
           break;
         case ':==':
           if (typeof productItem[field] === 'number') {
             if (productItem[field] === value) {
-              store.push(productItem);
+              returnValue[index] = productItem;
+              index++;
             }
           }
           break;
@@ -84,28 +95,35 @@ function RulesAction({ rules, newRules, products }) {
           break;
       }
     });
+
+    return returnValue;
   };
 
-  const getAllmatched = (match, value, store) => {
+  const getAllmatched = (match, value) => {
     const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     let checkValue = [];
+    const returnValue = [];
+    let index = 0;
     products.forEach((proItem) => {
       const values = Object.values(proItem);
       switch (match) {
         case ':=':
           if (values.filter(item => (item === value)).length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case '::':
           if (values.filter(item => caseInsensitiveMatch.test(item)).length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':':
           if (values.filter(item => caseSensitiveMatch.test(item)).length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':<=':
@@ -116,7 +134,8 @@ function RulesAction({ rules, newRules, products }) {
             return false;
           });
           if (checkValue.length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':>=':
@@ -127,7 +146,8 @@ function RulesAction({ rules, newRules, products }) {
             return false;
           });
           if (checkValue.length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':<':
@@ -138,7 +158,8 @@ function RulesAction({ rules, newRules, products }) {
             return false;
           });
           if (checkValue.length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':>':
@@ -149,7 +170,8 @@ function RulesAction({ rules, newRules, products }) {
             return false;
           });
           if (checkValue.length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         case ':==':
@@ -160,13 +182,15 @@ function RulesAction({ rules, newRules, products }) {
             return false;
           });
           if (checkValue.length > 0) {
-            store.push(proItem);
+            returnValue[index] = proItem;
+            index++;
           }
           break;
         default:
           break;
       }
     });
+    return returnValue;
   };
 
   const filterProducts = () => {
@@ -176,9 +200,9 @@ function RulesAction({ rules, newRules, products }) {
       const { match } = item;
       const { value } = item;
       if (field === '*') {
-        getAllmatched(match, value, filterProducts);
+        filterProducts.concat(getAllmatched(match, value));
       } else {
-        getProducts(field, match, value, filterProducts);
+        filterProducts.concat(getProducts(field, match, value));
       }
     });
 

@@ -28,17 +28,12 @@ const PreviewProducts = ({
       <div id="hot-app">
         <HotTable
           root="hot"
-          licenseKey="non-commercial-and-evaluation"
           settings={{
             data: filterProducts,
             columns,
-            autoWrapRow: true,
+            width: 100,
             colHeaders: headers,
             rowHeaders: true,
-            multiColumnSorting: {
-              indicator: true,
-            },
-            hiddenColumns: true,
           }}
         />
       </div>
