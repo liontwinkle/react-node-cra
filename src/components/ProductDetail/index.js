@@ -290,7 +290,6 @@ ProductsDataDetail.propTypes = {
 
 const mapStateToProps = store => ({
   headers: store.productsData.headers,
-  numbers: store.productsData.numbers,
   products: store.productsData.products,
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,

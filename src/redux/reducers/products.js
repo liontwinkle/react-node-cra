@@ -10,7 +10,6 @@ const INITIAL_STATE = {
   originProducts: [],
   columns: [],
   headers: [],
-  numbers: [],
   valueDetails: [],
   errors: '',
 };
@@ -28,7 +27,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         columns: data.columns,
         headers: data.headers,
-        numbers: data.numbers,
         products: data.data,
         valueDetails: data.valueDetails,
         originProducts: action.payload.products,

@@ -59,24 +59,14 @@ class ProductTable extends Component {
                 settings={{
                   data: products,
                   columns,
+                  width: '100%',
+                  height: '100%',
                   autoWrapRow: true,
-                  manualRowResize: true,
-                  manualColumnResize: true,
-                  manualColumnMove: true,
-                  manualRowMove: true,
-                  autoColumnResize: true,
                   headerTooltips: true,
                   colHeaders: headers,
                   rowHeaders: true,
-                  stretchH: 'all',
                   contextMenu: true,
-                  exportFile: true,
-                  // collapsibleColumns
-                  multiColumnSorting: {
-                    indicator: true,
-                  },
                   dropdownMenu: true,
-                  filters: true,
                   hiddenColumns: true,
                 }}
               />

@@ -185,90 +185,66 @@ const getRulesKey = (keys) => {
 };
 
 export const getProducts = (products) => {
-  const numbers = [];
   const columns = [];
   const objects = [];
   let headers = [];
-  let valueDetails = [];
 
   if (products.length > 0) {
-    const keys = Object.keys(products[0]);
-    const values = Object.values(products[0]);
-    headers = keys;
-    keys.sort();
+    headers = Object.keys(products[0]).sort();
 
-    valueDetails = getRulesKey(keys);
-
-
-    values.forEach((value, key) => {
-      let type = {};
+    Object.values(products[0]).forEach((value, key) => {
       switch (typeof value) {
         case 'number':
-          numbers.push({
-            key: keys[key],
-            label: keys[key].toUpperCase(),
-          });
-          type = {
-            data: keys[key],
+          columns[key] = {
+            data: headers[key],
             type: 'numeric',
           };
           break;
         case 'date':
-          type = {
-            data: keys[key],
+          columns[key] = {
+            data: headers[key],
             type: 'date',
             dateFormat: 'MM/DD/YYYY',
           };
           break;
         case 'object':
-
-          type = {
-            data: keys[key],
-            type: 'dropdown',
-          };
-          break;
         case 'array':
-          type = {
-            data: keys[key],
+          columns[key] = {
+            data: headers[key],
             type: 'dropdown',
           };
           break;
         case 'string':
-          type = {
-            data: keys[key],
+          columns[key] = {
+            data: headers[key],
             type: 'text',
           };
           break;
         default:
-          type = {
-            data: keys[key],
+          columns[key] = {
+            data: headers[key],
           };
           break;
       }
-      columns.push(type);
     });
 
-    products.forEach((dataObj) => {
+    products.forEach((dataObj, objKey) => {
       const subObject = {};
       const subKeys = Object.keys(dataObj);
-      const subValues = Object.values(dataObj);
-      subValues.forEach((dataItems, key) => {
-        let data = '';
+      Object.values(dataObj).forEach((dataItems, key) => {
         if (typeof dataItems === 'object') {
-          data = JSON.stringify(dataItems);
+          subObject[subKeys[key]] = JSON.stringify(dataItems);
         } else {
-          data = dataItems;
+          subObject[subKeys[key]] = dataItems;
         }
-        subObject[subKeys[key]] = data;
       });
-      objects.push(subObject);
+      objects[objKey] = subObject;
     });
   }
   return {
     columns,
     headers,
-    numbers,
-    valueDetails,
+    valueDetails: getRulesKey(headers),
     data: objects,
   };
 };
