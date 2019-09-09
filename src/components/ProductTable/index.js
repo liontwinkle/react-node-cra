@@ -61,7 +61,6 @@ class ProductTable extends Component {
                   columns,
                   width: '100%',
                   height: '100%',
-                  autoWrapRow: true,
                   headerTooltips: true,
                   colHeaders: headers,
                   rowHeaders: true,
