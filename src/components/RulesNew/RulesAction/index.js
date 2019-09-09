@@ -267,7 +267,7 @@ RulesAction.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  products: store.productsData.products,
+  products: store.productsData.data.products,
 });
 
 export default connect(

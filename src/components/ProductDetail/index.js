@@ -289,8 +289,8 @@ ProductsDataDetail.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  headers: store.productsData.headers,
-  products: store.productsData.products,
+  headers: store.productsData.data.headers,
+  products: store.productsData.data.products,
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
   imageKey: store.productsFieldsData.imageKey,

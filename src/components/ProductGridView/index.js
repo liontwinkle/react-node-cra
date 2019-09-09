@@ -181,9 +181,9 @@ ProductGridView.defaultProps = {
 };
 
 const mapStateToProps = store => ({
-  products: store.productsData.products,
+  products: store.productsData.data.products,
   productsField: store.productsFieldsData.productsField,
-  headers: store.productsData.headers,
+  headers: store.productsData.data.headers,
   imageKey: store.productsFieldsData.imageKey,
 });
 

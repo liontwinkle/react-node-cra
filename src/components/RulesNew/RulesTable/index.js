@@ -284,7 +284,7 @@ RulesTable.propTypes = {
   productViewType: PropTypes.object.isRequired,
 };
 const mapStateToProps = store => ({
-  products: store.productsData.products,
+  products: store.productsData.data.products,
   productViewType: store.clientsData.productViewType,
 });
 export default connect(

@@ -245,6 +245,6 @@ export const getProducts = (products) => {
     columns,
     headers,
     valueDetails: getRulesKey(headers),
-    data: objects,
+    products: objects,
   };
 };

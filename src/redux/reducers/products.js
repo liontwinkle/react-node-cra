@@ -6,11 +6,13 @@ import types from '../actionTypes';
 const INITIAL_STATE = {
   isFetchingList: false,
   isUpdatingList: false,
-  products: [],
+  data: {
+    products: [],
+    columns: [],
+    headers: [],
+    valueDetails: [],
+  },
   originProducts: [],
-  columns: [],
-  headers: [],
-  valueDetails: [],
   errors: '',
 };
 
@@ -25,10 +27,7 @@ export default (state = INITIAL_STATE, action) => {
       const data = getProducts(action.payload.products);
       return {
         ...state,
-        columns: data.columns,
-        headers: data.headers,
-        products: data.data,
-        valueDetails: data.valueDetails,
+        data,
         originProducts: action.payload.products,
         isFetchingList: false,
       };
@@ -46,7 +45,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.PRODUCTS_UPDATE_SUCCESS:
       const orgProducts = state.originProducts;
-      const newProducts = state.products;
+      const newProducts = state.data.products;
       const updatedData = action.payload.products;
       updatedData.forEach((newItem) => {
         const orgProductsIdx = _findIndex(orgProducts, { _id: newItem._id });
@@ -57,10 +56,13 @@ export default (state = INITIAL_STATE, action) => {
         const orgProductsIdx = _findIndex(orgProducts, { _id: newItem._id });
         newProducts[orgProductsIdx] = newItem;
       });
+
+      const willSaveData = state.data;
+      willSaveData.products = newProducts;
       return {
         ...state,
         originProducts: orgProducts,
-        products: newProducts,
+        data: willSaveData,
         isUpdatingList: false,
       };
     case types.PRODUCTS_UPDATE_FAIL:
@@ -71,9 +73,11 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.PRODUCTS_SET_PRODUCTS:
+      const currentData = state.data;
+      currentData.products = action.payload.updateData;
       return {
         ...state,
-        products: action.payload.updateData,
+        data: currentData,
       };
     default:
       return state;

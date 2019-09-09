@@ -191,7 +191,7 @@ EditRules.propTypes = {
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
   category: store.categoriesData.category,
-  valueDetails: store.productsData.valueDetails,
+  valueDetails: store.productsData.data.valueDetails,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

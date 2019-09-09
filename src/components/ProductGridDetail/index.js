@@ -81,7 +81,7 @@ ProductsGridDetail.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  headers: store.productsData.headers,
+  headers: store.productsData.data.headers,
   productsField: store.productsFieldsData.productsField,
 });
 

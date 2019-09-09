@@ -91,9 +91,9 @@ ProductTable.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  products: store.productsData.products,
-  columns: store.productsData.columns,
-  headers: store.productsData.headers,
+  products: store.productsData.data.products,
+  columns: store.productsData.data.columns,
+  headers: store.productsData.data.headers,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

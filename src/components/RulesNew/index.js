@@ -115,7 +115,7 @@ NewRules.propTypes = {
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
-  valueDetails: store.productsData.valueDetails,
+  valueDetails: store.productsData.data.valueDetails,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -33,22 +33,11 @@ const PreviewProducts = ({
             data: filterProducts,
             columns,
             autoWrapRow: true,
-            manualRowResize: true,
-            manualColumnResize: true,
-            manualColumnMove: true,
-            manualRowMove: true,
-            autoColumnResize: true,
-            headerTooltips: true,
             colHeaders: headers,
             rowHeaders: true,
-            stretchH: 'all',
-            contextMenu: true,
-            exportFile: true,
             multiColumnSorting: {
               indicator: true,
             },
-            dropdownMenu: true,
-            filters: true,
             hiddenColumns: true,
           }}
         />
@@ -67,8 +56,8 @@ PreviewProducts.propTypes = {
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
-  columns: store.productsData.columns,
-  headers: store.productsData.headers,
+  columns: store.productsData.data.columns,
+  headers: store.productsData.data.headers,
 });
 
 export default connect(
