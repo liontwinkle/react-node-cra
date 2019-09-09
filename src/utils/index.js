@@ -173,13 +173,11 @@ const getRulesKey = (keys) => {
       key: '*',
     },
   ];
-  keys.forEach((keyItem) => {
-    ruleKeys.push(
-      {
-        label: keyItem,
-        key: keyItem,
-      },
-    );
+  keys.forEach((keyItem, key) => {
+    ruleKeys[key + 1] = {
+      label: keyItem,
+      key: keyItem,
+    };
   });
   return ruleKeys;
 };
@@ -190,54 +188,57 @@ export const getProducts = (products) => {
   let headers = [];
 
   if (products.length > 0) {
-    headers = Object.keys(products[0]).sort();
+    headers = Object.keys(products[0])
+      .sort();
 
-    Object.values(products[0]).forEach((value, key) => {
-      switch (typeof value) {
-        case 'number':
-          columns[key] = {
-            data: headers[key],
-            type: 'numeric',
-          };
-          break;
-        case 'date':
-          columns[key] = {
-            data: headers[key],
-            type: 'date',
-            dateFormat: 'MM/DD/YYYY',
-          };
-          break;
-        case 'object':
-        case 'array':
-          columns[key] = {
-            data: headers[key],
-            type: 'dropdown',
-          };
-          break;
-        case 'string':
-          columns[key] = {
-            data: headers[key],
-            type: 'text',
-          };
-          break;
-        default:
-          columns[key] = {
-            data: headers[key],
-          };
-          break;
-      }
-    });
+    Object.values(products[0])
+      .forEach((value, key) => {
+        switch (typeof value) {
+          case 'number':
+            columns[key] = {
+              data: headers[key],
+              type: 'numeric',
+            };
+            break;
+          case 'date':
+            columns[key] = {
+              data: headers[key],
+              type: 'date',
+              dateFormat: 'MM/DD/YYYY',
+            };
+            break;
+          case 'object':
+          case 'array':
+            columns[key] = {
+              data: headers[key],
+              type: 'dropdown',
+            };
+            break;
+          case 'string':
+            columns[key] = {
+              data: headers[key],
+              type: 'text',
+            };
+            break;
+          default:
+            columns[key] = {
+              data: headers[key],
+            };
+            break;
+        }
+      });
 
     products.forEach((dataObj, objKey) => {
       const subObject = {};
       const subKeys = Object.keys(dataObj);
-      Object.values(dataObj).forEach((dataItems, key) => {
-        if (typeof dataItems === 'object') {
-          subObject[subKeys[key]] = JSON.stringify(dataItems);
-        } else {
-          subObject[subKeys[key]] = dataItems;
-        }
-      });
+      Object.values(dataObj)
+        .forEach((dataItems, key) => {
+          if (typeof dataItems === 'object') {
+            subObject[subKeys[key]] = JSON.stringify(dataItems);
+          } else {
+            subObject[subKeys[key]] = dataItems;
+          }
+        });
       objects[objKey] = subObject;
     });
   }
