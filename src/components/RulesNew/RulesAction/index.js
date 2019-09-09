@@ -194,18 +194,17 @@ function RulesAction({ rules, newRules, products }) {
   };
 
   const filterProducts = () => {
-    const filterProducts = [];
+    let filterProducts = [];
     rules.forEach((item) => {
       const field = item.detail;
       const { match } = item;
       const { value } = item;
       if (field === '*') {
-        filterProducts.concat(getAllmatched(match, value));
+        filterProducts = [...filterProducts, ...getAllmatched(match, value)];
       } else {
-        filterProducts.concat(getProducts(field, match, value));
+        filterProducts = [...filterProducts, ...getProducts(field, match, value)];
       }
     });
-
     setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
 
     return filterProducts.length;

@@ -28,10 +28,10 @@ const PreviewProducts = ({
       <div id="hot-app">
         <HotTable
           root="hot"
+          licenseKey="non-commercial-and-evaluation"
           settings={{
             data: filterProducts,
             columns,
-            width: 100,
             colHeaders: headers,
             rowHeaders: true,
           }}
