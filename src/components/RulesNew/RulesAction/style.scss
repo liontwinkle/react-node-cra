@@ -40,9 +40,10 @@
 
   #hot-app {
     width: fit-content;
-
+    min-width: 100%;
     .wtHolder {
-      width: fit-content !important;
+      position: relative;
+      width: 100% !important;
       height: fit-content !important;
       overflow: unset !important;
     }
