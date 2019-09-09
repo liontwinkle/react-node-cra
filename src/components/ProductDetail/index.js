@@ -65,7 +65,7 @@ function ProductsDataDetail({
   };
 
   const handleExportStr = () => {
-    // console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
+    console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
   };
 
   const handleSaveData = () => {
