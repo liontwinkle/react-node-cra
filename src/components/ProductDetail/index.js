@@ -11,15 +11,15 @@ import { confirmMessage, getProducts } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection } from 'components/elements';
-import SaveIcon from '@material-ui/icons/Save';
 import { Tooltip } from 'react-tippy';
+import SaveIcon from '@material-ui/icons/Save';
 import DisplaySetting from './DisplaySetting';
 import ExportDataSection from './ExportDataSection';
 import ShowFields from './ShowFields';
 
-import './style.scss';
 import IconButton from '../elements/IconButton';
 
+import './style.scss';
 
 function ProductsDataDetail({
   headers,
@@ -73,50 +73,52 @@ function ProductsDataDetail({
   };
 
   const handleSaveData = () => {
-    const diffArray = [];
-    const originArray = getProducts(originProducts).data;
+    if (!isUpdatingList) {
+      const diffArray = [];
+      const originArray = getProducts(originProducts).products;
 
-    products.forEach((item, key) => {
-      const original = Object.values(originArray[key]);
-      const current = Object.values(item);
-      const diffres = _isEqual(original.sort(), current.sort());
+      products.forEach((item, key) => {
+        const original = Object.values(originArray[key]);
+        const current = Object.values(item);
+        const diffres = _isEqual(original.sort(), current.sort());
 
-      if (!diffres) {
-        diffArray.push(item);
-      }
-    });
-
-    if (diffArray.length > 0) {
-      let duplicateFlag = false;
-
-      diffArray.forEach((item) => {
-        const duplicate = _filter(products, { _id: item._id });
-        if (duplicate.length > 1) {
-          duplicateFlag = true;
+        if (!diffres) {
+          diffArray.push(item);
         }
       });
 
-      if (!duplicateFlag && !isUpdatingList) {
-        updateProducts(diffArray)
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
-          })
-          .catch(() => {
-            const errMsg = 'Error is detected to save the table data1.';
-            confirmMessage(enqueueSnackbar, errMsg, 'error');
-          });
+      if (diffArray.length > 0) {
+        let duplicateFlag = false;
+
+        diffArray.forEach((item) => {
+          const duplicate = _filter(products, { _id: item._id });
+          if (duplicate.length > 1) {
+            duplicateFlag = true;
+          }
+        });
+
+        if (!duplicateFlag) {
+          updateProducts(diffArray)
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
+            })
+            .catch(() => {
+              const errMsg = 'Error is detected to save the table data1.';
+              confirmMessage(enqueueSnackbar, errMsg, 'error');
+            });
+        } else {
+          confirmMessage(enqueueSnackbar, 'The ID is duplicated.', 'error');
+        }
       } else {
-        confirmMessage(enqueueSnackbar, 'The ID is duplicated.', 'error');
+        const errMsg = 'There is no updated data.';
+        confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
-    } else {
-      const errMsg = 'There is no updated data.';
-      confirmMessage(enqueueSnackbar, errMsg, 'error');
+
+      setProducts(originArray);
+
+      tableRef.current.hotInstance.loadData(originArray);
+      tableRef.current.hotInstance.render();
     }
-
-    setProducts(originArray);
-
-    tableRef.current.hotInstance.loadData(originArray);
-    tableRef.current.hotInstance.render();
   };
 
   const handleShow = (index, value) => {
@@ -219,6 +221,7 @@ function ProductsDataDetail({
   const handleSaveImageKey = () => {
     const caseInsensitiveMatch = new RegExp('http', 'i');
     if (!isFetchingList
+      && !isUpdating
       && products[0][imageKeySet]
       && caseInsensitiveMatch.test(products[0][imageKeySet])) {
       setImageKey(imageKeySet)
