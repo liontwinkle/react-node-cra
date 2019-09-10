@@ -13,7 +13,7 @@ exports.show = (req, res) => {
   ProductsField
     .find({ clientId: req.params.clientId })
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

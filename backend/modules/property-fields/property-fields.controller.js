@@ -36,7 +36,7 @@ exports.show = (req, res) => {
     .find({ clientId: req.params.clientId, type: req.params.type })
     // .select('id name code url createdAt')
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -49,7 +49,7 @@ exports.update = (req, res) => {
 
   PropertyFields
     .findByIdAsync(req.params.id)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));

@@ -12,7 +12,7 @@ exports.show = (req, res) => {
     .sort('_id')
     // .limit(100)
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

@@ -52,7 +52,7 @@ export default (state = INITIAL_STATE, action) => {
         orgProducts[orgProductsIdx] = newItem;
       });
       const newData = getProducts(action.payload.products);
-      newData.data.forEach((newItem) => {
+      newData.products.forEach((newItem) => {
         const orgProductsIdx = _findIndex(orgProducts, { _id: newItem._id });
         newProducts[orgProductsIdx] = newItem;
       });

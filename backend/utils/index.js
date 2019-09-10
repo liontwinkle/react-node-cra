@@ -35,8 +35,7 @@ function responseWithResult(res, statusCode = 200) {
   };
 }
 
-function handleEntityNotFound(res, req) {
-  console.log(req);
+function handleEntityNotFound(res) {
   return (entity) => {
     if (!entity) {
       res.status(404)

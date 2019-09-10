@@ -31,7 +31,7 @@ exports.show = (req, res) => {
     .findById(req.params.categoryId)
     .select('-__v')
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -44,7 +44,7 @@ exports.update = (req, res) => {
 
   req.category
     .findByIdAsync(req.params.categoryId)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -54,7 +54,7 @@ exports.update = (req, res) => {
 exports.remove = (req, res) => {
   req.category
     .findByIdAsync(req.params.categoryId)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .then(removeChildren(req, req.params.categoryId))
     .catch(handleError(res));

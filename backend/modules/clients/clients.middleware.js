@@ -12,7 +12,7 @@ exports.loadClient = (req, res, next, id) => Clients
       return next();
     }
 
-    return handleEntityNotFound(res, req);
+    return handleEntityNotFound(res);
   })
   .catch(handleError(res));
 
@@ -35,7 +35,7 @@ exports.loadCategory = (req, res, next, type) => {
         return next();
       }
 
-      return handleEntityNotFound(res, req);
+      return handleEntityNotFound(res);
     })
     .catch(handleError(res));
 };

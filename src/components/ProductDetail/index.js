@@ -76,7 +76,6 @@ function ProductsDataDetail({
     if (!isUpdatingList) {
       const diffArray = [];
       const originArray = getProducts(originProducts).products;
-
       products.forEach((item, key) => {
         const original = Object.values(originArray[key]);
         const current = Object.values(item);
