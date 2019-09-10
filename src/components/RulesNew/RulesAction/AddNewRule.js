@@ -208,7 +208,7 @@ AddNewRule.propTypes = {
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
-  valueDetails: store.productsData.valueDetails,
+  valueDetails: store.productsData.data.valueDetails,
   category: store.categoriesData.category,
 });
 
