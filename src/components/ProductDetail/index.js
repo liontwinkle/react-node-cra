@@ -24,6 +24,7 @@ import IconButton from '../elements/IconButton';
 function ProductsDataDetail({
   headers,
   products,
+  isFetchingList,
   imageKey,
   originProducts,
   tableRef,
@@ -214,7 +215,7 @@ function ProductsDataDetail({
 
   const handleSaveImageKey = () => {
     const caseInsensitiveMatch = new RegExp('http', 'i');
-    if (products.length > 0
+    if (!isFetchingList
       && products[0][imageKeySet]
       && caseInsensitiveMatch.test(products[0][imageKeySet])) {
       setImageKey(imageKeySet)
@@ -231,7 +232,7 @@ function ProductsDataDetail({
   return (
     <PerfectScrollbar>
       {
-        products.length > 0
+        !isFetchingList
         && (
           <div className="product-details">
             <CustomSection title="Export and Save" key="export_save">
@@ -286,6 +287,7 @@ function ProductsDataDetail({
 ProductsDataDetail.propTypes = {
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
   imageKey: PropTypes.string.isRequired,
   originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
@@ -299,6 +301,7 @@ ProductsDataDetail.propTypes = {
 const mapStateToProps = store => ({
   headers: store.productsData.data.headers,
   products: store.productsData.data.products,
+  isFetchingList: store.productsData.isFetchingList,
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
   imageKey: store.productsFieldsData.imageKey,
