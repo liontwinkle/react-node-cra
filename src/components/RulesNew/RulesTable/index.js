@@ -8,6 +8,8 @@ import SaveIcon from '@material-ui/icons/Filter';
 import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
+import View from '../RuleEngine';
+
 
 import './style.scss';
 
@@ -22,6 +24,9 @@ function RulesTable({ rules, products, productViewType }) {
     const caseSensitiveMatch = new RegExp(`${value}`);
     const returnValue = [];
     let index = 0;
+
+    const rule = View.name;
+    console.log(rule);// fixme
 
     products.forEach((productItem) => {
       switch (match) {
