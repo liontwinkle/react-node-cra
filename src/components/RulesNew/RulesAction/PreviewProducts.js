@@ -32,10 +32,9 @@ const PreviewProducts = ({
           settings={{
             data: filterProducts,
             columns,
-            height: '800',
             colHeaders: headers,
             rowHeaders: true,
-            stretchH: 'all',
+            columnSorting: true,
           }}
         />
       </div>
