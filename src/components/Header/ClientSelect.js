@@ -14,6 +14,7 @@ import {
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
+import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
 import { productViewTypes } from 'utils/constants';
 import { confirmMessage } from 'utils';
@@ -37,6 +38,7 @@ function ClientSelect({
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,
+  setProducts,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -76,6 +78,7 @@ function ClientSelect({
     const newClient = _find(clients, { id: item.key });
     if (newClient) {
       setClient(newClient);
+      setProducts([]);
       actionChangeType(defaultType, newClient);
     }
   };
@@ -133,6 +136,7 @@ ClientSelect.propTypes = {
   fetchCategories: PropTypes.func.isRequired,
   fetchPropertyField: PropTypes.func.isRequired,
   fetchProductsField: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
 };
 
 ClientSelect.defaultProps = {
@@ -157,6 +161,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,
+  setProducts,
 }, dispatch);
 
 export default connect(

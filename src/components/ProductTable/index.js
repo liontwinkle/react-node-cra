@@ -17,26 +17,32 @@ class ProductTable extends Component {
   };
 
   componentDidMount() {
-    this.setState({
-      fetchingFlag: true,
-    });
-
-    this.props.fetchProducts()
-      .then(() => {
-        this.setState({
-          fetchingFlag: false,
-        });
-        this.props.enqueueSnackbar('Success fetching products data.', {
-          variant: 'success',
-          autoHideDuration: 1000,
-        });
-      })
-      .catch(() => {
-        this.props.enqueueSnackbar('Error in fetching products data.', {
-          variant: 'error',
-          autoHideDuration: 4000,
-        });
+    if (this.props.products.length === 0) {
+      this.setState({
+        fetchingFlag: true,
       });
+
+      this.props.fetchProducts()
+        .then(() => {
+          this.setState({
+            fetchingFlag: false,
+          });
+          this.props.enqueueSnackbar('Success fetching products data.', {
+            variant: 'success',
+            autoHideDuration: 1000,
+          });
+        })
+        .catch(() => {
+          this.props.enqueueSnackbar('Error in fetching products data.', {
+            variant: 'error',
+            autoHideDuration: 4000,
+          });
+        });
+    } else {
+      this.setState({
+        fetchingFlag: false,
+      });
+    }
   }
 
   render() {
