@@ -8,7 +8,7 @@ import SaveIcon from '@material-ui/icons/Filter';
 import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
-
+import RuleEngine from '../RuleEngine';
 import './style.scss';
 
 function RulesTable({ rules, products, productViewType }) {
@@ -18,12 +18,35 @@ function RulesTable({ rules, products, productViewType }) {
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value) => {
+    console.log('-------- RulesTable.getProducts --------');
+    console.log('Match:', match);
+    console.log('Field (Key):', field);
+    console.log('Value (Criteria):', value);
+
+    const rule = RuleEngine[match](value);
+    console.log(rule);
+    // console.log(productItem[field]);
+
+
     const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     const returnValue = [];
     let index = 0;
 
     products.forEach((productItem) => {
+      // console.log('In forEach..');
+      if (rule.test(productItem[field])) {
+        console.log('================== Match: ================== ', match);
+        console.log('Field (Key):', field);
+        console.log('Value (Criteria):', value);
+        console.log('MATCH!', productItem[field]);
+        console.log('rule.test(productItem[field])', rule.test(productItem[field]));
+        return;
+      }
+
+      // console.log('productItem:', productItem);
+      // console.log('Value (Key):', productItem[field]);
+      // console.log('');
       switch (match) {
         case ':=':
           if (productItem[field] === value) {
@@ -91,6 +114,7 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const getAllmatched = (match, value) => {
+    console.log('-------- RulesTable.getAllmatched --------');
     const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
     const caseSensitiveMatch = new RegExp(`${value}`);
     let checkValue = [];
@@ -185,6 +209,7 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const filterProducts = (key) => {
+    console.log('-------- RulesTable.filterProducts --------');
     let filter = [];
     const field = rules[key].detail.key;
     const match = rules[key].match.key;
@@ -199,6 +224,7 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const handleToggle = key => () => {
+    console.log('-------- RulesTable.handleToggle --------');
     if (key !== 'close' && filterProducts(key) === 0) {
       enqueueSnackbar('No Products match this rule.', {
         variant: 'info',
