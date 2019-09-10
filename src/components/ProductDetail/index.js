@@ -25,6 +25,8 @@ function ProductsDataDetail({
   headers,
   products,
   isFetchingList,
+  isUpdatingList,
+  isUpdating,
   imageKey,
   originProducts,
   tableRef,
@@ -94,7 +96,7 @@ function ProductsDataDetail({
         }
       });
 
-      if (!duplicateFlag) {
+      if (!duplicateFlag && !isUpdatingList) {
         updateProducts(diffArray)
           .then(() => {
             confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
@@ -118,55 +120,55 @@ function ProductsDataDetail({
   };
 
   const handleShow = (index, value) => {
-    const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+    if (!isUpdating) {
+      const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
 
-    if (value) {
-      showPlugin.showColumn(index);
-    } else {
-      showPlugin.hideColumn(index);
-    }
+      tableRef.current.hotInstance.render();
 
-    tableRef.current.hotInstance.render();
-
-    const newFieldData = fieldData;
-    headers.forEach((item, key) => {
-      if (
-        newFieldData[item] === undefined
-        || (newFieldData[item].data === undefined
-        && newFieldData[item].grid === undefined)
-      ) {
-        newFieldData[item] = {
-          data: true,
-          grid: true,
-        };
-      } else if (newFieldData[item].data === undefined) {
-        newFieldData[item] = {
-          data: true,
-          grid: newFieldData[item].grid,
-        };
-      } else if (newFieldData[item].grid === undefined) {
-        newFieldData[item] = {
-          data: newFieldData[item].data,
-          grid: true,
-        };
-      }
-      if (key === index) {
-        newFieldData[item].data = value;
-      }
-    });
-
-    updateProductsField(newFieldData)
-      .then(() => {
-        setFieldData(newFieldData);
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+      const newFieldData = fieldData;
+      headers.forEach((item, key) => {
+        if (
+          newFieldData[item] === undefined
+          || (newFieldData[item].data === undefined
+          && newFieldData[item].grid === undefined)
+        ) {
+          newFieldData[item] = {
+            data: true,
+            grid: true,
+          };
+        } else if (newFieldData[item].data === undefined) {
+          newFieldData[item] = {
+            data: true,
+            grid: newFieldData[item].grid,
+          };
+        } else if (newFieldData[item].grid === undefined) {
+          newFieldData[item] = {
+            data: newFieldData[item].data,
+            grid: true,
+          };
+        }
+        if (key === index) {
+          newFieldData[item].data = value;
+        }
       });
+
+      updateProductsField(newFieldData)
+        .then(() => {
+          setFieldData(newFieldData);
+          if (value) {
+            showPlugin.showColumn(index);
+          } else {
+            showPlugin.hideColumn(index);
+          }
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+        });
+    }
   };
 
   const setEmpty = (updateData, type) => {
     const updatedData = [];
-
     updateData.forEach((item) => {
       const keys = Object.keys(item);
       const values = Object.values(item);
@@ -181,7 +183,6 @@ function ProductsDataDetail({
           subData[keys[subKey]] = subItem;
         }
       });
-
       updatedData.push(subData);
     });
 
@@ -189,24 +190,26 @@ function ProductsDataDetail({
   };
 
   const toggleSwitch = field => () => {
-    let updateData = products;
+    if (!isUpdatingList) {
+      let updateData = products;
 
-    const newDisplaySetting = {
-      ...displayFlag,
-      [field]: !displayFlag[field],
-    };
-    setDisplayFlag(newDisplaySetting);
+      const newDisplaySetting = {
+        ...displayFlag,
+        [field]: !displayFlag[field],
+      };
+      setDisplayFlag(newDisplaySetting);
 
-    if (newDisplaySetting.nullType) {
-      updateData = setEmpty(updateData, 'nullType');
+      if (newDisplaySetting.nullType) {
+        updateData = setEmpty(updateData, 'nullType');
+      }
+
+      if (!newDisplaySetting.strType) {
+        updateData = setEmpty(updateData, 'strType');
+      }
+
+      tableRef.current.hotInstance.loadData(updateData);
+      tableRef.current.hotInstance.render();
     }
-
-    if (!newDisplaySetting.strType) {
-      updateData = setEmpty(updateData, 'strType');
-    }
-
-    tableRef.current.hotInstance.loadData(updateData);
-    tableRef.current.hotInstance.render();
   };
 
   const handleImageKeyChange = (event) => {
@@ -288,6 +291,8 @@ ProductsDataDetail.propTypes = {
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
+  isUpdatingList: PropTypes.bool.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
   imageKey: PropTypes.string.isRequired,
   originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
@@ -302,6 +307,8 @@ const mapStateToProps = store => ({
   headers: store.productsData.data.headers,
   products: store.productsData.data.products,
   isFetchingList: store.productsData.isFetchingList,
+  isUpdatingList: store.productsData.isUpdatingList,
+  isUpdating: store.productsFieldsData.isUpdating,
   productsField: store.productsFieldsData.productsField,
   originProducts: store.productsData.originProducts,
   imageKey: store.productsFieldsData.imageKey,

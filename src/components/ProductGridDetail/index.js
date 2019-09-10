@@ -16,6 +16,8 @@ function ProductsGridDetail({
   headers,
   productsField,
   updateProductsField,
+  isUpdating,
+  isFetchingList,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
@@ -49,25 +51,32 @@ function ProductsGridDetail({
       }
     });
 
-    updateProductsField(newFieldData)
-      .then(() => {
-        setFieldData(newFieldData);
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
-      });
+    if (!isUpdating) {
+      updateProductsField(newFieldData)
+        .then(() => {
+          setFieldData(newFieldData);
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+        });
+    }
   };
 
   return (
     <PerfectScrollbar>
       <div className="product-details">
         <CustomSection title="Show Fields Setting on Hover" key="show_setting">
-          <ShowFields
-            type="grid"
-            fields={headers}
-            chkValue={fieldData}
-            onChange={handleShow}
-          />
+          {
+            !isFetchingList
+            && (
+              <ShowFields
+                type="grid"
+                fields={headers}
+                chkValue={fieldData}
+                onChange={handleShow}
+              />
+            )
+          }
         </CustomSection>
       </div>
     </PerfectScrollbar>
@@ -76,12 +85,16 @@ function ProductsGridDetail({
 
 ProductsGridDetail.propTypes = {
   headers: PropTypes.array.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   headers: store.productsData.data.headers,
+  isUpdating: store.productsFieldsData.isUpdating,
+  isFetchingList: store.productsData.isFetchingList,
   productsField: store.productsFieldsData.productsField,
 });
 
