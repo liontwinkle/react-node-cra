@@ -80,12 +80,10 @@ function ProductsDataDetail({
         const original = Object.values(originArray[key]);
         const current = Object.values(item);
         const diffres = _isEqual(original.sort(), current.sort());
-
         if (!diffres) {
           diffArray.push(item);
         }
       });
-
       if (diffArray.length > 0) {
         let duplicateFlag = false;
 

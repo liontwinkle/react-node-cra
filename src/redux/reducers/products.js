@@ -12,6 +12,7 @@ const INITIAL_STATE = {
     headers: [],
     valueDetails: [],
   },
+  updatedData: [],
   originProducts: [],
   errors: '',
 };
@@ -78,6 +79,19 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: currentData,
+      };
+    case types.PRODUCTS_SET_UPDATE_PRODUCTS:
+      const changedData = state.updatedData;
+      const { changes } = action.payload;
+      const { length } = changedData;
+      const changeObj = state.data.products[changes[0][0]];
+      changedData[length] = {
+        ...changeObj,
+        [changes[1]]: changes[3],
+      };
+      return {
+        ...state,
+        updatedData: changedData,
       };
     default:
       return state;

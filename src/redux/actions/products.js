@@ -63,3 +63,10 @@ export const setProducts = updateData => (dispatch) => {
     payload: { updateData },
   });
 };
+
+export const setUpdatedProducts = changes => (dispatch) => {
+  dispatch({
+    type: types.PRODUCTS_SET_UPDATE_PRODUCTS,
+    payload: { changes },
+  });
+};

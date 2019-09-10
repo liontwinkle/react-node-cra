@@ -6,7 +6,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
 
-import { fetchProducts } from 'redux/actions/products';
+import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 
 import './style.scss';
@@ -45,6 +45,19 @@ class ProductTable extends Component {
     }
   }
 
+  setChangeItem = (changes) => {
+    if (changes) {
+      if (changes[1] === 'id') {
+        const duplicate = this.props.products.filter(item => (item.id === changes[3]));
+        if (duplicate.length === 0) {
+          this.props.setUpdatedProducts(changes);
+        }
+      } else {
+        this.props.setUpdatedProducts(changes);
+      }
+    }
+  };
+
   render() {
     const {
       columns,
@@ -62,6 +75,7 @@ class ProductTable extends Component {
                 ref={tableRef}
                 root="hot"
                 licenseKey="non-commercial-and-evaluation"
+                afterChange={this.setChangeItem}
                 settings={{
                   data: products,
                   columns,
@@ -93,6 +107,7 @@ ProductTable.propTypes = {
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  setUpdatedProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
@@ -104,6 +119,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
+  setUpdatedProducts,
 }, dispatch);
 
 export default connect(
