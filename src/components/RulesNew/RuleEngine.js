@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { memo } from 'react';
 
-export default memo(({ name }) => `Hi, I'm ${name}`);
+export const View = memo(({ name }) => `Hi, I'm ${name}`);
