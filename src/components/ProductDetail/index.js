@@ -65,7 +65,8 @@ function ProductsDataDetail({
   };
 
   const handleExportStr = () => {
-    console.log(tableRef.current.hotInstance.getPlugin('exportFile').exportAsString('csv'));
+    console.log(tableRef.current.hotInstance.getPlugin('exportFile')
+      .exportAsString('csv'));
   };
 
   const handleSaveData = () => {
@@ -213,7 +214,9 @@ function ProductsDataDetail({
 
   const handleSaveImageKey = () => {
     const caseInsensitiveMatch = new RegExp('http', 'i');
-    if (products[0][imageKeySet] && caseInsensitiveMatch.test(products[0][imageKeySet])) {
+    if (products.length > 0
+      && products[0][imageKeySet]
+      && caseInsensitiveMatch.test(products[0][imageKeySet])) {
       setImageKey(imageKeySet)
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success to save the Image Key', 'success');
@@ -227,50 +230,55 @@ function ProductsDataDetail({
   };
   return (
     <PerfectScrollbar>
-      <div className="product-details">
-        <CustomSection title="Export and Save" key="export_save">
-          <ExportDataSection
-            onExportCsv={handleExportCsv}
-            onExportStr={handleExportStr}
-            onSaveData={handleSaveData}
-          />
-        </CustomSection>
-        <CustomSection title="Display Setting" key="display_setting">
-          <DisplaySetting
-            nullType={displayFlag.nullType}
-            strType={displayFlag.strType}
-            onChangeHandle={toggleSwitch}
-          />
-        </CustomSection>
-        <CustomSection title="Setting the ImageKey" key="image_key">
-          <div className="set_imageKey">
-            <CustomInput
-              className="mb-3"
-              label="Image Key"
-              inline
-              value={imageKeySet}
-              onChange={handleImageKeyChange}
-            />
-            <Tooltip
-              title="Preview Products for Current Rule"
-              position="right"
-              arrow
-            >
-              <IconButton>
-                <SaveIcon style={{ fontSize: 20 }} onClick={handleSaveImageKey} />
-              </IconButton>
-            </Tooltip>
+      {
+        products.length > 0
+        && (
+          <div className="product-details">
+            <CustomSection title="Export and Save" key="export_save">
+              <ExportDataSection
+                onExportCsv={handleExportCsv}
+                onExportStr={handleExportStr}
+                onSaveData={handleSaveData}
+              />
+            </CustomSection>
+            <CustomSection title="Display Setting" key="display_setting">
+              <DisplaySetting
+                nullType={displayFlag.nullType}
+                strType={displayFlag.strType}
+                onChangeHandle={toggleSwitch}
+              />
+            </CustomSection>
+            <CustomSection title="Setting the ImageKey" key="image_key">
+              <div className="set_imageKey">
+                <CustomInput
+                  className="mb-3"
+                  label="Image Key"
+                  inline
+                  value={imageKeySet}
+                  onChange={handleImageKeyChange}
+                />
+                <Tooltip
+                  title="Preview Products for Current Rule"
+                  position="right"
+                  arrow
+                >
+                  <IconButton>
+                    <SaveIcon style={{ fontSize: 20 }} onClick={handleSaveImageKey} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </CustomSection>
+            <CustomSection title="Show Column Setting" key="show_setting">
+              <ShowFields
+                fields={headers}
+                chkValue={fieldData}
+                type="data"
+                onChange={handleShow}
+              />
+            </CustomSection>
           </div>
-        </CustomSection>
-        <CustomSection title="Show Column Setting" key="show_setting">
-          <ShowFields
-            fields={headers}
-            chkValue={fieldData}
-            type="data"
-            onChange={handleShow}
-          />
-        </CustomSection>
-      </div>
+        )
+      }
     </PerfectScrollbar>
   );
 }
