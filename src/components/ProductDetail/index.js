@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import _isEqual from 'lodash/isEqual';
-import _filter from 'lodash/filter';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useSnackbar } from 'notistack';
 
-import { confirmMessage, getProducts } from 'utils';
+import { confirmMessage } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection } from 'components/elements';
@@ -28,12 +26,11 @@ function ProductsDataDetail({
   isUpdatingList,
   isUpdating,
   imageKey,
-  originProducts,
   tableRef,
   updateProducts,
-  setProducts,
   setImageKey,
   productsField,
+  updated,
   updateProductsField,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -73,55 +70,29 @@ function ProductsDataDetail({
   };
 
   const handleSaveData = () => {
-    if (!isUpdatingList) {
-      const diffArray = [];
-      const originArray = getProducts(originProducts).products;
-      products.forEach((item, key) => {
-        const original = Object.values(originArray[key]);
-        const current = Object.values(item);
-        const diffres = _isEqual(original.sort(), current.sort());
-        if (!diffres) {
-          diffArray.push(item);
-        }
-      });
-      if (diffArray.length > 0) {
-        let duplicateFlag = false;
-
-        diffArray.forEach((item) => {
-          const duplicate = _filter(products, { _id: item._id });
-          if (duplicate.length > 1) {
-            duplicateFlag = true;
-          }
+    if (!isUpdatingList && updated.length > 0) {
+      updateProducts(updated)
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
+        })
+        .catch(() => {
+          const errMsg = 'Error is detected to save the table data1.';
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
         });
-
-        if (!duplicateFlag) {
-          updateProducts(diffArray)
-            .then(() => {
-              confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
-            })
-            .catch(() => {
-              const errMsg = 'Error is detected to save the table data1.';
-              confirmMessage(enqueueSnackbar, errMsg, 'error');
-            });
-        } else {
-          confirmMessage(enqueueSnackbar, 'The ID is duplicated.', 'error');
-        }
-      } else {
-        const errMsg = 'There is no updated data.';
-        confirmMessage(enqueueSnackbar, errMsg, 'error');
-      }
-
-      setProducts(originArray);
-
-      tableRef.current.hotInstance.loadData(originArray);
-      tableRef.current.hotInstance.render();
+    } else {
+      confirmMessage(enqueueSnackbar, 'The Update data is not exist.', 'error');
     }
   };
+
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
       const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-
+      if (value) {
+        showPlugin.showColumn(index);
+      } else {
+        showPlugin.hideColumn(index);
+      }
       tableRef.current.hotInstance.render();
 
       const newFieldData = fieldData;
@@ -154,11 +125,6 @@ function ProductsDataDetail({
       updateProductsField(newFieldData)
         .then(() => {
           setFieldData(newFieldData);
-          if (value) {
-            showPlugin.showColumn(index);
-          } else {
-            showPlugin.hideColumn(index);
-          }
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
@@ -290,14 +256,13 @@ function ProductsDataDetail({
 ProductsDataDetail.propTypes = {
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  updated: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
   isUpdatingList: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   imageKey: PropTypes.string.isRequired,
-  originProducts: PropTypes.array.isRequired,
   tableRef: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
-  setProducts: PropTypes.func.isRequired,
   setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
@@ -306,6 +271,7 @@ ProductsDataDetail.propTypes = {
 const mapStateToProps = store => ({
   headers: store.productsData.data.headers,
   products: store.productsData.data.products,
+  updated: store.productsData.updatedData,
   isFetchingList: store.productsData.isFetchingList,
   isUpdatingList: store.productsData.isUpdatingList,
   isUpdating: store.productsFieldsData.isUpdating,
