@@ -103,13 +103,18 @@ function ClientSelect({
             items={types}
             onChange={handleChangeType}
           />
-          <CustomSelect
-            className="mr-3"
-            placeholder="Select View Method"
-            value={productViewType}
-            items={productViewTypes}
-            onChange={handleChangeProductViewType}
-          />
+          {
+            type.key === 'products'
+            && (
+              <CustomSelect
+                className="mr-3"
+                placeholder="Select View Method"
+                value={productViewType}
+                items={productViewTypes}
+                onChange={handleChangeProductViewType}
+              />
+            )
+          }
         </Fragment>
       )}
     </Fragment>
