@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ import RulesAction from './RulesAction';
 
 import './style.scss';
 import { confirmMessage } from '../../utils';
+import Loader from '../Loader';
 
 class NewRules extends Component {
   state = {
@@ -25,14 +26,18 @@ class NewRules extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchProducts()
-      .then(() => {
-        this.setMap(this.props.category);
-        confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
-      });
+    if (this.props.products.length === 0) {
+      this.props.fetchProducts()
+        .then(() => {
+          this.setMap(this.props.category);
+          confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
+        });
+    } else {
+      this.setMap(this.props.category);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -95,12 +100,24 @@ class NewRules extends Component {
     const { newRules, editRules } = this.state;
     return (
       <div className="mg-rules-container d-flex">
-        <div className="mg-rule-content">
-          <PerfectScrollbar>
-            <RulesTable rules={newRules} />
-          </PerfectScrollbar>
-        </div>
-        <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+        {
+          !this.props.isFetchingList
+            ? (
+              <Fragment>
+                <div className="mg-rule-content">
+                  <PerfectScrollbar>
+                    <RulesTable rules={newRules} />
+                  </PerfectScrollbar>
+                </div>
+                <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+              </Fragment>
+            )
+            : (
+              <div className="loader">
+                <Loader size="small" color="dark" />
+              </div>
+            )
+        }
       </div>
     );
   }
@@ -109,6 +126,8 @@ class NewRules extends Component {
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
@@ -116,6 +135,8 @@ NewRules.propTypes = {
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
   valueDetails: store.productsData.data.valueDetails,
+  products: store.productsData.data.products,
+  isFetchingList: store.productsData.isFetchingList,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

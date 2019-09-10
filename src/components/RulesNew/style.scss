@@ -6,6 +6,12 @@
   display: flex;
   justify-content: center;
 
+  .loader {
+    position: absolute;
+    top: 50%;
+    left: 70%;
+  }
+
   .mg-rules-actions {
     margin-left: 10px;
   }
