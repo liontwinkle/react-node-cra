@@ -133,7 +133,8 @@ function ProductsDataDetail({
 
   const setEmpty = (updateData, type) => {
     const updatedData = [];
-    updateData.forEach((item) => {
+    const time1 = performance.now();
+    updateData.forEach((item, key) => {
       const keys = Object.keys(item);
       const values = Object.values(item);
       const subData = {};
@@ -147,8 +148,9 @@ function ProductsDataDetail({
           subData[keys[subKey]] = subItem;
         }
       });
-      updatedData.push(subData);
+      updatedData[key] = subData;
     });
+    console.log(performance.now() - time1);
     return updatedData;
   };
 
