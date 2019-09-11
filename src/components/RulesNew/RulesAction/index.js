@@ -89,9 +89,7 @@ function RulesAction({
 
     rules.forEach((item) => {
       const field = item.detail;
-      const { match } = item;
-      const { value } = item;
-      const { basis } = item;
+      const { match, value, basis } = item;
       if (field === '*') {
         filterResult = getAllmatched(match, value, basis);
       } else {

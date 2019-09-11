@@ -9,7 +9,10 @@ import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
 import {
-  AddSets, formatProductsData, getData, RuleEngine,
+  AddSets,
+  formatProductsData,
+  getData,
+  RuleEngine,
 } from '../RuleEngine';
 
 import './style.scss';
