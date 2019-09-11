@@ -90,7 +90,7 @@ function RulesTable({ rules, products, productViewType }) {
               <th>Rule`s Value</th>
               <th>Rule`s Criteria</th>
               <th>Rule`s Scope</th>
-              <th>Preview Marches</th>
+              <th>Preview Matches</th>
             </tr>
           </thead>
           <tbody>
