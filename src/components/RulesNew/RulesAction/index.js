@@ -11,7 +11,7 @@ import { IconButton } from 'components/elements';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
-// import RuleEngine from '../RuleEngine';
+import RuleEngine from '../RuleEngine';
 
 
 import './style.scss';
@@ -27,102 +27,41 @@ function RulesAction({ rules, newRules, products }) {
 
   const [previewProducts, setProducts] = useState([]);
 
-  const getProducts = () => {
-    const returnValue = [];
+  const getProducts = (field, match, value) => {
+    console.log('-------- RulesTable.getProducts --------');
+    console.log('Match:', match);
+    console.log('Field (Key):', field);
+    console.log('Value (Criteria):', value);
 
+    const rule = RuleEngine[match](value);
+    const returnValue = [];
+    let index = 0;
+
+    products.forEach((productItem) => {
+      if (rule.test(productItem[field])) {
+        console.log('================== Match: ================== ', match);
+        console.log('Field (Key):', field);
+        console.log('Value (Criteria):', value);
+        console.log('MATCH!', productItem[field]);
+        console.log('rule.test(productItem[field])', rule.test(productItem[field]));
+        returnValue[index] = productItem;
+        index++;
+      }
+    });
     return returnValue;
   };
 
   const getAllmatched = (match, value) => {
-    console.log('RulesAction.getAllmatched');
-    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
-    const caseSensitiveMatch = new RegExp(`${value}`);
-    let checkValue = [];
+    console.log('-------- RulesTable.getAllmatched --------');
     const returnValue = [];
     let index = 0;
+    const rule = RuleEngine[match](value);
     products.forEach((proItem) => {
       const values = Object.values(proItem);
-      switch (match) {
-        case ':=':
-          if (values.filter(item => (item === value)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case '::':
-          if (values.filter(item => caseInsensitiveMatch.test(item)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':':
-          if (values.filter(item => caseSensitiveMatch.test(item)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':<=':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item <= value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':>=':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item >= value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':<':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item < value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':>':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item > value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':==':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item === value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        default:
-          break;
+      if (values.filter(item => (rule.test(item))).length > 0) {
+        console.log('================== Match: ================== ', match);
+        returnValue[index] = proItem;
+        index++;
       }
     });
     return returnValue;

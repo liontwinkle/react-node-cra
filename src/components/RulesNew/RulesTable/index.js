@@ -19,30 +19,12 @@ function RulesTable({ rules, products, productViewType }) {
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value) => {
-    console.log('-------- RulesTable.getProducts --------');
-    console.log('Match:', match);
-    console.log('Field (Key):', field);
-    console.log('Value (Criteria):', value);
-
-    console.log('Check what value is:', RuleEngine); // fixme
     const rule = RuleEngine[match](value);
-    console.log(rule);
-    // console.log(productItem[field]);
-
-
     const returnValue = [];
     let index = 0;
 
     products.forEach((productItem) => {
-      // console.log('In forEach..');
-      console.log('rule.test(productItem[field])', rule.test(productItem[field]));
-
       if (rule.test(productItem[field])) {
-        console.log('================== Match: ================== ', match);
-        console.log('Field (Key):', field);
-        console.log('Value (Criteria):', value);
-        console.log('MATCH!', productItem[field]);
-        console.log('rule.test(productItem[field])', rule.test(productItem[field]));
         returnValue[index] = productItem;
         index++;
       }
@@ -51,102 +33,20 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const getAllmatched = (match, value) => {
-    console.log('-------- RulesTable.getAllmatched --------');
-    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
-    const caseSensitiveMatch = new RegExp(`${value}`);
-    let checkValue = [];
     const returnValue = [];
     let index = 0;
+    const rule = RuleEngine[match](value);
     products.forEach((proItem) => {
       const values = Object.values(proItem);
-      switch (match) {
-        case ':=':
-          if (values.filter(item => (item === value)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case '::':
-          if (values.filter(item => caseInsensitiveMatch.test(item)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':':
-          if (values.filter(item => caseSensitiveMatch.test(item)).length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':<=':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item <= value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':>=':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item >= value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':<':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item < value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':>':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item > value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        case ':==':
-          checkValue = values.filter((item) => {
-            if (typeof item === 'number') {
-              return item === value;
-            }
-            return false;
-          });
-          if (checkValue.length > 0) {
-            returnValue[index] = proItem;
-            index++;
-          }
-          break;
-        default:
-          break;
+      if (values.filter(item => (rule.test(item))).length > 0) {
+        returnValue[index] = proItem;
+        index++;
       }
     });
     return returnValue;
   };
 
   const filterProducts = (key) => {
-    console.log('-------- RulesTable.filterProducts --------');
     let filter = [];
     const field = rules[key].detail.key;
     const match = rules[key].match.key;
@@ -161,7 +61,6 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const handleToggle = key => () => {
-    console.log('-------- RulesTable.handleToggle --------');
     if (key !== 'close' && filterProducts(key) === 0) {
       enqueueSnackbar('No Products match this rule.', {
         variant: 'info',

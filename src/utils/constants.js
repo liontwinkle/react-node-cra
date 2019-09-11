@@ -126,26 +126,6 @@ export const match = [
     label: 'Literal(text)',
     key: '::',
   },
-  {
-    label: 'Lower or equals(number)',
-    key: ':<=',
-  },
-  {
-    label: 'Greater or equals(number)',
-    key: ':>=',
-  },
-  {
-    label: 'Lower(number)',
-    key: ':<',
-  },
-  {
-    label: 'Greater(number)',
-    key: ':>',
-  },
-  {
-    label: 'Equals(number)',
-    key: ':==',
-  },
 ];
 
 export const scope = [
