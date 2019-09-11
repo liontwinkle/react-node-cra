@@ -47,11 +47,7 @@ export const AddSets = (newSets, type) => {
   PRODUCTS_SET[type] = PRODUCTS_SET[type].union(newSets);
 };
 
-export const DiffSets = () => {
-  const diffIntoEx = PRODUCTS_SET.includes.difference(PRODUCTS_SET.excludes);
-  const diffExtoIn = PRODUCTS_SET.excludes.difference(PRODUCTS_SET.includes);
-  return diffExtoIn.union(diffIntoEx);
-};
+export const DiffSets = () => PRODUCTS_SET.includes.difference(PRODUCTS_SET.excludes);
 
 export const getData = () => PRODUCTS_SET;
 
