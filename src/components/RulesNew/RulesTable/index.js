@@ -61,7 +61,7 @@ function RulesTable({ rules, products, productViewType }) {
     } else {
       filterResult = getProducts(field, match, value);
     }
-    AddSets(filterResult);
+    AddSets(filterResult, 'union');
     const filter = Array.from(getData().union);
     setProducts(filter);
     return filter.length;

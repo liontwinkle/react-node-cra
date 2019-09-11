@@ -12,13 +12,19 @@ import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
 import {
-  RuleEngine, AddSets, getData, formatProductsData,
+  RuleEngine, AddSets, DiffSets, formatDifference,
 } from '../RuleEngine';
 
 
 import './style.scss';
+import PreviewGrid from './PreviewGrid';
 
-function RulesAction({ rules, newRules, products }) {
+function RulesAction({
+  rules,
+  newRules,
+  products,
+  productViewType,
+}) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState({
@@ -29,62 +35,73 @@ function RulesAction({ rules, newRules, products }) {
 
   const [previewProducts, setProducts] = useState([]);
 
-  const getProducts = (field, match, value) => {
-    console.log('-------- RulesTable.getProducts --------');
-    console.log('Match:', match);
-    console.log('Field (Key):', field);
-    console.log('Value (Criteria):', value);
-
+  const getProducts = (field, match, value, basis) => {
     const rule = RuleEngine[match](value);
-    const returnValue = [];
-    let index = 0;
+    const returnValue = {
+      includes: [],
+      excludes: [],
+    };
+    let includeIndex = 0;
+    let excludeIndex = 0;
 
     products.forEach((productItem) => {
       if (rule.test(productItem[field])) {
-        console.log('================== Match: ================== ', match);
-        console.log('Field (Key):', field);
-        console.log('Value (Criteria):', value);
-        console.log('MATCH!', productItem[field]);
-        console.log('rule.test(productItem[field])', rule.test(productItem[field]));
-        returnValue[index] = productItem;
-        index++;
+        if (basis === 'include') {
+          returnValue.includes[includeIndex] = productItem;
+          includeIndex++;
+        } else {
+          returnValue.excludes[excludeIndex] = productItem;
+          excludeIndex++;
+        }
       }
     });
     return returnValue;
   };
 
-  const getAllmatched = (match, value) => {
-    console.log('-------- RulesTable.getAllmatched --------');
-    const returnValue = [];
-    let index = 0;
+  const getAllmatched = (match, value, basis) => {
+    const returnValue = {
+      includes: [],
+      excludes: [],
+    };
+    let includeIndex = 0;
+    let excludeIndex = 0;
     const rule = RuleEngine[match](value);
+
+
     products.forEach((proItem) => {
       const values = Object.values(proItem);
       if (values.filter(item => (rule.test(item))).length > 0) {
-        console.log('================== Match: ================== ', match);
-        returnValue[index] = proItem;
-        index++;
+        if (basis === 'include') {
+          returnValue.includes[includeIndex] = proItem;
+          includeIndex++;
+        } else {
+          returnValue.excludes[excludeIndex] = proItem;
+          excludeIndex++;
+        }
       }
     });
     return returnValue;
   };
 
   const filterProducts = () => {
-    console.log('RulesAction.filterProducts');
-    formatProductsData();
+    formatDifference();
     let filterResult = new Set();
+
     rules.forEach((item) => {
       const field = item.detail;
       const { match } = item;
       const { value } = item;
+      const { basis } = item;
       if (field === '*') {
-        filterResult = getAllmatched(match, value);
+        filterResult = getAllmatched(match, value, basis);
       } else {
-        filterResult = getProducts(field, match, value);
+        filterResult = getProducts(field, match, value, basis);
       }
-      AddSets(filterResult); // fixme
+      AddSets(filterResult.includes, 'includes');
+      AddSets(filterResult.excludes, 'excludes');
     });
-    const filterProducts = Array.from(getData().union);
+
+    const filterProducts = Array.from(DiffSets());
     setProducts(filterProducts);
     return filterProducts.length;
   };
@@ -152,11 +169,21 @@ function RulesAction({ rules, newRules, products }) {
       )}
 
       {open.preview_products && (
-        <PreviewProducts
-          open={open.preview_products}
-          handleClose={handleToggle('preview_products')}
-          filterProducts={previewProducts}
-        />
+        (productViewType.key === 'grid')
+          ? (
+            <PreviewGrid
+              open={open.preview_products}
+              handleClose={handleToggle('preview_products')}
+              filterProducts={previewProducts}
+            />
+          )
+          : (
+            <PreviewProducts
+              open={open.preview_products}
+              handleClose={handleToggle('preview_products')}
+              filterProducts={previewProducts}
+            />
+          )
       )}
     </div>
   );
@@ -166,10 +193,13 @@ RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  productViewType: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({
   products: store.productsData.data.products,
+  productViewType: store.clientsData.productViewType,
+
 });
 
 export default connect(

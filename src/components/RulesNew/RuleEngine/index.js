@@ -9,7 +9,8 @@ const RULE_CACHE = {
 
 const PRODUCTS_SET = {
   union: new Set(),
-  difference: new Set(),
+  includes: new Set(),
+  excludes: new Set(),
 };
 // Memoize RegExp escaping text
 const ESCAPED_TEXT_CACHE = {};
@@ -21,20 +22,9 @@ const escapeText = (text) => {
 
 export const RuleEngine = {
   ':': (ruleValue, ruleType = ':') => {
-    console.log('Rule Value:', ruleValue);
-    console.log('Rule Type:', ruleType);
-
-    console.log('Escaped Text:', escapeText(ruleValue));
-    console.log('Escaped Text:', escapeText(ruleValue).code);
-    console.log(new RegExp(`${escapeText(ruleValue)}`, 'i').code);
-
-
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}`, 'i')
     );
-
-    console.log('RULE_CACHE[ruleType][ruleValue]', RULE_CACHE[ruleType][ruleValue]);
-
     return RULE_CACHE[ruleType][ruleValue];
   },
   '::': (ruleValue, ruleType = '::') => {
@@ -53,19 +43,23 @@ export const RuleEngine = {
   },
 };
 
-export const AddSets = (newSets) => {
-  PRODUCTS_SET.union = PRODUCTS_SET.union.union(newSets);
-  console.log('New Union>>>', PRODUCTS_SET);// fixme
+export const AddSets = (newSets, type) => {
+  PRODUCTS_SET[type] = PRODUCTS_SET[type].union(newSets);
 };
 
-export const DiffSets = (newSets) => {
-  PRODUCTS_SET.difference = PRODUCTS_SET.difference.intersection(newSets);
-  console.log('New Intersection>>>', PRODUCTS_SET);// fixme
+export const DiffSets = () => {
+  const diffIntoEx = PRODUCTS_SET.includes.difference(PRODUCTS_SET.excludes);
+  const diffExtoIn = PRODUCTS_SET.excludes.difference(PRODUCTS_SET.includes);
+  return diffExtoIn.union(diffIntoEx);
 };
 
 export const getData = () => PRODUCTS_SET;
 
 export const formatProductsData = () => {
   PRODUCTS_SET.union.clear();
-  PRODUCTS_SET.difference.clear();
+};
+
+export const formatDifference = () => {
+  PRODUCTS_SET.includes.clear();
+  PRODUCTS_SET.excludes.clear();
 };

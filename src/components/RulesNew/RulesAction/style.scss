@@ -40,11 +40,12 @@
 
   #hot-app {
     width: fit-content;
+    height: 100%;
     min-width: 100%;
     .wtHolder {
       position: relative;
       width: 100% !important;
-      height: fit-content !important;
+      height: fit-content!important;
       overflow: unset !important;
     }
   }
@@ -71,5 +72,7 @@
 
 .preview-image {
   width: 1330px;
-  height: 600px;
+  height: fit-content;
+  overflow: unset;
+  overflow-y: unset !important;
 }
