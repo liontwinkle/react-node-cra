@@ -17,6 +17,13 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import { getObjectFromArray } from 'utils';
 
+export const clientType = [
+  { key: 'virtual', label: 'Virtual' },
+  { key: 'native', label: 'Native' },
+  { key: 'products', label: 'Products' },
+  { key: 'attributes', label: 'Attributes' },
+];
+
 export const ruleStringItems = [
   { key: 'less', label: 'less' },
   { key: 'less_or_equal', label: 'less or equal' },

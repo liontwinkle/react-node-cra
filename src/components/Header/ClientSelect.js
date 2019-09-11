@@ -16,15 +16,8 @@ import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
 import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
-import { productViewTypes } from 'utils/constants';
+import { productViewTypes, clientType } from 'utils/constants';
 import { confirmMessage } from 'utils';
-
-const types = [
-  { key: 'virtual', label: 'Virtual' },
-  { key: 'native', label: 'Native' },
-  { key: 'products', label: 'Products' },
-  { key: 'attributes', label: 'Attributes' },
-];
 
 function ClientSelect({
   clients,
@@ -61,10 +54,8 @@ function ClientSelect({
     if (type.key !== 'products') {
       fetchCategories(client.id, type.key);
       fetchPropertyField(client.id, type.key);
-      fetchProductsField();
-    } else {
-      fetchProductsField();
     }
+    fetchProductsField();
   };
 
   const handleChangeType = (type) => {
@@ -103,7 +94,7 @@ function ClientSelect({
             className="mr-3"
             placeholder="Select Type"
             value={type}
-            items={types}
+            items={clientType}
             onChange={handleChangeType}
           />
           {

@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Grid } from 'react-virtualized';
 import { withSnackbar } from 'notistack';
 import $ from 'jquery';
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
-import { Grid } from 'react-virtualized';
 import DetailView from './detail_view';
 
 import './style.scss';
@@ -53,7 +53,6 @@ class ProductGridView extends Component {
     const data = [];
     getData.forEach((item, key) => {
       if (key % MAX_LENGTH_NUM === MAX_LENGTH_NUM - 1) {
-        temp.push(item);
         data.push(temp);
         temp = [];
       } else {

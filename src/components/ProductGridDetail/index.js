@@ -22,7 +22,6 @@ function ProductsGridDetail({
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
 
-
   const handleShow = (index, value) => {
     const newFieldData = fieldData;
     headers.forEach((item, key) => {
@@ -68,14 +67,14 @@ function ProductsGridDetail({
         <CustomSection title="Show Fields Setting on Hover" key="show_setting">
           {
             !isFetchingList
-            && (
-              <ShowFields
-                type="grid"
-                fields={headers}
-                chkValue={fieldData}
-                onChange={handleShow}
-              />
-            )
+              ? (
+                <ShowFields
+                  type="grid"
+                  fields={headers}
+                  chkValue={fieldData}
+                  onChange={handleShow}
+                />
+              ) : null
           }
         </CustomSection>
       </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import CustomCheck from 'components/elements/CustomCheck/index';
 
-import '../../../style.scss';
+import './style.scss';
 
 function ShowFields({
   fields,
@@ -15,6 +15,7 @@ function ShowFields({
   const unit = Math.ceil(parseInt(length / 2, 10));
   const fields1 = fields.slice(0, unit - 1);
   const fields2 = fields.slice(unit, length - 1);
+
   const handleChange = value => (e) => {
     const index = fields.indexOf(value);
     onChange(index, e.target.checked);

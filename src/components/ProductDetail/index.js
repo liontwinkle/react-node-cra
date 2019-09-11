@@ -4,18 +4,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useSnackbar } from 'notistack';
+import { Tooltip } from 'react-tippy';
+import SaveIcon from '@material-ui/icons/Save';
 
 import { confirmMessage } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
-import { CustomInput, CustomSection } from 'components/elements';
-import { Tooltip } from 'react-tippy';
-import SaveIcon from '@material-ui/icons/Save';
+import { CustomInput, CustomSection, IconButton } from 'components/elements';
 import DisplaySetting from './DisplaySetting';
 import ExportDataSection from './ExportDataSection';
 import ShowFields from './ShowFields';
-
-import IconButton from '../elements/IconButton';
 
 import './style.scss';
 
@@ -40,6 +38,7 @@ function ProductsDataDetail({
     strType: false,
   });
   const [imageKeySet, setImageKeySet] = useState(imageKey);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const tableObj = tableRef.current;
@@ -150,7 +149,6 @@ function ProductsDataDetail({
       });
       updatedData.push(subData);
     });
-
     return updatedData;
   };
 
