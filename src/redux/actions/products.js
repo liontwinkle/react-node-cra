@@ -34,7 +34,6 @@ export const updateProducts = updateData => (dispatch, getState) => {
     return Promise.reject();
   }
 
-  console.log(updateData);// fixme
   dispatch({
     type: types.PRODUCTS_UPDATE_REQUEST,
   });
