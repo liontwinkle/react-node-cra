@@ -20,75 +20,17 @@ function RulesTable({ rules, products, productViewType }) {
   const [previewProducts, setProducts] = useState([]);
 
   const getProducts = (field, match, value) => {
-    const caseInsensitiveMatch = new RegExp(`${value}`, 'i');
-    const caseSensitiveMatch = new RegExp(`${value}`);
     const returnValue = [];
     let index = 0;
-
-    console.log('viewName>>>>', View.type({ name: 'name' }));// fixme
-
     products.forEach((productItem) => {
-      switch (match) {
-        case ':=':
-          if (productItem[field] === value) {
-            returnValue[index] = productItem;
-            index++;
-          }
-          break;
-        case '::':
-          if (caseInsensitiveMatch.test(productItem[field])) {
-            returnValue[index] = productItem;
-            index++;
-          }
-          break;
-        case ':':
-          if (caseSensitiveMatch.test(productItem[field])) {
-            returnValue[index] = productItem;
-            index++;
-          }
-          break;
-        case ':<=':
-          if (typeof productItem[field] === 'number') {
-            if (productItem[field] <= value) {
-              returnValue[index] = productItem;
-              index++;
-            }
-          }
-          break;
-        case ':>=':
-          if (typeof productItem[field] === 'number') {
-            if (productItem[field] >= value) {
-              returnValue[index] = productItem;
-              index++;
-            }
-          }
-          break;
-        case ':<':
-          if (typeof productItem[field] === 'number') {
-            if (productItem[field] < value) {
-              returnValue[index] = productItem;
-              index++;
-            }
-          }
-          break;
-        case ':>':
-          if (typeof productItem[field] === 'number') {
-            if (productItem[field] > value) {
-              returnValue[index] = productItem;
-              index++;
-            }
-          }
-          break;
-        case ':==':
-          if (typeof productItem[field] === 'number') {
-            if (productItem[field] === value) {
-              returnValue[index] = productItem;
-              index++;
-            }
-          }
-          break;
-        default:
-          break;
+      const ruleTest = View.type({
+        value: productItem[field],
+        match,
+        criteria: value,
+      });
+      if (ruleTest) {
+        returnValue[index] = productItem;
+        index++;
       }
     });
     return returnValue;
