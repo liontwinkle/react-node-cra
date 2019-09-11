@@ -11,7 +11,9 @@ import { IconButton } from 'components/elements';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
-import RuleEngine from '../RuleEngine';
+import {
+  RuleEngine, AddSets, getData, formatProductsData,
+} from '../RuleEngine';
 
 
 import './style.scss';
@@ -69,19 +71,21 @@ function RulesAction({ rules, newRules, products }) {
 
   const filterProducts = () => {
     console.log('RulesAction.filterProducts');
-    let filterProducts = [];
+    formatProductsData();
+    let filterResult = new Set();
     rules.forEach((item) => {
       const field = item.detail;
       const { match } = item;
       const { value } = item;
       if (field === '*') {
-        filterProducts = [...filterProducts, ...getAllmatched(match, value)];
+        filterResult = getAllmatched(match, value);
       } else {
-        filterProducts = [...filterProducts, ...getProducts(field, match, value)];
+        filterResult = getProducts(field, match, value);
       }
+      AddSets(filterResult); // fixme
     });
-    setProducts(filterProducts.filter((e, i) => filterProducts.indexOf(e) >= i));
-
+    const filterProducts = Array.from(getData().union);
+    setProducts(filterProducts);
     return filterProducts.length;
   };
 

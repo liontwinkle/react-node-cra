@@ -8,7 +8,9 @@ import SaveIcon from '@material-ui/icons/Filter';
 import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
-import RuleEngine from '../RuleEngine';
+import {
+  AddSets, formatProductsData, getData, RuleEngine,
+} from '../RuleEngine';
 
 import './style.scss';
 
@@ -47,16 +49,21 @@ function RulesTable({ rules, products, productViewType }) {
   };
 
   const filterProducts = (key) => {
-    let filter = [];
     const field = rules[key].detail.key;
     const match = rules[key].match.key;
     const { value } = rules[key];
+    let filterResult = new Set();
+
+    formatProductsData();
+
     if (field === '*') {
-      filter = [...filter, ...getAllmatched(match, value)];
+      filterResult = getAllmatched(match, value);
     } else {
-      filter = [...filter, ...getProducts(field, match, value)];
+      filterResult = getProducts(field, match, value);
     }
-    setProducts(filter.filter((e, i) => filter.indexOf(e) >= i));
+    AddSets(filterResult);
+    const filter = Array.from(getData().union);
+    setProducts(filter);
     return filter.length;
   };
 

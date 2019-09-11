@@ -1,5 +1,4 @@
 /* eslint-disable no-extend-native,no-restricted-syntax,prefer-rest-params */
-
 /**
  * Adding methods to native Set
  */

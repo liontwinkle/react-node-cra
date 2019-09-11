@@ -7,6 +7,10 @@ const RULE_CACHE = {
   ':=': {},
 };
 
+const PRODUCTS_SET = {
+  union: new Set(),
+  difference: new Set(),
+};
 // Memoize RegExp escaping text
 const ESCAPED_TEXT_CACHE = {};
 
@@ -15,7 +19,7 @@ const escapeText = (text) => {
   return ESCAPED_TEXT_CACHE[text];
 };
 
-const RuleEngine = {
+export const RuleEngine = {
   ':': (ruleValue, ruleType = ':') => {
     console.log('Rule Value:', ruleValue);
     console.log('Rule Type:', ruleType);
@@ -49,4 +53,19 @@ const RuleEngine = {
   },
 };
 
-export default RuleEngine;
+export const AddSets = (newSets) => {
+  PRODUCTS_SET.union = PRODUCTS_SET.union.union(newSets);
+  console.log('New Union>>>', PRODUCTS_SET);// fixme
+};
+
+export const DiffSets = (newSets) => {
+  PRODUCTS_SET.difference = PRODUCTS_SET.difference.intersection(newSets);
+  console.log('New Intersection>>>', PRODUCTS_SET);// fixme
+};
+
+export const getData = () => PRODUCTS_SET;
+
+export const formatProductsData = () => {
+  PRODUCTS_SET.union.clear();
+  PRODUCTS_SET.difference.clear();
+};
