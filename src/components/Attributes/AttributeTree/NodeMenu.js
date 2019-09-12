@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
+import { addNodeUnderParent, removeNodeAtPath } from 'react-sortable-tree';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { useSnackbar } from 'notistack';
 
-import { confirmMessage, getNodeKey } from 'utils';
-import { createCategory, removeCategory } from 'redux/actions/categories';
+import { getNodeKey } from 'utils';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 
 function NodeMenu({
@@ -16,17 +12,11 @@ function NodeMenu({
   node,
   path,
   setTreeData,
-  createCategory,
-  removeCategory,
-  editable,
 }) {
-  const { enqueueSnackbar } = useSnackbar();
-
   const handleMenuClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
   };
-
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,63 +28,30 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    createCategory({
-      name: 'New Category',
-      parentId: node.item.id,
-    })
-      .then((category) => {
-        confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
-        setTreeData(
-          addNodeUnderParent({
-            treeData,
-            parentKey: path[path.length - 1],
-            expandParent: true,
-            getNodeKey,
-            newNode: {
-              title: category.name,
-              editable: false,
-              item: category,
-            },
-          }).treeData,
-        );
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
-      });
-    handleClose();
-  };
-
-  const handleEdit = () => {
     setTreeData(
-      changeNodeAtPath({
+      addNodeUnderParent({
         treeData,
-        path,
+        parentKey: path[path.length - 1],
+        expandParent: true,
         getNodeKey,
         newNode: {
-          ...node,
-          editable: true,
+          title: 'New',
+          editable: false,
+          item: null,
         },
-      }),
+      }).treeData,
     );
     handleClose();
   };
 
   const deleteItem = () => {
-    const removeId = node.item.id;
-    removeCategory(removeId)
-      .then(() => {
-        confirmMessage(enqueueSnackbar, 'The category has been deleted successfully.', 'success');
-        setTreeData(
-          removeNodeAtPath({
-            treeData,
-            path,
-            getNodeKey,
-          }),
-        );
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in deleting category.', 'error');
-      });
+    setTreeData(
+      removeNodeAtPath({
+        treeData,
+        path,
+        getNodeKey,
+      }),
+    );
   };
 
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
@@ -151,15 +108,14 @@ function NodeMenu({
         }}
       >
         <div className="d-flex flex-column">
-          <button className="mg-button transparent" onClick={handleAdd}>
-            Add Child
-          </button>
-
-          {editable && (
-            <button className="mg-button transparent" onClick={handleEdit}>
-              Edit Category
-            </button>
-          )}
+          {
+            (path.length <= 1)
+            && (
+              <button className="mg-button transparent" onClick={handleAdd}>
+              Add Child
+              </button>
+            )
+          }
 
           <button className="mg-button transparent" onClick={handleRemove}>
             Delete Category
@@ -171,7 +127,7 @@ function NodeMenu({
         <CustomConfirmDlg
           open={deleteDlgOpen}
           subCategoryNumber={subCategoryNumber}
-          msg="Are you sure you want to delete this category?"
+          msg="Are you sure you want to delete this attribute?"
           handleDelete={handleDelete}
           handleClose={handleDeleteDlgClose}
         />
@@ -185,17 +141,6 @@ NodeMenu.propTypes = {
   node: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
-  createCategory: PropTypes.func.isRequired,
-  removeCategory: PropTypes.func.isRequired,
-  editable: PropTypes.bool.isRequired,
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  createCategory,
-  removeCategory,
-}, dispatch);
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(NodeMenu);
+export default NodeMenu;
