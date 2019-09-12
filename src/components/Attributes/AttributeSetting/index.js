@@ -1,8 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+
 import {
   CustomInput,
   CustomSection,
-  CustomSelectWithLabel, IconButton,
+  CustomSelectWithLabel,
+  IconButton,
 } from 'components/elements';
 import './style.scss';
 import { Tooltip } from 'react-tippy';
@@ -24,17 +27,17 @@ const attrKey = [
   },
 ];
 
-// const attrGroup = [
-//   { label: 'Color', key: 'color' },
-//   { label: 'Size', key: 'size' },
-//   { label: 'Type', key: 'type' },
-// ];
-//
+const attrGroup = [
+  { label: 'Color', key: 'color' },
+  { label: 'Size', key: 'size' },
+  { label: 'Type', key: 'type' },
+];
 
 
 class AttributeSetting extends Component {
   state = {
     selectedKey: attrKey[0],
+    selectedGroup: attrGroup[0],
     categoryList: [
       { label: 'VitaminA', key: 'vitamin_a' },
     ],
@@ -45,17 +48,16 @@ class AttributeSetting extends Component {
     ],
     newCategory: null,
     keyTitle: '',
+    groupTitle: '',
   };
 
   componentDidMount() {
     const newCategories = [];
-    console.log('categories>>', this.state.categories);
     this.state.categories.forEach((item) => {
       if (this.state.categoryList.filter(listItem => (listItem.key === item.key)).length === 0) {
         newCategories.push(item);
       }
     });
-    console.log('new categories>>', newCategories);
     this.setState({
       categories: newCategories,
     });
@@ -82,7 +84,10 @@ class AttributeSetting extends Component {
     } else {
       this.setState((prevState) => {
         const currentState = prevState;
+        const tempCategories = [...currentState.categories, currentState.categoryList[type]];
+        const changeCategories = tempCategories.filter(item => (item !== value));
         currentState.categoryList[type] = value;
+        currentState.categories = changeCategories;
         return {
           ...currentState,
         };
@@ -119,31 +124,65 @@ class AttributeSetting extends Component {
   render() {
     const {
       selectedKey,
+      selectedGroup,
       keyTitle,
+      groupTitle,
       categoryList,
       newCategory,
       categories,
     } = this.state;
+
+    const {
+      groupFg,
+    } = this.props;
     return (
       <div className="mg-attr-setting-container d-flex">
         <CustomSection title="Setting Attribute" key="setting_attribute">
-          <div className="mg-setting-section">
-            <CustomSelectWithLabel
-              label="Key"
-              inline
-              value={selectedKey}
-              items={attrKey || []}
-              onChange={this.changeSelect('selectedKey')}
-              key={attrKey.key}
-            />
-          </div>
-          <CustomInput
-            label="Title"
-            inline
-            value={keyTitle}
-            onChange={this.changeInput('keyTitle')}
-            type="text"
-          />
+          {
+            groupFg
+              ? (
+                <Fragment>
+                  <div className="mg-setting-section">
+                    <CustomSelectWithLabel
+                      label="Key"
+                      inline
+                      value={selectedKey}
+                      items={attrKey || []}
+                      onChange={this.changeSelect('selectedKey')}
+                      key={attrKey.key}
+                    />
+                  </div>
+                  <CustomInput
+                    label="Title"
+                    inline
+                    value={keyTitle}
+                    onChange={this.changeInput('keyTitle')}
+                    type="text"
+                  />
+                </Fragment>
+              )
+              : (
+                <Fragment>
+                  <div className="mg-setting-section">
+                    <CustomSelectWithLabel
+                      label="Group"
+                      inline
+                      value={selectedGroup}
+                      items={attrGroup || []}
+                      onChange={this.changeSelect('selectedGroup')}
+                      key={attrGroup.key}
+                    />
+                  </div>
+                  <CustomInput
+                    label="Title"
+                    inline
+                    value={groupTitle}
+                    onChange={this.changeInput('keyTitle')}
+                    type="text"
+                  />
+                </Fragment>
+              )
+          }
         </CustomSection>
         <CustomSection title="Associated Category" key="associated_category">
           {
@@ -193,4 +232,7 @@ class AttributeSetting extends Component {
   }
 }
 
+AttributeSetting.propTypes = {
+  groupFg: PropTypes.bool.isRequired,
+};
 export default AttributeSetting;

@@ -25,7 +25,7 @@ function AttributeContent() {
       />
 
       <div className="attribute-content">
-        {tab === 'setting' && <AttributeSetting />}
+        {tab === 'setting' && <AttributeSetting groupFg={false} />}
         {tab === 'preview' && <Properties />}
       </div>
     </div>
