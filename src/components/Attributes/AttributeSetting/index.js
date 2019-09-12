@@ -1,66 +1,60 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import MaterialTable from 'material-table';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-
-import { convertDateFormat } from 'utils';
-import { tableIcons } from 'utils/constants';
-
+import React, { Component } from 'react';
+import {
+  CustomSection,
+  CustomSelectWithLabel,
+} from 'components/elements';
 import './style.scss';
 
-function AttributeSetting({ categories, category }) {
-  const parentId = category ? category.id : '';
-  const childrenCategories = categories.filter(c => c.parentId === parentId);
+const attrKey = [
+  { label: 'Color', key: 'color' },
+  { label: 'Size', key: 'size' },
+  { label: 'Type', key: 'type' },
+];
 
-  const tableData = {
-    columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Created Date', field: 'createdAt' },
-      { title: 'Updated Date', field: 'updatedAt' },
-    ],
-    data: childrenCategories.map(c => ({
-      name: c.name,
-      createdAt: convertDateFormat(c.createdAt),
-      updatedAt: convertDateFormat(c.updatedAt),
-    })),
+// const attrGroup = [
+//   { label: 'Color', key: 'color' },
+//   { label: 'Size', key: 'size' },
+//   { label: 'Type', key: 'type' },
+// ];
+//
+// const categories = [
+//   { label: 'VitaminA', key: 'vitamin_a' },
+//   { label: 'VitaminB', key: 'vitamin_b' },
+//   { label: 'VitaminC', key: 'vitamin_c' },
+// ];
+
+class AttributeSetting extends Component {
+  state = {
+    selectedKey: attrKey[0],
   };
 
-  return (
-    <div className="mg-detail-table">
-      <PerfectScrollbar
-        options={{
-          minScrollbarLength: 50,
-          suppressScrollX: true,
-        }}
-      >
-        <MaterialTable
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          options={{
-            actionsColumnIndex: -1,
-            paging: false,
-            toolbar: false,
-          }}
-        />
-      </PerfectScrollbar>
-    </div>
-  );
+  changeSelect = type => (value) => {
+    this.setState({
+      [type]: value,
+    });
+  };
+
+  render() {
+    const {
+      selectedKey,
+    } = this.state;
+    return (
+      <div className="mg-attr-setting-container d-flex">
+        <CustomSection title="Setting Attribute" key="setting_attribute">
+          <div className="mg-select-section">
+            <CustomSelectWithLabel
+              label={attrKey.label}
+              inline
+              value={selectedKey}
+              items={attrKey || []}
+              onChange={this.changeSelect('selectedKey')}
+              key={attrKey.key}
+            />
+          </div>
+        </CustomSection>
+      </div>
+    );
+  }
 }
 
-AttributeSetting.propTypes = {
-  categories: PropTypes.array.isRequired,
-  category: PropTypes.object,
-};
-
-AttributeSetting.defaultProps = {
-  category: null,
-};
-
-const mapStateToProps = store => ({
-  categories: store.categoriesData.categories,
-  category: store.categoriesData.category,
-});
-
-export default connect(mapStateToProps)(AttributeSetting);
+export default AttributeSetting;

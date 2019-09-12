@@ -1,28 +1,7 @@
-.mg-detail-table {
-  height: 100%;
+@import "scss/mixin.scss";
 
-  .MuiPaper-root {
-    box-shadow: none;
-
-    .MuiToolbar-root {
-      padding: 0;
-    }
-
-    .MuiTableCell-head {
-      font-size: 1rem;
-      color: #1CA1C1;
-    }
-
-    .MuiTableCell-root {
-      &:not(:first-child) {
-        border-left: 1px solid #ddd;
-      }
-    }
-
-    .MuiTableFooter-root {
-      .MuiTableCell-root {
-        border-bottom: 0;
-      }
-    }
-  }
+.mg-attr-setting-container {
+  @include full_width_height;
+  margin: 0;
+  white-space: nowrap;
 }
