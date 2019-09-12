@@ -30,33 +30,35 @@ const attrKey = [
 //   { label: 'Type', key: 'type' },
 // ];
 //
-const categories = [
-  {
-    label: 'VitaminA',
-    key: 'vitamin_a',
-  },
-  {
-    label: 'VitaminB',
-    key: 'vitamin_b',
-  },
-  {
-    label: 'VitaminC',
-    key: 'vitamin_c',
-  },
-];
+
 
 class AttributeSetting extends Component {
   state = {
     selectedKey: attrKey[0],
     categoryList: [
-      {
-        label: 'VitaminA',
-        key: 'vitamin_a',
-      },
+      { label: 'VitaminA', key: 'vitamin_a' },
     ],
-    newCategory: {},
+    categories: [
+      { label: 'VitaminA', key: 'vitamin_a' },
+      { label: 'VitaminB', key: 'vitamin_b' },
+      { label: 'VitaminC', key: 'vitamin_c' },
+    ],
+    newCategory: null,
     keyTitle: '',
   };
+
+  componentDidMount() {
+    const newCategories = [];
+    console.log('categories>>', this.state.categories);
+    this.state.categories.forEach((item) => {
+      if (this.state.categoryList.filter(listItem => (listItem !== item)).length === 0) {
+        newCategories.push(item);
+      }
+    });
+    this.setState({
+      categories: newCategories,
+    });
+  }
 
   changeSelect = type => (value) => {
     this.setState({
@@ -87,12 +89,39 @@ class AttributeSetting extends Component {
     }
   };
 
+  addCategory = () => {
+    if (this.state.newCategory) {
+      this.setState(prevState => (
+        {
+          categoryList: [...prevState.categoryList, prevState.newCategory],
+          categories: prevState.categories.filter(item => (item !== prevState.newCategory)),
+          newCategory: null,
+        }
+      ));
+    } else {
+      console.log('#DEBUG: Create New Catogry.');// fixme
+    }
+  };
+
+  deleteCategory = (key) => {
+    console.log('DEBUG: ', key);// fixme
+    console.log('DEBUG ARRAY: ###', this.state.categoryList);// fixme
+    this.setState(prevState => (
+      {
+        categoryList: prevState.categoryList.filter((item, keyItem) => (keyItem !== key)),
+        categories: [...prevState.categories, prevState.categoryList[key]],
+        newCategory: null,
+      }
+    ));
+  };
+
   render() {
     const {
       selectedKey,
       keyTitle,
       categoryList,
       newCategory,
+      categories,
     } = this.state;
     return (
       <div className="mg-attr-setting-container d-flex">
@@ -131,7 +160,7 @@ class AttributeSetting extends Component {
                   position="bottom"
                   arrow
                 >
-                  <IconButton>
+                  <IconButton onClick={() => this.deleteCategory(parseInt(key, 10))}>
                     <DeleteIcon style={{ fontSize: 20 }} />
                   </IconButton>
                 </Tooltip>
@@ -152,7 +181,7 @@ class AttributeSetting extends Component {
               position="bottom"
               arrow
             >
-              <IconButton>
+              <IconButton onClick={this.addCategory}>
                 <AddIcon style={{ fontSize: 20 }} />
               </IconButton>
             </Tooltip>
