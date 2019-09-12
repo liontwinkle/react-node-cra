@@ -2,6 +2,30 @@
 
 .mg-attr-setting-container {
   @include full_width_height;
+  flex-direction: column;
   margin: 0;
   white-space: nowrap;
+
+  .mg-section-control {
+    width: 100%;
+
+    .mg-input-control {
+      margin-top: 2%;
+      width: 50%;
+    }
+
+    .mg-setting-section {
+      @include full_width_height;
+      display: flex;
+      margin-top: 2%;
+
+      .icon-button {
+        margin-left: 10px;
+      }
+
+      .mg-select-container {
+        width: 50%;
+      }
+    }
+  }
 }
