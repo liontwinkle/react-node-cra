@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import DetailTable from 'components/DetailTable';
+import AttributeSetting from 'components/Attributes/AttributeSetting';
 import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';
 
@@ -25,7 +25,7 @@ function AttributeContent() {
       />
 
       <div className="attribute-content">
-        {tab === 'setting' && <DetailTable />}
+        {tab === 'setting' && <AttributeSetting />}
         {tab === 'preview' && <Properties />}
       </div>
     </div>
