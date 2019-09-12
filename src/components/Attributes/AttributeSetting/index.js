@@ -51,10 +51,11 @@ class AttributeSetting extends Component {
     const newCategories = [];
     console.log('categories>>', this.state.categories);
     this.state.categories.forEach((item) => {
-      if (this.state.categoryList.filter(listItem => (listItem !== item)).length === 0) {
+      if (this.state.categoryList.filter(listItem => (listItem.key === item.key)).length === 0) {
         newCategories.push(item);
       }
     });
+    console.log('new categories>>', newCategories);
     this.setState({
       categories: newCategories,
     });
