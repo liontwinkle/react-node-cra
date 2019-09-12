@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Container, Section, Bar } from 'react-simple-resizer';
 
 import { VirtualTree, VirtualDetail } from './Virtual';
+import { AttributeTree, AttributeContent } from './Attributes';
 import { ProductsTable, ProductsDetail } from './Products';
 
 import './style.scss';
@@ -21,6 +22,7 @@ function Home({
       <Container>
         <Section minSize={(value === 'products') ? '70%' : '35%'} defaultSize={(value === 'products') ? 700 : 350}>
           {(value === 'virtual' || value === 'native') && <VirtualTree />}
+          {(value === 'attributes') && <AttributeTree />}
           {(value === 'products') && <ProductsTable ref={tableRef} productViewType={productViewType} />}
         </Section>
 
@@ -30,6 +32,9 @@ function Home({
           <Fragment>
             {value === 'products' && (
               <ProductsDetail ref={tableRef} productViewType={productViewType} />
+            )}
+            {value === 'attributes' && (
+              <AttributeContent />
             )}
             {category && (value === 'virtual' || value === 'native') && (
               <VirtualDetail />
