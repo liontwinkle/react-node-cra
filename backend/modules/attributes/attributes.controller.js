@@ -1,8 +1,8 @@
 const {
   handleError,
   responseWithResult,
-  // handleEntityNotFound,
-  // saveUpdates,
+  handleEntityNotFound,
+  saveUpdates,
   // removeEntity,
   // removeChildren
 } = require('../../utils');
@@ -37,18 +37,18 @@ exports.create = (req, res) => {
 // };
 
 // Updates an existing Category in the DB
-// exports.update = (req, res) => {
-//   if (req.body._id) {
-//     delete req.body._id;
-//   }
-//
-//   req.category
-//     .findByIdAsync(req.params.categoryId)
-//     .then(handleEntityNotFound(res))
-//     .then(saveUpdates(req.body))
-//     .then(responseWithResult(res))
-//     .catch(handleError(res));
-// };
+exports.update = (req, res) => {
+  if (req.body._id) {
+    delete req.body._id;
+  }
+
+  req.attributes
+    .findByIdAsync(req.params.attributeId)
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+};
 
 // Deletes a Category from the DB
 // exports.remove = (req, res) => {

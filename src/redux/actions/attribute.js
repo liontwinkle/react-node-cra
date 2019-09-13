@@ -58,35 +58,35 @@ export const createAttribute = attribute => (dispatch, getState) => {
     });
 };
 
-// export const updateCategory = (id, updatedData) => (dispatch, getState) => {
-//   if (getState().categoriesData.isUpdating) {
-//     return;
-//   }
-//
-//   const { client, type } = getState().clientsData;
-//
-//   dispatch({
-//     type: types.CATEGORY_UPDATE_REQUEST,
-//   });
-//
-//   return categoryService.update(client.id, type.key, id, updatedData)
-//     .then((data) => {
-//       dispatch({
-//         type: types.CATEGORY_UPDATE_SUCCESS,
-//         payload: { data },
-//       });
-//
-//       return 'success';
-//     })
-//     .catch((error) => {
-//       dispatch({
-//         type: types.CATEGORY_UPDATE_FAIL,
-//         payload: { error },
-//       });
-//
-//       throw error;
-//     });
-// };
+export const updateAttribute = (id, updatedData) => (dispatch, getState) => {
+  if (getState().attributesData.isUpdating) {
+    return;
+  }
+
+  const { client, type } = getState().clientsData;
+
+  dispatch({
+    type: types.ATTRIBUTE_UPDATE_REQUEST,
+  });
+
+  return attributesService.update(client.id, type.key, id, updatedData)
+    .then((data) => {
+      dispatch({
+        type: types.ATTRIBUTE_UPDATE_SUCCESS,
+        payload: { data },
+      });
+
+      return 'success';
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.ATTRIBUTE_UPDATE_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};
 
 // export const removeCategory = id => (dispatch, getState) => {
 //   if (getState().categoriesData.isDeleting) {
@@ -125,9 +125,9 @@ export const createAttribute = attribute => (dispatch, getState) => {
 //   });
 // };
 
-// export const updateTreeData = treeData => (dispatch) => {
-//   dispatch({
-//     type: types.TREE_SET,
-//     payload: treeData,
-//   });
-// };
+export const updateNodeData = nodeData => (dispatch) => {
+  dispatch({
+    type: types.ATTRIBUTE_NODE_SET,
+    payload: nodeData,
+  });
+};

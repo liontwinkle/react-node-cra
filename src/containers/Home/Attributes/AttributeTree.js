@@ -13,12 +13,13 @@ import AttributeNode from 'components/Attributes/AttributeTree';
 import { IconButton } from 'components/elements';
 
 import { confirmMessage } from 'utils';
-import { createAttribute } from 'redux/actions/attribute';
+import { createAttribute, updateNodeData } from 'redux/actions/attribute';
 
 function AttributeTree({
   createAttribute,
   attributes,
   nodeData,
+  updateNodeData,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -31,6 +32,10 @@ function AttributeTree({
         confirmMessage(enqueueSnackbar, 'Error in adding group.', 'error');
       });
     console.log('#comment : click to create new group.'); // fixme
+  };
+
+  const setNodeData = (data) => {
+    updateNodeData(data);
   };
 
   return (
@@ -60,7 +65,7 @@ function AttributeTree({
       <div className="tree-content">
         {
           attributes && attributes.length > 0 && (
-            <AttributeNode nodeData={nodeData} />
+            <AttributeNode nodeData={nodeData} setNodeData={setNodeData} />
           )
         }
       </div>
@@ -72,6 +77,7 @@ AttributeTree.propTypes = {
   attributes: PropTypes.array.isRequired,
   nodeData: PropTypes.array.isRequired,
   createAttribute: PropTypes.func.isRequired,
+  updateNodeData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -81,6 +87,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createAttribute,
+  updateNodeData,
 }, dispatch);
 
 export default connect(

@@ -12,10 +12,10 @@ const create = (clientId, type, category) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
-// const update = (clientId, type, id, updatedData) => httpService
-//   .put(`${getAttributesRoute(clientId, type)}/${id}`, updatedData)
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+const update = (clientId, type, id, updatedData) => httpService
+  .put(`${getAttributesRoute(clientId, type)}/${id}`, updatedData)
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 
 // const remove = (clientId, type, id) => httpService
 //   .remove(`${getAttributesRoute(clientId, type)}/${id}`)
@@ -25,6 +25,6 @@ const create = (clientId, type, category) => httpService
 export default {
   fetch,
   create,
-  // update,
+  update,
   // remove,
 };

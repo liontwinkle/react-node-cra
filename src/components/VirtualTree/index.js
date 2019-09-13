@@ -95,6 +95,9 @@ function VirtualSortableTree(props) {
   };
 
   const handleDoubleClick = (node, path) => () => {
+    console.log(node);// fixme
+    console.log(path);// fixme
+    console.log(treeData);// fixme
     setTreeData(
       changeNodeAtPath({
         treeData,

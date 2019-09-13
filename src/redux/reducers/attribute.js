@@ -149,11 +149,12 @@ export default (state = INITIAL_STATE, action) => {
       //     category: action.payload.category,
       //   };
       //
-      // case types.TREE_SET:
-      //   return {
-      //     ...state,
-      //     trees: action.payload,
-      //   };
+    case types.ATTRIBUTE_NODE_SET:
+      console.log(action.payload);// fixme
+      return {
+        ...state,
+        nodes: action.payload,
+      };
 
     default:
       return state;

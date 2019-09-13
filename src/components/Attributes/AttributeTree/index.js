@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
+import { useSnackbar } from 'notistack';
+import _find from 'lodash/find';
 
-import { getNodeKey } from 'utils/';
+import { confirmMessage, getNodeKey } from 'utils/';
+import { updateAttribute } from 'redux/actions/attribute';
 import NodeMenu from './NodeMenu';
 
 import './style.scss';
 
-function AttributeNode({ nodeData }) {
-  const [treeData, setTreeData] = useState(nodeData);
-
+function AttributeNode({
+  nodeData,
+  setNodeData,
+  attributes,
+  updateAttribute,
+}) {
+  const { enqueueSnackbar } = useSnackbar();
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
       ...node,
@@ -23,9 +32,9 @@ function AttributeNode({ nodeData }) {
       };
     }
 
-    setTreeData(
+    setNodeData(
       changeNodeAtPath({
-        treeData,
+        treeData: nodeData,
         path,
         getNodeKey,
         newNode,
@@ -35,9 +44,25 @@ function AttributeNode({ nodeData }) {
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       console.log('#DEBUG BLUR CHANGE: ', node, path); // fixme
-      handleConfirm(node, path);
+      const attribute = _find(attributes, { id: node.item.id });
+      console.log('#DEBUG BLUR UPDATE: ', attribute); // fixme
+
+      if (attribute && attribute.name !== node.title) {
+        updateAttribute(node.item.id, { name: node.title })
+          .then(() => {
+            confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
+            handleConfirm(node, path);
+          })
+          .catch(() => {
+            confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
+            handleConfirm(node, path, attribute.name);
+          });
+      } else {
+        handleConfirm(node, path);
+      }
     }
   };
+
   const handleKeyDown = (node, path) => (e) => {
     if (e.key === 'Enter') {
       handleBlur(node, path)();
@@ -45,9 +70,9 @@ function AttributeNode({ nodeData }) {
   };
 
   const handleChange = (node, path) => (e) => {
-    setTreeData(
+    setNodeData(
       changeNodeAtPath({
-        treeData,
+        treeData: nodeData,
         path,
         getNodeKey,
         newNode: {
@@ -59,9 +84,9 @@ function AttributeNode({ nodeData }) {
   };
 
   const handleDoubleClick = (node, path) => () => {
-    setTreeData(
+    setNodeData(
       changeNodeAtPath({
-        treeData,
+        treeData: nodeData,
         path,
         getNodeKey,
         newNode: {
@@ -74,8 +99,8 @@ function AttributeNode({ nodeData }) {
 
   return (
     <SortableTree
-      treeData={treeData}
-      onChange={treeData => setTreeData(treeData)}
+      treeData={nodeData}
+      onChange={setNodeData}
       maxDepth={2}
       canDrag
       generateNodeProps={({ node, path }) => ({
@@ -83,10 +108,10 @@ function AttributeNode({ nodeData }) {
         buttons:
           [
             <NodeMenu
-              treeData={treeData}
+              treeData={nodeData}
               node={node}
               path={path}
-              setTreeData={setTreeData}
+              setTreeData={setNodeData}
             />,
           ],
         title: (
@@ -107,5 +132,20 @@ function AttributeNode({ nodeData }) {
 
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
+  setNodeData: PropTypes.func.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
+  attributes: PropTypes.array.isRequired,
 };
-export default AttributeNode;
+
+const mapStateToProps = store => ({
+  attributes: store.attributesData.attributes,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateAttribute,
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AttributeNode);
