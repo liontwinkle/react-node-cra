@@ -101,7 +101,6 @@ class AttributeSetting extends Component {
 
   render() {
     const {
-      selectedGroup,
       categoryList,
       newCategory,
       categories,
@@ -111,7 +110,6 @@ class AttributeSetting extends Component {
       attribute,
     } = this.props;
 
-    const groupFg = (attribute.groupId === '');
     return (
       <div className="mg-attr-setting-container d-flex">
         <PerfectScrollbar
@@ -164,7 +162,7 @@ class AttributeSetting extends Component {
             </div>
           </CustomSection>
         </PerfectScrollbar>
-        <AttributeSettingAction groupFg={groupFg} selectedGroup={selectedGroup} attributes={categoryList} />
+        <AttributeSettingAction attribute={attribute} categoryList={categoryList} />
       </div>
     );
   }

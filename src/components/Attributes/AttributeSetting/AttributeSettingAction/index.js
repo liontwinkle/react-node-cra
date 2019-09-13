@@ -1,24 +1,36 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import { Tooltip } from 'react-tippy';
+import { bindActionCreators } from 'redux';
+import { useSnackbar } from 'notistack';
 
 import { IconButton } from 'components/elements';
+import { updateAttribute } from 'redux/actions/attribute';
+import { confirmMessage } from '../../../../utils';
 
 
 function AttributeSettingAction({
-  attributes,
-  selectedGroup,
-  groupFg,
+  categoryList,
+  attribute,
+  updateAttribute,
 }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const saveProperties = () => {
-    console.log('#DEBUG SAVE Attributes:', attributes); // fixme
-    if (groupFg) {
-      console.log('####### Update the Group update #############'); // fixme
-    } else {
-      console.log('####### Update the Attribute update #############'); // fixme
-      console.log('#DEBUG SAVE Groups:', selectedGroup); // fixme
-    }
+    console.log('##################### START SAVE ################'); // fixme
+    console.log('#DEBUG SAVE Attributes:', attribute); // fixme
+    console.log('#DEBUG SAVE categoryList:', categoryList); // fixme
+    const appear = categoryList.map(categoryItem => (categoryItem.key));
+    console.log('#DEBUG UPDATE DATA:', appear); // fixme
+    updateAttribute(attribute._id, { appear })
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
+      });
   };
 
   return (
@@ -37,13 +49,15 @@ function AttributeSettingAction({
 }
 
 AttributeSettingAction.propTypes = {
-  attributes: PropTypes.array.isRequired,
-  selectedGroup: PropTypes.object,
-  groupFg: PropTypes.bool.isRequired,
+  categoryList: PropTypes.array.isRequired,
+  attribute: PropTypes.object.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
 };
 
-AttributeSettingAction.defaultProps = {
-  selectedGroup: null,
-};
-
-export default AttributeSettingAction;
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateAttribute,
+}, dispatch);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(AttributeSettingAction);

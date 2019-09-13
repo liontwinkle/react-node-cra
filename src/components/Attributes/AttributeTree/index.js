@@ -49,7 +49,7 @@ function AttributeNode({
       if (attribute && attribute.name !== node.title) {
         updateAttribute(node.item.id, { name: node.title })
           .then(() => {
-            confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
+            confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
             handleConfirm(node, path);
           })
           .catch(() => {

@@ -76,7 +76,24 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         attributes.push(updateData);
       }
-      const newTrees = _merge(state.trees, getAttribute(attributes));
+      const newTrees = [];
+      const recvTrees = getAttribute(attributes);
+      state.nodes.forEach((pItem, pKey) => {
+        if (pItem.children.length > 0) {
+          const cNewItem = [];
+          pItem.children.forEach((cItem, cKey) => {
+            cNewItem.push(cItem);
+            cNewItem[cKey].item = recvTrees[pKey].children[cKey].item;
+          });
+          newTrees.push(pItem);
+          newTrees[pKey].children = cNewItem;
+          newTrees[pKey].item = recvTrees[pKey].item;
+        } else {
+          newTrees.push(pItem);
+          newTrees[pKey].item = recvTrees[pKey].item;
+        }
+      });
+
       return {
         ...state,
         isUpdating: false,
