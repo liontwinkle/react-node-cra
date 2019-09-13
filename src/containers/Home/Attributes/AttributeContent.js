@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import AttributeSetting from 'components/Attributes/AttributeSetting';
-import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';
 
 const tabs = [
@@ -26,7 +25,6 @@ function AttributeContent() {
 
       <div className="attribute-content">
         {tab === 'setting' && <AttributeSetting groupFg />}
-        {tab === 'preview' && <Properties />}
       </div>
     </div>
   );
