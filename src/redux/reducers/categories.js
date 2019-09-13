@@ -71,6 +71,7 @@ export default (state = INITIAL_STATE, action) => {
       }
       categories.push(data);
       const treeData = _merge(getCategoryTree(categories), state.trees);
+
       return {
         ...state,
         isCreating: false,

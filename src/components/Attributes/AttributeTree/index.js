@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
 
 import { getNodeKey } from 'utils/';
@@ -6,11 +7,8 @@ import NodeMenu from './NodeMenu';
 
 import './style.scss';
 
-function AttributeNode() {
-  const [treeData, setTreeData] = useState([{
-    title: 'Color',
-    children: [{ title: 'black' }],
-  }]);
+function AttributeNode({ nodeData }) {
+  const [treeData, setTreeData] = useState(nodeData);
 
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
@@ -107,4 +105,7 @@ function AttributeNode() {
   );
 }
 
+AttributeNode.propTypes = {
+  nodeData: PropTypes.array.isRequired,
+};
 export default AttributeNode;

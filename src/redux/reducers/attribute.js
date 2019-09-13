@@ -1,3 +1,5 @@
+import _merge from 'lodash/merge';
+import { getAttribute } from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -13,7 +15,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // const { attributes } = state;
+  const { attributes } = state;
 
   switch (action.type) {
     // case types.CATEGORIES_GET_REQUEST:
@@ -57,8 +59,20 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_CREATE_SUCCESS:
       const { data } = action.payload;
+      console.log('################  DEBUG ATTRIBUTE CREATE ACTION #######################'); // fixme
       console.log('#DEBUG RECV DATA:', data); // fixme
-      break;
+      attributes.push(data);
+      console.log('#DEBUG ATTRIBUTE DATA:', attributes); // fixme
+
+      const nodeData = _merge(getAttribute(attributes), state.nodes);
+      console.log('#DEBUG NODE DATA DATA:', nodeData); // fixme
+      return {
+        ...state,
+        isCreating: false,
+        attributes: attributes.slice(0),
+        nodes: nodeData,
+        attribute: action.payload.data,
+      };
       // if (data.properties) {
       //   const keys = Object.keys(data.properties);
       //   keys.forEach((key) => {

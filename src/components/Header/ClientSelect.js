@@ -51,7 +51,7 @@ function ClientSelect({
 
   const actionChangeType = (type, client) => {
     setClientType(type);
-    if (type.key !== 'products') {
+    if (type.key !== 'products' && type.key !== 'attributes') {
       fetchCategories(client.id, type.key);
       fetchPropertyField(client.id, type.key);
     }

@@ -17,6 +17,8 @@ import { createAttribute } from 'redux/actions/attribute';
 
 function AttributeTree({
   createAttribute,
+  attributes,
+  nodeData,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -56,21 +58,32 @@ function AttributeTree({
       </div>
 
       <div className="tree-content">
-        <AttributeNode />
+        {
+          attributes && attributes.length > 0 && (
+            <AttributeNode nodeData={nodeData} />
+          )
+        }
       </div>
     </div>
   );
 }
 
 AttributeTree.propTypes = {
+  attributes: PropTypes.array.isRequired,
+  nodeData: PropTypes.array.isRequired,
   createAttribute: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = store => ({
+  attributes: store.attributesData.attributes,
+  nodeData: store.attributesData.nodes,
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createAttribute,
 }, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(AttributeTree);
