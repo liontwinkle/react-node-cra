@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { addNodeUnderParent, removeNodeAtPath } from 'react-sortable-tree';
+import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
@@ -21,8 +21,24 @@ function NodeMenu({
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    setTreeData(
+      changeNodeAtPath({
+        treeData,
+        path,
+        getNodeKey,
+        newNode: {
+          ...node,
+          editable: true,
+        },
+      }),
+    );
+    handleClose();
   };
 
   const open = Boolean(anchorEl);
@@ -116,6 +132,10 @@ function NodeMenu({
               </button>
             )
           }
+
+          <button className="mg-button transparent" onClick={handleEdit}>
+            Edit Category
+          </button>
 
           <button className="mg-button transparent" onClick={handleRemove}>
             Delete Category

@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  CustomInput,
   CustomSection,
   CustomSelectWithLabel,
   IconButton,
@@ -11,21 +10,6 @@ import './style.scss';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const attrKey = [
-  {
-    label: 'Color',
-    key: 'color',
-  },
-  {
-    label: 'Size',
-    key: 'size',
-  },
-  {
-    label: 'Type',
-    key: 'type',
-  },
-];
 
 const attrGroup = [
   { label: 'Color', key: 'color' },
@@ -36,7 +20,6 @@ const attrGroup = [
 
 class AttributeSetting extends Component {
   state = {
-    selectedKey: attrKey[0],
     selectedGroup: attrGroup[0],
     categoryList: [
       { label: 'VitaminA', key: 'vitamin_a' },
@@ -47,8 +30,6 @@ class AttributeSetting extends Component {
       { label: 'VitaminC', key: 'vitamin_c' },
     ],
     newCategory: null,
-    keyTitle: '',
-    groupTitle: '',
   };
 
   componentDidMount() {
@@ -66,13 +47,6 @@ class AttributeSetting extends Component {
   changeSelect = type => (value) => {
     this.setState({
       [type]: value,
-    });
-  };
-
-  changeInput = type => (e) => {
-    e.persist();
-    this.setState({
-      [type]: e.target.value,
     });
   };
 
@@ -123,10 +97,7 @@ class AttributeSetting extends Component {
 
   render() {
     const {
-      selectedKey,
       selectedGroup,
-      keyTitle,
-      groupTitle,
       categoryList,
       newCategory,
       categories,
@@ -137,53 +108,25 @@ class AttributeSetting extends Component {
     } = this.props;
     return (
       <div className="mg-attr-setting-container d-flex">
-        <CustomSection title="Setting Attribute" key="setting_attribute">
-          {
-            groupFg
-              ? (
-                <Fragment>
-                  <div className="mg-setting-section">
-                    <CustomSelectWithLabel
-                      label="Key"
-                      inline
-                      value={selectedKey}
-                      items={attrKey || []}
-                      onChange={this.changeSelect('selectedKey')}
-                      key={attrKey.key}
-                    />
-                  </div>
-                  <CustomInput
-                    label="Title"
+        {
+          !groupFg
+          && (
+            <CustomSection title="Setting Attribute" key="setting_attribute">
+              <Fragment>
+                <div className="mg-setting-section">
+                  <CustomSelectWithLabel
+                    label="Group"
                     inline
-                    value={keyTitle}
-                    onChange={this.changeInput('keyTitle')}
-                    type="text"
+                    value={selectedGroup}
+                    items={attrGroup || []}
+                    onChange={this.changeSelect('selectedGroup')}
+                    key={attrGroup.key}
                   />
-                </Fragment>
-              )
-              : (
-                <Fragment>
-                  <div className="mg-setting-section">
-                    <CustomSelectWithLabel
-                      label="Group"
-                      inline
-                      value={selectedGroup}
-                      items={attrGroup || []}
-                      onChange={this.changeSelect('selectedGroup')}
-                      key={attrGroup.key}
-                    />
-                  </div>
-                  <CustomInput
-                    label="Title"
-                    inline
-                    value={groupTitle}
-                    onChange={this.changeInput('keyTitle')}
-                    type="text"
-                  />
-                </Fragment>
-              )
-          }
-        </CustomSection>
+                </div>
+              </Fragment>
+            </CustomSection>
+          )
+        }
         <CustomSection title="Associated Category" key="associated_category">
           {
             categoryList.map((listItem, key) => (

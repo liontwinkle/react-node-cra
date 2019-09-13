@@ -16,7 +16,7 @@ function AttributeTree() {
     <div className="app-tree-container d-flex flex-column">
       <div className="tree-header d-flex align-items-center justify-content-between">
         <Tooltip
-          title="Add Category"
+          title="Create New Attribute Group"
           position="right"
           arrow
         >
