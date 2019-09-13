@@ -44,30 +44,39 @@ class AttributePreview extends Component {
     return (
       <div className="preview-container">
         <CustomSelect
-          className="mr-3"
+          className="preview-type"
           placeholder="Select View Method"
           value={this.state.productViewType}
           items={productViewTypes}
           onChange={this.handleChangeProductViewType}
         />
-
-        <HotTable
-          className="product-table"
-          root="hot-one"
-          licenseKey="non-commercial-and-evaluation"
-          settings={{
-            data: products,
-            columns,
-            width: '100%',
-            height: '100%',
-            headerTooltips: true,
-            colHeaders: headers,
-            rowHeaders: true,
-            contextMenu: true,
-            dropdownMenu: true,
-            hiddenColumns: true,
-          }}
-        />
+        <div className="preview-content">
+          { (this.state.productViewType.label === 'Product Table')
+            ? (
+              <HotTable
+                className="product-table"
+                root="hot-one"
+                licenseKey="non-commercial-and-evaluation"
+                settings={{
+                  data: products,
+                  columns,
+                  width: '100%',
+                  height: '100%',
+                  headerTooltips: true,
+                  colHeaders: headers,
+                  rowHeaders: true,
+                  contextMenu: true,
+                  dropdownMenu: true,
+                  hiddenColumns: true,
+                }}
+              />
+            ) : (
+              <div className="product-images">
+                <h1>Product Images Here</h1>
+              </div>
+            )
+          }
+        </div>
       </div>
     );
   }
