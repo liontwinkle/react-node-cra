@@ -46,13 +46,9 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_CREATE_SUCCESS:
       const { data } = action.payload;
-      console.log('################  DEBUG ATTRIBUTE CREATE ACTION #######################'); // fixme
-      console.log('#DEBUG RECV DATA:', data); // fixme
       attributes.push(data);
-      console.log('#DEBUG ATTRIBUTE DATA:', attributes); // fixme
 
       const nodeData = _merge(getAttribute(attributes), state.nodes);
-      console.log('#DEBUG NODE DATA DATA:', nodeData); // fixme
       return {
         ...state,
         isCreating: false,

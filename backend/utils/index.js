@@ -111,13 +111,25 @@ function removeChildren(req, id) {
 
 function removeAttribute(req, id) {
   req.attributes.find({ groupId: id })
-    .then(() => {
+    .then((result) => {
       req.attributes
         .deleteMany({ groupId: id }, (err, result) => {
           if (!result) {
             console.log(err);
           }
         });
+      if (result.length > 0) {
+        result.forEach((item) => {
+          removeChildren(req, item._id);
+        });
+      } else {
+        req.attributes
+          .deleteOne({ groupId: id }, (err, result) => {
+            if (!result) {
+              console.log(err);
+            }
+          });
+      }
     });
 }
 function createCollection(body) {

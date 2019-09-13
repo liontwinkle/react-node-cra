@@ -53,8 +53,8 @@ function NodeMenu({
 
   const handleAdd = () => {
     createAttribute({
-      name: 'New Category',
-      parentId: node.item.id,
+      name: 'New Attribute',
+      groupId: node.item.id,
     })
       .then((attribute) => {
         confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
@@ -161,17 +161,17 @@ function NodeMenu({
             (path.length <= 1)
             && (
               <button className="mg-button transparent" onClick={handleAdd}>
-              Add Child
+              Add Attribute
               </button>
             )
           }
 
           <button className="mg-button transparent" onClick={handleEdit}>
-            Edit Category
+            Edit
           </button>
 
           <button className="mg-button transparent" onClick={handleRemove}>
-            Delete Category
+            Delete
           </button>
         </div>
       </Popover>

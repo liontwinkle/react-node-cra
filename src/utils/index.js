@@ -10,7 +10,7 @@ const getSubTree = (list, parentId, type) => {
         title: item.name,
         editable: false,
         item,
-        children: getSubTree(list, item._id),
+        children: getSubTree(list, item._id, type),
       });
     });
   }
