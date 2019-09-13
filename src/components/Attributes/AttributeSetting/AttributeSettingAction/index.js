@@ -38,8 +38,12 @@ function AttributeSettingAction({
 
 AttributeSettingAction.propTypes = {
   attributes: PropTypes.array.isRequired,
-  selectedGroup: PropTypes.object.isRequired,
+  selectedGroup: PropTypes.object,
   groupFg: PropTypes.bool.isRequired,
+};
+
+AttributeSettingAction.defaultProps = {
+  selectedGroup: null,
 };
 
 export default AttributeSettingAction;

@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,44 +14,43 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import AttributeSettingAction from './AttributeSettingAction';
 
-const attrGroup = [
-  { label: 'Color', key: 'color' },
-  { label: 'Size', key: 'size' },
-  { label: 'Type', key: 'type' },
-];
-
-
 class AttributeSetting extends Component {
   state = {
-    selectedGroup: attrGroup[0],
-    categoryList: [
-      { label: 'VitaminA', key: 'vitamin_a' },
-    ],
+    selectedGroup: null,
+    categoryList: [],
     newCategory: null,
-
-    /** Constant Define * */
-    categories: [
-      { label: 'VitaminA', key: 'vitamin_a' },
-      { label: 'VitaminB', key: 'vitamin_b' },
-      { label: 'VitaminC', key: 'vitamin_c' },
-    ],
+    categories: [],
   };
 
   componentDidMount() {
-    const newCategories = [];
-    this.state.categories.forEach((item) => {
-      if (this.state.categoryList.filter(listItem => (listItem.key === item.key)).length === 0) {
-        newCategories.push(item);
-      }
-    });
-    this.setState({
-      categories: newCategories,
-    });
+    const { attribute, categories } = this.props;
+    this.updateState(categories, attribute.appear);
   }
 
-  changeSelect = type => (value) => {
+  componentDidUpdate(prevProps) {
+    if (prevProps.attribute !== this.props.attribute) {
+      this.updateState(this.props.categories, this.props.attribute.appear);
+    }
+  }
+
+  updateState = (categories, list) => {
+    const newCategories = [];
+    const categoryList = [];
+    const categoriesData = categories.map((categoryItem => ({
+      label: categoryItem.name,
+      key: categoryItem._id,
+    })));
+    categoriesData.forEach((item) => {
+      if (list.filter(listItem => (listItem === item.key)).length === 0) {
+        newCategories.push(item);
+      } else {
+        categoryList.push(item);
+      }
+    });
+    console.log('##################### DEBUG SETTING #################'); // fixme
     this.setState({
-      [type]: value,
+      categories: newCategories,
+      categoryList,
     });
   };
 
@@ -108,8 +108,10 @@ class AttributeSetting extends Component {
     } = this.state;
 
     const {
-      groupFg,
+      attribute,
     } = this.props;
+
+    const groupFg = (attribute.groupId === '');
     return (
       <div className="mg-attr-setting-container d-flex">
         <PerfectScrollbar
@@ -118,25 +120,6 @@ class AttributeSetting extends Component {
             minScrollbarLength: 50,
           }}
         >
-          {
-            !groupFg
-          && (
-            <CustomSection title="Setting Attribute" key="setting_attribute">
-              <Fragment>
-                <div className="mg-setting-section">
-                  <CustomSelectWithLabel
-                    label="Group"
-                    inline
-                    value={selectedGroup}
-                    items={attrGroup || []}
-                    onChange={this.changeSelect('selectedGroup')}
-                    key={attrGroup.key}
-                  />
-                </div>
-              </Fragment>
-            </CustomSection>
-          )
-          }
           <CustomSection title="Associated Category" key="associated_category">
             {
               categoryList.map((listItem, key) => (
@@ -188,6 +171,13 @@ class AttributeSetting extends Component {
 }
 
 AttributeSetting.propTypes = {
-  groupFg: PropTypes.bool.isRequired,
+  attribute: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
 };
-export default AttributeSetting;
+
+const mapStateToProps = store => ({
+  attribute: store.attributesData.attribute,
+  nodes: store.attributesData.nodes,
+  categories: store.categoriesData.categories,
+});
+export default connect(mapStateToProps)(AttributeSetting);

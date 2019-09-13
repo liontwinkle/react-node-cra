@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import AttributeSetting from 'components/Attributes/AttributeSetting';
 import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
@@ -9,7 +10,9 @@ const tabs = [
   { value: 'preview', label: 'Preview' },
 ];
 
-function AttributeContent() {
+function AttributeContent({
+  attribute,
+}) {
   const [tab, setTab] = useState('setting');
 
   const handleClick = value => () => {
@@ -25,11 +28,24 @@ function AttributeContent() {
       />
 
       <div className="attribute-content">
-        {tab === 'setting' && <AttributeSetting groupFg={false} />}
+        {tab === 'setting' && attribute && <AttributeSetting />}
         {tab === 'preview' && <AttributePreview />}
       </div>
     </div>
   );
 }
 
-export default AttributeContent;
+AttributeContent.propTypes = {
+  attribute: PropTypes.object,
+};
+
+AttributeContent.defaultProps = {
+  attribute: null,
+};
+
+
+const mapStateToProps = store => ({
+  attribute: store.attributesData.attribute,
+});
+
+export default connect(mapStateToProps)(AttributeContent);

@@ -113,13 +113,14 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: false,
         errors: action.payload.error,
       };
-      //
-      // case types.CATEGORY_SET:
-      //   return {
-      //     ...state,
-      //     category: action.payload.category,
-      //   };
-      //
+
+    case types.ATTRIBUTE_SET:
+      console.log('#DEBUG CURRENT ATTRIBUTE:', action.payload.attribute); // fixme
+      return {
+        ...state,
+        attribute: action.payload.attribute,
+      };
+
     case types.ATTRIBUTE_NODE_SET:
       console.log(action.payload);// fixme
       return {

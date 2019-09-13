@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
 import { confirmMessage, getNodeKey } from 'utils/';
-import { updateAttribute } from 'redux/actions/attribute';
+import { updateAttribute, setAttribute } from 'redux/actions/attribute';
 import NodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -17,6 +17,7 @@ function AttributeNode({
   setNodeData,
   attributes,
   updateAttribute,
+  setAttribute,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const handleConfirm = (node, path, title = null) => {
@@ -81,6 +82,12 @@ function AttributeNode({
     );
   };
 
+  const handleClick = node => () => {
+    if (!node.editable) {
+      setAttribute(node.item);
+    }
+  };
+
   const handleDoubleClick = (node, path) => () => {
     setNodeData(
       changeNodeAtPath({
@@ -123,6 +130,7 @@ function AttributeNode({
             onChange={handleChange(node, path)}
           />
         ),
+        onClick: handleClick(node),
       })}
     />
   );
@@ -130,9 +138,10 @@ function AttributeNode({
 
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   setNodeData: PropTypes.func.isRequired,
   updateAttribute: PropTypes.func.isRequired,
-  attributes: PropTypes.array.isRequired,
+  setAttribute: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -141,6 +150,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
+  setAttribute,
 }, dispatch);
 
 export default connect(

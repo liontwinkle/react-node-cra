@@ -118,12 +118,12 @@ export const removeAttribute = id => (dispatch, getState) => {
     });
 };
 
-// export const setCategory = category => (dispatch) => {
-//   dispatch({
-//     type: types.CATEGORY_SET,
-//     payload: { category },
-//   });
-// };
+export const setAttribute = attribute => (dispatch) => {
+  dispatch({
+    type: types.ATTRIBUTE_SET,
+    payload: { attribute },
+  });
+};
 
 export const updateNodeData = nodeData => (dispatch) => {
   dispatch({
