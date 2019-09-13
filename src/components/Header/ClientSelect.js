@@ -14,6 +14,7 @@ import {
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
+import { fetchAttributes } from 'redux/actions/attribute';
 import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
 import { productViewTypes, clientType } from 'utils/constants';
@@ -31,6 +32,7 @@ function ClientSelect({
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,
+  fetchAttributes,
   setProducts,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -51,9 +53,14 @@ function ClientSelect({
 
   const actionChangeType = (type, client) => {
     setClientType(type);
-    if (type.key !== 'products' && type.key !== 'attributes') {
-      fetchCategories(client.id, type.key);
-      fetchPropertyField(client.id, type.key);
+    if (type.key !== 'products') {
+      if (type.key === 'attributes') {
+        fetchCategories(client.id, 'virtual');
+        fetchAttributes(client.id, type.key);
+      } else {
+        fetchPropertyField(client.id, type.key);
+        fetchCategories(client.id, type.key);
+      }
     }
     fetchProductsField();
   };
@@ -127,6 +134,7 @@ ClientSelect.propTypes = {
   fetchCategories: PropTypes.func.isRequired,
   fetchPropertyField: PropTypes.func.isRequired,
   fetchProductsField: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
 };
 
@@ -152,6 +160,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchCategories,
   fetchPropertyField,
   fetchProductsField,
+  fetchAttributes,
   setProducts,
 }, dispatch);
 

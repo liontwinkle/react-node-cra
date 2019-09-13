@@ -1,32 +1,31 @@
-/* eslint-disable import/prefer-default-export */
 import attributesService from 'services/attributes.service';
 import types from '../actionTypes';
 
-// export const fetchCategories = (clientId, type) => (dispatch, getState) => {
-//   if (getState().categoriesData.isFetchingList) {
-//     return Promise.reject();
-//   }
-//
-//   dispatch({
-//     type: types.CATEGORIES_GET_REQUEST,
-//   });
-//
-//   return categoryService.fetch(clientId, type)
-//     .then((categories) => {
-//       dispatch({
-//         type: types.CATEGORIES_GET_SUCCESS,
-//         payload: { categories },
-//       });
-//     })
-//     .catch((error) => {
-//       dispatch({
-//         type: types.CATEGORIES_GET_FAIL,
-//         payload: { error },
-//       });
-//
-//       throw error;
-//     });
-// };
+export const fetchAttributes = (clientId, type) => (dispatch, getState) => {
+  if (getState().attributesData.isFetchingList) {
+    return Promise.reject();
+  }
+
+  dispatch({
+    type: types.ATTRIBUTE_FETCH_REQUEST,
+  });
+
+  return attributesService.fetch(clientId, type)
+    .then((attributes) => {
+      dispatch({
+        type: types.ATTRIBUTE_FETCH_SUCCESS,
+        payload: { attributes },
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.ATTRIBUTE_FETCH_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};
 
 export const createAttribute = attribute => (dispatch, getState) => {
   if (getState().attributesData.isCreating) {

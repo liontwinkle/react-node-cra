@@ -2,10 +2,10 @@ import httpService from './http.service';
 
 const getAttributesRoute = (clientId, type) => `/clients/${clientId}/types/${type}/attributes`;
 
-// const fetch = (clientId, type) => httpService
-//   .get(getAttributesRoute(clientId, type))
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+const fetch = (clientId, type) => httpService
+  .get(getAttributesRoute(clientId, type))
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 
 const create = (clientId, type, category) => httpService
   .post(getAttributesRoute(clientId, type), category)
@@ -23,7 +23,7 @@ const create = (clientId, type, category) => httpService
 //   .catch(err => Promise.reject(err.response));
 
 export default {
-  // fetch,
+  fetch,
   create,
   // update,
   // remove,

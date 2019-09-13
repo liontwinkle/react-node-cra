@@ -5,7 +5,7 @@ const router = express.Router();
 const controller = require('./attributes.controller');
 
 // Request to get list of Categories
-// router.get('/', controller.index);
+router.get('/', controller.index);
 
 // Request to create a Category
 router.post('/', controller.create);

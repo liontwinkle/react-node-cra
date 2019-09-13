@@ -8,14 +8,14 @@ const {
 } = require('../../utils');
 
 // Gets a list of Categories
-// exports.index = (req, res) => {
-//   req.attributes
-//     .find()
-//     .select('-__v')
-//     .execAsync()
-//     .then(responseWithResult(res))
-//     .catch(handleError(res));
-// };
+exports.index = (req, res) => {
+  req.attributes
+    .find()
+    .select('-__v')
+    .execAsync()
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+};
 
 // Creates a new Category in the DB
 exports.create = (req, res) => {

@@ -18,39 +18,25 @@ export default (state = INITIAL_STATE, action) => {
   const { attributes } = state;
 
   switch (action.type) {
-    // case types.CATEGORIES_GET_REQUEST:
-    //   return {
-    //     ...state,
-    //     isFetchingList: true,
-    //   };
-    // case types.CATEGORIES_GET_SUCCESS:
-    //   const tempDatas = action.payload.categories;
-    //   if (Array.isArray(tempDatas)) {
-    //     tempDatas.forEach((item, itemKey) => {
-    //       const { properties } = item;
-    //       if (properties) {
-    //         const keys = Object.keys(properties);
-    //         keys.forEach((key) => {
-    //           if (Array.isArray(properties[key])) {
-    //             tempDatas[itemKey].properties[key] = JSON.stringify(tempDatas[itemKey].properties[key]);
-    //           }
-    //         });
-    //       }
-    //     });
-    //   }
-    //   return {
-    //     ...state,
-    //     isFetchingList: false,
-    //     categories: tempDatas,
-    //     category: null,
-    //     trees: getCategoryTree(action.payload.categories),
-    //   };
-    // case types.CATEGORIES_GET_FAIL:
-    //   return {
-    //     ...state,
-    //     isFetchingList: false,
-    //     errors: action.payload.error,
-    //   };
+    case types.ATTRIBUTE_FETCH_REQUEST:
+      return {
+        ...state,
+        isFetchingList: true,
+      };
+    case types.ATTRIBUTE_FETCH_SUCCESS:
+      return {
+        ...state,
+        isFetchingList: false,
+        attributes: action.payload.attributes,
+        attribute: null,
+        nodes: getAttribute(action.payload.attributes),
+      };
+    case types.ATTRIBUTE_FETCH_FAIL:
+      return {
+        ...state,
+        isFetchingList: false,
+        errors: action.payload.error,
+      };
 
     case types.ATTRIBUTE_CREATE_REQUEST:
       return {
