@@ -6,6 +6,7 @@ import categoriesData from './categories';
 import productsData from './products';
 import propertyFieldsData from './propertyFields';
 import productsFieldsData from './productsFields';
+import attributesData from './attribute';
 
 export default history => combineReducers({
   router: connectRouter(history),
@@ -14,4 +15,5 @@ export default history => combineReducers({
   propertyFieldsData,
   productsData,
   productsFieldsData,
+  attributesData,
 });

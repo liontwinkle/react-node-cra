@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import { createCategory, updateTreeData } from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
-import { confirmMessage } from '../../../utils';
+import { confirmMessage } from 'utils';
 
 function Tree(props) {
   const { enqueueSnackbar } = useSnackbar();
