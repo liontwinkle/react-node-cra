@@ -10,7 +10,7 @@ const tabs = [
 ];
 
 function AttributeContent() {
-  const [tab, setTab] = useState('detail');
+  const [tab, setTab] = useState('setting');
 
   const handleClick = value => () => {
     setTab(value);
@@ -25,7 +25,7 @@ function AttributeContent() {
       />
 
       <div className="attribute-content">
-        {tab === 'setting' && <AttributeSetting groupFg={false} />}
+        {tab === 'setting' && <AttributeSetting groupFg />}
         {tab === 'preview' && <Properties />}
       </div>
     </div>
