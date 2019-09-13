@@ -47,7 +47,6 @@ class AttributeSetting extends Component {
         categoryList.push(item);
       }
     });
-    console.log('##################### DEBUG SETTING #################'); // fixme
     this.setState({
       categories: newCategories,
       categoryList,
@@ -88,8 +87,6 @@ class AttributeSetting extends Component {
   };
 
   deleteCategory = (key) => {
-    console.log('DEBUG: ', key);// fixme
-    console.log('DEBUG ARRAY: ###', this.state.categoryList);// fixme
     this.setState(prevState => (
       {
         categoryList: prevState.categoryList.filter((item, keyItem) => (keyItem !== key)),

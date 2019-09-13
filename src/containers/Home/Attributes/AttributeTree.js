@@ -31,7 +31,6 @@ function AttributeTree({
       .catch(() => {
         confirmMessage(enqueueSnackbar, 'Error in adding group.', 'error');
       });
-    console.log('#comment : click to create new group.'); // fixme
   };
 
   const setNodeData = (data) => {

@@ -32,7 +32,6 @@ export const createAttribute = attribute => (dispatch, getState) => {
     return;
   }
 
-  console.log('#DEBUG CREATE ATTRIBUTE:', attribute); // fixme
   const { client, type } = getState().clientsData;
 
   dispatch({

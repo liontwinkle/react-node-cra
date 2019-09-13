@@ -19,11 +19,7 @@ function AttributeSettingAction({
   const { enqueueSnackbar } = useSnackbar();
 
   const saveProperties = () => {
-    console.log('##################### START SAVE ################'); // fixme
-    console.log('#DEBUG SAVE Attributes:', attribute); // fixme
-    console.log('#DEBUG SAVE categoryList:', categoryList); // fixme
     const appear = categoryList.map(categoryItem => (categoryItem.key));
-    console.log('#DEBUG UPDATE DATA:', appear); // fixme
     updateAttribute(attribute._id, { appear })
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');

@@ -132,14 +132,12 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.ATTRIBUTE_SET:
-      console.log('#DEBUG CURRENT ATTRIBUTE:', action.payload.attribute); // fixme
       return {
         ...state,
         attribute: action.payload.attribute,
       };
 
     case types.ATTRIBUTE_NODE_SET:
-      console.log(action.payload);// fixme
       return {
         ...state,
         nodes: action.payload,
