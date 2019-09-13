@@ -6,7 +6,7 @@ import { CustomTab } from 'components/elements';
 
 const tabs = [
   { value: 'setting', label: 'Setting' },
-  { value: 'preview', label: 'PreView' },
+  { value: 'preview', label: 'Preview' },
 ];
 
 function AttributeContent() {
