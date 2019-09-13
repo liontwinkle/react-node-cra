@@ -1,4 +1,5 @@
 import _merge from 'lodash/merge';
+import _findIndex from 'lodash/findIndex';
 import { getAttribute } from 'utils';
 import types from '../actionTypes';
 
@@ -59,89 +60,63 @@ export default (state = INITIAL_STATE, action) => {
         nodes: nodeData,
         attribute: action.payload.data,
       };
-      // if (data.properties) {
-      //   const keys = Object.keys(data.properties);
-      //   keys.forEach((key) => {
-      //     if (Array.isArray(data.properties[key])) {
-      //       data.properties[key] = JSON.stringify(data.properties[key]);
-      //     }
-      //   });
-      // }
-      // categories.push(data);
-      // const treeData = _merge(getCategoryTree(categories), state.trees);
-      // return {
-      //   ...state,
-      //   isCreating: false,
-      //   categories: categories.slice(0),
-      //   trees: treeData,
-      //   category: action.payload.data,
-      // };
-    case types.CATEGORY_CREATE_FAIL:
+    case types.ATTRIBUTE_CREATE_FAIL:
       return {
         ...state,
         isCreating: false,
         errors: action.payload.error,
       };
 
-      // case types.CATEGORY_UPDATE_REQUEST:
-      //   return {
-      //     ...state,
-      //     isUpdating: true,
-      //   };
-      // case types.CATEGORY_UPDATE_SUCCESS:
-      //   const updateData = action.payload.data;
-      //   const { properties } = updateData;
-      //   if (properties) {
-      //     const keys = Object.keys(properties);
-      //     keys.forEach((key) => {
-      //       if (Array.isArray(properties[key])) {
-      //         updateData.properties[key] = JSON.stringify(updateData.properties[key]);
-      //       }
-      //     });
-      //   }
-      //   const categoryIdx = _findIndex(categories, { id: updateData.id });
-      //   if (categoryIdx > -1) {
-      //     categories.splice(categoryIdx, 1, updateData);
-      //   } else {
-      //     categories.push(updateData);
-      //   }
-      //   const newTrees = _merge(state.trees, getCategoryTree(categories));
-      //   return {
-      //     ...state,
-      //     isUpdating: false,
-      //     categories: categories.slice(0),
-      //     trees: newTrees,
-      //     category: action.payload.data,
-      //   };
-      // case types.CATEGORY_UPDATE_FAIL:
-      //   return {
-      //     ...state,
-      //     isUpdating: false,
-      //     errors: action.payload.error,
-      //   };
-      //
-      // case types.CATEGORY_DELETE_REQUEST:
-      //   return {
-      //     ...state,
-      //     isDeleting: true,
-      //   };
-      // case types.CATEGORY_DELETE_SUCCESS:
-      //   const index = _findIndex(categories, { id: action.payload.id });
-      //   if (index > -1) {
-      //     categories.splice(index, 1);
-      //   }
-      //   return {
-      //     ...state,
-      //     isDeleting: false,
-      //     categories: categories.slice(0),
-      //     category: null,
-      //   };
-      // case types.CATEGORY_DELETE_FAIL:
-      //   return {
-      //     ...state,
-      //     isDeleting: false,
-      //     errors: action.payload.error,
-      //   };
+    case types.ATTRIBUTE_UPDATE_REQUEST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.ATTRIBUTE_UPDATE_SUCCESS:
+      const updateData = action.payload.data;
+      const attributesIdx = _findIndex(attributes, { id: updateData.id });
+      if (attributesIdx > -1) {
+        attributes.splice(attributesIdx, 1, updateData);
+      } else {
+        attributes.push(updateData);
+      }
+      const newTrees = _merge(state.trees, getAttribute(attributes));
+      return {
+        ...state,
+        isUpdating: false,
+        attributes: attributes.slice(0),
+        nodes: newTrees,
+        attribute: action.payload.data,
+      };
+    case types.ATTRIBUTE_UPDATE_FAIL:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
+      };
+
+    case types.ATTRIBUTE_REMOVE_REQUEST:
+      return {
+        ...state,
+        isDeleting: true,
+      };
+    case types.ATTRIBUTE_REMOVE_SUCCESS:
+      const index = _findIndex(attributes, { id: action.payload.id });
+      if (index > -1) {
+        attributes.splice(index, 1);
+      }
+      return {
+        ...state,
+        isDeleting: false,
+        attributes: attributes.slice(0),
+        attribute: null,
+      };
+    case types.ATTRIBUTE_REMOVE_FAIL:
+      return {
+        ...state,
+        isDeleting: false,
+        errors: action.payload.error,
+      };
       //
       // case types.CATEGORY_SET:
       //   return {

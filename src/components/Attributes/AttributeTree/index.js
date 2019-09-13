@@ -43,9 +43,7 @@ function AttributeNode({
   };
   const handleBlur = (node, path) => () => {
     if (node.editable) {
-      console.log('#DEBUG BLUR CHANGE: ', node, path); // fixme
       const attribute = _find(attributes, { id: node.item.id });
-      console.log('#DEBUG BLUR UPDATE: ', attribute); // fixme
 
       if (attribute && attribute.name !== node.title) {
         updateAttribute(node.item.id, { name: node.title })

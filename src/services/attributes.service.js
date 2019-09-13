@@ -17,14 +17,14 @@ const update = (clientId, type, id, updatedData) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
-// const remove = (clientId, type, id) => httpService
-//   .remove(`${getAttributesRoute(clientId, type)}/${id}`)
-//   .then(({ data }) => data)
-//   .catch(err => Promise.reject(err.response));
+const remove = (clientId, type, id) => httpService
+  .remove(`${getAttributesRoute(clientId, type)}/${id}`)
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
 
 export default {
   fetch,
   create,
   update,
-  // remove,
+  remove,
 };

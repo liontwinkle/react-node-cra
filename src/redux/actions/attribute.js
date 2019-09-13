@@ -88,35 +88,35 @@ export const updateAttribute = (id, updatedData) => (dispatch, getState) => {
     });
 };
 
-// export const removeCategory = id => (dispatch, getState) => {
-//   if (getState().categoriesData.isDeleting) {
-//     return;
-//   }
-//
-//   const { client, type } = getState().clientsData;
-//
-//   dispatch({
-//     type: types.CATEGORY_DELETE_REQUEST,
-//   });
-//
-//   return categoryService.remove(client.id, type.key, id)
-//     .then(() => {
-//       dispatch({
-//         type: types.CATEGORY_DELETE_SUCCESS,
-//         payload: { id },
-//       });
-//
-//       return 'success';
-//     })
-//     .catch((error) => {
-//       dispatch({
-//         type: types.CATEGORY_DELETE_FAIL,
-//         payload: { error },
-//       });
-//
-//       throw error;
-//     });
-// };
+export const removeAttribute = id => (dispatch, getState) => {
+  if (getState().attributesData.isDeleting) {
+    return;
+  }
+
+  const { client, type } = getState().clientsData;
+
+  dispatch({
+    type: types.ATTRIBUTE_REMOVE_REQUEST,
+  });
+
+  return attributesService.remove(client.id, type.key, id)
+    .then(() => {
+      dispatch({
+        type: types.ATTRIBUTE_REMOVE_SUCCESS,
+        payload: { id },
+      });
+
+      return 'success';
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.ATTRIBUTE_REMOVE_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};
 
 // export const setCategory = category => (dispatch) => {
 //   dispatch({

@@ -4,15 +4,23 @@ import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-so
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import { getNodeKey } from 'utils';
+import { confirmMessage, getNodeKey } from 'utils';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
+import { bindActionCreators } from 'redux';
+import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import connect from 'react-redux/es/connect/connect';
+import { useSnackbar } from 'notistack';
 
 function NodeMenu({
   treeData,
   node,
   path,
   setTreeData,
+  createAttribute,
+  removeAttribute,
 }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleMenuClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -44,23 +52,48 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    setTreeData(
-      addNodeUnderParent({
-        treeData,
-        parentKey: path[path.length - 1],
-        expandParent: true,
-        getNodeKey,
-        newNode: {
-          title: 'New',
-          editable: false,
-          item: null,
-        },
-      }).treeData,
-    );
+    createAttribute({
+      name: 'New Category',
+      parentId: node.item.id,
+    })
+      .then((attribute) => {
+        confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
+        setTreeData(
+          addNodeUnderParent({
+            treeData,
+            parentKey: path[path.length - 1],
+            expandParent: true,
+            getNodeKey,
+            newNode: {
+              title: attribute.name,
+              editable: false,
+              item: attribute,
+            },
+          }).treeData,
+        );
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
+      });
     handleClose();
   };
 
   const deleteItem = () => {
+    const removeId = node.item.id;
+    removeAttribute(removeId)
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'The attribute has been deleted successfully.', 'success');
+        setTreeData(
+          removeNodeAtPath({
+            treeData,
+            path,
+            getNodeKey,
+          }),
+        );
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in deleting attribute.', 'error');
+      });
     setTreeData(
       removeNodeAtPath({
         treeData,
@@ -161,6 +194,16 @@ NodeMenu.propTypes = {
   node: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
+  createAttribute: PropTypes.func.isRequired,
+  removeAttribute: PropTypes.func.isRequired,
 };
 
-export default NodeMenu;
+const mapDispatchToProps = dispatch => bindActionCreators({
+  createAttribute,
+  removeAttribute,
+}, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(NodeMenu);

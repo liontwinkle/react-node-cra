@@ -109,6 +109,17 @@ function removeChildren(req, id) {
     });
 }
 
+function removeAttribute(req, id) {
+  req.attributes.find({ groupId: id })
+    .then(() => {
+      req.attributes
+        .deleteMany({ groupId: id }, (err, result) => {
+          if (!result) {
+            console.log(err);
+          }
+        });
+    });
+}
 function createCollection(body) {
   const fileName = [
     `${body.code}_virtuals`,
@@ -126,6 +137,7 @@ module.exports = {
   handleError,
   respondWith,
   removeChildren,
+  removeAttribute,
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
