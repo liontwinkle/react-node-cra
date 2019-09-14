@@ -2,7 +2,7 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
+  saveAttributeUpdates,
   removeEntity,
   removeAttribute
 } = require('../../utils');
@@ -45,7 +45,7 @@ exports.update = (req, res) => {
   req.attributes
     .findByIdAsync(req.params.attributeId)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(saveAttributeUpdates(req))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

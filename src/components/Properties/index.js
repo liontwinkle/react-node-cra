@@ -20,7 +20,7 @@ import {
   IconButton,
 } from 'components/elements';
 import CustomCheck from 'components/elements/CustomCheck';
-import { updateAttribute } from 'redux/actions/attribute';
+import { updateAttribute, fetchAttributes } from 'redux/actions/attribute';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
@@ -269,7 +269,10 @@ class Properties extends Component {
     } else {
       appearData = appear.filter(item => (item !== this.props.category._id));
     }
-    this.props.updateAttribute(id, { appear: appearData });
+    this.props.updateAttribute(id, { appear: appearData })
+      .then(() => {
+        this.props.fetchAttributes(this.props.client.id, 'attributes');
+      });
   };
 
   renderAttributes = () => {
@@ -379,10 +382,13 @@ Properties.propTypes = {
   propertyField: PropTypes.object.isRequired,
   nodes: PropTypes.array.isRequired,
   updateAttribute: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
+  client: store.clientsData.client,
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
   nodes: store.attributesData.nodes,
@@ -390,6 +396,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
+  fetchAttributes,
 }, dispatch);
 export default connect(
   mapStateToProps,

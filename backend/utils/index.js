@@ -79,6 +79,26 @@ function saveUpdates(updates) {
   };
 }
 
+function saveAttributeUpdates(req) {
+  return (entity) => {
+    const old = entity.appear;
+    if (req.body) {
+      req.attributes.find({ groupId: entity._id })
+        .then((results) => {
+          results.forEach((resItem) => {
+            const newAppear = _.merge(req.body.appear,
+              _.difference(resItem.appear, old));
+            const newData = resItem;
+            newData.appear = newAppear;
+            req.attributes.update({ _id: resItem._id }, { $set: { appear: newAppear } })
+              .then(() => {});
+          });
+        });
+      _.assign(entity, req.body);
+    }
+    return entity.saveAsync();
+  };
+}
 
 function removeEntity(res) {
   return entity => entity && entity.removeAsync()
@@ -156,4 +176,5 @@ module.exports = {
   removeEntity,
   createCollection,
   handleExistingRemove,
+  saveAttributeUpdates,
 };

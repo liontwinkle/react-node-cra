@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { updateAttribute } from 'redux/actions/attribute';
+import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 
@@ -15,6 +15,8 @@ function AttributeSettingAction({
   categoryList,
   attribute,
   updateAttribute,
+  fetchAttributes,
+  client,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -23,6 +25,7 @@ function AttributeSettingAction({
     updateAttribute(attribute._id, { appear })
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');
+        fetchAttributes(client.id, 'attributes');
       })
       .catch(() => {
         confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
@@ -47,13 +50,20 @@ function AttributeSettingAction({
 AttributeSettingAction.propTypes = {
   categoryList: PropTypes.array.isRequired,
   attribute: PropTypes.object.isRequired,
+  client: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = store => ({
+  client: store.clientsData.client,
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
+  fetchAttributes,
 }, dispatch);
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(AttributeSettingAction);
