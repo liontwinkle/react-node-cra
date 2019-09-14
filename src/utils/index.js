@@ -1,5 +1,16 @@
 import { OrderedMap } from 'immutable';
+import { getUnion } from 'components/RulesNew/RuleEngine';
 import uuidv4 from 'uuid/v4';
+
+const singleFilter = (key, products, value) => {
+  const result = [];
+  products.forEach((productItem) => {
+    if (productItem[key] === value) {
+      result.push(productItem);
+    }
+  });
+  return result;
+};
 
 export const getPreFilterData = (attribute, group, products) => {
   console.log('################## Preview DEBUG ##############');// fixme
@@ -7,17 +18,35 @@ export const getPreFilterData = (attribute, group, products) => {
   console.log('#DEBUG Group:', group); // fixme
   console.log('#DEBUG Products:', products); // fixme
 
-  if (attribute.groupId) {
+  let filterData = [];
+  if (!attribute.groupId) {
+    console.log('##### DEBUG Filtering with group #####'); // fixme
+    const childrenList = group.filter(groupItem => (groupItem.item._id === attribute._id))[0].children;
+    const groupKey = attribute.name;
+    console.log('##### DEBUG Child #####', childrenList); // fixme
+    if (childrenList.length > 0) {
+      let filterSet = new Set();
+      let singleFilterSet = new Set();
+      childrenList.forEach((childItem) => {
+        console.log('##### DEBUG Child Item #####', childItem); // fixme
+        singleFilterSet = singleFilter(groupKey, products, childItem.item.name);
+        console.log('##### DEBUG Single Filter #####', singleFilterSet); // fixme
+        filterSet = getUnion(filterSet, singleFilterSet);
+      });
+      console.log('##### DEBUG All Filter #####', filterSet); // fixme
+      filterData = Array.from(filterSet);
+    }
     console.log('##### DEBUG Filtering with group #####'); // fixme
   } else {
     console.log('##### DEBUG Filtering with attribute #####'); // fixme
+    const { groupId, name } = attribute;
+    const key = group.filter(groupItem => (groupItem.item._id === groupId))[0].item.name;
+    console.log(`##### DEBUG GroupId,${groupId} Key,${key} Name, ${name}`);
+    filterData = singleFilter(key, products, name);
   }
+  return filterData;
 };
 
-// const singleFilter = ( key, products, value ) => {
-//   const result = [];
-//   products.forEach(())
-// };
 const getSubTree = (list, parentId, type) => {
   const subTree = [];
   const sublist = list.filter(item => item[type] === parentId);

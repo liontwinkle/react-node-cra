@@ -21,6 +21,7 @@ class AttributePreview extends Component {
     productViewType: {},
     fetchingFlag: true,
     noneDisplayFlag: false,
+    filterProducts: [],
   };
 
   componentDidMount() {
@@ -46,7 +47,7 @@ class AttributePreview extends Component {
           confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
         });
     } else {
-      getPreFilterData(attribute, nodes, products);
+      this.setFilterData(getPreFilterData(attribute, nodes, products));
       this.setState({ noneDisplayFlag: false });
       this.setFetchingFlag(false);
     }
@@ -64,10 +65,24 @@ class AttributePreview extends Component {
     } = this.props;
     if (prevProps.attribute !== attribute || prevProps.products !== products) {
       this.setFetchingFlag(true);
-      getPreFilterData(attribute, nodes, products);
+      this.setFilterData(getPreFilterData(attribute, nodes, products));
       this.setFetchingFlag(false);
     }
   }
+
+  setFilterData = (data) => {
+    if (data.length > 0) {
+      this.setState({
+        filterProducts: data,
+        noneDisplayFlag: false,
+      });
+    } else {
+      confirmMessage(this.props.enqueueSnackbar, 'Matched Data is not exists.', 'info');
+      this.setState({
+        noneDisplayFlag: true,
+      });
+    }
+  };
 
   setFetchingFlag = (value) => {
     this.setState({
@@ -85,7 +100,6 @@ class AttributePreview extends Component {
     const {
       columns,
       headers,
-      products,
     } = this.props;
 
     const { fetchingFlag, noneDisplayFlag } = this.state;
@@ -109,7 +123,7 @@ class AttributePreview extends Component {
                     root="hot-one"
                     licenseKey="non-commercial-and-evaluation"
                     settings={{
-                      data: products,
+                      data: this.state.filterProducts,
                       columns,
                       width: '100%',
                       height: '100%',

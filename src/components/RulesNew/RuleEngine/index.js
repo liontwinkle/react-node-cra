@@ -59,3 +59,5 @@ export const formatDifference = () => {
   PRODUCTS_SET.includes.clear();
   PRODUCTS_SET.excludes.clear();
 };
+
+export const getUnion = (setA, setB) => setA.union(setB);
