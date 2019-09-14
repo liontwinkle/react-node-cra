@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { withSnackbar } from 'notistack';
 
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useSnackbar } from 'notistack';
+
 
 import {
   CustomSection,
@@ -14,6 +15,7 @@ import {
   IconButton,
 } from 'components/elements';
 import { confirmMessage } from 'utils';
+
 import AttributeSettingAction from './AttributeSettingAction';
 
 import './style.scss';
@@ -81,8 +83,6 @@ class AttributeSetting extends Component {
   };
 
   addCategory = () => {
-    const { enqueueSnackbar } = useSnackbar();
-
     if (this.state.newCategory) {
       this.setState(prevState => (
         {
@@ -92,7 +92,7 @@ class AttributeSetting extends Component {
         }
       ));
     } else {
-      confirmMessage(enqueueSnackbar, 'There is no any updated categories.', 'info');
+      confirmMessage(this.props.enqueueSnackbar, 'There is no any updated categories.', 'info');
     }
   };
 
@@ -176,6 +176,7 @@ class AttributeSetting extends Component {
 }
 
 AttributeSetting.propTypes = {
+  enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
 };
@@ -185,4 +186,4 @@ const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
   categories: store.categoriesData.categories,
 });
-export default connect(mapStateToProps)(AttributeSetting);
+export default connect(mapStateToProps)(withSnackbar(AttributeSetting));
