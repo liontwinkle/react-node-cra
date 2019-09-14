@@ -2,18 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { createAttribute, updateNodeData } from 'redux/actions/attribute';
+import { Tooltip } from 'react-tippy';
+import { useSnackbar } from 'notistack';
 
 import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { Tooltip } from 'react-tippy';
-import { useSnackbar } from 'notistack';
 
 import AttributeNode from 'components/Attributes/AttributeTree';
 import { IconButton } from 'components/elements';
-
 import { confirmMessage } from 'utils';
-import { createAttribute, updateNodeData } from 'redux/actions/attribute';
 
 function AttributeTree({
   createAttribute,

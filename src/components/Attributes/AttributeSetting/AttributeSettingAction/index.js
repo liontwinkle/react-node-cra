@@ -1,15 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import SaveIcon from '@material-ui/icons/Save';
+import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { bindActionCreators } from 'redux';
+
 import { useSnackbar } from 'notistack';
+import SaveIcon from '@material-ui/icons/Save';
 
-import { IconButton } from 'components/elements';
 import { updateAttribute } from 'redux/actions/attribute';
-import { confirmMessage } from '../../../../utils';
-
+import { IconButton } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 function AttributeSettingAction({
   categoryList,

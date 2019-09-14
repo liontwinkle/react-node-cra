@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import DetailTable from 'components/DetailTable';
-// import Rules from 'components/Rules';
 import NewRules from 'components/RulesNew';
 import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';

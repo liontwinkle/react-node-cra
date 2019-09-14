@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
+import { bindActionCreators } from 'redux';
+import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import { useSnackbar } from 'notistack';
+
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { confirmMessage, getNodeKey } from 'utils';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
-import { bindActionCreators } from 'redux';
-import { createAttribute, removeAttribute } from 'redux/actions/attribute';
 import connect from 'react-redux/es/connect/connect';
-import { useSnackbar } from 'notistack';
 
 function NodeMenu({
   treeData,

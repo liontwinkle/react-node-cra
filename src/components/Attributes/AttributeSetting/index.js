@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { useSnackbar } from 'notistack';
 
 import {
   CustomSection,
   CustomSelectWithLabel,
   IconButton,
 } from 'components/elements';
-import './style.scss';
-import { Tooltip } from 'react-tippy';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import { confirmMessage } from 'utils';
 import AttributeSettingAction from './AttributeSettingAction';
+
+import './style.scss';
 
 class AttributeSetting extends Component {
   state = {
@@ -40,6 +44,7 @@ class AttributeSetting extends Component {
       label: categoryItem.name,
       key: categoryItem._id,
     })));
+
     categoriesData.forEach((item) => {
       if (list.filter(listItem => (listItem === item.key)).length === 0) {
         newCategories.push(item);
@@ -47,6 +52,7 @@ class AttributeSetting extends Component {
         categoryList.push(item);
       }
     });
+
     this.setState({
       categories: newCategories,
       categoryList,
@@ -63,8 +69,10 @@ class AttributeSetting extends Component {
         const currentState = prevState;
         const tempCategories = [...currentState.categories, currentState.categoryList[type]];
         const changeCategories = tempCategories.filter(item => (item !== value));
+
         currentState.categoryList[type] = value;
         currentState.categories = changeCategories;
+
         return {
           ...currentState,
         };
@@ -73,6 +81,8 @@ class AttributeSetting extends Component {
   };
 
   addCategory = () => {
+    const { enqueueSnackbar } = useSnackbar();
+
     if (this.state.newCategory) {
       this.setState(prevState => (
         {
@@ -82,7 +92,7 @@ class AttributeSetting extends Component {
         }
       ));
     } else {
-      console.log('#DEBUG: Create New Catogry.');// fixme
+      confirmMessage(enqueueSnackbar, 'There is no any updated categories.', 'info');
     }
   };
 

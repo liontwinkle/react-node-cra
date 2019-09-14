@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import AttributeSetting from 'components/Attributes/AttributeSetting';
 import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
@@ -42,7 +43,6 @@ AttributeContent.propTypes = {
 AttributeContent.defaultProps = {
   attribute: null,
 };
-
 
 const mapStateToProps = store => ({
   attribute: store.attributesData.attribute,

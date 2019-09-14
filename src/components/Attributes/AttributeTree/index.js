@@ -6,8 +6,8 @@ import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
 import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
-import { confirmMessage, getNodeKey } from 'utils/';
 import { updateAttribute, setAttribute } from 'redux/actions/attribute';
+import { confirmMessage, getNodeKey } from 'utils/';
 import NodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -20,6 +20,7 @@ function AttributeNode({
   setAttribute,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
       ...node,
@@ -42,6 +43,7 @@ function AttributeNode({
       }),
     );
   };
+
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const attribute = _find(attributes, { id: node.item.id });

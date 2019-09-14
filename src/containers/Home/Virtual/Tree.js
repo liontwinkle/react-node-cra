@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'react-tippy';
+import { useSnackbar } from 'notistack';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { createCategory, updateTreeData } from 'redux/actions/categories';
+
 import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { Tooltip } from 'react-tippy';
-import { useSnackbar } from 'notistack';
 
-import { createCategory, updateTreeData } from 'redux/actions/categories';
 import VirtualSortableTree from 'components/VirtualTree';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import './style.scss';
 import { HotTable } from '@handsontable/react';
-import { productViewTypes } from '../../../utils/constants';
-import { CustomSelect } from '../../elements';
+
+import { productViewTypes } from 'utils/constants';
+import { CustomSelect } from 'components/elements';
+
+import './style.scss';
 
 const products = [
   {
@@ -27,11 +29,13 @@ const columns = [
 
 class AttributePreview extends Component {
   state = {
-    productViewType: { key: 'data', label: 'Product Table' },
+    productViewType: {},
   };
 
   componentDidMount() {
-
+    this.setState({
+      productViewType: { key: 'data', label: 'Product Table' },
+    });
   }
 
   handleChangeProductViewType = (productViewType) => {
