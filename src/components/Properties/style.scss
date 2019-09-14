@@ -27,6 +27,31 @@
         }
       }
     }
+    .attribute-section {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      flex-wrap: wrap;
+      .attribute-item {
+        width: 50%;
+        .group{
+          .custom-check-container
+          {
+            font-size: 18px;
+            font-weight: bolder;
+            padding: 0 10px;
+            border-bottom: solid 1px black;
+            margin: 0!important;
+            label{
+              margin-left: 10px;
+            }
+          }
+        }
+        .custom-check-container{
+          margin: 10px 20px;
+        }
+      }
+    }
   }
 
   .mg-property-actions {

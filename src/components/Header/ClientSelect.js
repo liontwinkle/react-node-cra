@@ -60,6 +60,7 @@ function ClientSelect({
       } else {
         fetchPropertyField(client.id, type.key);
         fetchCategories(client.id, type.key);
+        fetchAttributes(client.id, 'attributes');
       }
     }
     fetchProductsField();

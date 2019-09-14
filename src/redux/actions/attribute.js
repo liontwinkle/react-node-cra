@@ -62,13 +62,13 @@ export const updateAttribute = (id, updatedData) => (dispatch, getState) => {
     return;
   }
 
-  const { client, type } = getState().clientsData;
+  const { client } = getState().clientsData;
 
   dispatch({
     type: types.ATTRIBUTE_UPDATE_REQUEST,
   });
 
-  return attributesService.update(client.id, type.key, id, updatedData)
+  return attributesService.update(client.id, 'attributes', id, updatedData)
     .then((data) => {
       dispatch({
         type: types.ATTRIBUTE_UPDATE_SUCCESS,

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import isEqual from 'lodash/isEqual';
 import { Tooltip } from 'react-tippy';
@@ -17,11 +19,14 @@ import {
   CustomArray,
   IconButton,
 } from 'components/elements';
+import CustomCheck from 'components/elements/CustomCheck';
+import { updateAttribute } from 'redux/actions/attribute';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
+
 
 class Properties extends Component {
   state = {
@@ -256,6 +261,50 @@ class Properties extends Component {
     return res;
   };
 
+  handleAttributeChange = (appear, id) => (state) => {
+    console.log('#Updated ID', appear, id, state.target.checked);
+    let appearData = [];
+    if (state.target.checked) {
+      appearData = [...appear, this.props.category._id];
+    } else {
+      appearData = appear.filter(item => (item !== this.props.category._id));
+    }
+    this.props.updateAttribute(id, { appear: appearData });
+  };
+
+  renderAttributes = () => {
+    const res = [];
+    this.props.nodes.forEach((nodeItem) => {
+      res.push(
+        <div key={nodeItem.item._id} className="attribute-item">
+          <div className="group">
+            <CustomCheck
+              key={nodeItem.item._id}
+              insertValue={
+                !!(nodeItem.item.appear.find(appearItem => (appearItem === this.props.category._id)))
+              }
+              value={nodeItem.item.name}
+              onChange={this.handleAttributeChange(nodeItem.item.appear, nodeItem.item._id)}
+            />
+          </div>
+          {
+            nodeItem.children.map(childItem => (
+              <CustomCheck
+                key={childItem.item._id}
+                insertValue={
+                  !!(childItem.item.appear.find(appearItem => (appearItem === this.props.category._id)))
+                }
+                value={childItem.item.name}
+                onChange={this.handleAttributeChange(childItem.item.appear, childItem.item._id)}
+              />
+            ))
+          }
+        </div>,
+      );
+    });
+    return res;
+  };
+
   render() {
     const {
       properties,
@@ -289,6 +338,16 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
+            {
+              this.props.nodes.length > 0
+              && (
+                <CustomSection title="Attributes" key="attributes">
+                  <div className="attribute-section">
+                    {this.renderAttributes(null)}
+                  </div>
+                </CustomSection>
+              )
+            }
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
@@ -318,12 +377,21 @@ class Properties extends Component {
 Properties.propTypes = {
   category: PropTypes.object.isRequired,
   propertyField: PropTypes.object.isRequired,
+  nodes: PropTypes.array.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
+  nodes: store.attributesData.nodes,
 });
 
-export default connect(mapStateToProps)(Properties);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateAttribute,
+}, dispatch);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Properties);
