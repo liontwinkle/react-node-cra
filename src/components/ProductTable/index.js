@@ -10,6 +10,7 @@ import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 
 import './style.scss';
+import { confirmMessage } from '../../utils';
 
 class ProductTable extends Component {
   state = {
@@ -27,16 +28,10 @@ class ProductTable extends Component {
           this.setState({
             fetchingFlag: false,
           });
-          this.props.enqueueSnackbar('Success fetching products data.', {
-            variant: 'success',
-            autoHideDuration: 1000,
-          });
+          confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
         })
         .catch(() => {
-          this.props.enqueueSnackbar('Error in fetching products data.', {
-            variant: 'error',
-            autoHideDuration: 4000,
-          });
+          confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
         });
     } else {
       this.setState({

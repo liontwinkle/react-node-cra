@@ -1,6 +1,23 @@
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 
+export const getPreFilterData = (attribute, group, products) => {
+  console.log('################## Preview DEBUG ##############');// fixme
+  console.log('#DEBUG Attribute:', attribute); // fixme
+  console.log('#DEBUG Group:', group); // fixme
+  console.log('#DEBUG Products:', products); // fixme
+
+  if (attribute.groupId) {
+    console.log('##### DEBUG Filtering with group #####'); // fixme
+  } else {
+    console.log('##### DEBUG Filtering with attribute #####'); // fixme
+  }
+};
+
+// const singleFilter = ( key, products, value ) => {
+//   const result = [];
+//   products.forEach(())
+// };
 const getSubTree = (list, parentId, type) => {
   const subTree = [];
   const sublist = list.filter(item => item[type] === parentId);
