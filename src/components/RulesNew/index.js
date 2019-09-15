@@ -66,28 +66,18 @@ class NewRules extends Component {
     } = this.props;
 
     let filterProject = [];
-    console.log('############### DEBUG: Filter Products Start ##############'); // fixme
-    console.log('#### DEBUG: Attributes', attributes);// fixme
-    console.log('#### DEBUG: Category', category);// fixme
-    console.log('#### DEBUG: products', products);// fixme
     let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
-    console.log('#### DEBUG: initial attributes', attributeList);// fixme
     const groups = attributeList.filter(item => (!item.groupId));
-    console.log('#### DEBUG: groups', groups);// fixme
     attributeList = _difference(attributeList, groups);
-    console.log('#### DEBUG: Before Arrange', attributeList);// fixme
     groups.forEach((groupItem) => {
       const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
       filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
-      console.log('#### DEBUG: Step Group Data: ', filterProject);// fixme
       attributeList = _difference(attributeList, childrenList);
     });
 
     attributeList.forEach((childListItem) => {
       filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
     });
-    console.log('#### DEBUG: Arrange', attributeList);// fixme
-    console.log('#### DEBUG: Filter Data', filterProject);// fixme
     setPrefilterData(filterProject);
     this.setState({
       fetchingFlag: false,

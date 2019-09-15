@@ -89,12 +89,10 @@ class AttributeSetting extends Component {
 
   checkGorupPermission= (type) => {
     const group = this.props.nodes.filter(nodeItem => (nodeItem.item._id === this.props.attribute.groupId));
-    console.log('##DEBUG:', group);// fixme
     let updateFlag = true;
     if (group.length > 0) {
       updateFlag = !(group[0].item.appear.find(arrItem => (arrItem === this.state.categoryList[type].key)));
     }
-    console.log('##DEBUG FLAG:', updateFlag);// fixme
     return updateFlag;
   };
 

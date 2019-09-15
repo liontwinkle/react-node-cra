@@ -86,7 +86,7 @@ function saveAttributeUpdates(req) {
       req.attributes.find({ groupId: entity._id })
         .then((results) => {
           results.forEach((resItem) => {
-            const newAppear = _.mergeWith(req.body.appear,
+            const newAppear = _.union(req.body.appear,
               _.difference(resItem.appear, old));
             req.attributes.update({ _id: resItem._id }, { $set: { appear: newAppear } })
               .then(() => {});

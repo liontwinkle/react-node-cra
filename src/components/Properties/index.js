@@ -271,6 +271,7 @@ class Properties extends Component {
     if (groupAttr.length > 0) {
       updateFlag = !(groupAttr[0].appear.find(arrItem => (arrItem === this.props.category._id)));
     }
+
     if (updateFlag) {
       if (state.target.checked) {
         appearData = [...appear, this.props.category._id];

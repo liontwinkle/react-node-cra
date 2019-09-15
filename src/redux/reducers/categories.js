@@ -160,7 +160,6 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.MATCHED_PRODUCT:
-      console.log('#### DEBUG prefilterData:', action.payload);// fixme
       return {
         ...state,
         preProducts: action.payload,
