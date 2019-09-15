@@ -261,18 +261,61 @@ class Properties extends Component {
     return res;
   };
 
-  handleAttributeChange = (appear, id) => (state) => {
-    console.log('#Updated ID', appear, id, state.target.checked);
+  handleAttributeChange = (appear, attr) => (state) => {
+    console.log('#Updated ID', appear, attr._id, state.target.checked);
+    let checkGrp = false;
+    let removeGrp = false;
     let appearData = [];
     if (state.target.checked) {
       appearData = [...appear, this.props.category._id];
+      if (attr.groupId) {
+        const includeCategoryList = this.props.attributes.filter(
+          attrItem => (!!attrItem.appear.find(
+            (arrItem => (arrItem === this.props.category._id)),
+          ) && (attrItem.groupId === attr.groupId)),
+        );
+        const groupList = this.props.attributes.filter(attrItem => (attrItem.groupId === attr.groupId));
+        if (includeCategoryList.length === groupList.length - 1) {
+          checkGrp = true;
+        }
+      }
     } else {
       appearData = appear.filter(item => (item !== this.props.category._id));
+      if (attr.groupId) {
+        const includeCategoryList = this.props.attributes.filter(
+          attrItem => (!!attrItem.appear.find(
+            (arrItem => (arrItem === this.props.category._id)),
+          ) && (attrItem.groupId === attr.groupId)),
+        );
+        if (includeCategoryList.length === 1) {
+          removeGrp = true;
+        }
+      }
     }
-    this.props.updateAttribute(id, { appear: appearData })
-      .then(() => {
-        this.props.fetchAttributes(this.props.client.id, 'attributes');
-      });
+    if (checkGrp) {
+      const groupAdd = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
+      const groupAddAppear = groupAdd.appear;
+      groupAddAppear.push(this.props.category._id);
+      this.props.updateAttribute(attr.groupId, { appear: groupAddAppear })
+        .then(() => {
+          this.props.fetchAttributes(this.props.client.id, 'attributes');
+        });
+    } else if (removeGrp) {
+      const groupAdd = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
+      const groupAddAppear = groupAdd.appear.filter(appearItem => (appearItem !== this.props.category._id));
+      this.props.updateAttribute(attr.groupId, { appear: groupAddAppear })
+        .then(() => {
+          this.props.updateAttribute(attr._id, { appear: appearData })
+            .then(() => {
+              this.props.fetchAttributes(this.props.client.id, 'attributes');
+            });
+        });
+    } else {
+      this.props.updateAttribute(attr._id, { appear: appearData })
+        .then(() => {
+          this.props.fetchAttributes(this.props.client.id, 'attributes');
+        });
+    }
   };
 
   renderAttributes = () => {
@@ -287,7 +330,7 @@ class Properties extends Component {
                 !!(nodeItem.item.appear.find(appearItem => (appearItem === this.props.category._id)))
               }
               value={nodeItem.item.name}
-              onChange={this.handleAttributeChange(nodeItem.item.appear, nodeItem.item._id)}
+              onChange={this.handleAttributeChange(nodeItem.item.appear, nodeItem.item)}
             />
           </div>
           {
@@ -298,7 +341,7 @@ class Properties extends Component {
                   !!(childItem.item.appear.find(appearItem => (appearItem === this.props.category._id)))
                 }
                 value={childItem.item.name}
-                onChange={this.handleAttributeChange(childItem.item.appear, childItem.item._id)}
+                onChange={this.handleAttributeChange(childItem.item.appear, childItem.item)}
               />
             ))
           }
@@ -381,6 +424,7 @@ Properties.propTypes = {
   category: PropTypes.object.isRequired,
   propertyField: PropTypes.object.isRequired,
   nodes: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   client: PropTypes.object.isRequired,
@@ -392,6 +436,7 @@ const mapStateToProps = store => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
   nodes: store.attributesData.nodes,
+  attributes: store.attributesData.attributes,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

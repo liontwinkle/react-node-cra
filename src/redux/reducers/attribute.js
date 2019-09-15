@@ -25,12 +25,33 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.ATTRIBUTE_FETCH_SUCCESS:
+      const fetchedTrees = getAttribute(action.payload.attributes);
+      let convertedTrees = [];
+      if (state.nodes.length > 0) {
+        state.nodes.forEach((pItem, pKey) => {
+          if (pItem.children.length > 0) {
+            const cNewItem = [];
+            pItem.children.forEach((cItem, cKey) => {
+              cNewItem.push(cItem);
+              cNewItem[cKey].item = fetchedTrees[pKey].children[cKey].item;
+            });
+            convertedTrees.push(pItem);
+            convertedTrees[pKey].children = cNewItem;
+            convertedTrees[pKey].item = fetchedTrees[pKey].item;
+          } else {
+            convertedTrees.push(pItem);
+            convertedTrees[pKey].item = fetchedTrees[pKey].item;
+          }
+        });
+      } else {
+        convertedTrees = fetchedTrees;
+      }
       return {
         ...state,
         isFetchingList: false,
         attributes: action.payload.attributes,
-        attribute: null,
-        nodes: getAttribute(action.payload.attributes),
+        attribute: state.attribute || null,
+        nodes: convertedTrees,
       };
     case types.ATTRIBUTE_FETCH_FAIL:
       return {
