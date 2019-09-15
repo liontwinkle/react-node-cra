@@ -52,7 +52,7 @@ const getSubTree = (list, parentId, type) => {
 };
 
 export const confirmMessage = (func, msg, type) => {
-  const duration = (type === 'success' || type === 'info') ? 1000 : 4000;
+  const duration = (type === 'success' || type === 'info') ? 2000 : 4000;
   func(msg, {
     variant: type,
     autoHideDuration: duration,

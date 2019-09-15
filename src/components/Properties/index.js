@@ -264,13 +264,13 @@ class Properties extends Component {
   };
 
   handleAttributeChange = (appear, attr) => (state) => {
-    console.log('#Updated ID', appear, attr._id, state.target.checked);
     let checkGrp = false;
     let appearData = [];
     const groupAttr = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId));
-    console.log('#DEBUG group:', groupAttr);// fixme
-    const updateFlag = !!groupAttr.appear.find(arrItem => (arrItem === this.props.category._id));
-    console.log('#DEBUG updateFlag:', updateFlag);// fixme
+    let updateFlag = true;
+    if (groupAttr.length > 0) {
+      updateFlag = !(groupAttr[0].appear.find(arrItem => (arrItem === this.props.category._id)));
+    }
     if (updateFlag) {
       if (state.target.checked) {
         appearData = [...appear, this.props.category._id];

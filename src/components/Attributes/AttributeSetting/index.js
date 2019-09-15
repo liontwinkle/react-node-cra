@@ -66,12 +66,11 @@ class AttributeSetting extends Component {
       this.setState({
         newCategory: value,
       });
-    } else {
+    } else if (this.checkGorupPermission(type)) {
       this.setState((prevState) => {
         const currentState = prevState;
         const tempCategories = [...currentState.categories, currentState.categoryList[type]];
         const changeCategories = tempCategories.filter(item => (item !== value));
-
         currentState.categoryList[type] = value;
         currentState.categories = changeCategories;
 
@@ -79,7 +78,24 @@ class AttributeSetting extends Component {
           ...currentState,
         };
       });
+    } else {
+      confirmMessage(
+        this.props.enqueueSnackbar,
+        'This attribute could not be changed since the group is selected.',
+        'info',
+      );
     }
+  };
+
+  checkGorupPermission= (type) => {
+    const group = this.props.nodes.filter(nodeItem => (nodeItem.item._id === this.props.attribute.groupId));
+    console.log('##DEBUG:', group);// fixme
+    let updateFlag = true;
+    if (group.length > 0) {
+      updateFlag = !(group[0].item.appear.find(arrItem => (arrItem === this.state.categoryList[type].key)));
+    }
+    console.log('##DEBUG FLAG:', updateFlag);// fixme
+    return updateFlag;
   };
 
   addCategory = () => {
@@ -97,13 +113,17 @@ class AttributeSetting extends Component {
   };
 
   deleteCategory = (key) => {
-    this.setState(prevState => (
-      {
-        categoryList: prevState.categoryList.filter((item, keyItem) => (keyItem !== key)),
-        categories: [...prevState.categories, prevState.categoryList[key]],
-        newCategory: null,
-      }
-    ));
+    if (this.checkGorupPermission(key)) {
+      this.setState(prevState => (
+        {
+          categoryList: prevState.categoryList.filter((item, keyItem) => (keyItem !== key)),
+          categories: [...prevState.categories, prevState.categoryList[key]],
+          newCategory: null,
+        }
+      ));
+    } else {
+      confirmMessage(this.props.enqueueSnackbar, 'There is no any updated categories.', 'info');
+    }
   };
 
   render() {
@@ -179,6 +199,7 @@ AttributeSetting.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
+  nodes: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
