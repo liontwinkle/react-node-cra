@@ -67,17 +67,22 @@ class NewRules extends Component {
 
     let filterProject = [];
     let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
-    const groups = attributeList.filter(item => (!item.groupId));
-    attributeList = _difference(attributeList, groups);
-    groups.forEach((groupItem) => {
-      const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
-      filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
-      attributeList = _difference(attributeList, childrenList);
-    });
+    if (attributeList.length > 0) {
+      const groups = attributeList.filter(item => (!item.groupId));
+      attributeList = _difference(attributeList, groups);
+      groups.forEach((groupItem) => {
+        const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
+        filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
+        attributeList = _difference(attributeList, childrenList);
+      });
 
-    attributeList.forEach((childListItem) => {
-      filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
-    });
+      attributeList.forEach((childListItem) => {
+        filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
+      });
+    } else {
+      filterProject = products;
+    }
+
     setPrefilterData(filterProject);
     this.setState({
       fetchingFlag: false,
