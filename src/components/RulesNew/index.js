@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
+import _difference from 'lodash/difference';
+import _union from 'lodash/union';
+
 import {
   basis,
   refer,
@@ -12,24 +15,30 @@ import {
   scope,
 } from 'utils/constants';
 import { fetchProducts } from 'redux/actions/products';
+import { setPrefilterData } from 'redux/actions/categories';
+import { confirmMessage, getPreFilterData } from 'utils';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
+import Loader from '../Loader';
 
 import './style.scss';
-import { confirmMessage } from '../../utils';
-import Loader from '../Loader';
 
 class NewRules extends Component {
   state = {
     newRules: [],
     editRules: [],
+    fetchingFlag: true,
   };
 
   componentDidMount() {
+    this.setState({
+      fetchingFlag: true,
+    });
     if (this.props.products.length === 0) {
       this.props.fetchProducts()
         .then(() => {
           this.setMap(this.props.category);
+          this.FilterProducts();
           confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
         })
         .catch(() => {
@@ -37,6 +46,7 @@ class NewRules extends Component {
         });
     } else {
       this.setMap(this.props.category);
+      this.FilterProducts();
     }
   }
 
@@ -45,6 +55,44 @@ class NewRules extends Component {
       this.setMap(this.props.category);
     }
   }
+
+  FilterProducts = () => {
+    const {
+      attributes,
+      category,
+      products,
+      setPrefilterData,
+      nodes,
+    } = this.props;
+
+    let filterProject = [];
+    console.log('############### DEBUG: Filter Products Start ##############'); // fixme
+    console.log('#### DEBUG: Attributes', attributes);// fixme
+    console.log('#### DEBUG: Category', category);// fixme
+    console.log('#### DEBUG: products', products);// fixme
+    let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
+    console.log('#### DEBUG: initial attributes', attributeList);// fixme
+    const groups = attributeList.filter(item => (!item.groupId));
+    console.log('#### DEBUG: groups', groups);// fixme
+    attributeList = _difference(attributeList, groups);
+    console.log('#### DEBUG: Before Arrange', attributeList);// fixme
+    groups.forEach((groupItem) => {
+      const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
+      filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
+      console.log('#### DEBUG: Step Group Data: ', filterProject);// fixme
+      attributeList = _difference(attributeList, childrenList);
+    });
+
+    attributeList.forEach((childListItem) => {
+      filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
+    });
+    console.log('#### DEBUG: Arrange', attributeList);// fixme
+    console.log('#### DEBUG: Filter Data', filterProject);// fixme
+    setPrefilterData(filterProject);
+    this.setState({
+      fetchingFlag: false,
+    });
+  };
 
   AnaylsisDetails = (valueStr) => {
     const partValue = valueStr.split(']');
@@ -101,7 +149,7 @@ class NewRules extends Component {
     return (
       <div className="mg-rules-container d-flex">
         {
-          !this.props.isFetchingList
+          !this.state.fetchingFlag
             ? (
               <Fragment>
                 <div className="mg-rule-content">
@@ -125,10 +173,12 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
+  attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  isFetchingList: PropTypes.bool.isRequired,
+  nodes: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
@@ -136,11 +186,13 @@ const mapStateToProps = store => ({
   category: store.categoriesData.category,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
-  isFetchingList: store.productsData.isFetchingList,
+  attributes: store.attributesData.attributes,
+  nodes: store.attributesData.nodes,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
+  setPrefilterData,
 }, dispatch);
 
 export default connect(

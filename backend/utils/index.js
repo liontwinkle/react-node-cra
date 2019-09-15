@@ -85,12 +85,9 @@ function saveAttributeUpdates(req) {
     if (req.body) {
       req.attributes.find({ groupId: entity._id })
         .then((results) => {
-          console.log('resultNow>>>', old); // fixme
-          console.log('resultNew>>>', req.body.appear); // fixme
           results.forEach((resItem) => {
             const newAppear = _.mergeWith(req.body.appear,
               _.difference(resItem.appear, old));
-            console.log('results>>>', _.difference(resItem.appear, old)); // fixme
             req.attributes.update({ _id: resItem._id }, { $set: { appear: newAppear } })
               .then(() => {});
           });

@@ -130,3 +130,10 @@ export const updateTreeData = treeData => (dispatch) => {
     payload: treeData,
   });
 };
+
+export const setPrefilterData = matchedProduct => (dispatch) => {
+  dispatch({
+    type: types.MATCHED_PRODUCT,
+    payload: matchedProduct,
+  });
+};

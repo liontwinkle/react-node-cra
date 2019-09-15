@@ -8,8 +8,10 @@ import isEqual from 'lodash/isEqual';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import { withSnackbar } from 'notistack';
 
-import { sortByOrder } from 'utils';
+
+import { confirmMessage, sortByOrder } from 'utils';
 import {
   CustomInput,
   CustomText,
@@ -264,57 +266,48 @@ class Properties extends Component {
   handleAttributeChange = (appear, attr) => (state) => {
     console.log('#Updated ID', appear, attr._id, state.target.checked);
     let checkGrp = false;
-    let removeGrp = false;
     let appearData = [];
-    if (state.target.checked) {
-      appearData = [...appear, this.props.category._id];
-      if (attr.groupId) {
-        const includeCategoryList = this.props.attributes.filter(
-          attrItem => (!!attrItem.appear.find(
-            (arrItem => (arrItem === this.props.category._id)),
-          ) && (attrItem.groupId === attr.groupId)),
-        );
-        const groupList = this.props.attributes.filter(attrItem => (attrItem.groupId === attr.groupId));
-        if (includeCategoryList.length === groupList.length - 1) {
-          checkGrp = true;
+    const groupAttr = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId));
+    console.log('#DEBUG group:', groupAttr);// fixme
+    const updateFlag = !!groupAttr.appear.find(arrItem => (arrItem === this.props.category._id));
+    console.log('#DEBUG updateFlag:', updateFlag);// fixme
+    if (updateFlag) {
+      if (state.target.checked) {
+        appearData = [...appear, this.props.category._id];
+        if (attr.groupId) {
+          const includeCategoryList = this.props.attributes.filter(
+            attrItem => (!!attrItem.appear.find(
+              (arrItem => (arrItem === this.props.category._id)),
+            ) && (attrItem.groupId === attr.groupId)),
+          );
+          const groupList = this.props.attributes.filter(attrItem => (attrItem.groupId === attr.groupId));
+          if (includeCategoryList.length === groupList.length - 1) {
+            checkGrp = true;
+          }
         }
+      } else {
+        appearData = appear.filter(item => (item !== this.props.category._id));
+      }
+      if (checkGrp) {
+        const groupAdd = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
+        const groupAddAppear = groupAdd.appear;
+        groupAddAppear.push(this.props.category._id);
+        this.props.updateAttribute(attr.groupId, { appear: groupAddAppear })
+          .then(() => {
+            this.props.fetchAttributes(this.props.client.id, 'attributes');
+          });
+      } else {
+        this.props.updateAttribute(attr._id, { appear: appearData })
+          .then(() => {
+            this.props.fetchAttributes(this.props.client.id, 'attributes');
+          });
       }
     } else {
-      appearData = appear.filter(item => (item !== this.props.category._id));
-      if (attr.groupId) {
-        const includeCategoryList = this.props.attributes.filter(
-          attrItem => (!!attrItem.appear.find(
-            (arrItem => (arrItem === this.props.category._id)),
-          ) && (attrItem.groupId === attr.groupId)),
-        );
-        if (includeCategoryList.length === 1) {
-          removeGrp = true;
-        }
-      }
-    }
-    if (checkGrp) {
-      const groupAdd = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
-      const groupAddAppear = groupAdd.appear;
-      groupAddAppear.push(this.props.category._id);
-      this.props.updateAttribute(attr.groupId, { appear: groupAddAppear })
-        .then(() => {
-          this.props.fetchAttributes(this.props.client.id, 'attributes');
-        });
-    } else if (removeGrp) {
-      const groupAdd = this.props.attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
-      const groupAddAppear = groupAdd.appear.filter(appearItem => (appearItem !== this.props.category._id));
-      this.props.updateAttribute(attr.groupId, { appear: groupAddAppear })
-        .then(() => {
-          this.props.updateAttribute(attr._id, { appear: appearData })
-            .then(() => {
-              this.props.fetchAttributes(this.props.client.id, 'attributes');
-            });
-        });
-    } else {
-      this.props.updateAttribute(attr._id, { appear: appearData })
-        .then(() => {
-          this.props.fetchAttributes(this.props.client.id, 'attributes');
-        });
+      confirmMessage(
+        this.props.enqueueSnackbar,
+        'This attribute could not be changed since the group is selected.',
+        'info',
+      );
     }
   };
 
@@ -428,6 +421,7 @@ Properties.propTypes = {
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   client: PropTypes.object.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -446,4 +440,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Properties);
+)(withSnackbar(Properties));

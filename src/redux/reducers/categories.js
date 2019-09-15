@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   isDeleting: false,
 
   categories: [],
+  preProducts: null,
   trees: [],
   category: null,
   errors: '',
@@ -158,6 +159,12 @@ export default (state = INITIAL_STATE, action) => {
         trees: action.payload,
       };
 
+    case types.MATCHED_PRODUCT:
+      console.log('#### DEBUG prefilterData:', action.payload);// fixme
+      return {
+        ...state,
+        preProducts: action.payload,
+      };
     default:
       return state;
   }
