@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import AttributeSetting from 'components/Attributes/AttributeSetting';
-import AttributePreview from 'components/Attributes/AttributePreview';
+import AttributeRules from 'components/Attributes/AttributeRules';
+// import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
 
 const tabs = [
-  { value: 'setting', label: 'Setting' },
-  { value: 'preview', label: 'Preview' },
+  { value: 'association', label: 'Association' },
+  { value: 'properties', label: 'Properties' },
+  { value: 'rules', label: 'Rules' },
 ];
 
 function AttributeContent({
@@ -29,8 +31,8 @@ function AttributeContent({
       />
 
       <div className="attribute-content">
-        {tab === 'setting' && attribute && <AttributeSetting />}
-        {tab === 'preview' && <AttributePreview />}
+        {tab === 'association' && attribute && <AttributeSetting />}
+        {tab === 'rules' && <AttributeRules />}
       </div>
     </div>
   );

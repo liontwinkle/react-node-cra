@@ -12,6 +12,7 @@ import './style.scss';
 function Home({
   type,
   category,
+  attribute,
   productViewType,
 }) {
   const value = type && type.key;
@@ -33,7 +34,7 @@ function Home({
             {value === 'products' && (
               <ProductsDetail ref={tableRef} productViewType={productViewType} />
             )}
-            {value === 'attributes' && (
+            {attribute && value === 'attributes' && (
               <AttributeContent />
             )}
             {category && (value === 'virtual' || value === 'native') && (
@@ -50,18 +51,21 @@ Home.propTypes = {
   type: PropTypes.object,
   productViewType: PropTypes.object,
   category: PropTypes.object,
+  attribute: PropTypes.object,
 };
 
 Home.defaultProps = {
   type: null,
   productViewType: null,
   category: null,
+  attribute: null,
 };
 
 const mapStateToProps = store => ({
   type: store.clientsData.type,
   productViewType: store.clientsData.productViewType,
   category: store.categoriesData.category,
+  attribute: store.attributesData.attribute,
 });
 
 export default connect(mapStateToProps)(Home);

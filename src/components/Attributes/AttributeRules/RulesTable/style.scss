@@ -1,0 +1,39 @@
+@import "scss/mixin.scss";
+
+.mg-rule-actions {
+  width: fit-content;
+
+  table {
+    width: 100%;
+    padding: 0;
+    border-spacing: 0;
+    border: 1px solid #5e5e5e;
+
+    thead {
+      background: #475466;
+    }
+
+    th, td {
+      border: 1px solid #5e5e5e;
+    }
+
+    th {
+      color: #c9dde2;
+    }
+
+    td {
+      width: fit-content;
+      padding: 10px;
+
+      .item {
+        margin: 10px;
+        font-size: 14px;
+        width: fit-content;
+      }
+
+      .icon-button {
+        margin: auto;
+      }
+    }
+  }
+}

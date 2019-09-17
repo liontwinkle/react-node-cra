@@ -8,6 +8,12 @@ const AttributeSchema = new Schema({
     type: String,
     default: '',
   },
+  rules: [{
+    basis: String,
+    refer: String,
+    value: String,
+    scope: Number
+  }],
   appear: [],
 }, { toJSON: { virtuals: true }, timestamps: true });
 
