@@ -8,18 +8,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import _difference from 'lodash/difference';
 import _union from 'lodash/union';
 
-import {
-  basis,
-  refer,
-  match,
-  scope,
-} from 'utils/constants';
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { confirmMessage, getRules, getPreFilterData } from 'utils';
+import Loader from 'components/Loader';
+
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
-import Loader from '../Loader';
 
 import './style.scss';
 
@@ -80,6 +75,7 @@ class NewRules extends Component {
         filterAttribute = _union(filterAttribute, groupChild);
       });
       const srcAttributeRules = this.getSrcAttributeRules(filterAttribute);
+
       const attributeRules = getRules(srcAttributeRules, this.props.valueDetails);
       filterProduct = getPreFilterData(attributeRules.editRules, this.props.products);
     } else {
@@ -100,53 +96,12 @@ class NewRules extends Component {
     return srcAttributeRules;
   };
 
-  AnaylsisDetails = (valueStr) => {
-    const partValue = valueStr.split(']');
-    const detailValue = partValue[0].split(':');
-    const detailKey = detailValue[0].replace('[', '');
-    const matchKey = `:${detailValue[1]}`;
-    const valueKey = partValue[1];
-    const detailObj = this.props.valueDetails.find(
-      valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
-    );
-    const matchObj = match.find(matchItem => (matchItem.key === matchKey));
-    return {
-      detailObj,
-      matchObj,
-      valueKey,
-    };
-  };
-
   setMap = (category) => {
     const recvNewRules = category.newRules || [];
-    const newRules = [];
-    const editRules = [];
-    recvNewRules.forEach((item) => {
-      const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
-      const referObj = refer.find(referItem => (referItem.key === item.refer));
-      const otherObj = this.AnaylsisDetails(item.value);
-      newRules.push({
-        _id: item._id,
-        basis: basisObj,
-        refer: referObj,
-        detail: otherObj.detailObj,
-        match: otherObj.matchObj,
-        value: otherObj.valueKey,
-        scope: scope[0],
-      });
-      editRules.push({
-        _id: item._id,
-        basis: basisObj.key,
-        refer: referObj.key,
-        detail: otherObj.detailObj.key,
-        match: otherObj.matchObj.key,
-        value: otherObj.valueKey,
-        scope: scope[0].key,
-      });
-    });
+    const attributeRules = getRules(recvNewRules, this.props.valueDetails);
     this.setState({
-      newRules,
-      editRules,
+      newRules: attributeRules.newRules,
+      editRules: attributeRules.editRules,
     });
   };
 

@@ -111,7 +111,6 @@ export const getPreFilterData = (rules, products) => {
   rules.forEach((item) => {
     const field = item.detail;
     const { match, value, basis } = item;
-    console.log('## DEBUG M, V, B', match, value, basis);
     if (field === '*') {
       filterResult = getAllmatched(products, match, value, basis);
     } else {

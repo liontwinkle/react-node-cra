@@ -8,16 +8,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Filter';
 
 import { IconButton } from 'components/elements';
+import { getPreFilterData } from 'utils';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
-import {
-  RuleEngine, AddSets, DiffSets, formatDifference,
-} from '../RuleEngine';
-
+import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
-import PreviewGrid from './PreviewGrid';
 
 function RulesAction({
   rules,
@@ -35,73 +32,10 @@ function RulesAction({
 
   const [previewProducts, setProducts] = useState([]);
 
-  const getProducts = (field, match, value, basis) => {
-    const rule = RuleEngine[match](value);
-    const returnValue = {
-      includes: [],
-      excludes: [],
-    };
-    let includeIndex = 0;
-    let excludeIndex = 0;
-
-    products.forEach((productItem) => {
-      if (rule.test(productItem[field])) {
-        if (basis === 'include') {
-          returnValue.includes[includeIndex] = productItem;
-          includeIndex++;
-        } else {
-          returnValue.excludes[excludeIndex] = productItem;
-          excludeIndex++;
-        }
-      }
-    });
-    return returnValue;
-  };
-
-  const getAllmatched = (match, value, basis) => {
-    const returnValue = {
-      includes: [],
-      excludes: [],
-    };
-    let includeIndex = 0;
-    let excludeIndex = 0;
-    const rule = RuleEngine[match](value);
-
-
-    products.forEach((proItem) => {
-      const values = Object.values(proItem);
-      if (values.filter(item => (rule.test(item))).length > 0) {
-        if (basis === 'include') {
-          returnValue.includes[includeIndex] = proItem;
-          includeIndex++;
-        } else {
-          returnValue.excludes[excludeIndex] = proItem;
-          excludeIndex++;
-        }
-      }
-    });
-    return returnValue;
-  };
-
   const filterProducts = () => {
-    formatDifference();
-    let filterResult = new Set();
-
-    rules.forEach((item) => {
-      const field = item.detail;
-      const { match, value, basis } = item;
-      if (field === '*') {
-        filterResult = getAllmatched(match, value, basis);
-      } else {
-        filterResult = getProducts(field, match, value, basis);
-      }
-      AddSets(filterResult.includes, 'includes');
-      AddSets(filterResult.excludes, 'excludes');
-    });
-
-    const filterProducts = Array.from(DiffSets());
-    setProducts(filterProducts);
-    return filterProducts.length;
+    const filterProduct = getPreFilterData(rules, products);
+    setProducts(filterProduct);
+    return filterProduct.length;
   };
 
   const handleToggle = field => () => {
