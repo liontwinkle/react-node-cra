@@ -27,7 +27,9 @@ import './style.scss';
 class AttributeRules extends Component {
   state = {
     newRules: [],
+    newEditRules: [],
     editRules: [],
+    displayRules: [],
     fetchingFlag: true,
   };
 
@@ -111,41 +113,56 @@ class AttributeRules extends Component {
     };
   };
 
-  setMap = (attribute) => {
-    const recvRules = attribute.rules || [];
-    const newRules = [];
-    const editRules = [];
-    recvRules.forEach((item) => {
+  setRuleArray = (srcList, ruleArray, type = null) => {
+    srcList.forEach((item) => {
       const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
       const referObj = refer.find(referItem => (referItem.key === item.refer));
       const otherObj = this.AnaylsisDetails(item.value);
-      newRules.push({
+      ruleArray.push({
         _id: item._id,
-        basis: basisObj,
-        refer: referObj,
-        detail: otherObj.detailObj,
-        match: otherObj.matchObj,
-        value: otherObj.valueKey,
-        scope: scope[0],
-      });
-      editRules.push({
-        _id: item._id,
-        basis: basisObj.key,
-        refer: referObj.key,
-        detail: otherObj.detailObj.key,
-        match: otherObj.matchObj.key,
-        value: otherObj.valueKey,
-        scope: scope[0].key,
+        basis: (type) ? basisObj.key : basisObj,
+        refer: (type) ? referObj.key : referObj,
+        detail: (type) ? otherObj.detailObj.key : otherObj.detailObj,
+        match: (type) ? otherObj.matchObj.key : otherObj.matchObj,
+        value: (type) ? otherObj.valueKey : otherObj.valueKey,
+        scope: (type) ? scope[0].key : scope[0],
       });
     });
+  };
+
+  setMap = (attribute) => {
+    let currentRules = [];
+    const grpRules = this.props.attributes.filter(attributeItem => (attributeItem.id === attribute.groupId));
+    if (attribute.rules) {
+      currentRules = _union(currentRules, attribute.rules);
+    }
+    let displayRules = currentRules;
+    if (grpRules.length > 0 && grpRules[0].rules) {
+      displayRules = _union(currentRules, grpRules[0].rules);
+    }
+    const newRules = [];
+    const editRules = [];
+    const newEditRules = [];
+    const displayEditRules = [];
+    this.setRuleArray(currentRules, editRules, 'key');
+    this.setRuleArray(currentRules, newEditRules);
+    this.setRuleArray(displayRules, newRules);
+    this.setRuleArray(displayRules, displayEditRules, 'key');
+
     this.setState({
       newRules,
       editRules,
+      displayRules: displayEditRules,
     });
   };
 
   render() {
-    const { newRules, editRules } = this.state;
+    const {
+      newRules,
+      editRules,
+      newEditRules,
+      displayRules,
+    } = this.state;
     return (
       <div className="mg-rules-container d-flex">
         {
@@ -157,7 +174,12 @@ class AttributeRules extends Component {
                     <RulesTable rules={newRules} />
                   </PerfectScrollbar>
                 </div>
-                <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+                <RulesAction
+                  className="mg-rules-actions"
+                  rules={editRules}
+                  newRules={newEditRules}
+                  displayRules={displayRules}
+                />
               </Fragment>
             )
             : (

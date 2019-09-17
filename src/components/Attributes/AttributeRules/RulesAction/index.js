@@ -22,6 +22,7 @@ import PreviewGrid from './PreviewGrid';
 function RulesAction({
   rules,
   newRules,
+  displayRules,
   products,
   productViewType,
 }) {
@@ -87,7 +88,7 @@ function RulesAction({
     formatDifference();
     let filterResult = new Set();
 
-    rules.forEach((item) => {
+    displayRules.forEach((item) => {
       const field = item.detail;
       const { match, value, basis } = item;
       if (field === '*') {
@@ -190,6 +191,7 @@ function RulesAction({
 RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
+  displayRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };
