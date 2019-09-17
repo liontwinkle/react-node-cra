@@ -16,7 +16,7 @@ import {
 } from 'utils/constants';
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
-import { confirmMessage, getRules } from 'utils';
+import { confirmMessage, getRules, getPreFilterData } from 'utils';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 import Loader from '../Loader';
@@ -68,7 +68,6 @@ class NewRules extends Component {
     let filterAttribute = [];
     let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
     filterAttribute = attributeList;
-    console.log('########### DEBUG Origin Attribute: ', filterAttribute); // fixme
     if (attributeList.length > 0) {
       const groups = attributeList.filter(item => (!item.groupId));
       attributeList = _difference(attributeList, groups);
@@ -80,11 +79,9 @@ class NewRules extends Component {
         const groupChild = attributes.filter(item => (item.id === childListItem.groupId));
         filterAttribute = _union(filterAttribute, groupChild);
       });
-      console.log('########### DEBUG Filter Attribute: ', filterAttribute); // fixme
       const srcAttributeRules = this.getSrcAttributeRules(filterAttribute);
-      console.log('########### DEBUG Filter Source Attribute Rules: ', srcAttributeRules); // fixme
-      const attributeRules = getRules(srcAttributeRules);
-      console.log('########### DEBUG Convert Attribute Rules: ', attributeRules); // fixme
+      const attributeRules = getRules(srcAttributeRules, this.props.valueDetails);
+      filterProduct = getPreFilterData(attributeRules.editRules, this.props.products);
     } else {
       filterProduct = products;
     }

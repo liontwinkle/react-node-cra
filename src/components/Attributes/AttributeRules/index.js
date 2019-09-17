@@ -39,7 +39,6 @@ class AttributeRules extends Component {
     if (this.props.products.length === 0) {
       this.props.fetchProducts()
         .then(() => {
-          console.log('######## DEBUG: START THE BUILDING RULES PAGE ###############'); // fixme
           this.setMap(this.props.attribute);
           confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
           this.setState({ fetchingFlag: false });

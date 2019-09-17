@@ -1,17 +1,36 @@
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
-import { RuleEngine } from 'components/Attributes/AttributeRules/RuleEngine';
-import { basis, refer, scope } from './constants';
+import {
+  AddSets, DiffSets, formatDifference, RuleEngine,
+} from 'components/Attributes/AttributeRules/RuleEngine';
+import {
+  basis, match, refer, scope,
+} from './constants';
 
-export const getRules = (srcRules) => {
-  console.log('########### DEBUG CONVERT THE RULES'); // fixme
-  console.log('## DEBUG SRC: ', srcRules); // fixme
+const AnaylsisDetails = (valueStr, valueDetails) => {
+  const partValue = valueStr.split(']');
+  const detailValue = partValue[0].split(':');
+  const detailKey = detailValue[0].replace('[', '');
+  const matchKey = `:${detailValue[1]}`;
+  const valueKey = partValue[1];
+  const detailObj = valueDetails.find(
+    valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
+  );
+  const matchObj = match.find(matchItem => (matchItem.key === matchKey));
+  return {
+    detailObj,
+    matchObj,
+    valueKey,
+  };
+};
+
+export const getRules = (srcRules, valueDetails) => {
   const newRules = [];
   const editRules = [];
   srcRules.forEach((item) => {
     const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
     const referObj = refer.find(referItem => (referItem.key === item.refer));
-    const otherObj = this.AnaylsisDetails(item.value);
+    const otherObj = AnaylsisDetails(item.value, valueDetails);
     newRules.push({
       _id: item._id,
       basis: basisObj,
@@ -31,14 +50,38 @@ export const getRules = (srcRules) => {
       scope: scope[0].key,
     });
   });
-  console.log('## DEBUG NEW: ', newRules); // fixme
-  console.log('## DEBUG RULE: ', editRules); // fixme
   return {
     newRules,
     editRules,
   };
 };
-export const getPreFilterData = (products, field, match, value, basis) => {
+
+const getAllmatched = (products, match, value, basis) => {
+  const returnValue = {
+    includes: [],
+    excludes: [],
+  };
+  let includeIndex = 0;
+  let excludeIndex = 0;
+  const rule = RuleEngine[match](value);
+
+
+  products.forEach((proItem) => {
+    const values = Object.values(proItem);
+    if (values.filter(item => (rule.test(item))).length > 0) {
+      if (basis === 'include') {
+        returnValue.includes[includeIndex] = proItem;
+        includeIndex++;
+      } else {
+        returnValue.excludes[excludeIndex] = proItem;
+        excludeIndex++;
+      }
+    }
+  });
+  return returnValue;
+};
+
+const getRuleProducts = (products, field, match, value, basis) => {
   const rule = RuleEngine[match](value);
   const returnValue = {
     includes: [],
@@ -59,6 +102,26 @@ export const getPreFilterData = (products, field, match, value, basis) => {
     }
   });
   return returnValue;
+};
+
+export const getPreFilterData = (rules, products) => {
+  formatDifference();
+  let filterResult = new Set();
+
+  rules.forEach((item) => {
+    const field = item.detail;
+    const { match, value, basis } = item;
+    console.log('## DEBUG M, V, B', match, value, basis);
+    if (field === '*') {
+      filterResult = getAllmatched(products, match, value, basis);
+    } else {
+      filterResult = getRuleProducts(products, field, match, value, basis);
+    }
+    AddSets(filterResult.includes, 'includes');
+    AddSets(filterResult.excludes, 'excludes');
+  });
+
+  return Array.from(DiffSets());
 };
 
 const getSubTree = (list, parentId, type) => {

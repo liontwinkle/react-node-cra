@@ -26,8 +26,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.PRODUCTS_GET_DATA_SUCCESS:
       const data = getProducts(action.payload.products);
-      console.log('# DEBUG PRODUCTS: ', action.payload.products); // fixme
-      console.log('# DEBUG PRODUCT DATA: ', data); // fixme
       return {
         ...state,
         data,
