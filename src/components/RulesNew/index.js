@@ -16,7 +16,7 @@ import {
 } from 'utils/constants';
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
-import { confirmMessage, getPreFilterData } from 'utils';
+import { confirmMessage, getRules } from 'utils';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 import Loader from '../Loader';
@@ -62,31 +62,45 @@ class NewRules extends Component {
       category,
       products,
       setPrefilterData,
-      nodes,
     } = this.props;
 
-    let filterProject = [];
+    let filterProduct = [];
+    let filterAttribute = [];
     let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
+    filterAttribute = attributeList;
+    console.log('########### DEBUG Origin Attribute: ', filterAttribute); // fixme
     if (attributeList.length > 0) {
       const groups = attributeList.filter(item => (!item.groupId));
       attributeList = _difference(attributeList, groups);
       groups.forEach((groupItem) => {
         const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
-        filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
         attributeList = _difference(attributeList, childrenList);
       });
-
       attributeList.forEach((childListItem) => {
-        filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
+        const groupChild = attributes.filter(item => (item.id === childListItem.groupId));
+        filterAttribute = _union(filterAttribute, groupChild);
       });
+      console.log('########### DEBUG Filter Attribute: ', filterAttribute); // fixme
+      const srcAttributeRules = this.getSrcAttributeRules(filterAttribute);
+      console.log('########### DEBUG Filter Source Attribute Rules: ', srcAttributeRules); // fixme
+      const attributeRules = getRules(srcAttributeRules);
+      console.log('########### DEBUG Convert Attribute Rules: ', attributeRules); // fixme
     } else {
-      filterProject = products;
+      filterProduct = products;
     }
 
-    setPrefilterData(filterProject);
+    setPrefilterData(filterProduct);
     this.setState({
       fetchingFlag: false,
     });
+  };
+
+  getSrcAttributeRules = (srcAttributes) => {
+    let srcAttributeRules = [];
+    srcAttributes.forEach((attritbueItem) => {
+      srcAttributeRules = _union(srcAttributeRules, attritbueItem.rules);
+    });
+    return srcAttributeRules;
   };
 
   AnaylsisDetails = (valueStr) => {
@@ -171,7 +185,6 @@ NewRules.propTypes = {
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  nodes: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -182,7 +195,6 @@ const mapStateToProps = store => ({
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
   attributes: store.attributesData.attributes,
-  nodes: store.attributesData.nodes,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

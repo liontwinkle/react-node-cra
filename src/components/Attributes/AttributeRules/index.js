@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
-import _difference from 'lodash/difference';
 import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
-import { confirmMessage, getPreFilterData } from 'utils';
+import { confirmMessage } from 'utils';
 import Loader from 'components/Loader';
 import {
   basis,
@@ -42,18 +41,16 @@ class AttributeRules extends Component {
         .then(() => {
           console.log('######## DEBUG: START THE BUILDING RULES PAGE ###############'); // fixme
           this.setMap(this.props.attribute);
-          this.FilterProducts();
           confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
+          this.setState({ fetchingFlag: false });
         })
         .catch(() => {
           confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
-          this.setState({
-            fetchingFlag: false,
-          });
+          this.setState({ fetchingFlag: false });
         });
     } else {
       this.setMap(this.props.attribute);
-      this.FilterProducts();
+      this.setState({ fetchingFlag: false });
     }
   }
 
@@ -62,39 +59,6 @@ class AttributeRules extends Component {
       this.setMap(this.props.attribute);
     }
   }
-
-  FilterProducts = () => {
-    const {
-      attributes,
-      attribute,
-      products,
-      setPrefilterData,
-      nodes,
-    } = this.props;
-
-    let filterProject = [];
-    let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === attribute._id))));
-    if (attributeList.length > 0) {
-      const groups = attributeList.filter(item => (!item.groupId));
-      attributeList = _difference(attributeList, groups);
-      groups.forEach((groupItem) => {
-        const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
-        filterProject = _union(filterProject, getPreFilterData(groupItem, nodes, products));
-        attributeList = _difference(attributeList, childrenList);
-      });
-
-      attributeList.forEach((childListItem) => {
-        filterProject = _union(filterProject, getPreFilterData(childListItem, nodes, products));
-      });
-    } else {
-      filterProject = products;
-    }
-
-    setPrefilterData(filterProject);
-    this.setState({
-      fetchingFlag: false,
-    });
-  };
 
   AnaylsisDetails = (valueStr) => {
     const partValue = valueStr.split(']');
@@ -198,9 +162,7 @@ AttributeRules.propTypes = {
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  nodes: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
-  setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 

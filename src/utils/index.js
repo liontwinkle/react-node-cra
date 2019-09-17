@@ -1,37 +1,64 @@
 import { OrderedMap } from 'immutable';
-import { getUnion } from 'components/RulesNew/RuleEngine';
 import uuidv4 from 'uuid/v4';
+import { RuleEngine } from 'components/Attributes/AttributeRules/RuleEngine';
+import { basis, refer, scope } from './constants';
 
-const singleFilter = (key, products, value) => {
-  const result = [];
+export const getRules = (srcRules) => {
+  console.log('########### DEBUG CONVERT THE RULES'); // fixme
+  console.log('## DEBUG SRC: ', srcRules); // fixme
+  const newRules = [];
+  const editRules = [];
+  srcRules.forEach((item) => {
+    const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
+    const referObj = refer.find(referItem => (referItem.key === item.refer));
+    const otherObj = this.AnaylsisDetails(item.value);
+    newRules.push({
+      _id: item._id,
+      basis: basisObj,
+      refer: referObj,
+      detail: otherObj.detailObj,
+      match: otherObj.matchObj,
+      value: otherObj.valueKey,
+      scope: scope[0],
+    });
+    editRules.push({
+      _id: item._id,
+      basis: basisObj.key,
+      refer: referObj.key,
+      detail: otherObj.detailObj.key,
+      match: otherObj.matchObj.key,
+      value: otherObj.valueKey,
+      scope: scope[0].key,
+    });
+  });
+  console.log('## DEBUG NEW: ', newRules); // fixme
+  console.log('## DEBUG RULE: ', editRules); // fixme
+  return {
+    newRules,
+    editRules,
+  };
+};
+export const getPreFilterData = (products, field, match, value, basis) => {
+  const rule = RuleEngine[match](value);
+  const returnValue = {
+    includes: [],
+    excludes: [],
+  };
+  let includeIndex = 0;
+  let excludeIndex = 0;
+
   products.forEach((productItem) => {
-    if (productItem[key] === value) {
-      result.push(productItem);
+    if (rule.test(productItem[field])) {
+      if (basis === 'include') {
+        returnValue.includes[includeIndex] = productItem;
+        includeIndex++;
+      } else {
+        returnValue.excludes[excludeIndex] = productItem;
+        excludeIndex++;
+      }
     }
   });
-  return result;
-};
-
-export const getPreFilterData = (attribute, group, products) => {
-  let filterData = [];
-  if (!attribute.groupId) {
-    const childrenList = group.filter(groupItem => (groupItem.item._id === attribute._id))[0].children;
-    const groupKey = attribute.name;
-    if (childrenList.length > 0) {
-      let filterSet = new Set();
-      let singleFilterSet = new Set();
-      childrenList.forEach((childItem) => {
-        singleFilterSet = singleFilter(groupKey, products, childItem.item.name);
-        filterSet = getUnion(filterSet, singleFilterSet);
-      });
-      filterData = Array.from(filterSet);
-    }
-  } else {
-    const { groupId, name } = attribute;
-    const key = group.filter(groupItem => (groupItem.item._id === groupId))[0].item.name;
-    filterData = singleFilter(key, products, name);
-  }
-  return filterData;
+  return returnValue;
 };
 
 const getSubTree = (list, parentId, type) => {

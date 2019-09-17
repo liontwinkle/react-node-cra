@@ -197,7 +197,7 @@ RulesAction.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  products: store.categoriesData.preProducts,
+  products: store.productsData.data.products,
   productViewType: store.clientsData.productViewType,
 
 });
