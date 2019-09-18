@@ -4,10 +4,12 @@ import DetailTable from 'components/DetailTable';
 import NewRules from 'components/RulesNew';
 import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';
+import Association from 'components/Association';
 
 const tabs = [
   { value: 'detail', label: 'Detail View' },
   { value: 'properties', label: 'Properties' },
+  { value: 'association', label: 'Association' },
   { value: 'rules', label: 'Rules' },
 ];
 
@@ -29,6 +31,7 @@ function Content() {
       <div className="virtual-content">
         {tab === 'detail' && <DetailTable />}
         {tab === 'properties' && <Properties />}
+        {tab === 'association' && <Association />}
         {tab === 'rules' && <NewRules />}
       </div>
     </div>
