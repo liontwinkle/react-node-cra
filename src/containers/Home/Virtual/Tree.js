@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import VirtualSortableTree from 'components/VirtualTree';
+import VirtualSortableTree from 'components/Virtual/VirtualTree';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 

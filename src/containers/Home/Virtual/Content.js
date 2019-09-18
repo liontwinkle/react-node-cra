@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import DetailTable from 'components/DetailTable';
-import NewRules from 'components/RulesNew';
-import Properties from 'components/Properties';
+import NewRules from 'components/Virtual/RulesNew';
+import Properties from 'components/Virtual/Properties';
 import { CustomTab } from 'components/elements';
-import Association from 'components/Association';
+import Association from 'components/Virtual/Association';
 
 const tabs = [
   { value: 'detail', label: 'Detail View' },
