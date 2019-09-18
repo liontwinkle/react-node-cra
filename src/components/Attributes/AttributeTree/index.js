@@ -16,6 +16,7 @@ function AttributeNode({
   nodeData,
   setNodeData,
   attributes,
+  attribute,
   updateAttribute,
   setAttribute,
 }) {
@@ -103,6 +104,7 @@ function AttributeNode({
       }),
     );
   };
+  const isSelected = node => (attribute && attribute.id) === node.item.id;
 
   return (
     <SortableTree
@@ -111,7 +113,7 @@ function AttributeNode({
       maxDepth={2}
       canDrag
       generateNodeProps={({ node, path }) => ({
-        className: 'selected',
+        className: isSelected(node) ? 'selected' : '',
         buttons:
           [
             <NodeMenu
@@ -141,13 +143,19 @@ function AttributeNode({
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
+  attribute: PropTypes.object,
   setNodeData: PropTypes.func.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   setAttribute: PropTypes.func.isRequired,
 };
 
+AttributeNode.defaultProps = {
+  attribute: null,
+};
+
 const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
+  attribute: store.attributesData.attribute,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
