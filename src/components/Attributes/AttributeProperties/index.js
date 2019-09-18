@@ -125,7 +125,6 @@ class AttributeProperties extends Component {
   };
 
   toggleSwitch = field => () => {
-    console.log('# DEBUG TOGGLE: ', this.state.properties[field]); // fixme
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
