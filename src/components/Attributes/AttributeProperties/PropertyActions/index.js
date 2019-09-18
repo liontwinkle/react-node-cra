@@ -8,7 +8,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import { Tooltip } from 'react-tippy';
 
-import { updateCategory } from 'redux/actions/categories';
+import { updateAttribute } from 'redux/actions/attribute';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 import AddSections from './AddSections';
@@ -19,8 +19,8 @@ import EditPropertyFields from './EditPropertyFields';
 function PropertyActions({
   properties,
   isUpdating,
-  category,
-  updateCategory,
+  attribute,
+  updateAttribute,
   fields,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -68,7 +68,7 @@ function PropertyActions({
     const saveData = setDefault();
     if (saveData.chkFlag) {
       if (!isUpdating) {
-        updateCategory(category.id, { properties: saveData })
+        updateAttribute(attribute.id, { properties: saveData })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
           })
@@ -160,17 +160,17 @@ PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
   fields: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  attribute: PropTypes.object.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  isUpdating: store.categoriesData.isUpdating,
-  category: store.categoriesData.category,
+  isUpdating: store.attributesData.isUpdating,
+  attribute: store.attributesData.attribute,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
+  updateAttribute,
 }, dispatch);
 
 export default connect(

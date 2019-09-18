@@ -209,10 +209,10 @@ class Properties extends Component {
           );
         } else if (p.propertyType === 'toggle') {
           let value = true;
-          if (!properties[p.key]) {
+          if (properties[p.key] === undefined) {
             value = (p.default === 'true');
           } else {
-            value = (properties[p.key] === 'true');
+            value = properties[p.key];
           }
           res.push(
             <CustomToggle

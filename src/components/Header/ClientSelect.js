@@ -54,11 +54,11 @@ function ClientSelect({
   const actionChangeType = (type, client) => {
     setClientType(type);
     if (type.key !== 'products') {
+      fetchPropertyField(client.id, type.key);
       if (type.key === 'attributes') {
         fetchCategories(client.id, 'virtual');
         fetchAttributes(client.id, type.key);
       } else {
-        fetchPropertyField(client.id, type.key);
         fetchCategories(client.id, type.key);
         fetchAttributes(client.id, 'attributes');
       }

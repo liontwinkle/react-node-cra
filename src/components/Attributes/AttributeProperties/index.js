@@ -125,6 +125,7 @@ class AttributeProperties extends Component {
   };
 
   toggleSwitch = field => () => {
+    console.log('# DEBUG TOGGLE: ', this.state.properties[field]); // fixme
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
@@ -206,10 +207,10 @@ class AttributeProperties extends Component {
           );
         } else if (p.propertyType === 'toggle') {
           let value = true;
-          if (!properties[p.key]) {
+          if (properties[p.key] === undefined) {
             value = (p.default === 'true');
           } else {
-            value = (properties[p.key] === 'true');
+            value = properties[p.key];
           }
           res.push(
             <CustomToggle
