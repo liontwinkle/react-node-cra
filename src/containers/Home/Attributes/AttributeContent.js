@@ -6,6 +6,7 @@ import AttributeSetting from 'components/Attributes/AttributeSetting';
 import AttributeRules from 'components/Attributes/AttributeRules';
 // import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
+import AttributeProperties from '../../../components/Attributes/AttributeProperties';
 
 const tabs = [
   { value: 'association', label: 'Association' },
@@ -32,6 +33,7 @@ function AttributeContent({
 
       <div className="attribute-content">
         {tab === 'association' && attribute && <AttributeSetting />}
+        {tab === 'properties' && attribute && <AttributeProperties />}
         {tab === 'rules' && <AttributeRules />}
       </div>
     </div>

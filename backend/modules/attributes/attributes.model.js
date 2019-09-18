@@ -8,6 +8,7 @@ const AttributeSchema = new Schema({
     type: String,
     default: '',
   },
+  properties: Object,
   rules: [{
     basis: String,
     refer: String,
