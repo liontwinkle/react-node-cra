@@ -7,6 +7,7 @@ import 'react-sortable-tree/style.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'react-tippy/dist/tippy.css';
 import 'handsontable/dist/handsontable.full.css';
+import 'react-checkbox-tree-enhanced/lib/react-checkbox-tree.css';
 import './style.scss';
 
 import store, { history } from './redux/store';
