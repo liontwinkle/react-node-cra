@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import CheckboxTree from 'react-checkbox-tree-enhanced';
 import { withSnackbar } from 'notistack';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -16,9 +17,18 @@ import {
 } from 'components/elements';
 import { confirmMessage } from 'utils';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AttributeSettingAction from './AttributeSettingAction';
-
 import './style.scss';
+
+const checkNodes = [{
+  value: 'mars',
+  label: 'Mars',
+  children: [
+    { value: 'phobos', label: 'Phobos' },
+    { value: 'deimos', label: 'Deimos' },
+  ],
+}];
 
 class AttributeSetting extends Component {
   state = {
@@ -26,6 +36,8 @@ class AttributeSetting extends Component {
     categoryList: [],
     newCategory: null,
     categories: [],
+    checked: [],
+    expanded: [],
   };
 
   componentDidMount() {
@@ -143,6 +155,25 @@ class AttributeSetting extends Component {
             minScrollbarLength: 50,
           }}
         >
+          <CheckboxTree
+            nodes={checkNodes}
+            checked={this.state.checked}
+            expanded={this.state.expanded}
+            onCheck={checked => this.setState({ checked })}
+            onExpand={expanded => this.setState({ expanded })}
+            icons={{
+              check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
+              uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
+              halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
+              expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon="chevron-right" />,
+              expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon="chevron-down" />,
+              expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon="plus-square" />,
+              collapseAll: <FontAwesomeIcon className="rct-icon rct-icon-collapse-all" icon="minus-square" />,
+              parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
+              parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
+              leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
+            }}
+          />
           <CustomSection title="Associated Category" key="associated_category">
             {
               categoryList.map((listItem, key) => (
