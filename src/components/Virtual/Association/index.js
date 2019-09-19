@@ -4,13 +4,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import CheckboxTree from 'react-checkbox-tree-enhanced';
 
 import { confirmMessage } from 'utils/index';
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
-import CheckboxTree from 'react-checkbox-tree-enhanced';
+
+import './style.scss';
 
 function Association({
   category,
@@ -33,7 +35,6 @@ function Association({
           updateChecked.push(attrItem._id);
         }
       });
-      console.log('update Checked>>>', updateChecked); // fixme
       setChecked(updateChecked);
     }
   }, [category, attributes, setChecked]);
@@ -43,12 +44,7 @@ function Association({
     setExpanded(expanded);
   };
   const handleAttributeChange = (checked, nodeTarget) => {
-    console.log(associationAttributes);// fixme
-    console.log('target>>>', nodeTarget); // fixme
-    console.log('checked>>>', checked); // fixme
-
     const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
-    console.log('checked Attr>>>>', targetAppear); // fixme
 
     let checkGrp = false;
     let appearData = [];
@@ -100,16 +96,15 @@ function Association({
   };
 
   return (
-    <div className="mg-properties-container d-flex">
-      <div className="mg-properties-content">
-        <PerfectScrollbar
-          options={{
-            suppressScrollX: true,
-            minScrollbarLength: 50,
-          }}
-        >
-          {
-            nodes.length > 0
+    <div className="mg-attributes-container d-flex">
+      <PerfectScrollbar
+        options={{
+          suppressScrollX: true,
+          minScrollbarLength: 50,
+        }}
+      >
+        {
+          nodes.length > 0
             && (
               <CheckboxTree
                 nodes={associationAttributes}
@@ -125,9 +120,8 @@ function Association({
                 }}
               />
             )
-          }
-        </PerfectScrollbar>
-      </div>
+        }
+      </PerfectScrollbar>
     </div>
   );
 }
