@@ -6,8 +6,9 @@ import CheckboxTree from 'react-checkbox-tree-enhanced';
 import { withSnackbar } from 'notistack';
 
 import { confirmMessage } from 'utils';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import _ from 'lodash';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import AttributeSettingAction from './AttributeSettingAction';
 import './style.scss';
 
@@ -15,6 +16,7 @@ class AttributeSetting extends Component {
   state = {
     // selectedGroup: null,
     // newCategory: null,
+    categoryList: [],
     checked: [],
     expanded: [],
   };
@@ -37,23 +39,39 @@ class AttributeSetting extends Component {
     return updateFlag;
   };
 
+  getSubCategory = (array, source) => {
+    source.children.forEach((childItem) => {
+      array.push(childItem.value);
+      this.getSubCategory(array, childItem);
+    });
+  };
 
-  handleCheck = (checked) => {
-    console.log('checked>>>', checked);
-    const stateLen = this.state.checked.length;
-    const updateLen = checked.length;
-    let value = '';
-    if (stateLen > updateLen) {
-      value = this.state.checked[stateLen - 1];
-    } else {
-      value = checked[updateLen - 1];
-    }
-    if (this.checkGroupPermission(value)) {
-      console.log('# DEBUG: UPDATE'); // fixme
-      this.setState({ checked });
+  updateList = (target) => {
+    const updateCategory = [];
+    updateCategory.push(target.value);
+    this.getSubCategory(updateCategory, target);
+    console.log(updateCategory);// fixme
+    return updateCategory;
+  };
+
+  handleCheck = (checked, targetNode) => {
+    if (this.checkGroupPermission(targetNode.value)) {
+      const updateData = this.updateList(targetNode);
+      if (targetNode.checked) {
+        this.setState(prevState => ({
+          categoryList: _.union(updateData, prevState.categoryList),
+          checked,
+        }));
+      } else {
+        this.setState(prevState => ({
+          categoryList: _.difference(prevState.categoryList, updateData),
+          checked,
+        }));
+      }
     } else {
       confirmMessage(this.props.enqueueSnackbar, 'This attribute is changeable on the group only', 'info');
     }
+    console.log('update State>>>', this.state.categoryList); // fixme
   };
 
   handleExpand = (expanded) => {
@@ -88,8 +106,8 @@ class AttributeSetting extends Component {
             nativeCheckboxes
             showNodeIcon={false}
             icons={{
-              expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon="chevron-right" />,
-              expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon="chevron-down" />,
+              expandClose: <AddIcon />,
+              expandOpen: <RemoveIcon />,
             }}
           />
         </PerfectScrollbar>
