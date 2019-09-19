@@ -48,45 +48,47 @@ class AttributeProperties extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(this.props.attribute.properties, prevProps.attribute.properties)) {
+    const { attribute, propertyField } = this.props;
+    const { properties } = this.state;
+    if (!isEqual(attribute.properties, prevProps.attribute.properties)) {
       if (this.props.attribute.id === prevProps.attribute.id) {
-        const properties = {};
-        const keys = Object.keys(this.state.properties);
-        const propKeys = Object.keys(this.props.attribute.properties);
+        const updateProperties = {};
+        const keys = Object.keys(properties);
+        const propKeys = Object.keys(attribute.properties);
 
         keys.forEach((key) => {
           if (propKeys.indexOf(key) > -1) {
-            properties[key] = this.state.properties[key];
+            updateProperties[key] = properties[key];
           }
         });
 
-        this.updateState({ properties });
+        this.updateState({ updateProperties });
       } else {
         this.updateState({
-          properties: this.props.attribute.properties || {},
+          properties: attribute.properties || {},
         });
       }
     }
-    if (!isEqual(this.props.propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
+    if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nextProperties = {};
-      this.props.propertyField.propertyFields.forEach((item, key) => {
-        if (this.state.properties[item.key] === item.default) {
-          nextProperties[item.key] = this.props.propertyField.propertyFields[key].default;
-        } else if (this.state.properties[item.key] === (item.default === 'true')) {
-          nextProperties[item.key] = (this.props.propertyField.propertyFields[key].default === true);
+      propertyField.propertyFields.forEach((item, key) => {
+        if (properties[item.key] === item.default) {
+          nextProperties[item.key] = propertyField.propertyFields[key].default;
+        } else if (properties[item.key] === (item.default === 'true')) {
+          nextProperties[item.key] = (propertyField.propertyFields[key].default === true);
         }
       });
-      const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+      const nonSection = propertyField.propertyFields.filter(item => item.section === null);
       this.updateState({
-        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
+        sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
         properties: nextProperties,
       });
     }
 
-    if (!isEqual(this.props.propertyField.sections, this.props.propertyField.sections)) {
+    if (!isEqual(propertyField.sections, propertyField.sections)) {
       this.updateState({
-        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
+        sections: propertyField.sections.sort(sortByOrder) || [],
       });
     }
   }

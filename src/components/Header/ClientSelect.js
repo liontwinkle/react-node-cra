@@ -11,10 +11,10 @@ import {
   setClientType,
   setProductViewType,
 } from 'redux/actions/clients';
-import { fetchCategories } from 'redux/actions/categories';
+import { fetchCategories, updateTreeData } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
-import { fetchAttributes } from 'redux/actions/attribute';
+import { fetchAttributes, updateNodeData } from 'redux/actions/attribute';
 import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
 import { productViewTypes, clientType } from 'utils/constants';
@@ -34,6 +34,8 @@ function ClientSelect({
   fetchProductsField,
   fetchAttributes,
   setProducts,
+  updateTreeData,
+  updateNodeData,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -78,6 +80,8 @@ function ClientSelect({
     if (newClient) {
       setClient(newClient);
       setProducts([]);
+      updateNodeData([]);
+      updateTreeData([]);
       actionChangeType(defaultType, newClient);
     }
   };
@@ -137,6 +141,8 @@ ClientSelect.propTypes = {
   fetchProductsField: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
+  updateTreeData: PropTypes.func.isRequired,
+  updateNodeData: PropTypes.func.isRequired,
 };
 
 ClientSelect.defaultProps = {
@@ -163,6 +169,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProductsField,
   fetchAttributes,
   setProducts,
+  updateTreeData,
+  updateNodeData,
 }, dispatch);
 
 export default connect(

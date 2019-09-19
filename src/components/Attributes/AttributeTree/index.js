@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
 import { updateAttribute, setAttribute } from 'redux/actions/attribute';
-import { confirmMessage, getNodeKey } from 'utils/';
+import { confirmMessage, getNodeKey } from 'utils';
 import NodeMenu from './NodeMenu';
 
 import './style.scss';

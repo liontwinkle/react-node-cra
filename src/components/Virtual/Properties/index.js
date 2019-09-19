@@ -39,7 +39,9 @@ class Properties extends Component {
   };
 
   componentDidMount() {
-    const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+    const { propertyField } = this.props;
+    const nonSection = (propertyField.propertyFields)
+      ? propertyField.propertyFields.filter(item => item.section === null) : [];
     this.setState({
       noSectionPropertyFields: nonSection || [],
       properties: this.props.category.properties || {},
