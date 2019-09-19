@@ -17,16 +17,19 @@ import {
 } from 'components/elements';
 import { confirmMessage } from 'utils';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AttributeSettingAction from './AttributeSettingAction';
 import './style.scss';
 
 const checkNodes = [{
   value: 'mars',
   label: 'Mars',
+  id: 'ID',
   children: [
-    { value: 'phobos', label: 'Phobos' },
-    { value: 'deimos', label: 'Deimos' },
+    {
+      value: 'phobos', label: 'Phobos', id: 'ID', children: [{ value: 'child', label: 'child', id: 'ID' }],
+    },
+    { value: 'deimos', label: 'Deimos', id: 'ID' },
   ],
 }];
 
@@ -145,8 +148,11 @@ class AttributeSetting extends Component {
 
     const {
       attribute,
+      assoicationCategories,
     } = this.props;
 
+    console.log('org trees>>>', checkNodes); // fixme
+    console.log('trees>>>', assoicationCategories); // fixme
     return (
       <div className="mg-attr-setting-container d-flex">
         <PerfectScrollbar
@@ -156,23 +162,11 @@ class AttributeSetting extends Component {
           }}
         >
           <CheckboxTree
-            nodes={checkNodes}
+            nodes={assoicationCategories}
             checked={this.state.checked}
             expanded={this.state.expanded}
             onCheck={checked => this.setState({ checked })}
             onExpand={expanded => this.setState({ expanded })}
-            icons={{
-              check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
-              uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
-              halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
-              expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon="chevron-right" />,
-              expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon="chevron-down" />,
-              expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon="plus-square" />,
-              collapseAll: <FontAwesomeIcon className="rct-icon rct-icon-collapse-all" icon="minus-square" />,
-              parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
-              parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
-              leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
-            }}
           />
           <CustomSection title="Associated Category" key="associated_category">
             {
@@ -229,11 +223,13 @@ AttributeSetting.propTypes = {
   attribute: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   nodes: PropTypes.array.isRequired,
+  assoicationCategories: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
   attribute: store.attributesData.attribute,
   nodes: store.attributesData.nodes,
+  assoicationCategories: store.categoriesData.associations,
   categories: store.categoriesData.categories,
 });
 export default connect(mapStateToProps)(withSnackbar(AttributeSetting));

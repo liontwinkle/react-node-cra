@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   categories: [],
   preProducts: null,
   trees: [],
+  associations: [],
   category: null,
   errors: '',
 };
@@ -41,12 +42,14 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
+      const fetchSaveData = getCategoryTree(action.payload.categories);
       return {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
         category: null,
-        trees: getCategoryTree(action.payload.categories),
+        trees: fetchSaveData.subTree,
+        associations: fetchSaveData.association,
       };
     case types.CATEGORIES_GET_FAIL:
       return {
@@ -71,13 +74,16 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       categories.push(data);
-      const treeData = _merge(getCategoryTree(categories), state.trees);
+      const updateSaveData = getCategoryTree(categories);
+      const treeData = _merge(updateSaveData.subTree, state.trees);
+      const associationData = _merge(updateSaveData.association, state.associations);
 
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
         trees: treeData,
+        associations: associationData,
         category: action.payload.data,
       };
     case types.CATEGORY_CREATE_FAIL:
@@ -109,12 +115,15 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         categories.push(updateData);
       }
-      const newTrees = _merge(state.trees, getCategoryTree(categories));
+      const newSaveData = getCategoryTree(categories);
+      const newTrees = _merge(state.trees, newSaveData.subTree);
+      const newAssociations = _merge(state.associations, newSaveData.association);
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
         trees: newTrees,
+        associations: newAssociations,
         category: action.payload.data,
       };
     case types.CATEGORY_UPDATE_FAIL:

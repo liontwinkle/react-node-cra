@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   attributes: [],
   nodes: [],
   attribute: null,
+  associations: [],
   errors: '',
 };
 
@@ -33,24 +34,25 @@ export default (state = INITIAL_STATE, action) => {
             const cNewItem = [];
             pItem.children.forEach((cItem, cKey) => {
               cNewItem.push(cItem);
-              cNewItem[cKey].item = fetchedTrees[pKey].children[cKey].item;
+              cNewItem[cKey].item = fetchedTrees.subTree[pKey].children[cKey].item;
             });
             convertedTrees.push(pItem);
             convertedTrees[pKey].children = cNewItem;
-            convertedTrees[pKey].item = fetchedTrees[pKey].item;
+            convertedTrees[pKey].item = fetchedTrees.subTree[pKey].item;
           } else {
             convertedTrees.push(pItem);
-            convertedTrees[pKey].item = fetchedTrees[pKey].item;
+            convertedTrees[pKey].item = fetchedTrees.subTree[pKey].item;
           }
         });
       } else {
-        convertedTrees = fetchedTrees;
+        convertedTrees = fetchedTrees.subTree;
       }
       return {
         ...state,
         isFetchingList: false,
         attributes: action.payload.attributes,
         attribute: state.attribute || null,
+        associations: fetchedTrees.association,
         nodes: convertedTrees,
       };
     case types.ATTRIBUTE_FETCH_FAIL:
@@ -69,12 +71,15 @@ export default (state = INITIAL_STATE, action) => {
       const { data } = action.payload;
       attributes.push(data);
 
-      const nodeData = _merge(getAttribute(attributes), state.nodes);
+      const createData = getAttribute(attributes);
+      const nodeData = _merge(createData.subTree, state.nodes);
+      const nodeAssociation = _merge(createData.association, state.associations);
       return {
         ...state,
         isCreating: false,
         attributes: attributes.slice(0),
         nodes: nodeData,
+        associations: nodeAssociation,
         attribute: action.payload.data,
       };
     case types.ATTRIBUTE_CREATE_FAIL:
@@ -104,14 +109,14 @@ export default (state = INITIAL_STATE, action) => {
           const cNewItem = [];
           pItem.children.forEach((cItem, cKey) => {
             cNewItem.push(cItem);
-            cNewItem[cKey].item = recvTrees[pKey].children[cKey].item;
+            cNewItem[cKey].item = recvTrees.subTree[pKey].children[cKey].item;
           });
           newTrees.push(pItem);
           newTrees[pKey].children = cNewItem;
-          newTrees[pKey].item = recvTrees[pKey].item;
+          newTrees[pKey].item = recvTrees.subTree[pKey].item;
         } else {
           newTrees.push(pItem);
-          newTrees[pKey].item = recvTrees[pKey].item;
+          newTrees[pKey].item = recvTrees.subTree[pKey].item;
         }
       });
 
@@ -120,6 +125,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: false,
         attributes: attributes.slice(0),
         nodes: newTrees,
+        associations: recvTrees.association,
         attribute: action.payload.data,
       };
     case types.ATTRIBUTE_UPDATE_FAIL:

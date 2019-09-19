@@ -125,19 +125,28 @@ export const getPreFilterData = (rules, products) => {
 
 const getSubTree = (list, parentId, type) => {
   const subTree = [];
+  const association = [];
   const sublist = list.filter(item => item[type] === parentId);
   if (sublist.length > 0) {
     sublist.forEach((item) => {
+      association.push({
+        label: item.name,
+        value: item._id,
+        children: getSubTree(list, item._id, type).association,
+      });
       subTree.push({
         title: item.name,
         editable: false,
         item,
-        children: getSubTree(list, item._id, type),
+        children: getSubTree(list, item._id, type).subTree,
       });
     });
   }
 
-  return subTree;
+  return {
+    subTree,
+    association,
+  };
 };
 
 export const confirmMessage = (func, msg, type) => {
