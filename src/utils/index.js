@@ -131,7 +131,7 @@ const getSubTree = (list, parentId, type) => {
     sublist.forEach((item) => {
       association.push({
         label: item.name,
-        value: item._id,
+        value: item.name, // fixme
         children: getSubTree(list, item._id, type).association,
       });
       subTree.push({
