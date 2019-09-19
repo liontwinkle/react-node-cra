@@ -132,6 +132,7 @@ const getSubTree = (list, parentId, type) => {
       association.push({
         label: item.name,
         value: item._id,
+        appear: item.appear || [],
         children: getSubTree(list, item._id, type).association,
       });
       subTree.push({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -6,9 +6,11 @@ import { useSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import { confirmMessage } from 'utils/index';
-import { CustomSection } from 'components/elements/index';
-import CustomCheck from 'components/elements/CustomCheck/index';
+
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
+import CheckboxTree from 'react-checkbox-tree-enhanced';
 
 function Association({
   category,
@@ -17,46 +19,73 @@ function Association({
   updateAttribute,
   fetchAttributes,
   client,
+  associationAttributes,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [checked, setChecked] = useState([]);
+  const [expanded, setExpanded] = useState([]);
 
-  const handleAttributeChange = (appear, attr) => (state) => {
+  useEffect(() => {
+    if (category) {
+      const updateChecked = [];
+      attributes.forEach((attrItem) => {
+        if (attrItem.appear.find(appearItem => (appearItem === category._id))) {
+          updateChecked.push(attrItem._id);
+        }
+      });
+      console.log('update Checked>>>', updateChecked); // fixme
+      setChecked(updateChecked);
+    }
+  }, [category, attributes, setChecked]);
+
+
+  const handleExpanded = (expanded) => {
+    setExpanded(expanded);
+  };
+  const handleAttributeChange = (checked, nodeTarget) => {
+    console.log(associationAttributes);// fixme
+    console.log('target>>>', nodeTarget); // fixme
+    console.log('checked>>>', checked); // fixme
+
+    const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
+    console.log('checked Attr>>>>', targetAppear); // fixme
+
     let checkGrp = false;
     let appearData = [];
-    const groupAttr = attributes.filter(attrItem => (attrItem._id === attr.groupId));
+    const groupAttr = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId));
     let updateFlag = true;
     if (groupAttr.length > 0) {
       updateFlag = !(groupAttr[0].appear.find(arrItem => (arrItem === category._id)));
     }
 
     if (updateFlag) {
-      if (state.target.checked) {
-        appearData = [...appear, category._id];
-        if (attr.groupId) {
+      if (nodeTarget.checked) {
+        appearData = [...targetAppear.appear, category._id];
+        if (targetAppear.groupId) {
           const includeCategoryList = attributes.filter(
             attrItem => (!!attrItem.appear.find(
               (arrItem => (arrItem === category._id)),
-            ) && (attrItem.groupId === attr.groupId)),
+            ) && (attrItem.groupId === targetAppear.groupId)),
           );
-          const groupList = attributes.filter(attrItem => (attrItem.groupId === attr.groupId));
+          const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
           if (includeCategoryList.length === groupList.length - 1) {
             checkGrp = true;
           }
         }
       } else {
-        appearData = appear.filter(item => (item !== category._id));
+        appearData = targetAppear.appear.filter(item => (item !== category._id));
       }
 
       if (checkGrp) {
-        const groupAdd = attributes.filter(attrItem => (attrItem._id === attr.groupId))[0];
+        const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
         const groupAddAppear = groupAdd.appear;
         groupAddAppear.push(category._id);
-        updateAttribute(attr.groupId, { appear: groupAddAppear })
+        updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
           .then(() => {
             fetchAttributes(client.id, 'attributes');
           });
       } else {
-        updateAttribute(attr._id, { appear: appearData })
+        updateAttribute(targetAppear._id, { appear: appearData })
           .then(() => {
             fetchAttributes(client.id, 'attributes');
           });
@@ -68,39 +97,6 @@ function Association({
         'info',
       );
     }
-  };
-
-  const renderAttributes = () => {
-    const res = [];
-    nodes.forEach((nodeItem) => {
-      res.push(
-        <div key={nodeItem.item._id} className="attribute-item">
-          <div className="group">
-            <CustomCheck
-              key={nodeItem.item._id}
-              insertValue={
-                !!(nodeItem.item.appear.find(appearItem => (appearItem === category._id)))
-              }
-              value={nodeItem.item.name}
-              onChange={handleAttributeChange(nodeItem.item.appear, nodeItem.item)}
-            />
-          </div>
-          {
-            nodeItem.children.map(childItem => (
-              <CustomCheck
-                key={childItem.item._id}
-                insertValue={
-                  !!(childItem.item.appear.find(appearItem => (appearItem === category._id)))
-                }
-                value={childItem.item.name}
-                onChange={handleAttributeChange(childItem.item.appear, childItem.item)}
-              />
-            ))
-          }
-        </div>,
-      );
-    });
-    return res;
   };
 
   return (
@@ -115,11 +111,19 @@ function Association({
           {
             nodes.length > 0
             && (
-              <CustomSection title="Attributes" key="attributes">
-                <div className="attribute-section">
-                  {renderAttributes(null)}
-                </div>
-              </CustomSection>
+              <CheckboxTree
+                nodes={associationAttributes}
+                checked={checked}
+                expanded={expanded}
+                onCheck={handleAttributeChange}
+                onExpand={handleExpanded}
+                nativeCheckboxes
+                showNodeIcon={false}
+                icons={{
+                  expandClose: <AddIcon />,
+                  expandOpen: <RemoveIcon />,
+                }}
+              />
             )
           }
         </PerfectScrollbar>
@@ -132,6 +136,7 @@ Association.propTypes = {
   category: PropTypes.object.isRequired,
   nodes: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
+  associationAttributes: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
@@ -140,6 +145,7 @@ Association.propTypes = {
 const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
   attributes: store.attributesData.attributes,
+  associationAttributes: store.attributesData.associations,
   category: store.categoriesData.category,
   client: store.clientsData.client,
 });
