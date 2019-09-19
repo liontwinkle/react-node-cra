@@ -9,9 +9,10 @@ import { CustomTab } from 'components/elements';
 import AttributeProperties from '../../../components/Attributes/AttributeProperties';
 
 const tabs = [
-  { value: 'association', label: 'Association' },
   { value: 'properties', label: 'Properties' },
+  { value: 'categories', label: 'Categories' },
   { value: 'rules', label: 'Rules' },
+  { value: 'history', label: 'History' },
 ];
 
 function AttributeContent({
@@ -32,7 +33,7 @@ function AttributeContent({
       />
 
       <div className="attribute-content">
-        {tab === 'association' && attribute && <AttributeSetting />}
+        {tab === 'categories' && attribute && <AttributeSetting />}
         {tab === 'properties' && attribute && <AttributeProperties />}
         {tab === 'rules' && <AttributeRules />}
       </div>

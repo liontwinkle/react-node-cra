@@ -7,10 +7,10 @@ import { CustomTab } from 'components/elements';
 import Association from 'components/Virtual/Association';
 
 const tabs = [
-  { value: 'detail', label: 'Detail View' },
   { value: 'properties', label: 'Properties' },
-  { value: 'association', label: 'Association' },
+  { value: 'attributes', label: 'Attributes' },
   { value: 'rules', label: 'Rules' },
+  { value: 'history', label: 'History' },
 ];
 
 function Content() {
@@ -29,9 +29,9 @@ function Content() {
       />
 
       <div className="virtual-content">
-        {tab === 'detail' && <DetailTable />}
+        {tab === 'history' && <DetailTable />}
         {tab === 'properties' && <Properties />}
-        {tab === 'association' && <Association />}
+        {tab === 'attributes' && <Association />}
         {tab === 'rules' && <NewRules />}
       </div>
     </div>
