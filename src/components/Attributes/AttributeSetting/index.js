@@ -1,34 +1,44 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
 import { withSnackbar } from 'notistack';
-
-import { confirmMessage } from 'utils';
-import _ from 'lodash';
+import _union from 'lodash/union';
+import _difference from 'lodash/difference';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import AttributeSettingAction from './AttributeSettingAction';
+
+import { confirmMessage } from 'utils';
+import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
+
 import './style.scss';
 
 class AttributeSetting extends Component {
   state = {
-    // selectedGroup: null,
-    // newCategory: null,
     categoryList: [],
     checked: [],
     expanded: [],
   };
 
   componentDidMount() {
-    // const { attribute, categories } = this.props;
+    const { attribute } = this.props;
+    this.setChecked(attribute);
   }
 
-  componentDidUpdate() {
-    // if (prevProps.attribute !== this.props.attribute) {
-    // }
+  componentDidUpdate(prevProps) {
+    if (prevProps.attribute !== this.props.attribute) {
+      this.setChecked(this.props.attribute);
+    }
   }
+
+  setChecked = (attribute) => {
+    this.setState({
+      checked: attribute.appear,
+      categoryList: attribute.appear,
+    });
+  };
 
   checkGroupPermission= (value) => {
     const group = this.props.nodes.filter(nodeItem => (nodeItem.item._id === this.props.attribute.groupId));
@@ -50,42 +60,55 @@ class AttributeSetting extends Component {
     const updateCategory = [];
     updateCategory.push(target.value);
     this.getSubCategory(updateCategory, target);
-    console.log(updateCategory);// fixme
     return updateCategory;
+  };
+
+  updateAttribute = (updateData) => {
+    const {
+      attribute,
+      enqueueSnackbar,
+      updateAttribute,
+      fetchAttributes,
+    } = this.props;
+
+    updateAttribute(attribute._id, { appear: updateData })
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');
+        fetchAttributes(this.props.client.id, 'attributes');
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
+      });
   };
 
   handleCheck = (checked, targetNode) => {
     if (this.checkGroupPermission(targetNode.value)) {
-      const updateData = this.updateList(targetNode);
+      let updateData = [];
       if (targetNode.checked) {
-        this.setState(prevState => ({
-          categoryList: _.union(updateData, prevState.categoryList),
+        updateData = _union(this.updateList(targetNode), this.state.categoryList);
+        this.setState({
+          categoryList: updateData,
           checked,
-        }));
+        });
       } else {
-        this.setState(prevState => ({
-          categoryList: _.difference(prevState.categoryList, updateData),
+        updateData = _difference(this.state.categoryList, this.updateList(targetNode));
+        this.setState({
+          categoryList: updateData,
           checked,
-        }));
+        });
       }
+      this.updateAttribute(updateData);
     } else {
       confirmMessage(this.props.enqueueSnackbar, 'This attribute is changeable on the group only', 'info');
     }
-    console.log('update State>>>', this.state.categoryList); // fixme
   };
 
   handleExpand = (expanded) => {
-    console.log('expand>>>>>', expanded);
     this.setState({ expanded });
   };
 
   render() {
     const {
-      categoryList,
-    } = this.state;
-
-    const {
-      attribute,
       assoicationCategories,
     } = this.props;
 
@@ -111,7 +134,6 @@ class AttributeSetting extends Component {
             }}
           />
         </PerfectScrollbar>
-        <AttributeSettingAction attribute={attribute} categoryList={categoryList} />
       </div>
     );
   }
@@ -122,6 +144,9 @@ AttributeSetting.propTypes = {
   attribute: PropTypes.object.isRequired,
   nodes: PropTypes.array.isRequired,
   assoicationCategories: PropTypes.array.isRequired,
+  client: PropTypes.object.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -129,5 +154,15 @@ const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
   assoicationCategories: store.categoriesData.associations,
   categories: store.categoriesData.categories,
+  client: store.clientsData.client,
 });
-export default connect(mapStateToProps)(withSnackbar(AttributeSetting));
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateAttribute,
+  fetchAttributes,
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withSnackbar(AttributeSetting));
