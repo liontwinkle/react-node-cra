@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
 import { updateAttribute, setAttribute } from 'redux/actions/attribute';
+import { createHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey } from 'utils';
 import NodeMenu from './NodeMenu';
 
@@ -14,10 +15,12 @@ import './style.scss';
 
 function AttributeNode({
   nodeData,
+  history,
   setNodeData,
   attributes,
   attribute,
   updateAttribute,
+  createHistory,
   setAttribute,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -64,6 +67,11 @@ function AttributeNode({
         if (checkNameDuplicate(node.title, node.item.groupId) === 0) {
           updateAttribute(node.item.id, { name: node.title })
             .then(() => {
+              createHistory({
+                label: `Name is changed as ${node.title}`,
+                itemId: node.item.id,
+                type: 'attributes',
+              });
               confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
               handleConfirm(node, path);
             })
@@ -138,6 +146,7 @@ function AttributeNode({
               attributes={attributes}
               setTreeData={setNodeData}
               checkNameDuplicate={checkNameDuplicate}
+              history={history}
             />,
           ],
         title: (
@@ -159,10 +168,12 @@ function AttributeNode({
 
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
   attribute: PropTypes.object,
   setNodeData: PropTypes.func.isRequired,
   updateAttribute: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   setAttribute: PropTypes.func.isRequired,
 };
 
@@ -172,12 +183,14 @@ AttributeNode.defaultProps = {
 
 const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
+  history: store.historyData.history,
   attribute: store.attributesData.attribute,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
   setAttribute,
+  createHistory,
 }, dispatch);
 
 export default connect(

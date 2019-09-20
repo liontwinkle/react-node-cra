@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { bindActionCreators } from 'redux';
 import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import { createHistory, removeHistory } from 'redux/actions/history';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
@@ -14,11 +15,14 @@ import connect from 'react-redux/es/connect/connect';
 
 function NodeMenu({
   treeData,
+  history,
   node,
   path,
   setTreeData,
   createAttribute,
+  createHistory,
   removeAttribute,
+  removeHistory,
   checkNameDuplicate,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -64,6 +68,11 @@ function NodeMenu({
         groupId: node.item.id,
       })
         .then((attribute) => {
+          createHistory({
+            label: 'Create Node',
+            itemId: attribute._id,
+            type: 'attributes',
+          });
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
           setTreeData(
             addNodeUnderParent({
@@ -92,6 +101,10 @@ function NodeMenu({
     const removeId = node.item.id;
     removeAttribute(removeId)
       .then(() => {
+        const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+        if (deleteHistory.length > 0) {
+          removeHistory(removeId);
+        }
         confirmMessage(enqueueSnackbar, 'The attribute has been deleted successfully.', 'success');
         setTreeData(
           removeNodeAtPath({
@@ -201,17 +214,22 @@ function NodeMenu({
 
 NodeMenu.propTypes = {
   treeData: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createAttribute: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   removeAttribute: PropTypes.func.isRequired,
+  removeHistory: PropTypes.func.isRequired,
   checkNameDuplicate: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createAttribute,
+  createHistory,
   removeAttribute,
+  removeHistory,
 }, dispatch);
 
 export default connect(

@@ -9,20 +9,23 @@ import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
-function DetailTable({ category, history }) {
+function DetailTable({
+  category, attribute, history, type,
+}) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     if (history) {
-      const parentId = category ? category.id : '';
+      const item = (type === 'virtual') ? category : attribute;
+      const parentId = item ? item.id : '';
       const displayHistory = history.filter(historyItem => (historyItem.itemId === parentId));
       setData(displayHistory.map(c => ({
         action: c.label,
-        createdAt: convertDateFormat(category.createdAt),
+        createdAt: convertDateFormat(item.createdAt),
         updatedAt: convertDateFormat(c.updatedAt),
       })));
     }
-  }, [category, history]);
+  }, [attribute, category, history, type]);
 
 
   const columns = [
@@ -57,14 +60,18 @@ function DetailTable({ category, history }) {
 DetailTable.propTypes = {
   history: PropTypes.array.isRequired,
   category: PropTypes.object,
+  attribute: PropTypes.object,
+  type: PropTypes.string.isRequired,
 };
 
 DetailTable.defaultProps = {
   category: null,
+  attribute: null,
 };
 
 const mapStateToProps = store => ({
   category: store.categoriesData.category,
+  attribute: store.attributesData.attribute,
   history: store.historyData.history,
 });
 

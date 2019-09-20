@@ -7,6 +7,7 @@ import AttributeRules from 'components/Attributes/AttributeRules';
 // import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
 import AttributeProperties from '../../../components/Attributes/AttributeProperties';
+import DetailTable from '../../../components/DetailTable';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
@@ -36,6 +37,7 @@ function AttributeContent({
         {tab === 'categories' && attribute && <AttributeSetting />}
         {tab === 'properties' && attribute && <AttributeProperties />}
         {tab === 'rules' && <AttributeRules />}
+        {tab === 'history' && <DetailTable type="attributes" />}
       </div>
     </div>
   );

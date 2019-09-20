@@ -29,7 +29,7 @@ function Content() {
       />
 
       <div className="virtual-content">
-        {tab === 'history' && <DetailTable />}
+        {tab === 'history' && <DetailTable type="virtual" />}
         {tab === 'properties' && <Properties />}
         {tab === 'attributes' && <Association />}
         {tab === 'rules' && <NewRules />}

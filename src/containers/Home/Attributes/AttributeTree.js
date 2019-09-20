@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createAttribute, updateNodeData } from 'redux/actions/attribute';
+import { createHistory } from 'redux/actions/history';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
@@ -16,6 +17,7 @@ import { confirmMessage } from 'utils';
 
 function AttributeTree({
   createAttribute,
+  createHistory,
   attributes,
   nodeData,
   updateNodeData,
@@ -27,7 +29,12 @@ function AttributeTree({
     const flag = (filterGroup.length === 0);
     if (flag) {
       createAttribute({ name: 'New Group' })
-        .then(() => {
+        .then((attribute) => {
+          createHistory({
+            label: 'Create Node',
+            itemId: attribute._id,
+            type: 'attributes',
+          });
           confirmMessage(enqueueSnackbar, 'New group has been created successfully.', 'success');
         })
         .catch(() => {
@@ -81,6 +88,7 @@ AttributeTree.propTypes = {
   attributes: PropTypes.array.isRequired,
   nodeData: PropTypes.array.isRequired,
   createAttribute: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   updateNodeData: PropTypes.func.isRequired,
 };
 
@@ -91,6 +99,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createAttribute,
+  createHistory,
   updateNodeData,
 }, dispatch);
 
