@@ -26,7 +26,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.ATTRIBUTE_FETCH_SUCCESS:
-      const fetchedTrees = getAttribute(action.payload.attributes);
+      const fetchedTrees = getAttribute(action.payload.attributes.sort());
       let convertedTrees = [];
       if (state.nodes.length > 0) {
         state.nodes.forEach((pItem, pKey) => {

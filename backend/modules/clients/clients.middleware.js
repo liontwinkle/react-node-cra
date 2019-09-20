@@ -2,6 +2,7 @@ const Clients = require('./clients.model');
 const CategoryModel = require('../categories/categories.model');
 const ProductsModel = require('../products/products.model');
 const AttributesModel = require('../attributes/attributes.model');
+const HistoryModel = require('../history/history.model');
 
 const { handleEntityNotFound, handleError } = require('../../utils');
 
@@ -24,6 +25,8 @@ exports.loadCategory = (req, res, next, type) => {
       req.products = ProductsModel(`${req.client.code}_${type}`);
     } else if (type === 'attributes') {
       req.attributes = AttributesModel(`${req.client.code}_${type}`);
+    } else if (type === 'history') {
+      req.history = HistoryModel(`${req.client.code}_${type}`);
     } else {
       req.category = CategoryModel(`${req.client.code}_${type}`);
     }
