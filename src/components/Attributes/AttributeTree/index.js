@@ -30,7 +30,6 @@ function AttributeNode({
         len++;
       }
     });
-    console.log(len);
     return len;
   };
 
