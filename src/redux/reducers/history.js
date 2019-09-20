@@ -6,12 +6,12 @@ const INITIAL_STATE = {
   isUpdating: false,
   isDeleting: false,
 
-  histories: [],
+  history: [],
   errors: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // const { histories } = state;
+  const { history } = state;
 
   switch (action.type) {
     case types.HISTORY_FETCH_REQUEST:
@@ -22,7 +22,11 @@ export default (state = INITIAL_STATE, action) => {
     case types.HISTORY_FETCH_SUCCESS:
       console.log('############# DEBUG START FETCH ##################'); // fixme
       console.log('## DEBUG FETCH DATA: ', action.payload.data); // fixme
-      break;
+      return {
+        ...state,
+        isFetchingList: false,
+        history: action.payload.data,
+      };
     case types.HISTORY_FETCH_FAIL:
       return {
         ...state,
@@ -36,10 +40,14 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.HISTORY_CREATE_SUCCESS:
-      console.log('################ DEBUG START CREATE ###########'); // fixme
       const { data } = action.payload;
-      console.log('## DEBUG: ', data); // fixme
-      break;
+      history.push(data);
+
+      return {
+        ...state,
+        isCreating: false,
+        history,
+      };
     case types.HISTORY_CREATE_FAIL:
       return {
         ...state,

@@ -1,4 +1,4 @@
-import historyService from 'services/category.service';
+import historyService from 'services/history.service';
 import types from '../actionTypes';
 
 export const fetchHistories = (clientId, type) => (dispatch, getState) => {
@@ -10,6 +10,7 @@ export const fetchHistories = (clientId, type) => (dispatch, getState) => {
     type: types.HISTORY_FETCH_REQUEST,
   });
 
+  console.log('# DEBUG :', clientId, type); // fixme
   return historyService.fetch(clientId, type)
     .then((data) => {
       dispatch({
@@ -32,6 +33,8 @@ export const createHistory = history => (dispatch, getState) => {
     return;
   }
 
+  console.log('################ DEBUG START CREATE ###########'); // fixme
+  console.log('## DEBUG SEND DATA: ', history); // fixme
   const { client } = getState().clientsData;
 
   dispatch({

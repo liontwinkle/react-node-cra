@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 
 import { confirmMessage, getNodeKey } from 'utils/index';
 import { createCategory, removeCategory } from 'redux/actions/categories';
+import { createHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 
 function NodeMenu({
@@ -17,6 +18,7 @@ function NodeMenu({
   path,
   setTreeData,
   createCategory,
+  createHistory,
   removeCategory,
   editable,
 }) {
@@ -43,6 +45,11 @@ function NodeMenu({
       parentId: node.item.id,
     })
       .then((category) => {
+        createHistory({
+          label: 'Create Node',
+          itemId: category._id,
+          type: 'virtual',
+        });
         confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
         setTreeData(
           addNodeUnderParent({
@@ -186,12 +193,14 @@ NodeMenu.propTypes = {
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
+  createHistory,
   removeCategory,
 }, dispatch);
 

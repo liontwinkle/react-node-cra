@@ -15,6 +15,7 @@ import { fetchCategories, updateTreeData } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
 import { fetchAttributes, updateNodeData } from 'redux/actions/attribute';
+import { fetchHistories } from 'redux/actions/history';
 import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
 import { productViewTypes, clientType } from 'utils/constants';
@@ -36,6 +37,7 @@ function ClientSelect({
   setProducts,
   updateTreeData,
   updateNodeData,
+  fetchHistories,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -57,6 +59,7 @@ function ClientSelect({
     setClientType(type);
     if (type.key !== 'products') {
       fetchPropertyField(client.id, type.key);
+      fetchHistories(client.id, type.key);
       if (type.key === 'attributes') {
         fetchCategories(client.id, 'virtual');
         fetchAttributes(client.id, type.key);
@@ -143,6 +146,7 @@ ClientSelect.propTypes = {
   setProducts: PropTypes.func.isRequired,
   updateTreeData: PropTypes.func.isRequired,
   updateNodeData: PropTypes.func.isRequired,
+  fetchHistories: PropTypes.func.isRequired,
 };
 
 ClientSelect.defaultProps = {
@@ -168,6 +172,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchPropertyField,
   fetchProductsField,
   fetchAttributes,
+  fetchHistories,
   setProducts,
   updateTreeData,
   updateNodeData,

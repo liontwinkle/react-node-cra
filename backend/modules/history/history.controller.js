@@ -10,7 +10,7 @@ const {
 // Gets a list of Categories
 exports.index = (req, res) => {
   req.history
-    .find()
+    .find({ type: req.params.itemType })
     .select('-__v')
     .execAsync()
     .then(responseWithResult(res))

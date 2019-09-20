@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createCategory, updateTreeData } from 'redux/actions/categories';
+import { createHistory } from 'redux/actions/history';
 
 import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -20,6 +21,7 @@ function Tree(props) {
     categories,
     createCategory,
     updateTreeData,
+    createHistory,
     treeData,
   } = props;
 
@@ -29,7 +31,12 @@ function Tree(props) {
 
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })
-      .then(() => {
+      .then((category) => {
+        createHistory({
+          label: 'Create Node',
+          itemId: category._id,
+          type: 'virtual',
+        });
         confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
       })
       .catch(() => {
@@ -75,6 +82,7 @@ Tree.propTypes = {
   treeData: PropTypes.array.isRequired,
   createCategory: PropTypes.func.isRequired,
   updateTreeData: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -84,6 +92,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
+  createHistory,
   updateTreeData,
 }, dispatch);
 

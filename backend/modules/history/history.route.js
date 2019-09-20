@@ -5,7 +5,7 @@ const router = express.Router();
 const controller = require('./history.controller');
 
 // Request to get list of Categories
-router.get('/', controller.index);
+router.get('/item/:itemType', controller.index);
 
 // Request to create a Category
 router.post('/', controller.create);
