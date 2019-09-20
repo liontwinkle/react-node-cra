@@ -19,6 +19,7 @@ function NodeMenu({
   setTreeData,
   createAttribute,
   removeAttribute,
+  checkNameDuplicate,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -36,46 +37,54 @@ function NodeMenu({
   };
 
   const handleEdit = () => {
-    setTreeData(
-      changeNodeAtPath({
-        treeData,
-        path,
-        getNodeKey,
-        newNode: {
-          ...node,
-          editable: true,
-        },
-      }),
-    );
+    if (checkNameDuplicate(node.item.name, node.item.groupId) < 2) {
+      setTreeData(
+        changeNodeAtPath({
+          treeData,
+          path,
+          getNodeKey,
+          newNode: {
+            ...node,
+            editable: true,
+          },
+        }),
+      );
+    } else {
+      confirmMessage(enqueueSnackbar, 'The attribute name is duplicated', 'info');
+    }
     handleClose();
   };
 
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    createAttribute({
-      name: 'New Attribute',
-      groupId: node.item.id,
-    })
-      .then((attribute) => {
-        confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
-        setTreeData(
-          addNodeUnderParent({
-            treeData,
-            parentKey: path[path.length - 1],
-            expandParent: true,
-            getNodeKey,
-            newNode: {
-              title: attribute.name,
-              editable: false,
-              item: attribute,
-            },
-          }).treeData,
-        );
+    if (checkNameDuplicate('New Attribute', node.item.id) === 0) {
+      createAttribute({
+        name: 'New Attribute',
+        groupId: node.item.id,
       })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
-      });
+        .then((attribute) => {
+          confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
+          setTreeData(
+            addNodeUnderParent({
+              treeData,
+              parentKey: path[path.length - 1],
+              expandParent: true,
+              getNodeKey,
+              newNode: {
+                title: attribute.name,
+                editable: false,
+                item: attribute,
+              },
+            }).treeData,
+          );
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, 'The attribute name is duplicated', 'info');
+    }
     handleClose();
   };
 
@@ -197,6 +206,7 @@ NodeMenu.propTypes = {
   setTreeData: PropTypes.func.isRequired,
   createAttribute: PropTypes.func.isRequired,
   removeAttribute: PropTypes.func.isRequired,
+  checkNameDuplicate: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({

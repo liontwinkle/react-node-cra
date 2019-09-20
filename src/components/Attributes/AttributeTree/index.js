@@ -22,6 +22,18 @@ function AttributeNode({
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
+  const checkNameDuplicate = (name, groupId) => {
+    let len = 0;
+    const filterAttr = attributes.filter(attrItem => (attrItem.groupId === groupId));
+    filterAttr.forEach((arrItem) => {
+      if (arrItem.name === name) {
+        len++;
+      }
+    });
+    console.log(len);
+    return len;
+  };
+
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
       ...node,
@@ -50,15 +62,19 @@ function AttributeNode({
       const attribute = _find(attributes, { id: node.item.id });
 
       if (attribute && attribute.name !== node.title) {
-        updateAttribute(node.item.id, { name: node.title })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
-            handleConfirm(node, path);
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
-            handleConfirm(node, path, attribute.name);
-          });
+        if (checkNameDuplicate(node.title, node.item.groupId) === 0) {
+          updateAttribute(node.item.id, { name: node.title })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
+              handleConfirm(node, path);
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
+              handleConfirm(node, path, attribute.name);
+            });
+        } else {
+          confirmMessage(enqueueSnackbar, 'The attribute name is duplicated', 'info');
+        }
       } else {
         handleConfirm(node, path);
       }
@@ -120,7 +136,9 @@ function AttributeNode({
               treeData={nodeData}
               node={node}
               path={path}
+              attributes={attributes}
               setTreeData={setNodeData}
+              checkNameDuplicate={checkNameDuplicate}
             />,
           ],
         title: (

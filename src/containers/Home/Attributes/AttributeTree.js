@@ -23,13 +23,19 @@ function AttributeTree({
   const { enqueueSnackbar } = useSnackbar();
 
   const addRootCategory = () => {
-    createAttribute({ name: 'New Group' })
-      .then(() => {
-        confirmMessage(enqueueSnackbar, 'New group has been created successfully.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in adding group.', 'error');
-      });
+    const filterGroup = attributes.filter(attrItem => (attrItem.groupId === '' && attrItem.name === 'New Group'));
+    const flag = (filterGroup.length === 0);
+    if (flag) {
+      createAttribute({ name: 'New Group' })
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'New group has been created successfully.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in adding group.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, 'Group name is duplicated.', 'info');
+    }
   };
 
   const setNodeData = (data) => {
