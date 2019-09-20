@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import AttributeSetting from 'components/Attributes/AttributeSetting';
 import AttributeRules from 'components/Attributes/AttributeRules';
-// import AttributePreview from 'components/Attributes/AttributePreview';
 import { CustomTab } from 'components/elements';
-import AttributeProperties from '../../../components/Attributes/AttributeProperties';
-import DetailTable from '../../../components/DetailTable';
+import AttributeProperties from 'components/Attributes/AttributeProperties';
+import DetailTable from 'components/DetailTable';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
