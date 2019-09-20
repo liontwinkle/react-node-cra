@@ -7,7 +7,7 @@ const INITIAL_STATE = {
 
   productsField: {},
   errors: '',
-  imageKey: '',
+  imageKey: 'image',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,7 +21,7 @@ export default (state = INITIAL_STATE, action) => {
       const data = (action.payload.productsField.length > 0 && action.payload.productsField[0].fields)
         ? action.payload.productsField[0].fields : {};
       const imageKey = (action.payload.productsField.length > 0 && action.payload.productsField[0].imageKey)
-        ? action.payload.productsField[0].imageKey : '';
+        ? action.payload.productsField[0].imageKey : 'image';
       return {
         ...state,
         isFetchingList: false,

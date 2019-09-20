@@ -133,7 +133,6 @@ function ProductsDataDetail({
 
   const setEmpty = (updateData, type) => {
     const updatedData = [];
-    const time1 = performance.now();
     updateData.forEach((item, key) => {
       const keys = Object.keys(item);
       const values = Object.values(item);
@@ -150,14 +149,12 @@ function ProductsDataDetail({
       });
       updatedData[key] = subData;
     });
-    console.log(performance.now() - time1);
     return updatedData;
   };
 
   const toggleSwitch = field => () => {
     if (!isUpdatingList) {
       let updateData = products;
-
       const newDisplaySetting = {
         ...displayFlag,
         [field]: !displayFlag[field],
