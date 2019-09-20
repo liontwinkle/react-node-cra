@@ -8,6 +8,7 @@ import _find from 'lodash/find';
 
 import { confirmMessage, getNodeKey } from 'utils/index';
 import { updateCategory, setCategory } from 'redux/actions/categories';
+import { createHistory } from 'redux/actions/history';
 import TreeNodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -17,12 +18,14 @@ function VirtualSortableTree(props) {
 
   const {
     categories,
+    history,
     category,
     treeData,
     setTreeData,
     updateCategory,
     setCategory,
     clientType,
+    createHistory,
   } = props;
 
   const handleConfirm = (node, path, title = null) => {
@@ -55,6 +58,11 @@ function VirtualSortableTree(props) {
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
+            createHistory({
+              label: `Name is changed as ${node.title}`,
+              itemId: category._id,
+              type: 'virtual',
+            });
             confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
             handleConfirm(node, path);
           })
@@ -117,6 +125,12 @@ function VirtualSortableTree(props) {
 
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
+        const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
+        createHistory({
+          label: msg,
+          itemId: category._id,
+          type: 'virtual',
+        });
         const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
         confirmMessage(enqueueSnackbar, string, 'success');
         handleConfirm(node, path);
@@ -146,6 +160,7 @@ function VirtualSortableTree(props) {
               path={path}
               setTreeData={setTreeData}
               editable={editable}
+              history={history}
             />,
           ] : [],
         title: (
@@ -167,12 +182,14 @@ function VirtualSortableTree(props) {
 
 VirtualSortableTree.propTypes = {
   categories: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
   category: PropTypes.object,
   clientType: PropTypes.object.isRequired,
   treeData: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
   setCategory: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 VirtualSortableTree.defaultProps = {
@@ -183,11 +200,13 @@ const mapStateToProps = store => ({
   categories: store.categoriesData.categories,
   category: store.categoriesData.category,
   clientType: store.clientsData.type,
+  history: store.historyData.history,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateCategory,
   setCategory,
+  createHistory,
 }, dispatch);
 
 export default connect(

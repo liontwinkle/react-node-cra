@@ -10,7 +10,6 @@ export const fetchHistories = (clientId, type) => (dispatch, getState) => {
     type: types.HISTORY_FETCH_REQUEST,
   });
 
-  console.log('# DEBUG :', clientId, type); // fixme
   return historyService.fetch(clientId, type)
     .then((data) => {
       dispatch({
@@ -33,8 +32,6 @@ export const createHistory = history => (dispatch, getState) => {
     return;
   }
 
-  console.log('################ DEBUG START CREATE ###########'); // fixme
-  console.log('## DEBUG SEND DATA: ', history); // fixme
   const { client } = getState().clientsData;
 
   dispatch({
@@ -60,41 +57,10 @@ export const createHistory = history => (dispatch, getState) => {
     });
 };
 
-export const updateHistory = (id, updatedData) => (dispatch, getState) => {
-  if (getState().historyData.isUpdating) {
-    return;
-  }
-
-  const { client } = getState().clientsData;
-
-  dispatch({
-    type: types.HISTORY_UPDATE_REQUEST,
-  });
-
-  return historyService.update(client.id, id, updatedData)
-    .then((data) => {
-      dispatch({
-        type: types.HISTORY_UPDATE_SUCCESS,
-        payload: { data },
-      });
-
-      return 'success';
-    })
-    .catch((error) => {
-      dispatch({
-        type: types.HISTORY_UPDATE_FAIL,
-        payload: { error },
-      });
-
-      throw error;
-    });
-};
-
 export const removeHistory = id => (dispatch, getState) => {
   if (getState().historyData.isDeleting) {
     return;
   }
-
   const { client } = getState().clientsData;
 
   dispatch({

@@ -2,9 +2,7 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
-  removeEntity,
-  removeChildren
+  respondWith,
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -35,27 +33,15 @@ exports.show = (req, res) => {
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
-
-// Updates an existing Category in the DB
-exports.update = (req, res) => {
-  if (req.body._id) {
-    delete req.body._id;
-  }
-
-  req.history
-    .findByIdAsync(req.params.historyId)
-    .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
-    .then(responseWithResult(res))
-    .catch(handleError(res));
-};
-
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   req.history
-    .findByIdAsync(req.params.historyId)
-    .then(handleEntityNotFound(res))
-    .then(removeEntity(res))
-    .then(removeChildren(req, req.params.historyId))
-    .catch(handleError(res));
+    .deleteMany({ itemId: req.params.itemId }, (err) => {
+      if (err) {
+        handleError(res);
+      } else {
+        respondWith(res, 204);
+      }
+    })
+    .then(respondWith(res, 204));
 };

@@ -9,17 +9,19 @@ import { useSnackbar } from 'notistack';
 
 import { confirmMessage, getNodeKey } from 'utils/index';
 import { createCategory, removeCategory } from 'redux/actions/categories';
-import { createHistory } from 'redux/actions/history';
+import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 
 function NodeMenu({
   treeData,
+  history,
   node,
   path,
   setTreeData,
   createCategory,
   createHistory,
   removeCategory,
+  removeHistory,
   editable,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -90,6 +92,10 @@ function NodeMenu({
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
+        const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+        if (deleteHistory.length > 0) {
+          removeHistory(removeId);
+        }
         confirmMessage(enqueueSnackbar, 'The category has been deleted successfully.', 'success');
         setTreeData(
           removeNodeAtPath({
@@ -189,12 +195,14 @@ function NodeMenu({
 
 NodeMenu.propTypes = {
   treeData: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
+  removeHistory: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
 
@@ -202,6 +210,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
   createHistory,
   removeCategory,
+  removeHistory,
 }, dispatch);
 
 export default connect(

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MaterialTable from 'material-table';
@@ -9,22 +9,27 @@ import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
-function DetailTable({ categories, category }) {
-  const parentId = category ? category.id : '';
-  const childrenCategories = categories.filter(c => c.parentId === parentId);
+function DetailTable({ category, history }) {
+  const [data, setData] = useState([]);
 
-  const tableData = {
-    columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Created Date', field: 'createdAt' },
-      { title: 'Updated Date', field: 'updatedAt' },
-    ],
-    data: childrenCategories.map(c => ({
-      name: c.name,
-      createdAt: convertDateFormat(c.createdAt),
-      updatedAt: convertDateFormat(c.updatedAt),
-    })),
-  };
+  useEffect(() => {
+    if (history) {
+      const parentId = category ? category.id : '';
+      const displayHistory = history.filter(historyItem => (historyItem.itemId === parentId));
+      setData(displayHistory.map(c => ({
+        action: c.label,
+        createdAt: convertDateFormat(category.createdAt),
+        updatedAt: convertDateFormat(c.updatedAt),
+      })));
+    }
+  }, [category, history]);
+
+
+  const columns = [
+    { title: 'Action', field: 'action' },
+    { title: 'Created Date', field: 'createdAt' },
+    { title: 'Updated Date', field: 'updatedAt' },
+  ];
 
   return (
     <div className="mg-detail-table">
@@ -36,8 +41,8 @@ function DetailTable({ categories, category }) {
       >
         <MaterialTable
           icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
+          columns={columns}
+          data={data}
           options={{
             actionsColumnIndex: -1,
             paging: false,
@@ -50,7 +55,7 @@ function DetailTable({ categories, category }) {
 }
 
 DetailTable.propTypes = {
-  categories: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
   category: PropTypes.object,
 };
 
@@ -59,8 +64,8 @@ DetailTable.defaultProps = {
 };
 
 const mapStateToProps = store => ({
-  categories: store.categoriesData.categories,
   category: store.categoriesData.category,
+  history: store.historyData.history,
 });
 
 export default connect(mapStateToProps)(DetailTable);
