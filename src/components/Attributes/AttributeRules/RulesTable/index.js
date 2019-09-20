@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
-import SaveIcon from '@material-ui/icons/Filter';
 
 import { IconButton } from 'components/elements';
 import PreviewProducts from '../RulesAction/PreviewProducts';
@@ -65,19 +64,23 @@ function RulesTable({ rules, products, productViewType }) {
       filterResult = getProducts(field, match, value);
     }
     AddSets(filterResult, 'union');
-    const filter = Array.from(getData().union);
-    setProducts(filter);
-    return filter.length;
+    return Array.from(getData().union);
   };
 
   const handleToggle = key => () => {
-    if (key !== 'close' && filterProducts(key) === 0) {
-      enqueueSnackbar('No Products match this rule.', {
-        variant: 'info',
-        autoHideDuration: 4000,
-      });
+    if (key !== 'close') {
+      const data = filterProducts(key);
+      if (data.length === 0) {
+        enqueueSnackbar('No Products match this rule.', {
+          variant: 'info',
+          autoHideDuration: 4000,
+        });
+      } else {
+        setProducts(data);
+        setPreViewState(true);
+      }
     } else {
-      setPreViewState(!preViewState);
+      setPreViewState(false);
     }
   };
 
@@ -136,7 +139,7 @@ function RulesTable({ rules, products, productViewType }) {
                     arrow
                   >
                     <IconButton>
-                      <SaveIcon style={{ fontSize: 20 }} onClick={handleToggle(i)} />
+                      <span onClick={handleToggle(i)}>{filterProducts(i).length}</span>
                     </IconButton>
                   </Tooltip>
                 </td>
