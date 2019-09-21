@@ -8,6 +8,10 @@
     width: 100%;
     display: flex;
     align-items: flex-start;
-    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .custom-check-container{
+      width: 50%;
+    }
   }
 }

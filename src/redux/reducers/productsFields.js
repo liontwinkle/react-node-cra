@@ -52,12 +52,6 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: false,
         errors: action.payload.error,
       };
-
-    case types.PRODUCTS_DELETE_FIELDS_REQUEST:
-      return {
-        ...state,
-        isDeleting: true,
-      };
     case types.PRODUCTS_DELETE_FIELDS_SUCCESS:
       return {
         ...state,

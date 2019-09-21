@@ -43,6 +43,7 @@ exports.updateImageKey = (req, res) => {
     .then(handleExistingRemove(ProductsField, req, newData, res))
     .catch(handleError(res));
 };
+
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   ProductsField

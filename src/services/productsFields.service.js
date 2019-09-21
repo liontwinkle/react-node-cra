@@ -16,7 +16,6 @@ const updateImageKey = (clientId, ImageKey) => httpService
   .put(`${getCategoryRoute}/key/${clientId}`, ImageKey)
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
-
 const remove = clientId => httpService
   .remove(`${getCategoryRoute}/${clientId}`)
   .then(({ data }) => data)

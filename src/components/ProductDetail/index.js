@@ -131,6 +131,41 @@ function ProductsDataDetail({
     }
   };
 
+  const handleAllUpdate = (type) => {
+    const value = (type === 'checked');
+    const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+    const columnIndexArray = Array(headers.length).fill().map((value, index) => index);
+    if (value) {
+      showPlugin.showColumn(...columnIndexArray);
+    } else {
+      showPlugin.hideColumn(...columnIndexArray);
+    }
+    tableRef.current.hotInstance.render();
+
+    const updateData = fieldData;
+    headers.forEach((headerItem) => {
+      if ((updateData[headerItem] === undefined)
+      || (updateData[headerItem].grid === undefined)) {
+        updateData[headerItem] = {
+          data: value,
+          grid: true,
+        };
+      } else {
+        updateData[headerItem] = {
+          data: value,
+          grid: fieldData[headerItem].grid,
+        };
+      }
+    });
+    updateProductsField(updateData)
+      .then(() => {
+        setFieldData(updateData);
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+      });
+  };
+
   const setEmpty = (updateData, type) => {
     const updatedData = [];
     updateData.forEach((item, key) => {
@@ -235,12 +270,13 @@ function ProductsDataDetail({
                 </Tooltip>
               </div>
             </CustomSection>
-            <CustomSection title="Show Column Setting" key="show_setting">
+            <CustomSection title="Visible Product Keys" key="show_setting">
               <ShowFields
                 fields={headers}
                 chkValue={fieldData}
                 type="data"
                 onChange={handleShow}
+                onUpdate={handleAllUpdate}
               />
             </CustomSection>
           </div>
