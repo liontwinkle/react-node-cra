@@ -76,6 +76,7 @@ export default (state = INITIAL_STATE, action) => {
     case types.PRODUCTS_SET_PRODUCTS:
       return {
         ...state,
+        isUpdatingList: false,
         data: {
           ...state.data,
           products: JSON.parse(action.payload.updateData),

@@ -45,6 +45,12 @@ class ProductTable extends Component {
       console.log('# DEBUG: updating... ...'); // fixme
       this.setFetchFg(this.props.isUpdating);
     }
+
+    if ((prevProps.isUpdatingList !== this.props.isUpdatingList) && this.props.isUpdatingList) {
+      console.log('# DEBUG: updating... ...'); // fixme
+      this.setFetchFg(this.props.isUpdatingList);
+    }
+
     const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
     if (prevProps.columns.length > 0 && !diffFlag) {
       console.log('# DEBUG START: ');
@@ -153,6 +159,7 @@ class ProductTable extends Component {
 
 ProductTable.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
+  isUpdatingList: PropTypes.bool.isRequired,
   tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
@@ -169,7 +176,7 @@ const mapStateToProps = store => ({
   headers: store.productsData.data.headers,
   productsField: store.productsFieldsData.productsField,
   isUpdating: store.productsFieldsData.isUpdating,
-
+  isUpdatingList: store.productsData.isUpdatingList,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
