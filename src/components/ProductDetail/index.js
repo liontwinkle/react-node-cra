@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -39,24 +39,6 @@ function ProductsDataDetail({
   });
   const [imageKeySet, setImageKeySet] = useState(imageKey);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const tableObj = tableRef.current;
-      if (tableObj !== null) {
-        clearInterval(interval);
-
-        const showPlugin = tableObj.hotInstance.getPlugin('hiddenColumns');
-        const hiddenColumns = [];
-        headers.forEach((item, key) => {
-          if (!fieldData[item] && (fieldData[item] !== undefined)) hiddenColumns.push(key);
-        });
-        showPlugin.hideColumns(hiddenColumns);
-
-        tableObj.hotInstance.render();
-      }
-    }, 1000);
-  }, [fieldData, headers, tableRef]);
-
   const handleExportCsv = () => {
     tableRef.current.hotInstance
       .getPlugin('exportFile')
@@ -86,13 +68,13 @@ function ProductsDataDetail({
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
-      const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-      if (value) {
-        showPlugin.showColumn(index);
-      } else {
-        showPlugin.hideColumn(index);
-      }
-      tableRef.current.hotInstance.render();
+      // const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+      // if (value) {
+      //   showPlugin.showColumn(index);
+      // } else {
+      //   showPlugin.hideColumn(index);
+      // }
+      // tableRef.current.hotInstance.render();
 
       const newFieldData = fieldData;
       headers.forEach((item, key) => {
@@ -133,19 +115,19 @@ function ProductsDataDetail({
 
   const handleAllUpdate = (type) => {
     const value = (type === 'checked');
-    const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-    const columnIndexArray = Array(headers.length).fill().map((value, index) => index);
-    if (value) {
-      showPlugin.showColumn(...columnIndexArray);
-    } else {
-      showPlugin.hideColumn(...columnIndexArray);
-    }
-    tableRef.current.hotInstance.render();
+    // const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
+    // const columnIndexArray = Array(headers.length).fill().map((value, index) => index);
+    // if (value) {
+    //   showPlugin.showColumns(columnIndexArray);
+    // } else {
+    //   showPlugin.hideColumns(columnIndexArray);
+    // }
+    // tableRef.current.hotInstance.render();
 
     const updateData = fieldData;
     headers.forEach((headerItem) => {
       if ((updateData[headerItem] === undefined)
-      || (updateData[headerItem].grid === undefined)) {
+        || (updateData[headerItem].grid === undefined)) {
         updateData[headerItem] = {
           data: value,
           grid: true,

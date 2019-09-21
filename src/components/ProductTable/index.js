@@ -10,11 +10,12 @@ import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
 
 import './style.scss';
-import { confirmMessage } from '../../utils';
+import { confirmMessage } from 'utils';
 
 class ProductTable extends Component {
   state = {
     fetchingFlag: true,
+    hiddenColumns: [],
   };
 
   componentDidMount() {
@@ -25,9 +26,7 @@ class ProductTable extends Component {
 
       this.props.fetchProducts()
         .then(() => {
-          this.setState({
-            fetchingFlag: false,
-          });
+          this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
           confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
         })
         .catch(() => {
@@ -39,6 +38,44 @@ class ProductTable extends Component {
       });
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.columns.length > 0
+      && (prevProps.productsField !== this.props.productsField)) {
+      console.log('# DEBUG Time ####:'); // fixme
+      const time1 = performance.now();
+      // this.setDisplayState(true);
+      const plugin = this.props.tableRef.current.hotInstance.getPlugin('hiddenColumns');
+      plugin.hideColumns(this.gethiddenColumns(this.props.productsField));
+      console.log('# RUNNING Time ####:', performance.now() - time1); // fixme
+    }
+  }
+
+  setDisplayState = (state) => {
+    this.setState({
+      fetchingFlag: state,
+    });
+  };
+
+  gethiddenColumns = (fieldData) => {
+    const hiddenData = [];
+    this.props.headers.forEach((item, key) => {
+      if ((fieldData[item] !== undefined)
+      && (fieldData[item].data !== undefined && !fieldData[item].data)) {
+        hiddenData.push(key);
+      }
+    });
+    console.log(hiddenData); // fixme
+    return hiddenData;
+  };
+
+  setHiddenColumns = (data) => {
+    console.log('Here'); // fixme
+    this.setState({
+      hiddenColumns: data,
+      fetchingFlag: false,
+    });
+  };
 
   setChangeItem = (changes) => {
     if (changes) {
@@ -81,7 +118,10 @@ class ProductTable extends Component {
                   rowHeaders: true,
                   contextMenu: true,
                   dropdownMenu: true,
-                  hiddenColumns: true,
+                  hiddenColumns: {
+                    columns: this.state.hiddenColumns,
+                    indicators: true,
+                  },
                 }}
               />
             </PerfectScrollbar>
@@ -101,6 +141,7 @@ ProductTable.propTypes = {
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  productsField: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setUpdatedProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -110,6 +151,8 @@ const mapStateToProps = store => ({
   products: store.productsData.data.products,
   columns: store.productsData.data.columns,
   headers: store.productsData.data.headers,
+  productsField: store.productsFieldsData.productsField,
+
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -47,27 +47,27 @@ function handleEntityNotFound(res) {
 }
 
 function handleExistingRemove(collection, req, newData, res) {
-  collection.find({ clientId: req.params.clientId }, (err, findRes) => {
-    if (!err) {
-      if (findRes.length > 0) {
-        collection.deleteMany({ clientId: req.params.clientId }, () => {
+  const time1 = performance.now();
+  collection.update({ clientId: req.params.clientId },
+    {
+      $set: {
+        clientId: req.params.clientId,
+        imageKey: req.body.imageKey,
+        fields: req.body.fields,
+      }
+    }, (err, findRes) => {
+      if (!err) {
+        if (findRes.length > 0) {
           collection.create(newData, (err, insertResult) => {
             if (!err) {
               res.status(200)
                 .json(insertResult);
             }
           });
-        });
-      } else {
-        collection.create(newData, (err, insertResult) => {
-          if (!err) {
-            res.status(200)
-              .json(insertResult);
-          }
-        });
+        }
       }
-    }
-  });
+    });
+  console.log('time>>>>>>', performance.now() - time1); // fixme
 }
 
 function saveUpdates(updates) {
