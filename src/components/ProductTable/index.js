@@ -118,9 +118,10 @@ class ProductTable extends Component {
                   headerTooltips: true,
                   colHeaders: headers,
                   rowHeaders: true,
-                  contextMenu: true,
+                  contextMenu: ['copy', 'cut'],
                   filters: true,
                   dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
+                  // multiColumnSorting: true,
                   hiddenColumns: {
                     columns: this.state.hiddenColumns,
                     indicators: true,
