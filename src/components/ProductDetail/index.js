@@ -30,7 +30,6 @@ function ProductsDataDetail({
   productsField,
   updated,
   updateProductsField,
-  // setProducts,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
@@ -170,9 +169,9 @@ function ProductsDataDetail({
       if (!newDisplaySetting.strType) {
         updateData = setEmpty(updateData, 'strType');
       }
-      tableRef.current.hotInstance.loadData(updateData);
-
-      // setProducts(updateData);
+      setTimeout(() => {
+        tableRef.current.hotInstance.loadData(updateData);
+      }, 500);
     }
   };
 
@@ -266,7 +265,6 @@ ProductsDataDetail.propTypes = {
   setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
-  // setProducts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({

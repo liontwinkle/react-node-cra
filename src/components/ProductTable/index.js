@@ -18,7 +18,6 @@ class ProductTable extends Component {
     super(props);
     this.state = {
       fetchingFlag: true,
-      products: [],
       hiddenColumns: [],
     };
   }
@@ -54,19 +53,7 @@ class ProductTable extends Component {
       this.setFetchFg(true);
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
     }
-
-    if (this.props.products.length > 0 && !_isEqual(prevProps.products, this.props.products)) {
-      this.setFetchFg(true);
-      this.setProducts(this.props.products);
-    }
   }
-
-  setProducts = (products) => {
-    this.setState({
-      products,
-      fetchingFlag: false,
-    });
-  };
 
   setFetchFg = (value) => {
     this.setState({
@@ -109,6 +96,7 @@ class ProductTable extends Component {
     const {
       columns,
       headers,
+      products,
       tableRef,
     } = this.props;
 
@@ -123,7 +111,7 @@ class ProductTable extends Component {
                 licenseKey="non-commercial-and-evaluation"
                 afterChange={this.setChangeItem}
                 settings={{
-                  data: this.state.products,
+                  data: products,
                   columns,
                   width: '100%',
                   height: '100%',
