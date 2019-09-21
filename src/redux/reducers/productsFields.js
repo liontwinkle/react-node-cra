@@ -41,7 +41,6 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
-      console.log(state.isUpdating); // fixme
       return Object.assign({}, state, {
         isUpdating: false,
         productsField: JSON.parse(action.payload.data).fields,
