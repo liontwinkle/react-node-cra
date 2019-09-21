@@ -37,6 +37,7 @@ function ProductsDataDetail({
     nullType: false,
     strType: false,
   });
+  const [updateFg, setUpdateFg] = useState(true);
   const [imageKeySet, setImageKeySet] = useState(imageKey);
 
   const handleExportCsv = () => {
@@ -77,7 +78,7 @@ function ProductsDataDetail({
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
-      const newFieldData = fieldData;
+      const newFieldData = JSON.parse(JSON.stringify(fieldData));
       headers.forEach((item, key) => {
         if (
           newFieldData[item] === undefined
@@ -111,24 +112,29 @@ function ProductsDataDetail({
 
   const handleAllUpdate = (type) => {
     if (!isUpdating) {
+      const time1 = performance.now(); // fixme
       const value = (type === 'checked');
-      const updateData = JSON.parse(JSON.stringify(fieldData));
+      const updateFieldData = JSON.parse(JSON.stringify(fieldData));
       headers.forEach((headerItem) => {
-        if ((updateData[headerItem] === undefined)
-          || (updateData[headerItem].grid === undefined)) {
-          updateData[headerItem] = {
+        if ((updateFieldData[headerItem] === undefined)
+          || (updateFieldData[headerItem].grid === undefined)) {
+          updateFieldData[headerItem] = {
             data: value,
             grid: true,
           };
         } else {
-          updateData[headerItem] = {
+          updateFieldData[headerItem] = {
             data: value,
             grid: fieldData[headerItem].grid,
           };
         }
       });
-      setFieldData(updateData);
-      updateProductsField(updateData);
+      setFieldData(updateFieldData);
+      console.log('### DEBUG TIME BEFORE API: ', performance.now() - time1); // fixme
+      updateProductsField(updateFieldData)
+        .then(() => {
+          console.log('### DEBUG TIME AFTER API: ', performance.now() - time1); // fixme
+        });
     }
   };
 
@@ -154,7 +160,8 @@ function ProductsDataDetail({
   };
 
   const toggleSwitch = field => () => {
-    if (!isUpdatingList) {
+    if (updateFg) {
+      setUpdateFg(false);
       let updateData = JSON.parse(JSON.stringify(products));
       const newDisplaySetting = {
         ...displayFlag,
@@ -171,6 +178,7 @@ function ProductsDataDetail({
       }
       setTimeout(() => {
         tableRef.current.hotInstance.loadData(updateData);
+        setUpdateFg(true);
       }, 500);
     }
   };

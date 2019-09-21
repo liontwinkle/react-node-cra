@@ -36,10 +36,9 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.PRODUCTS_UPDATE_FIELDS_REQUEST:
-      return {
-        ...state,
+      return Object.assign({}, state, {
         isUpdating: true,
-      };
+      });
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
       return Object.assign({}, state, {
         isUpdating: false,

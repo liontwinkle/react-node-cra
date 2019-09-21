@@ -9,9 +9,9 @@ import _isEqual from 'lodash/isEqual';
 
 import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
+import { confirmMessage } from 'utils';
 
 import './style.scss';
-import { confirmMessage } from 'utils';
 
 class ProductTable extends Component {
   constructor(props) {
@@ -41,6 +41,7 @@ class ProductTable extends Component {
 
   componentDidUpdate(prevProps) {
     if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
+      console.log('## DEBUG START UPDATE FLAG #####'); // fixme
       this.setFetchFg(this.props.isUpdating);
     }
 
@@ -50,8 +51,11 @@ class ProductTable extends Component {
 
     const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
     if (prevProps.columns.length > 0 && !diffFlag) {
+      console.log('## DEBUG START UPDATE TABLE #####'); // fixme
+      const time3 = performance.now();
       this.setFetchFg(true);
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
+      console.log('## DEBUG TIME UPDATE TABLE :', performance.now() - time3); // fixme
     }
   }
 
