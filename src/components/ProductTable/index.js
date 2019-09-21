@@ -121,6 +121,8 @@ class ProductTable extends Component {
                   contextMenu: ['copy', 'cut'],
                   filters: true,
                   dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
+                  manualColumnResize: true,
+                  manualRowResize: true,
                   // multiColumnSorting: true,
                   hiddenColumns: {
                     columns: this.state.hiddenColumns,
