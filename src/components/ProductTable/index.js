@@ -119,7 +119,8 @@ class ProductTable extends Component {
                   colHeaders: headers,
                   rowHeaders: true,
                   contextMenu: true,
-                  dropdownMenu: true,
+                  filters: true,
+                  dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
                   hiddenColumns: {
                     columns: this.state.hiddenColumns,
                     indicators: true,
