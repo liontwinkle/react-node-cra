@@ -18,6 +18,7 @@ class ProductTable extends Component {
     super(props);
     this.state = {
       fetchingFlag: true,
+      products: [],
       hiddenColumns: [],
     };
   }
@@ -52,7 +53,20 @@ class ProductTable extends Component {
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
       console.log('# DEBUG RUNNING TIME: ', performance.now() - time1);
     }
+
+    if (this.props.products.length > 0 && !_isEqual(prevProps.products, this.props.products)) {
+      console.log('# DEBUG LENGTH START: '); // fixme
+      this.setFetchFg(true);
+      this.setProducts(this.props.products);
+    }
   }
+
+  setProducts = (products) => {
+    this.setState({
+      products,
+      fetchingFlag: false,
+    });
+  };
 
   setFetchFg = (value) => {
     this.setState({
@@ -96,7 +110,6 @@ class ProductTable extends Component {
     const {
       columns,
       headers,
-      products,
       tableRef,
     } = this.props;
 
@@ -111,7 +124,7 @@ class ProductTable extends Component {
                 licenseKey="non-commercial-and-evaluation"
                 afterChange={this.setChangeItem}
                 settings={{
-                  data: products,
+                  data: this.state.products,
                   columns,
                   width: '100%',
                   height: '100%',

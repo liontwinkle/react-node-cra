@@ -59,7 +59,7 @@ export const updateProducts = updateData => (dispatch, getState) => {
 export const setProducts = updateData => (dispatch) => {
   dispatch({
     type: types.PRODUCTS_SET_PRODUCTS,
-    payload: { updateData },
+    payload: { updateData: JSON.stringify(updateData) },
   });
 };
 

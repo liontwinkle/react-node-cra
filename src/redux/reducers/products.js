@@ -74,11 +74,12 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.PRODUCTS_SET_PRODUCTS:
-      const currentData = state.data;
-      currentData.products = action.payload.updateData;
       return {
         ...state,
-        data: currentData,
+        data: {
+          ...state.data,
+          products: JSON.parse(action.payload.updateData),
+        },
       };
     case types.PRODUCTS_SET_UPDATE_PRODUCTS:
       const changedData = state.updatedData;

@@ -30,6 +30,7 @@ function ProductsDataDetail({
   productsField,
   updated,
   updateProductsField,
+  setProducts,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
@@ -153,7 +154,7 @@ function ProductsDataDetail({
 
   const toggleSwitch = field => () => {
     if (!isUpdatingList) {
-      let updateData = products;
+      let updateData = JSON.parse(JSON.stringify(products));
       const newDisplaySetting = {
         ...displayFlag,
         [field]: !displayFlag[field],
@@ -168,8 +169,8 @@ function ProductsDataDetail({
         updateData = setEmpty(updateData, 'strType');
       }
 
-      tableRef.current.hotInstance.loadData(updateData);
-      tableRef.current.hotInstance.render();
+      console.log('START TOGGLE'); // fixme
+      setProducts(updateData);
     }
   };
 
@@ -263,6 +264,7 @@ ProductsDataDetail.propTypes = {
   setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
