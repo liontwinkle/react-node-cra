@@ -32,6 +32,7 @@ function ProductsDataDetail({
   updateProductsField,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [fieldData, setFieldData] = useState(productsField);
   const [displayFlag, setDisplayFlag] = useState({
     nullType: false,
     strType: false,
@@ -67,7 +68,7 @@ function ProductsDataDetail({
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
-      const newFieldData = productsField;
+      const newFieldData = fieldData;
       headers.forEach((item, key) => {
         if (
           newFieldData[item] === undefined
@@ -94,28 +95,37 @@ function ProductsDataDetail({
         }
       });
 
-      updateProductsField(newFieldData);
+      updateProductsField(newFieldData)
+        .then(() => {
+          setFieldData(newFieldData);
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+        });
     }
   };
 
   const handleAllUpdate = (type) => {
-    const value = (type === 'checked');
-    const updateData = productsField;
-    headers.forEach((headerItem) => {
-      if ((updateData[headerItem] === undefined)
-        || (updateData[headerItem].grid === undefined)) {
-        updateData[headerItem] = {
-          data: value,
-          grid: true,
-        };
-      } else {
-        updateData[headerItem] = {
-          data: value,
-          grid: productsField[headerItem].grid,
-        };
-      }
-    });
-    updateProductsField(updateData);
+    if (!isUpdating) {
+      const value = (type === 'checked');
+      const updateData = JSON.parse(JSON.stringify(fieldData));
+      headers.forEach((headerItem) => {
+        if ((updateData[headerItem] === undefined)
+          || (updateData[headerItem].grid === undefined)) {
+          updateData[headerItem] = {
+            data: value,
+            grid: true,
+          };
+        } else {
+          updateData[headerItem] = {
+            data: value,
+            grid: fieldData[headerItem].grid,
+          };
+        }
+      });
+      setFieldData(updateData);
+      updateProductsField(updateData);
+    }
   };
 
   const setEmpty = (updateData, type) => {
@@ -225,7 +235,7 @@ function ProductsDataDetail({
             <CustomSection title="Visible Product Keys" key="show_setting">
               <ShowFields
                 fields={headers}
-                chkValue={productsField}
+                chkValue={fieldData}
                 type="data"
                 onChange={handleShow}
                 onUpdate={handleAllUpdate}

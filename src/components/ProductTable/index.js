@@ -14,16 +14,17 @@ import './style.scss';
 import { confirmMessage } from 'utils';
 
 class ProductTable extends Component {
-  state = {
-    fetchingFlag: true,
-    hiddenColumns: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fetchingFlag: true,
+      hiddenColumns: [],
+    };
+  }
 
   componentDidMount() {
     if (this.props.products.length === 0) {
-      this.setState({
-        fetchingFlag: true,
-      });
+      this.setFetchFg(true);
 
       this.props.fetchProducts()
         .then(() => {
@@ -34,27 +35,30 @@ class ProductTable extends Component {
           confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
         });
     } else {
-      this.setState({
-        fetchingFlag: false,
-      });
+      this.setFetchFg(false);
     }
   }
 
   componentDidUpdate(prevProps) {
-    console.log('prev>>>>> new>>>>>>'); // fixme
-    console.log('prev>>', prevProps.productsField); // fixme
-    console.log('new>>', this.props.productsField); // fixme
+    if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
+      console.log('# DEBUG: updating... ...'); // fixme
+      this.setFetchFg(this.props.isUpdating);
+    }
     const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
     if (prevProps.columns.length > 0 && !diffFlag) {
       console.log('# DEBUG START: ');
+      this.setFetchFg(true);
       const time1 = performance.now();
-      console.log(this.props.productsField); // fixme
-      // const plugin = this.props.tableRef.current.hotInstance.getPlugin('hiddenColumns');
-      // plugin.hideColumns(this.gethiddenColumns(this.props.productsField));
-      // this.props.tableRef.current.hotInstance.render();
+      this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
       console.log('# DEBUG RUNNING TIME: ', performance.now() - time1);
     }
   }
+
+  setFetchFg = (value) => {
+    this.setState({
+      fetchingFlag: value,
+    });
+  };
 
   gethiddenColumns = (fieldData) => {
     console.log('# DEBUG START CONVERT: ');
@@ -65,12 +69,10 @@ class ProductTable extends Component {
         hiddenData.push(key);
       }
     });
-    console.log(hiddenData); // fixme
     return hiddenData;
   };
 
   setHiddenColumns = (data) => {
-    console.log('Here'); // fixme
     this.setState({
       hiddenColumns: data,
       fetchingFlag: false,
@@ -137,6 +139,7 @@ class ProductTable extends Component {
 }
 
 ProductTable.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
   tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
@@ -152,6 +155,7 @@ const mapStateToProps = store => ({
   columns: store.productsData.data.columns,
   headers: store.productsData.data.headers,
   productsField: store.productsFieldsData.productsField,
+  isUpdating: store.productsFieldsData.isUpdating,
 
 });
 

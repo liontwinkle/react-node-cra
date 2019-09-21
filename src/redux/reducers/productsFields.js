@@ -41,12 +41,11 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
-      console.log('recv>>>>', action.payload.data.fields);// fixme
-      return {
-        ...state,
+      console.log(state.isUpdating); // fixme
+      return Object.assign({}, state, {
         isUpdating: false,
-        productsField: action.payload.data.fields,
-      };
+        productsField: JSON.parse(action.payload.data).fields,
+      });
     case types.PRODUCTS_UPDATE_FIELDS_FAIL:
       return {
         ...state,

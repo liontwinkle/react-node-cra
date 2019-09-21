@@ -47,7 +47,7 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
     .then(() => {
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
-        payload: { data },
+        payload: { data: JSON.stringify(data) },
       });
     })
     .catch((error) => {
