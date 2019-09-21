@@ -41,6 +41,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
+      console.log('recv>>>>', action.payload.data.fields);// fixme
       return {
         ...state,
         isUpdating: false,

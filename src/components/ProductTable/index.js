@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
+import _isEqual from 'lodash/isEqual';
 
 import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
@@ -40,24 +41,23 @@ class ProductTable extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.columns.length > 0
-      && (prevProps.productsField !== this.props.productsField)) {
-      console.log('# DEBUG Time ####:'); // fixme
+    console.log('prev>>>>> new>>>>>>'); // fixme
+    console.log('prev>>', prevProps.productsField); // fixme
+    console.log('new>>', this.props.productsField); // fixme
+    const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
+    if (prevProps.columns.length > 0 && !diffFlag) {
+      console.log('# DEBUG START: ');
       const time1 = performance.now();
-      // this.setDisplayState(true);
-      const plugin = this.props.tableRef.current.hotInstance.getPlugin('hiddenColumns');
-      plugin.hideColumns(this.gethiddenColumns(this.props.productsField));
-      console.log('# RUNNING Time ####:', performance.now() - time1); // fixme
+      console.log(this.props.productsField); // fixme
+      // const plugin = this.props.tableRef.current.hotInstance.getPlugin('hiddenColumns');
+      // plugin.hideColumns(this.gethiddenColumns(this.props.productsField));
+      // this.props.tableRef.current.hotInstance.render();
+      console.log('# DEBUG RUNNING TIME: ', performance.now() - time1);
     }
   }
 
-  setDisplayState = (state) => {
-    this.setState({
-      fetchingFlag: state,
-    });
-  };
-
   gethiddenColumns = (fieldData) => {
+    console.log('# DEBUG START CONVERT: ');
     const hiddenData = [];
     this.props.headers.forEach((item, key) => {
       if ((fieldData[item] !== undefined)

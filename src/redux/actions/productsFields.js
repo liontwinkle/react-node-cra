@@ -44,12 +44,11 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
     fields: updatedData,
   };
   return productsFieldsService.update(client.id, data)
-    .then((data) => {
+    .then(() => {
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
         payload: { data },
       });
-      return 'success';
     })
     .catch((error) => {
       dispatch({

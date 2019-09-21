@@ -32,7 +32,6 @@ function ProductsDataDetail({
   updateProductsField,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [fieldData, setFieldData] = useState(productsField);
   const [displayFlag, setDisplayFlag] = useState({
     nullType: false,
     strType: false,
@@ -68,15 +67,7 @@ function ProductsDataDetail({
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
-      // const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-      // if (value) {
-      //   showPlugin.showColumn(index);
-      // } else {
-      //   showPlugin.hideColumn(index);
-      // }
-      // tableRef.current.hotInstance.render();
-
-      const newFieldData = fieldData;
+      const newFieldData = productsField;
       headers.forEach((item, key) => {
         if (
           newFieldData[item] === undefined
@@ -103,28 +94,13 @@ function ProductsDataDetail({
         }
       });
 
-      updateProductsField(newFieldData)
-        .then(() => {
-          setFieldData(newFieldData);
-        })
-        .catch(() => {
-          confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
-        });
+      updateProductsField(newFieldData);
     }
   };
 
   const handleAllUpdate = (type) => {
     const value = (type === 'checked');
-    // const showPlugin = tableRef.current.hotInstance.getPlugin('hiddenColumns');
-    // const columnIndexArray = Array(headers.length).fill().map((value, index) => index);
-    // if (value) {
-    //   showPlugin.showColumns(columnIndexArray);
-    // } else {
-    //   showPlugin.hideColumns(columnIndexArray);
-    // }
-    // tableRef.current.hotInstance.render();
-
-    const updateData = fieldData;
+    const updateData = productsField;
     headers.forEach((headerItem) => {
       if ((updateData[headerItem] === undefined)
         || (updateData[headerItem].grid === undefined)) {
@@ -135,17 +111,11 @@ function ProductsDataDetail({
       } else {
         updateData[headerItem] = {
           data: value,
-          grid: fieldData[headerItem].grid,
+          grid: productsField[headerItem].grid,
         };
       }
     });
-    updateProductsField(updateData)
-      .then(() => {
-        setFieldData(updateData);
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
-      });
+    updateProductsField(updateData);
   };
 
   const setEmpty = (updateData, type) => {
@@ -255,7 +225,7 @@ function ProductsDataDetail({
             <CustomSection title="Visible Product Keys" key="show_setting">
               <ShowFields
                 fields={headers}
-                chkValue={fieldData}
+                chkValue={productsField}
                 type="data"
                 onChange={handleShow}
                 onUpdate={handleAllUpdate}

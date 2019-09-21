@@ -46,9 +46,9 @@ function handleEntityNotFound(res) {
   };
 }
 
-function handleExistingRemove(collection, req, newData, res) {
-  const time1 = performance.now();
-  collection.update({ clientId: req.params.clientId },
+function handleExistingRemove(collection, req, res) {
+  console.time('update>>>>'); // fixme
+  collection.updateOne({ clientId: req.params.clientId },
     {
       $set: {
         clientId: req.params.clientId,
@@ -57,17 +57,11 @@ function handleExistingRemove(collection, req, newData, res) {
       }
     }, (err, findRes) => {
       if (!err) {
-        if (findRes.length > 0) {
-          collection.create(newData, (err, insertResult) => {
-            if (!err) {
-              res.status(200)
-                .json(insertResult);
-            }
-          });
-        }
+        res.status(200)
+          .json(findRes);
       }
     });
-  console.log('time>>>>>>', performance.now() - time1); // fixme
+  console.timeEnd('update>>>>'); // fixme
 }
 
 function saveUpdates(updates) {
