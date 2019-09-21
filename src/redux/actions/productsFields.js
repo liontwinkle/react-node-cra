@@ -29,7 +29,6 @@ export const fetchProductsField = () => (dispatch, getState) => {
 };
 
 export const updateProductsField = updatedData => (dispatch, getState) => {
-  const time3 = performance.now();
   if (getState().productsFieldsData.isUpdating) {
     return;
   }
@@ -44,10 +43,8 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
     imageKey: getState().productsFieldsData.imageKey,
     fields: updatedData,
   };
-  console.log('# DEBUG RUNNING TIME OF ACTION BEFORE API: ', performance.now() - time3); // fixme
   return productsFieldsService.update(client.id, data)
     .then(() => {
-      console.log('# DEBUG RUNNING TIME OF ACTION AFTER API: ', performance.now() - time3); // fixme
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
         payload: { data: JSON.stringify(data) },

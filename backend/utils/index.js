@@ -47,7 +47,6 @@ function handleEntityNotFound(res) {
 }
 
 function handleExistingRemove(collection, req, res) {
-  console.time('update>>>>'); // fixme
   collection.updateOne({ clientId: req.params.clientId },
     {
       $set: {
@@ -61,7 +60,6 @@ function handleExistingRemove(collection, req, res) {
           .json(findRes);
       }
     });
-  console.timeEnd('update>>>>'); // fixme
 }
 
 function saveUpdates(updates) {

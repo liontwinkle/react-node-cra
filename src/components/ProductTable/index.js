@@ -42,26 +42,20 @@ class ProductTable extends Component {
 
   componentDidUpdate(prevProps) {
     if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
-      console.log('# DEBUG: updating... ...'); // fixme
       this.setFetchFg(this.props.isUpdating);
     }
 
     if ((prevProps.isUpdatingList !== this.props.isUpdatingList) && this.props.isUpdatingList) {
-      console.log('# DEBUG: updating... ...'); // fixme
       this.setFetchFg(this.props.isUpdatingList);
     }
 
     const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
     if (prevProps.columns.length > 0 && !diffFlag) {
-      console.log('# DEBUG START: ');
       this.setFetchFg(true);
-      const time1 = performance.now();
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
-      console.log('# DEBUG RUNNING TIME: ', performance.now() - time1);
     }
 
     if (this.props.products.length > 0 && !_isEqual(prevProps.products, this.props.products)) {
-      console.log('# DEBUG LENGTH START: '); // fixme
       this.setFetchFg(true);
       this.setProducts(this.props.products);
     }
@@ -81,7 +75,6 @@ class ProductTable extends Component {
   };
 
   gethiddenColumns = (fieldData) => {
-    console.log('# DEBUG START CONVERT: ');
     const hiddenData = [];
     this.props.headers.forEach((item, key) => {
       if ((fieldData[item] !== undefined)

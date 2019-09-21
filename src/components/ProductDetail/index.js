@@ -68,7 +68,6 @@ function ProductsDataDetail({
 
 
   const handleShow = (index, value) => {
-    console.log('#DEBUG: UPDATING FLAG ', isUpdating); // fixme
     if (!isUpdating) {
       const newFieldData = fieldData;
       headers.forEach((item, key) => {
@@ -103,9 +102,7 @@ function ProductsDataDetail({
   };
 
   const handleAllUpdate = (type) => {
-    console.log('#DEBUG: UPDATING FLAG ', isUpdating); // fixme
     if (!isUpdating) {
-      const time2 = performance.now();
       const value = (type === 'checked');
       const updateData = JSON.parse(JSON.stringify(fieldData));
       headers.forEach((headerItem) => {
@@ -123,11 +120,7 @@ function ProductsDataDetail({
         }
       });
       setFieldData(updateData);
-      console.log('# DEBUG RUNNING TIME BEFORE SEND API: ', performance.now() - time2);
-      updateProductsField(updateData)
-        .then(() => {
-          console.log('# DEBUG RUNNING TIME GETTING RESP: ', performance.now() - time2);
-        });
+      updateProductsField(updateData);
     }
   };
 
@@ -169,7 +162,6 @@ function ProductsDataDetail({
         updateData = setEmpty(updateData, 'strType');
       }
 
-      console.log('START TOGGLE'); // fixme
       setProducts(updateData);
     }
   };
