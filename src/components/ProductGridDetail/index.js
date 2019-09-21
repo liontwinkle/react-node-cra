@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useSnackbar } from 'notistack';
-
-import { confirmMessage } from 'utils';
 import { updateProductsField } from 'redux/actions/productsFields';
 import { CustomSection } from 'components/elements';
 import ShowFields from 'components/ProductDetail/ShowFields';
@@ -19,47 +16,69 @@ function ProductsGridDetail({
   isUpdating,
   isFetchingList,
 }) {
-  const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
 
   const handleShow = (index, value) => {
-    const newFieldData = fieldData;
-    headers.forEach((item, key) => {
-      if (
-        newFieldData[item] === undefined
-        || (newFieldData[item].data === undefined
-        && newFieldData[item].grid === undefined)
-      ) {
-        newFieldData[item] = {
-          data: true,
-          grid: true,
-        };
-      } else if (newFieldData[item].data === undefined) {
-        newFieldData[item] = {
-          data: true,
-          grid: newFieldData[item].grid,
-        };
-      } else if (newFieldData[item].grid === undefined) {
-        newFieldData[item] = {
-          data: newFieldData[item].data,
-          grid: true,
-        };
-      }
-      if (key === index) {
-        newFieldData[item].grid = value;
-      }
-    });
-
     if (!isUpdating) {
-      updateProductsField(newFieldData)
+      const newFieldData = fieldData;
+      headers.forEach((item, key) => {
+        if (
+          newFieldData[item] === undefined
+          || (newFieldData[item].data === undefined
+          && newFieldData[item].grid === undefined)
+        ) {
+          newFieldData[item] = {
+            data: true,
+            grid: true,
+          };
+        } else if (newFieldData[item].data === undefined) {
+          newFieldData[item] = {
+            data: true,
+            grid: newFieldData[item].grid,
+          };
+        } else if (newFieldData[item].grid === undefined) {
+          newFieldData[item] = {
+            data: newFieldData[item].data,
+            grid: true,
+          };
+        }
+        if (key === index) {
+          newFieldData[item].grid = value;
+        }
+      });
+      updateProductsField(newFieldData);
+    }
+  };
+
+  const handleAllUpdate = (type) => {
+    console.log('#DEBUG: UPDATING FLAG ', isUpdating); // fixme
+    if (!isUpdating) {
+      const time2 = performance.now();
+      const value = (type === 'checked');
+      const updateData = JSON.parse(JSON.stringify(fieldData));
+      headers.forEach((headerItem) => {
+        if ((updateData[headerItem] === undefined)
+          || (updateData[headerItem].data === undefined)) {
+          updateData[headerItem] = {
+            data: true,
+            grid: value,
+          };
+        } else {
+          updateData[headerItem] = {
+            data: fieldData[headerItem].grid,
+            grid: value,
+          };
+        }
+      });
+      setFieldData(updateData);
+      console.log('# DEBUG RUNNING TIME BEFORE SEND API: ', performance.now() - time2);
+      updateProductsField(updateData)
         .then(() => {
-          setFieldData(newFieldData);
-        })
-        .catch(() => {
-          confirmMessage(enqueueSnackbar, 'Fields fetching error.', 'error');
+          console.log('# DEBUG RUNNING TIME GETTING RESP: ', performance.now() - time2);
         });
     }
   };
+
 
   return (
     <PerfectScrollbar>
@@ -73,6 +92,7 @@ function ProductsGridDetail({
                   fields={headers}
                   chkValue={fieldData}
                   onChange={handleShow}
+                  onUpdate={handleAllUpdate}
                 />
               ) : null
           }
