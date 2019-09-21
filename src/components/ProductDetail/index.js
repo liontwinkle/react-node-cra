@@ -30,7 +30,7 @@ function ProductsDataDetail({
   productsField,
   updated,
   updateProductsField,
-  setProducts,
+  // setProducts,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
@@ -41,9 +41,18 @@ function ProductsDataDetail({
   const [imageKeySet, setImageKeySet] = useState(imageKey);
 
   const handleExportCsv = () => {
+    const fieldValues = Object.values(fieldData);
+    const fieldKeys = Object.keys(fieldData);
+    const checkStatus = [];
+    fieldKeys.forEach((keyItem, key) => {
+      checkStatus[keyItem] = fieldValues[key].data;
+    });
+    const updateData = [checkStatus, ...products];
+    tableRef.current.hotInstance.loadData(updateData);
     tableRef.current.hotInstance
       .getPlugin('exportFile')
       .downloadFile('csv', { filename: 'CSV Export File' });
+    tableRef.current.hotInstance.loadData(products);
   };
 
   const handleExportStr = () => {
@@ -161,8 +170,9 @@ function ProductsDataDetail({
       if (!newDisplaySetting.strType) {
         updateData = setEmpty(updateData, 'strType');
       }
+      tableRef.current.hotInstance.loadData(updateData);
 
-      setProducts(updateData);
+      // setProducts(updateData);
     }
   };
 
@@ -256,7 +266,7 @@ ProductsDataDetail.propTypes = {
   setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
-  setProducts: PropTypes.func.isRequired,
+  // setProducts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
