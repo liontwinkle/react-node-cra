@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import isEqual from 'lodash/isEqual';
 import { Tooltip } from 'react-tippy';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+
+import isEqual from 'lodash/isEqual';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import { withSnackbar } from 'notistack';
 
-
 import { sortByOrder } from 'utils/index';
+import { initProperties } from 'utils/propertyManagement';
 import {
   CustomInput,
   CustomText,
@@ -20,12 +20,12 @@ import {
   CustomArray,
   IconButton,
 } from 'components/elements/index';
+
 import PropertyActions from './PropertyActions/index';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
-
 
 class Properties extends Component {
   state = {
@@ -39,56 +39,50 @@ class Properties extends Component {
   };
 
   componentDidMount() {
-    const { propertyField } = this.props;
+    const { propertyField, category } = this.props;
     const nonSection = (propertyField.propertyFields)
       ? propertyField.propertyFields.filter(item => item.section === null) : [];
     this.setState({
       noSectionPropertyFields: nonSection || [],
-      properties: this.props.category.properties || {},
-      sections: this.props.propertyField.sections || [],
+      properties: category.properties || {},
+      sections: propertyField.sections || [],
     });
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(this.props.category.properties, prevProps.category.properties)) {
-      if (this.props.category.id === prevProps.category.id) {
-        const properties = {};
-        const keys = Object.keys(this.state.properties);
-        const propKeys = Object.keys(this.props.category.properties);
-
-        keys.forEach((key) => {
-          if (propKeys.indexOf(key) > -1) {
-            properties[key] = this.state.properties[key];
-          }
+    const { category, propertyField } = this.props;
+    const { properties } = this.state;
+    if (!isEqual(category.properties, prevProps.category.properties)) {
+      if (category.id === prevProps.category.id) {
+        this.updateState({
+          updateProperties: initProperties(properties, category.properties),
         });
-
-        this.updateState({ properties });
       } else {
         this.updateState({
-          properties: this.props.category.properties || {},
+          properties: category.properties || {},
         });
       }
     }
-    if (!isEqual(this.props.propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
+    if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nextProperties = {};
-      this.props.propertyField.propertyFields.forEach((item, key) => {
-        if (this.state.properties[item.key] === item.default) {
-          nextProperties[item.key] = this.props.propertyField.propertyFields[key].default;
-        } else if (this.state.properties[item.key] === (item.default === 'true')) {
-          nextProperties[item.key] = (this.props.propertyField.propertyFields[key].default === true);
+      propertyField.propertyFields.forEach((item, key) => {
+        if (properties[item.key] === item.default) {
+          nextProperties[item.key] = propertyField.propertyFields[key].default;
+        } else if (properties[item.key] === (item.default === 'true')) {
+          nextProperties[item.key] = (propertyField.propertyFields[key].default === true);
         }
       });
-      const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+      const nonSection = propertyField.propertyFields.filter(item => item.section === null);
       this.updateState({
-        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
+        sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
         properties: nextProperties,
       });
     }
 
-    if (!isEqual(this.props.propertyField.sections, this.props.propertyField.sections)) {
+    if (!isEqual(propertyField.sections, propertyField.sections)) {
       this.updateState({
-        sections: this.props.propertyField.sections.sort(sortByOrder) || [],
+        sections: propertyField.sections.sort(sortByOrder) || [],
       });
     }
   }

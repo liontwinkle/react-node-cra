@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import isEqual from 'lodash/isEqual';
 import { Tooltip } from 'react-tippy';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+
+import isEqual from 'lodash/isEqual';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import { withSnackbar } from 'notistack';
 
-
 import { sortByOrder } from 'utils';
+import { initProperties } from 'utils/propertyManagement';
 import {
   CustomInput,
   CustomText,
@@ -20,12 +20,12 @@ import {
   CustomArray,
   IconButton,
 } from 'components/elements';
+
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
-
 
 class AttributeProperties extends Component {
   state = {
@@ -39,11 +39,13 @@ class AttributeProperties extends Component {
   };
 
   componentDidMount() {
-    const nonSection = this.props.propertyField.propertyFields.filter(item => item.section === null);
+    const { propertyField, attribute } = this.props;
+    const nonSection = (propertyField.propertyFields)
+      ? propertyField.propertyFields.filter(item => item.section === null) : [];
     this.setState({
       noSectionPropertyFields: nonSection || [],
-      properties: this.props.attribute.properties || {},
-      sections: this.props.propertyField.sections || [],
+      properties: attribute.properties || {},
+      sections: propertyField.sections || [],
     });
   }
 
@@ -52,17 +54,9 @@ class AttributeProperties extends Component {
     const { properties } = this.state;
     if (!isEqual(attribute.properties, prevProps.attribute.properties)) {
       if (this.props.attribute.id === prevProps.attribute.id) {
-        const updateProperties = {};
-        const keys = Object.keys(properties);
-        const propKeys = Object.keys(attribute.properties);
-
-        keys.forEach((key) => {
-          if (propKeys.indexOf(key) > -1) {
-            updateProperties[key] = properties[key];
-          }
+        this.updateState({
+          updateProperties: initProperties(properties, attribute.properties),
         });
-
-        this.updateState({ updateProperties });
       } else {
         this.updateState({
           properties: attribute.properties || {},
