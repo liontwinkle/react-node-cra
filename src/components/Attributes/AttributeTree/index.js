@@ -29,7 +29,7 @@ function AttributeNode({
     let len = 0;
     const filterAttr = attributes.filter(attrItem => (attrItem.groupId === groupId));
     filterAttr.forEach((arrItem) => {
-      if (arrItem.name === name) {
+      if (arrItem.name.toLowerCase() === name.toLowerCase()) {
         len++;
       }
     });
