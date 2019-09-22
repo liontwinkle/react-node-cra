@@ -18,6 +18,7 @@ import {
   scope,
 } from 'utils/constants';
 import { updateAttribute } from 'redux/actions/attribute';
+import { createHistory } from 'redux/actions/history';
 import { CustomInput, CustomSelect } from 'components/elements';
 import { confirmMessage } from 'utils';
 
@@ -35,6 +36,7 @@ function AddNewRule({
   isUpdating,
   handleClose,
   updateAttribute,
+  createHistory,
   valueDetails,
   attribute,
   rules,
@@ -91,6 +93,11 @@ function AddNewRule({
     if (!isUpdating) {
       updateAttribute(attribute.id, { rules: updatedData })
         .then(() => {
+          createHistory({
+            label: 'Create New Rules',
+            itemId: attribute.id,
+            type: 'attributes',
+          });
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
         })
@@ -203,6 +210,7 @@ AddNewRule.propTypes = {
   handleClose: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   valueDetails: PropTypes.array.isRequired,
   rules: PropTypes.array.isRequired,
   displayRules: PropTypes.array.isRequired,
@@ -216,6 +224,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
+  createHistory,
 }, dispatch);
 
 export default connect(

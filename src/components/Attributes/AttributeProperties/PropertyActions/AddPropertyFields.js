@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import isEqual from 'lodash/isEqual';
 import {
   Dialog,
   DialogActions,
@@ -30,6 +31,8 @@ function AddPropertyFields({
   isUpdating,
   handleClose,
   propertyField,
+  createHistory,
+  attribute,
   updatePropertyField,
 }) {
   const classes = useStyles();
@@ -79,14 +82,23 @@ function AddPropertyFields({
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
 
-        updatePropertyField(propertyField.id, { propertyFields })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-            handleClose();
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-          });
+        if (!isEqual(propertyField.propertyFields, propertyFields)) {
+          updatePropertyField(propertyField.id, { propertyFields })
+            .then(() => {
+              createHistory({
+                label: `Create Property(${propertyFieldData.propertyType.key})`,
+                itemId: attribute.id,
+                type: 'attributes',
+              });
+              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+              handleClose();
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+            });
+        } else {
+          confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
+        }
       } else {
         const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
@@ -170,6 +182,8 @@ AddPropertyFields.propTypes = {
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   propertyField: PropTypes.object.isRequired,
+  attribute: PropTypes.object.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({

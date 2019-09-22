@@ -7,10 +7,12 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import { Tooltip } from 'react-tippy';
+import isEqual from 'lodash/isEqual';
 
 import { updateAttribute } from 'redux/actions/attribute';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
+import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -21,6 +23,7 @@ function PropertyActions({
   isUpdating,
   attribute,
   updateAttribute,
+  createHistory,
   fields,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -68,13 +71,20 @@ function PropertyActions({
     const saveData = setDefault();
     if (saveData.chkFlag) {
       if (!isUpdating) {
-        updateAttribute(attribute.id, { properties: saveData })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in updating properties.', 'error');
-          });
+        if (!isEqual(attribute.properties, saveData)) {
+          updateAttribute(attribute.id, { properties: saveData })
+            .then(() => {
+              createHistory({
+                label: 'Update Attribute',
+                itemId: attribute.id,
+                type: 'attributes',
+              });
+              confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating properties.', 'error');
+            });
+        }
       }
     } else {
       confirmMessage(enqueueSnackbar, 'Input format is wrong.', 'error');
@@ -146,11 +156,21 @@ function PropertyActions({
       )}
 
       {open.add && (
-        <AddPropertyFields open={open.add} handleClose={handleToggle('add')} />
+        <AddPropertyFields
+          open={open.add}
+          handleClose={handleToggle('add')}
+          createHistory={createHistory}
+          attribute={attribute}
+        />
       )}
 
       {open.edit && (
-        <EditPropertyFields open={open.edit} handleClose={handleToggle('edit')} />
+        <EditPropertyFields
+          open={open.edit}
+          handleClose={handleToggle('edit')}
+          createHistory={createHistory}
+          attribute={attribute}
+        />
       )}
     </div>
   );
@@ -162,6 +182,7 @@ PropertyActions.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -171,6 +192,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
+  createHistory,
 }, dispatch);
 
 export default connect(

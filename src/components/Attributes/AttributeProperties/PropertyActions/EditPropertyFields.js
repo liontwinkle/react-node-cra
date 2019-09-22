@@ -17,6 +17,8 @@ function EditPropertyFields({
   propertyField,
   updatePropertyField,
   handleClose,
+  createHistory,
+  attribute,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -60,6 +62,11 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
+            createHistory({
+              label: `Create Property(${newData.propertyType})`,
+              itemId: attribute.id,
+              type: 'attributes',
+            });
             confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
           })
           .catch(() => {
@@ -77,6 +84,7 @@ function EditPropertyFields({
     setTimeout(() => {
       resolve();
 
+      const data = JSON.parse(JSON.stringify(oldData));
       const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         propertyFields.splice(ruleKeyIndex, 1, {
@@ -88,13 +96,23 @@ function EditPropertyFields({
           _id: newData._id,
         });
 
-        updatePropertyField(propertyField.id, { propertyFields })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-          });
+        delete data.tableData;
+        if (JSON.stringify(newData) !== JSON.stringify(data)) {
+          updatePropertyField(propertyField.id, { propertyFields })
+            .then(() => {
+              createHistory({
+                label: `Update the Property field(${newData.label} ${newData.propertyType})`,
+                itemId: attribute.id,
+                type: 'attributes',
+              });
+              confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+            });
+        } else {
+          confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
+        }
       }
     }, 600);
   });
@@ -109,6 +127,11 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
+            createHistory({
+              label: `Delete the property field (${oldData.label})`,
+              itemId: attribute.id,
+              type: 'attributes',
+            });
             confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
           })
           .catch(() => {
@@ -153,8 +176,10 @@ function EditPropertyFields({
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
+  attribute: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
