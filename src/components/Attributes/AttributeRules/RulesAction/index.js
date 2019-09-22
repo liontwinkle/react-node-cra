@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Filter';
 
 import { IconButton } from 'components/elements';
 import { getPreFilterData } from 'utils';
@@ -37,23 +36,22 @@ function RulesAction({
   const filterProducts = () => {
     const recvRules = displayRules || [];
     const filterProducts = getPreFilterData(recvRules, products);
-    setProducts(filterProducts);
-    return filterProducts.length;
+    return filterProducts;
   };
 
   const handleToggle = field => () => {
-    let displayLength = 0;
-
+    let displayData = [];
     if (field === 'preview_products') {
-      displayLength = filterProducts();
+      displayData = filterProducts();
     }
 
-    if (displayLength === 0 && field === 'preview_products') {
+    if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', {
         variant: 'info',
         autoHideDuration: 4000,
       });
     } else {
+      setProducts(displayData);
       setOpen({
         ...open,
         [field]: !open[field],
@@ -86,13 +84,11 @@ function RulesAction({
       <div className="divider" />
 
       <Tooltip
-        title="Preview Products for All Rules"
+        title={`Preview ${filterProducts().length} Products for All Rules`}
         position="left"
         arrow
       >
-        <IconButton>
-          <SaveIcon style={{ fontSize: 20 }} onClick={handleToggle('preview_products')} />
-        </IconButton>
+        <span onClick={handleToggle('preview_products')}>{filterProducts().length}</span>
       </Tooltip>
 
       {open.add_rule && (

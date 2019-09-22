@@ -4,7 +4,6 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import { IconButton } from 'components/elements/index';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
 import {
@@ -134,13 +133,11 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <Tooltip
-                    title="Preview Products for Current Rule"
+                    title={`Preview ${filterProducts(i).length} Products for Current Rule`}
                     position="right"
                     arrow
                   >
-                    <IconButton>
-                      <span onClick={handleToggle(i)}>{filterProducts(i).length}</span>
-                    </IconButton>
+                    <span onClick={handleToggle(i)}>{filterProducts(i).length}</span>
                   </Tooltip>
                 </td>
               </tr>

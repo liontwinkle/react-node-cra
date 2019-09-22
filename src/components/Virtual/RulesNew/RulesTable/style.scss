@@ -34,6 +34,15 @@
       .icon-button {
         margin: auto;
       }
+      div{
+        width: 100%;
+        span {
+          width: 100%;
+          text-align: center;
+          cursor: pointer;
+          padding-left: 10px;
+        }
+      }
     }
   }
 }

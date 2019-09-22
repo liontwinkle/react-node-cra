@@ -1,10 +1,13 @@
-@import "../../../../scss/mixin";
+@import "scss/mixin.scss";
 
 .mg-rules-actions {
-  width: 49px;
+  width: fit-content;
   padding: 0.5rem;
   border-left: 1px solid #ddd;
 
+  span{
+    cursor: pointer;
+  }
   > * {
     &:not(:first-child) {
       margin-top: 0.5rem;
