@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const initProperties = (properties, matchProperties) => {
   const updateProperties = {};
   const keys = Object.keys(properties);
@@ -10,4 +9,16 @@ export const initProperties = (properties, matchProperties) => {
     }
   });
   return updateProperties;
+};
+
+export const updateProperties = (propertyFields, properties) => {
+  const nextProperties = {};
+  propertyFields.forEach((item, key) => {
+    if (properties[item.key] === item.default) {
+      nextProperties[item.key] = propertyFields[key].default;
+    } else if (properties[item.key] === (item.default === 'true')) {
+      nextProperties[item.key] = (propertyFields[key].default === true);
+    }
+  });
+  return nextProperties;
 };

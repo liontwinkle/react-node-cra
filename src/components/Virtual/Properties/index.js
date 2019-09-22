@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils/index';
-import { initProperties } from 'utils/propertyManagement';
+import { initProperties, updateProperties } from 'utils/propertyManagement';
 import {
   CustomInput,
   CustomText,
@@ -64,19 +64,11 @@ class Properties extends Component {
       }
     }
     if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
-      const nextProperties = {};
-      propertyField.propertyFields.forEach((item, key) => {
-        if (properties[item.key] === item.default) {
-          nextProperties[item.key] = propertyField.propertyFields[key].default;
-        } else if (properties[item.key] === (item.default === 'true')) {
-          nextProperties[item.key] = (propertyField.propertyFields[key].default === true);
-        }
-      });
       const nonSection = propertyField.propertyFields.filter(item => item.section === null);
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
-        properties: nextProperties,
+        properties: updateProperties(propertyField.propertyFields, properties),
       });
     }
 

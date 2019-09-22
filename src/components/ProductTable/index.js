@@ -35,7 +35,7 @@ class ProductTable extends Component {
           confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
         });
     } else {
-      this.setFetchFg(false);
+      this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
     }
   }
 
@@ -122,11 +122,19 @@ class ProductTable extends Component {
                   headerTooltips: true,
                   colHeaders: headers,
                   rowHeaders: true,
-                  contextMenu: ['copy', 'cut'],
+                  contextMenu: [
+                    'copy',
+                    'cut',
+                    'hidden_columns_hide',
+                    'hidden_columns_show',
+                    'make_read_only',
+                  ],
                   filters: true,
                   dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
                   manualColumnResize: true,
                   manualRowResize: true,
+                  manualColumnMove: true,
+                  manualRowMove: true,
                   // multiColumnSorting: true,
                   hiddenColumns: {
                     columns: this.state.hiddenColumns,
