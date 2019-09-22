@@ -102,8 +102,6 @@ function AddNewRule({
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      console.log('# DEBUG RULES :', rules); // fixme
-      console.log('# DEBUG DISPLAY RULES :', displayRules); // fixme
       if (!displayRules.find(item => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
