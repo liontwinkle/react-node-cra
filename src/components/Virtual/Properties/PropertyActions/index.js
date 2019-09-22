@@ -2,25 +2,28 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements/index';
+import { confirmMessage } from 'utils/index';
+import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
-import { confirmMessage } from '../../../../utils/index';
 
 function PropertyActions({
   properties,
   isUpdating,
   category,
   updateCategory,
+  createHistory,
   fields,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -68,13 +71,20 @@ function PropertyActions({
     const saveData = setDefault();
     if (saveData.chkFlag) {
       if (!isUpdating) {
-        updateCategory(category.id, { properties: saveData })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in updating properties.', 'error');
-          });
+        if (!isEqual(category.properties, saveData)) {
+          updateCategory(category.id, { properties: saveData })
+            .then(() => {
+              createHistory({
+                label: 'Update Properties',
+                itemId: category.id,
+                type: 'virtual',
+              });
+              confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating properties.', 'error');
+            });
+        }
       }
     } else {
       confirmMessage(enqueueSnackbar, 'Input format is wrong.', 'error');
@@ -138,19 +148,35 @@ function PropertyActions({
       </Tooltip>
 
       {open.add_section && (
-        <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
+        <AddSections
+          open={open.add_section}
+          handleClose={handleToggle('add_section')}
+        />
       )}
 
       {open.edit_section && (
-        <EditSections open={open.edit_section} handleClose={handleToggle('edit_section')} />
+        <EditSections
+          open={open.edit_section}
+          handleClose={handleToggle('edit_section')}
+        />
       )}
 
       {open.add && (
-        <AddPropertyFields open={open.add} handleClose={handleToggle('add')} />
+        <AddPropertyFields
+          open={open.add}
+          handleClose={handleToggle('add')}
+          createHistory={createHistory}
+          category={category}
+        />
       )}
 
       {open.edit && (
-        <EditPropertyFields open={open.edit} handleClose={handleToggle('edit')} />
+        <EditPropertyFields
+          open={open.edit}
+          handleClose={handleToggle('edit')}
+          createHistory={createHistory}
+          category={category}
+        />
       )}
     </div>
   );
@@ -162,6 +188,7 @@ PropertyActions.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -171,6 +198,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateCategory,
+  createHistory,
 }, dispatch);
 
 export default connect(

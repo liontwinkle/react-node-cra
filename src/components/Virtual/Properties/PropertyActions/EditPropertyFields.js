@@ -7,6 +7,7 @@ import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+// import isEqual from 'lodash/isEqual';
 
 import { isExist, confirmMessage } from 'utils/index';
 import { propertyTypes, tableIcons } from 'utils/constants';
@@ -17,6 +18,8 @@ function EditPropertyFields({
   propertyField,
   updatePropertyField,
   handleClose,
+  createHistory,
+  category,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -60,6 +63,11 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
+            createHistory({
+              label: `Create Property(${newData.propertyType})`,
+              itemId: category.id,
+              type: 'virtual',
+            });
             confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
           })
           .catch(() => {
@@ -153,8 +161,10 @@ function EditPropertyFields({
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({

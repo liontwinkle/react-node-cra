@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import isEqual from 'lodash/isEqual';
 import {
   Dialog,
   DialogActions,
@@ -31,6 +32,8 @@ function AddPropertyFields({
   handleClose,
   propertyField,
   updatePropertyField,
+  createHistory,
+  category,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -71,22 +74,30 @@ function AddPropertyFields({
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      const { propertyFields } = propertyField;
+      const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
       if (isExist(propertyFields, propertyFieldData.key) === 0) {
         propertyFields.push({
           ...propertyFieldData,
           propertyType: propertyFieldData.propertyType.key,
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
-
-        updatePropertyField(propertyField.id, { propertyFields })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-            handleClose();
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-          });
+        if (!isEqual(propertyField.propertyFields, propertyFields)) {
+          updatePropertyField(propertyField.id, { propertyFields })
+            .then(() => {
+              createHistory({
+                label: `Create Property(${propertyFieldData.propertyType.key})`,
+                itemId: category.id,
+                type: 'virtual',
+              });
+              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+              handleClose();
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+            });
+        } else {
+          confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
+        }
       } else {
         const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
@@ -167,9 +178,11 @@ function AddPropertyFields({
 AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  propertyField: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
-  propertyField: PropTypes.object.isRequired,
+  createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
