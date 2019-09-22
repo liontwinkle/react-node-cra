@@ -17,13 +17,14 @@ import {
   tableIcons,
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
-
+import { createHistory } from 'redux/actions/history';
 import './style.scss';
 
 function EditRules({
   open,
   rules,
   updateCategory,
+  createHistory,
   handleClose,
   isUpdating,
   category,
@@ -101,6 +102,11 @@ function EditRules({
         scope: newData.scope,
       });
 
+      createHistory({
+        label: 'Create New Rules',
+        itemId: category.id,
+        type: 'virtual',
+      });
       saveRules(rules);
     },
     600);
@@ -110,6 +116,7 @@ function EditRules({
     setTimeout(() => {
       resolve();
 
+      const data = JSON.parse(JSON.stringify(oldData));
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
@@ -121,8 +128,17 @@ function EditRules({
           match: newData.match,
           scope: newData.scope,
         });
-
-        saveRules(rules);
+        delete data.tableData;
+        if (JSON.stringify(newData) !== JSON.stringify(data)) {
+          createHistory({
+            label: `Update ${newData.basis} Rule.`,
+            itemId: category.id,
+            type: 'virtual',
+          });
+          saveRules(rules);
+        } else {
+          confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
+        }
       }
     }, 600);
   });
@@ -134,6 +150,11 @@ function EditRules({
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
+        createHistory({
+          label: `Delete ${oldData.basis} Rule.`,
+          itemId: category.id,
+          type: 'virtual',
+        });
         saveRules(rules);
       }
     }, 600);
@@ -183,6 +204,7 @@ EditRules.propTypes = {
   rules: PropTypes.array.isRequired,
   updateCategory: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
@@ -196,6 +218,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateCategory,
+  createHistory,
 }, dispatch);
 
 export default connect(
