@@ -38,6 +38,7 @@ function AddNewRule({
   valueDetails,
   attribute,
   rules,
+  displayRules,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -101,7 +102,9 @@ function AddNewRule({
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      if (!rules.find(item => (
+      console.log('# DEBUG RULES :', rules); // fixme
+      console.log('# DEBUG DISPLAY RULES :', displayRules); // fixme
+      if (!displayRules.find(item => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
         && item.value === ruleData.value
@@ -204,6 +207,7 @@ AddNewRule.propTypes = {
   updateAttribute: PropTypes.func.isRequired,
   valueDetails: PropTypes.array.isRequired,
   rules: PropTypes.array.isRequired,
+  displayRules: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({

@@ -95,14 +95,17 @@ class AttributeRules extends Component {
 
   setMap = (attribute) => {
     let currentRules = [];
+    console.log('# DEBUG ATTR RULES: ', attribute.rules); // fixme
     const grpRules = this.props.attributes.filter(attributeItem => (attributeItem.id === attribute.groupId));
     if (attribute.rules) {
       currentRules = _union(currentRules, attribute.rules);
     }
+    console.log('# DEBUG ATTR CURRENT RULES: ', currentRules); // fixme
     let displayRules = currentRules;
     if (grpRules.length > 0 && grpRules[0].rules) {
       displayRules = _union(currentRules, grpRules[0].rules);
     }
+    console.log('# DEBUG ATTR DISPLAY RULES: ', displayRules); // fixme
     const newRules = [];
     const editRules = [];
     const newEditRules = [];
@@ -112,9 +115,11 @@ class AttributeRules extends Component {
     this.setRuleArray(displayRules, newRules);
     this.setRuleArray(displayRules, displayEditRules, 'key');
 
+    console.log('# DEBUG EDIT RULES :', editRules); // fixme
     this.setState({
       newRules,
       editRules,
+      newEditRules,
       displayRules: displayEditRules,
     });
   };
@@ -141,6 +146,7 @@ class AttributeRules extends Component {
                   className="mg-rules-actions"
                   rules={editRules}
                   newRules={newEditRules}
+                  matchRules={newRules}
                   displayRules={displayRules}
                 />
               </Fragment>

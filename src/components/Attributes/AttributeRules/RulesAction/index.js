@@ -22,6 +22,7 @@ function RulesAction({
   displayRules,
   products,
   productViewType,
+  matchRules,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -95,7 +96,12 @@ function RulesAction({
       </Tooltip>
 
       {open.add_rule && (
-        <AddNewRule open={open.add_rule} handleClose={handleToggle('add_rule')} rules={newRules} />
+        <AddNewRule
+          open={open.add_rule}
+          handleClose={handleToggle('add_rule')}
+          rules={newRules}
+          displayRules={matchRules}
+        />
       )}
 
       {open.edit_rules && (
@@ -127,6 +133,7 @@ RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
   displayRules: PropTypes.array.isRequired,
+  matchRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };
