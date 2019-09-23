@@ -112,7 +112,6 @@ function ProductsDataDetail({
 
   const handleAllUpdate = (type) => {
     if (!isUpdating) {
-      const time1 = performance.now(); // fixme
       const value = (type === 'checked');
       const updateFieldData = JSON.parse(JSON.stringify(fieldData));
       headers.forEach((headerItem) => {
@@ -130,11 +129,7 @@ function ProductsDataDetail({
         }
       });
       setFieldData(updateFieldData);
-      console.log('### DEBUG TIME BEFORE API: ', performance.now() - time1); // fixme
-      updateProductsField(updateFieldData)
-        .then(() => {
-          console.log('### DEBUG TIME AFTER API: ', performance.now() - time1); // fixme
-        });
+      setTimeout(() => { updateProductsField(updateFieldData); }, 500);
     }
   };
 
@@ -161,6 +156,7 @@ function ProductsDataDetail({
 
   const toggleSwitch = field => () => {
     if (updateFg) {
+      const time1 = performance.now(); // fixme
       setUpdateFg(false);
       let updateData = JSON.parse(JSON.stringify(products));
       const newDisplaySetting = {
@@ -169,15 +165,19 @@ function ProductsDataDetail({
       };
       setDisplayFlag(newDisplaySetting);
 
+      console.log('# DEBUG Set State :', performance.now() - time1); // fixme
       if (newDisplaySetting.nullType) {
         updateData = setEmpty(updateData, 'nullType');
       }
+      console.log('# DEBUG Running Time :', performance.now() - time1); // fixme
 
       if (!newDisplaySetting.strType) {
         updateData = setEmpty(updateData, 'strType');
       }
+      console.log('# DEBUG Running Time :', performance.now() - time1); // fixme
       setTimeout(() => {
         tableRef.current.hotInstance.loadData(updateData);
+        console.log('# DEBUG Displaying Time :', performance.now() - time1); // fixme
         setUpdateFg(true);
       }, 500);
     }

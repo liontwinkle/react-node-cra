@@ -33,28 +33,22 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
     return;
   }
 
-  console.log('### DEBUG TIME ACTION START ####'); // fixme
-  const timer2 = performance.now(); // fixme
   const { client } = getState().clientsData;
 
   dispatch({
     type: types.PRODUCTS_UPDATE_FIELDS_REQUEST,
   });
 
-  console.log('### DEBUG TIME SET UPDATE FLAG :', performance.now() - timer2); // fixme
   const data = {
     imageKey: getState().productsFieldsData.imageKey,
     fields: updatedData,
   };
-  console.log('### DEBUG TIME SET UPDATED FLAG :', performance.now() - timer2); // fixme
   return productsFieldsService.update(client.id, data)
     .then(() => {
-      console.log('### DEBUG TIME BEFORE SET DATA :', performance.now() - timer2); // fixme
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
         payload: { data: JSON.stringify(data) },
       });
-      console.log('### DEBUG TIME AFTER SET DATA :', performance.now() - timer2); // fixme
       return 'success';
     })
     .catch((error) => {
