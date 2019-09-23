@@ -10,6 +10,7 @@ import {
   CustomToggle,
   IconButton,
 } from 'components/elements';
+import { propertyTypes } from './constants';
 
 export const initProperties = (properties, matchProperties) => {
   const updateProperties = {};
@@ -154,3 +155,22 @@ export const sectionRender = (
   });
   return res;
 };
+
+export const getTableData = (sections, propertyFields) => ({
+  columns: [
+    { title: 'Key', field: 'key' },
+    { title: 'Label', field: 'label' },
+    { title: 'Default', field: 'default' },
+    {
+      title: 'Type',
+      field: 'propertyType',
+      lookup: propertyTypes,
+    },
+    {
+      title: 'Section',
+      field: 'section',
+      lookup: sections,
+    },
+  ],
+  data: propertyFields,
+});

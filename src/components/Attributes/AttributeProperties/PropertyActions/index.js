@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import { Tooltip } from 'react-tippy';
-import isEqual from 'lodash/isEqual';
 
 import { updateAttribute } from 'redux/actions/attribute';
 import { IconButton } from 'components/elements';
@@ -78,7 +78,16 @@ function PropertyActions({
                 label: 'Update Attribute',
                 itemId: attribute.id,
                 type: 'attributes',
-              });
+              })
+                .then(() => {
+                  if (attribute.groupId !== '') {
+                    createHistory({
+                      label: `The properties of the Child ${attribute.name} is updated.`,
+                      itemId: attribute.groupId,
+                      type: 'attributes',
+                    });
+                  }
+                });
               confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
             })
             .catch(() => {

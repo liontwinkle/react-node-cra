@@ -9,7 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { isExist, confirmMessage } from 'utils';
-import { propertyTypes, tableIcons } from 'utils/constants';
+import { tableIcons } from 'utils/constants';
+import { getTableData } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditPropertyFields({
@@ -28,24 +29,7 @@ function EditPropertyFields({
   });
 
   const { propertyFields } = propertyField;
-  const tableData = {
-    columns: [
-      { title: 'Key', field: 'key' },
-      { title: 'Label', field: 'label' },
-      { title: 'Default', field: 'default' },
-      {
-        title: 'Type',
-        field: 'propertyType',
-        lookup: propertyTypes,
-      },
-      {
-        title: 'Section',
-        field: 'section',
-        lookup: sections,
-      },
-    ],
-    data: propertyFields,
-  };
+  const tableData = getTableData(sections, propertyFields);
 
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {

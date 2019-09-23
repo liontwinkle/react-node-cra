@@ -78,7 +78,16 @@ function PropertyActions({
                 label: 'Update Properties',
                 itemId: category.id,
                 type: 'virtual',
-              });
+              })
+                .then(() => {
+                  if (category.parentId !== '') {
+                    createHistory({
+                      label: `The properties of the Child ${category.name} is updated.`,
+                      itemId: category.parentId,
+                      type: 'virtual',
+                    });
+                  }
+                });
               confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
             })
             .catch(() => {
@@ -148,17 +157,11 @@ function PropertyActions({
       </Tooltip>
 
       {open.add_section && (
-        <AddSections
-          open={open.add_section}
-          handleClose={handleToggle('add_section')}
-        />
+        <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
       )}
 
       {open.edit_section && (
-        <EditSections
-          open={open.edit_section}
-          handleClose={handleToggle('edit_section')}
-        />
+        <EditSections open={open.edit_section} handleClose={handleToggle('edit_section')} />
       )}
 
       {open.add && (
