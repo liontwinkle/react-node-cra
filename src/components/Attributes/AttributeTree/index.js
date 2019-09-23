@@ -71,7 +71,16 @@ function AttributeNode({
                 label: `Name is changed as ${node.title}`,
                 itemId: node.item.id,
                 type: 'attributes',
-              });
+              })
+                .then(() => {
+                  if (node.item.groupId !== '') {
+                    createHistory({
+                      label: `The Child ${attribute.name} Name is changed as ${node.title}`,
+                      itemId: node.item.groupId,
+                      type: 'virtual',
+                    });
+                  }
+                });
               confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
               handleConfirm(node, path);
             })

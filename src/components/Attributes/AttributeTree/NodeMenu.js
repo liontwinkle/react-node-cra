@@ -72,7 +72,16 @@ function NodeMenu({
             label: 'Create Node',
             itemId: attribute._id,
             type: 'attributes',
-          });
+          })
+            .then(() => {
+              if (node.item.id !== '') {
+                createHistory({
+                  label: 'Add Child Node- New Attribute',
+                  itemId: node.item.id,
+                  type: 'virtual',
+                });
+              }
+            });
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
           setTreeData(
             addNodeUnderParent({
@@ -103,7 +112,16 @@ function NodeMenu({
       .then(() => {
         const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
         if (deleteHistory.length > 0) {
-          removeHistory(removeId);
+          removeHistory(removeId)
+            .then(() => {
+              if (node.item.groupId !== '') {
+                createHistory({
+                  label: `Delete Child Node ${node.item.name}`,
+                  itemId: node.item.groupId,
+                  type: 'attributes',
+                });
+              }
+            });
         }
         confirmMessage(enqueueSnackbar, 'The attribute has been deleted successfully.', 'success');
         setTreeData(

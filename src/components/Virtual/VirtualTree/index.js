@@ -54,7 +54,6 @@ function VirtualSortableTree(props) {
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const category = _find(categories, { id: node.item.id });
-
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
@@ -62,7 +61,16 @@ function VirtualSortableTree(props) {
               label: `Name is changed as ${node.title}`,
               itemId: category._id,
               type: 'virtual',
-            });
+            })
+              .then(() => {
+                if (node.item.parentId !== '') {
+                  createHistory({
+                    label: `The Child ${category.name} Name is changed as ${node.title}`,
+                    itemId: node.item.parentId,
+                    type: 'virtual',
+                  });
+                }
+              });
             confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
             handleConfirm(node, path);
           })
@@ -130,7 +138,16 @@ function VirtualSortableTree(props) {
           label: msg,
           itemId: category._id,
           type: 'virtual',
-        });
+        })
+          .then(() => {
+            if (node.item.parentId !== '') {
+              createHistory({
+                label: `Move Child Node ${node.item.name}`,
+                itemId: node.item.parentId,
+                type: 'virtual',
+              });
+            }
+          });
         const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
         confirmMessage(enqueueSnackbar, string, 'success');
         handleConfirm(node, path);
