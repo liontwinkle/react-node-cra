@@ -27,6 +27,7 @@ function EditPropertyFields({
     sections[section.key] = section.label;
   });
 
+  console.log('# DEBUG PROPERTY :', propertyField); // fixme
   const { propertyFields } = propertyField;
   const tableData = {
     columns: [
@@ -95,7 +96,6 @@ function EditPropertyFields({
           section: newData.section,
           _id: newData._id,
         });
-
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           updatePropertyField(propertyField.id, { propertyFields })

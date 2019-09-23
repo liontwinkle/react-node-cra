@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { isExist, confirmMessage } from 'utils/index';
+import { isExist, confirmMessage } from 'utils';
 import { propertyTypes, tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 

@@ -11,14 +11,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { confirmMessage, isExist } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { updateCategory } from 'redux/actions/categories';
+import { updateAttribute } from 'redux/actions/attribute';
 
 function EditPropertyFields({
   open,
   propertyField,
   updatePropertyField,
-  updateCategory,
-  category,
+  updateAttribute,
+  attribute,
   handleClose,
   selectKey,
 }) {
@@ -30,7 +30,7 @@ function EditPropertyFields({
   });
 
   const { propertyFields } = propertyField;
-  const { properties } = category;
+  const { properties } = attribute;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -118,7 +118,7 @@ function EditPropertyFields({
         selectItems.splice(ruleKeyIndex, 1);
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            updateCategory(category.id, { properties })
+            updateAttribute(attribute.id, { properties })
               .then(() => {
                 confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
               })
@@ -168,21 +168,21 @@ function EditPropertyFields({
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
-  category: PropTypes.object.isRequired,
+  attribute: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   selectKey: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = store => ({
   propertyField: store.propertyFieldsData.propertyField,
-  category: store.categoriesData.category,
+  attribute: store.attributesData.attribute,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
-  updateCategory,
+  updateAttribute,
 }, dispatch);
 
 export default connect(
