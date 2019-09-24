@@ -93,10 +93,31 @@ function AddNewRule({
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
           createHistory({
-            label: 'Create New Rules',
+            label: `Create New Rule(basis: 
+            ${ruleData.basis.key}, 
+            refer: ${ruleData.refer.key},
+            detail: ${ruleData.detail.key},
+            match: ${ruleData.match.key},
+            criteria: ${ruleData.value}
+            )`,
             itemId: category.id,
             type: 'virtual',
-          });
+          })
+            .then(() => {
+              if (category.parentId !== '') {
+                createHistory({
+                  label: `Add New Rule in Child ${category.name} (basis: 
+                  ${ruleData.basis.key}, 
+                  refer: ${ruleData.refer.key},
+                  detail: ${ruleData.detail.key},
+                  match: ${ruleData.match.key},
+                  criteria: ${ruleData.value}
+                  )`,
+                  itemId: category.parentId,
+                  type: 'virtual',
+                });
+              }
+            });
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
         })

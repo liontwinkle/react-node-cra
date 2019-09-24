@@ -94,10 +94,31 @@ function AddNewRule({
       updateAttribute(attribute.id, { rules: updatedData })
         .then(() => {
           createHistory({
-            label: 'Create New Rules',
+            label: `Create New Rule(basis:
+            ${ruleData.basis.key},
+            refer: ${ruleData.refer.key},
+            detail: ${ruleData.detail.key},
+            match: ${ruleData.match.key},
+            criteria: ${ruleData.value}
+            )`,
             itemId: attribute.id,
             type: 'attributes',
-          });
+          })
+            .then(() => {
+              if (attribute.groupId !== '') {
+                createHistory({
+                  label: `Add New Rule in Child ${attribute.name} (basis: 
+                  ${ruleData.basis.key}, 
+                  refer: ${ruleData.refer.key},
+                  detail: ${ruleData.detail.key},
+                  match: ${ruleData.match.key},
+                  criteria: ${ruleData.value}
+                  )`,
+                  itemId: attribute.groupId,
+                  type: 'attributes',
+                });
+              }
+            });
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
         })

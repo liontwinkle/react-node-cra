@@ -92,22 +92,48 @@ function EditRules({
     setTimeout(() => {
       resolve();
 
-      rules.push({
-        _id: newData._id,
-        basis: newData.basis,
-        refer: newData.refer,
-        detail: newData.detail,
-        value: newData.value,
-        match: newData.match,
-        scope: newData.scope,
-      });
-
-      createHistory({
-        label: 'Create New Rules',
-        itemId: category.id,
-        type: 'virtual',
-      });
-      saveRules(rules);
+      if (!rules.find(item => (
+        item.detail === newData.detail
+        && item.match === newData.match
+        && item.value === newData.value
+      ))) {
+        rules.push({
+          _id: newData._id,
+          basis: newData.basis,
+          refer: newData.refer,
+          detail: newData.detail,
+          value: newData.value,
+          match: newData.match,
+          scope: newData.scope,
+        });
+        createHistory({
+          label: `Create New Rule(basis: 
+            ${newData.basis.key}, 
+            refer: ${newData.refer.key},
+            detail: ${newData.detail.key},
+            match: ${newData.match.key},
+            criteria: ${newData.value}
+            )`,
+          itemId: category.id,
+          type: 'virtual',
+        })
+          .then(() => {
+            if (category.parentId !== '') {
+              createHistory({
+                label: `Add New Rule in Child ${category.name} (basis: 
+                  ${newData.basis.key}, 
+                  refer: ${newData.refer.key},
+                  detail: ${newData.detail.key},
+                  match: ${newData.match.key},
+                  criteria: ${newData.value}
+                  )`,
+                itemId: category.parentId,
+                type: 'virtual',
+              });
+            }
+          });
+        saveRules(rules);
+      }
     },
     600);
   });
@@ -131,10 +157,31 @@ function EditRules({
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           createHistory({
-            label: `Update ${newData.basis} Rule.`,
+            label: `Update Rule as (basis: 
+            ${newData.basis}, 
+            refer: ${newData.refer},
+            detail: ${newData.detail},
+            match: ${newData.match},
+            criteria: ${newData.value}
+            )`,
             itemId: category.id,
             type: 'virtual',
-          });
+          })
+            .then(() => {
+              if (category.parentId !== '') {
+                createHistory({
+                  label: `Update Rule in Child ${category.name} (basis: 
+                  ${newData.basis}, 
+                  refer: ${newData.refer},
+                  detail: ${newData.detail},
+                  match: ${newData.match},
+                  criteria: ${newData.value}
+                  )`,
+                  itemId: category.parentId,
+                  type: 'virtual',
+                });
+              }
+            });
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -151,10 +198,31 @@ function EditRules({
       if (ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         createHistory({
-          label: `Delete ${oldData.basis} Rule.`,
+          label: `Delete Rule (basis: 
+            ${oldData.basis}, 
+            refer: ${oldData.refer},
+            detail: ${oldData.detail},
+            match: ${oldData.match},
+            criteria: ${oldData.value}
+            )`,
           itemId: category.id,
           type: 'virtual',
-        });
+        })
+          .then(() => {
+            if (category.parentId !== '') {
+              createHistory({
+                label: `Rule is deleted in Child ${category.name} (basis: 
+                  ${oldData.basis}, 
+                  refer: ${oldData.refer},
+                  detail: ${oldData.detail},
+                  match: ${oldData.match},
+                  criteria: ${oldData.value}
+                  )`,
+                itemId: category.parentId,
+                type: 'virtual',
+              });
+            }
+          });
         saveRules(rules);
       }
     }, 600);
