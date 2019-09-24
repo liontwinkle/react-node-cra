@@ -75,6 +75,17 @@ function saveAttributeUpdates(req) {
   return (entity) => {
     const old = entity.appear;
     if (req.body) {
+      if (!req.body.checked && entity.groupId !== '') {
+        req.attributes.find({ _id: entity.groupId })
+          .then((result) => {
+            if (result.length > 0) {
+              const diff = _.difference(old, req.body.appear);
+              const deletedAppear = _.intersection(result.appear, diff);
+              req.attributes.update({ _id: result._id }, { $set: { appear: deletedAppear } })
+                .then(() => {});
+            }
+          });
+      }
       req.attributes.find({ groupId: entity._id })
         .then((results) => {
           results.forEach((resItem) => {
@@ -84,8 +95,8 @@ function saveAttributeUpdates(req) {
               .then(() => {});
           });
         });
-      _.assign(entity, req.body);
     }
+    _.assign(entity, req.body);
     return entity.saveAsync();
   };
 }

@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { useSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
-
-import { confirmMessage } from 'utils/index';
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -23,7 +20,6 @@ function Association({
   client,
   associationAttributes,
 }) {
-  const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
 
@@ -48,50 +44,36 @@ function Association({
 
     let checkGrp = false;
     let appearData = [];
-    const groupAttr = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId));
-    let updateFlag = true;
-    if (groupAttr.length > 0) {
-      updateFlag = !(groupAttr[0].appear.find(arrItem => (arrItem === category._id)));
-    }
-
-    if (updateFlag) {
-      if (nodeTarget.checked) {
-        appearData = [...targetAppear.appear, category._id];
-        if (targetAppear.groupId) {
-          const includeCategoryList = attributes.filter(
-            attrItem => (!!attrItem.appear.find(
-              (arrItem => (arrItem === category._id)),
-            ) && (attrItem.groupId === targetAppear.groupId)),
-          );
-          const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
-          if (includeCategoryList.length === groupList.length - 1) {
-            checkGrp = true;
-          }
+    if (nodeTarget.checked) {
+      appearData = [...targetAppear.appear, category._id];
+      if (targetAppear.groupId) {
+        const includeCategoryList = attributes.filter(
+          attrItem => (!!attrItem.appear.find(
+            (arrItem => (arrItem === category._id)),
+          ) && (attrItem.groupId === targetAppear.groupId)),
+        );
+        const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
+        if (includeCategoryList.length === groupList.length - 1) {
+          checkGrp = true;
         }
-      } else {
-        appearData = targetAppear.appear.filter(item => (item !== category._id));
-      }
-
-      if (checkGrp) {
-        const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
-        const groupAddAppear = groupAdd.appear;
-        groupAddAppear.push(category._id);
-        updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
-          .then(() => {
-            fetchAttributes(client.id, 'attributes');
-          });
-      } else {
-        updateAttribute(targetAppear._id, { appear: appearData })
-          .then(() => {
-            fetchAttributes(client.id, 'attributes');
-          });
       }
     } else {
-      confirmMessage(
-        enqueueSnackbar,
-        'This attribute could not be changed since the group is selected.',
-        'info',
-      );
+      appearData = targetAppear.appear.filter(item => (item !== category._id));
+    }
+
+    if (checkGrp) {
+      const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
+      const groupAddAppear = groupAdd.appear;
+      groupAddAppear.push(category._id);
+      updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
+        .then(() => {
+          fetchAttributes(client.id, 'attributes');
+        });
+    } else {
+      updateAttribute(targetAppear._id, { appear: appearData, checked: nodeTarget.checked })
+        .then(() => {
+          fetchAttributes(client.id, 'attributes');
+        });
     }
   };
 
