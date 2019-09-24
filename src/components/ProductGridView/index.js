@@ -23,6 +23,8 @@ class ProductGridView extends Component {
       viewDetailFlag: false,
       pointX: 0,
       pointY: 0,
+      width: 0,
+      height: 0,
       data: [],
     };
   }
@@ -88,6 +90,8 @@ class ProductGridView extends Component {
       viewDetailFlag: true,
       pointX: leftOffset,
       pointY: topOffset,
+      width: this.props.hoverSize.width,
+      height: this.props.hoverSize.height,
     });
   };
 
@@ -127,6 +131,8 @@ class ProductGridView extends Component {
       detail,
       pointX,
       pointY,
+      width,
+      height,
       data,
     } = this.state;
     return (
@@ -157,6 +163,8 @@ class ProductGridView extends Component {
             productsField={productsField}
             detail={detail}
             pointY={pointY}
+            width={width}
+            height={height}
             close={this.handleClose}
           />
         )}
@@ -168,6 +176,7 @@ class ProductGridView extends Component {
 ProductGridView.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
   imageKey: PropTypes.string.isRequired,
+  hoverSize: PropTypes.object.isRequired,
   products: PropTypes.array.isRequired,
   productsField: PropTypes.object.isRequired,
   filterProducts: PropTypes.array,
@@ -184,6 +193,7 @@ const mapStateToProps = store => ({
   productsField: store.productsFieldsData.productsField,
   headers: store.productsData.data.headers,
   imageKey: store.productsFieldsData.imageKey,
+  hoverSize: store.productsFieldsData.hoverSize,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

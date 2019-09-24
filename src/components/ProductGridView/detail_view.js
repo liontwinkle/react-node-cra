@@ -8,6 +8,8 @@ function DetailView({
   detail,
   pointX,
   pointY,
+  width,
+  height,
   close,
 }) {
   return (
@@ -16,6 +18,8 @@ function DetailView({
       style={{
         top: `${pointY}px`,
         left: `${pointX}px`,
+        width: `${width}px`,
+        height: `${height}px`,
       }}
       onMouseLeave={close}
     >
@@ -56,6 +60,8 @@ DetailView.propTypes = {
   detail: PropTypes.object.isRequired,
   pointX: PropTypes.number.isRequired,
   pointY: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
   close: PropTypes.func.isRequired,
 };
 

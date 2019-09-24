@@ -117,3 +117,10 @@ export const setImageKey = imageKey => (dispatch, getState) => {
       throw error;
     });
 };
+
+export const setSizeSet = size => (dispatch) => {
+  dispatch({
+    type: types.PRODUCTS_HOVER_SIZE,
+    payload: { size },
+  });
+};

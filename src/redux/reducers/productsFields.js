@@ -8,6 +8,10 @@ const INITIAL_STATE = {
   productsField: {},
   errors: '',
   imageKey: 'image',
+  hoverSize: {
+    width: 730,
+    height: 530,
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -78,6 +82,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isUpdating: false,
         errors: action.payload.error,
+      };
+    case types.PRODUCTS_HOVER_SIZE:
+      return {
+        ...state,
+        hoverSize: action.payload.size,
       };
     default:
       return state;
