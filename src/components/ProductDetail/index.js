@@ -106,7 +106,7 @@ function ProductsDataDetail({
       });
       setFieldData(newFieldData);
 
-      updateProductsField(newFieldData);
+      setTimeout(() => { updateProductsField(newFieldData); }, 500);
     }
   };
 
