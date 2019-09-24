@@ -1,4 +1,3 @@
-import _merge from 'lodash/merge';
 import _findIndex from 'lodash/findIndex';
 
 import { getCategoryTree } from 'utils';
@@ -43,13 +42,20 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       const fetchSaveData = getCategoryTree(action.payload.categories, []);
+      const association = action.payload.categories.map(item => ({
+        label: item.name,
+        value: item._id,
+        appear: [],
+        children: [],
+      }));
       return {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
         category: null,
         trees: fetchSaveData.subTree,
-        associations: fetchSaveData.association,
+        // associations: fetchSaveData.association,
+        associations: association,
       };
     case types.CATEGORIES_GET_FAIL:
       return {
@@ -75,14 +81,19 @@ export default (state = INITIAL_STATE, action) => {
       }
       categories.push(data);
       const updateSaveData = getCategoryTree(categories, state.trees);
-      const associationData = _merge(updateSaveData.association, state.associations);
+      const updatedAssociation = action.payload.categories.map(item => ({
+        label: item.name,
+        value: item._id,
+        appear: [],
+        children: [],
+      }));
 
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
         trees: updateSaveData.subTree,
-        associations: associationData,
+        associations: updatedAssociation,
         category: action.payload.data,
       };
     case types.CATEGORY_CREATE_FAIL:
@@ -116,7 +127,12 @@ export default (state = INITIAL_STATE, action) => {
         categories.push(updateData);
       }
       const newSaveData = getCategoryTree(categories, state.trees);
-      const newAssociations = _merge(state.associations, newSaveData.association);
+      const newAssociations = action.payload.categories.map(item => ({
+        label: item.name,
+        value: item._id,
+        appear: [],
+        children: [],
+      }));
       return {
         ...state,
         isUpdating: false,
