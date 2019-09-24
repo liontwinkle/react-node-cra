@@ -42,7 +42,7 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      const fetchSaveData = getCategoryTree(action.payload.categories);
+      const fetchSaveData = getCategoryTree(action.payload.categories, []);
       return {
         ...state,
         isFetchingList: false,
@@ -74,15 +74,14 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       categories.push(data);
-      const updateSaveData = getCategoryTree(categories);
-      const treeData = _merge(updateSaveData.subTree, state.trees);
+      const updateSaveData = getCategoryTree(categories, state.trees);
       const associationData = _merge(updateSaveData.association, state.associations);
 
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
-        trees: treeData,
+        trees: updateSaveData.subTree,
         associations: associationData,
         category: action.payload.data,
       };
@@ -109,20 +108,20 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
+
       const categoryIdx = _findIndex(categories, { id: updateData.id });
       if (categoryIdx > -1) {
         categories.splice(categoryIdx, 1, updateData);
       } else {
         categories.push(updateData);
       }
-      const newSaveData = getCategoryTree(categories);
-      const newTrees = _merge(state.trees, newSaveData.subTree);
+      const newSaveData = getCategoryTree(categories, state.trees);
       const newAssociations = _merge(state.associations, newSaveData.association);
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
-        trees: newTrees,
+        trees: newSaveData.subTree,
         associations: newAssociations,
         category: action.payload.data,
       };

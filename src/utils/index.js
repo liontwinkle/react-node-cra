@@ -123,12 +123,13 @@ export const getPreFilterData = (rules, products) => {
   return Array.from(DiffSets());
 };
 
-const getSubTree = (list, parentId, type) => {
+const getSubTree = (list, parentId, type, originNode) => {
   const subTree = [];
   const association = [];
   const sublist = list.filter(item => item[type] === parentId);
   if (sublist.length > 0) {
-    sublist.forEach((item) => {
+    sublist.forEach((item, key) => {
+      const subNode = (originNode && originNode.length > 0 && originNode[key]) ? originNode[key] : null;
       association.push({
         label: item.name,
         value: item._id,
@@ -138,8 +139,9 @@ const getSubTree = (list, parentId, type) => {
       subTree.push({
         title: item.name,
         editable: false,
+        expanded: (subNode) ? subNode.expanded : false,
         item,
-        children: getSubTree(list, item._id, type).subTree,
+        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null).subTree,
       });
     });
   }
@@ -158,11 +160,11 @@ export const confirmMessage = (func, msg, type) => {
   });
 };
 
-export const getCategoryTree = (categories) => {
+export const getCategoryTree = (categories, originNode) => {
   const parentId = '';
   const list = categories || [];
 
-  return getSubTree(list, parentId, 'parentId');
+  return getSubTree(list, parentId, 'parentId', originNode);
 };
 
 export const getAttribute = (attributes) => {

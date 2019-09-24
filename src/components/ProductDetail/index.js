@@ -156,7 +156,6 @@ function ProductsDataDetail({
 
   const toggleSwitch = field => () => {
     if (updateFg) {
-      const time1 = performance.now(); // fixme
       setUpdateFg(false);
       let updateData = JSON.parse(JSON.stringify(products));
       const newDisplaySetting = {
@@ -165,19 +164,15 @@ function ProductsDataDetail({
       };
       setDisplayFlag(newDisplaySetting);
 
-      console.log('# DEBUG Set State :', performance.now() - time1); // fixme
       if (newDisplaySetting.nullType) {
         updateData = setEmpty(updateData, 'nullType');
       }
-      console.log('# DEBUG Running Time :', performance.now() - time1); // fixme
 
       if (!newDisplaySetting.strType) {
         updateData = setEmpty(updateData, 'strType');
       }
-      console.log('# DEBUG Running Time :', performance.now() - time1); // fixme
       setTimeout(() => {
         tableRef.current.hotInstance.loadData(updateData);
-        console.log('# DEBUG Displaying Time :', performance.now() - time1); // fixme
         setUpdateFg(true);
       }, 500);
     }
