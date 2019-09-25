@@ -127,15 +127,12 @@ export default (state = INITIAL_STATE, action) => {
         categories.push(updateData);
       }
       const newSaveData = getCategoryTree(categories, state.trees);
-      console.log('# DEBUG SAVE DATA: ', newSaveData); // fixme
-      console.log('# DEBUG NEW ACTION: ', categories); // fixme
       const newAssociations = categories.map(item => ({
         label: item.name,
         value: item._id,
         appear: [],
         children: [],
       }));
-      console.log('# DEBUG NEW ASSOCIATION: ', newAssociations); // fixme
       return {
         ...state,
         isUpdating: false,
