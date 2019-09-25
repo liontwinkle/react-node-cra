@@ -4,14 +4,14 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import PreviewProducts from '../RulesAction/PreviewProducts';
-import PreviewGrid from '../RulesAction/PreviewGrid';
 import {
   AddSets,
   formatProductsData,
   getData,
   RuleEngine,
-} from '../RuleEngine/index';
+} from 'utils/RuleEngine';
+import PreviewProducts from '../RulesAction/PreviewProducts';
+import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
@@ -20,7 +20,6 @@ function RulesTable({ rules, products, productViewType }) {
 
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
-
   const getProducts = (field, match, value) => {
     const rule = RuleEngine[match](value);
     const returnValue = [];

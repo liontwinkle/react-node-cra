@@ -4,14 +4,14 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import PreviewProducts from '../RulesAction/PreviewProducts';
-import PreviewGrid from '../RulesAction/PreviewGrid';
 import {
   AddSets,
   formatProductsData,
   getData,
   RuleEngine,
-} from '../RuleEngine';
+} from 'utils/RuleEngine';
+import PreviewProducts from '../RulesAction/PreviewProducts';
+import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 

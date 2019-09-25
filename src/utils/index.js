@@ -2,7 +2,7 @@ import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 import {
   AddSets, DiffSets, formatDifference, RuleEngine,
-} from 'components/Attributes/AttributeRules/RuleEngine';
+} from './RuleEngine';
 import {
   basis, match, refer, scope,
 } from './constants';
