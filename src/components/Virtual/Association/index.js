@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -7,19 +7,26 @@ import CheckboxTree from 'react-checkbox-tree-enhanced';
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
+import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
+import { fetchProducts } from 'redux/actions/products';
 
 import './style.scss';
 import ContextMenu from './ContextMenu';
+import Loader from '../../Loader';
 
 function Association({
   category,
   nodes,
   attributes,
+  products,
+  valueDetails,
+  fetchProducts,
   updateAttribute,
   fetchAttributes,
+  setAttribute,
   client,
   associationAttributes,
+  isFetchingList,
 }) {
   const menuItem = [
     { label: 'EDIT ATTRIBUTE', key: 'edit' },
@@ -35,15 +42,20 @@ function Association({
     positionY: 0,
   });
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     event.preventDefault();
+    const strId = event.path[2].id.split('-');
+    const attributeId = strId[strId.length - 1];
+    const attribute = attributes.filter(attributeItem => (attributeItem._id === attributeId));
+    setAttribute(attribute[0]);
     setDisplayMenu(true);
     setInfo({
       label: event.target.innerText,
+      id: attributeId,
       positionX: event.clientX,
       positionY: event.clientY + 10,
     });
-  };
+  }, [attributes, setAttribute]);
   const handleClose = () => {
     setDisplayMenu(false);
   };
@@ -57,6 +69,9 @@ function Association({
       });
       setChecked(updateChecked);
     }
+    if (products.length === 0 && !isFetchingList) {
+      fetchProducts();
+    }
     if (context.length > 0) {
       const keys = Object.keys(context);
       keys.forEach((keyItem) => {
@@ -67,7 +82,7 @@ function Association({
       });
     }
     setContext(document.getElementsByClassName('rct-title'));
-  }, [category, attributes, setChecked, context]);
+  }, [category, attributes, setChecked, context, products, fetchProducts, handleClick, isFetchingList]);
 
 
   const handleExpanded = (expanded) => {
@@ -124,15 +139,17 @@ function Association({
   };
 
   return (
-    <div className="mg-attributes-container d-flex">
-      <PerfectScrollbar
-        options={{
-          suppressScrollX: true,
-          minScrollbarLength: 50,
-        }}
-      >
-        {
-          nodes.length > 0
+    products.length > 0
+      ? (
+        <div className="mg-attributes-container d-flex">
+          <PerfectScrollbar
+            options={{
+              suppressScrollX: true,
+              minScrollbarLength: 50,
+            }}
+          >
+            {
+              nodes.length > 0
             && (
               <CheckboxTree
                 nodes={associationAttributes}
@@ -148,29 +165,53 @@ function Association({
                 }}
               />
             )
-        }
-      </PerfectScrollbar>
-      {
-        displayMenu
-          && <ContextMenu handleClose={handleClose} open={displayMenu} info={info} menuItem={menuItem} />
-      }
-    </div>
+            }
+          </PerfectScrollbar>
+          {
+            displayMenu
+          && (
+            <ContextMenu
+              handleClose={handleClose}
+              open={displayMenu}
+              info={info}
+              menuItem={menuItem}
+              products={products}
+              valueDetails={valueDetails}
+              attributes={attributes}
+              category={category}
+            />
+          )
+          }
+        </div>
+      ) : (
+        <div className="loader">
+          <Loader size="small" color="dark" />
+        </div>
+      )
   );
 }
 
 Association.propTypes = {
   category: PropTypes.object.isRequired,
   nodes: PropTypes.array.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
+  valueDetails: PropTypes.array.isRequired,
   associationAttributes: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
+  setAttribute: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
   attributes: store.attributesData.attributes,
+  products: store.productsData.data.products,
+  isFetchingList: store.productsData.isFetchingList,
+  valueDetails: store.productsData.data.valueDetails,
   associationAttributes: store.attributesData.associations,
   category: store.categoriesData.category,
   client: store.clientsData.client,
@@ -179,6 +220,8 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateAttribute,
   fetchAttributes,
+  fetchProducts,
+  setAttribute,
 }, dispatch);
 
 export default connect(

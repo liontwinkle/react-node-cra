@@ -1,14 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import _intersection from 'lodash/intersection';
+import { setUnionRules } from 'utils/ruleManagement';
+import { getPreFilterData, getRules } from 'utils';
+import PreviewProducts from 'components/Virtual/RulesNew/RulesAction/PreviewProducts';
+
 
 import './style.scss';
+
 
 function ContextMenu({
   open,
   handleClose,
   info,
   menuItem,
+  attributes,
+  attribute,
+  category,
+  products,
+  valueDetails,
 }) {
+  const [prefilterData, setPrefilterData] = useState([]);
+  const [displayData, setDisplayData] = useState(false);
+
   const handleClick = (event) => {
     const target = document.getElementsByClassName('context-menu-container');
     const currentX = event.clientX;
@@ -21,14 +37,44 @@ function ContextMenu({
       handleClose();
     }
   };
+  const getAttributeProducts = () => {
+    let filterAttribute = [];
+    if (attribute.groupId === '') {
+      filterAttribute = attributes.filter(attributeItem => (attributeItem.groupId === attribute._id));
+      filterAttribute.push(attribute);
+    } else {
+      filterAttribute.push(attribute);
+    }
+    const srcAttributeRules = setUnionRules(filterAttribute);
+    const attributeRules = getRules(srcAttributeRules, valueDetails);
+    return getPreFilterData(attributeRules.editRules, products);
+  };
+
+  const FilterProducts = () => {
+    const attributeProducts = getAttributeProducts();
+    const categoriesRules = getRules(category.newRules, valueDetails);
+    const categoriesData = getPreFilterData(categoriesRules.editRules, products);
+    return _intersection(attributeProducts, categoriesData);
+  };
   useEffect(() => {
+    setPrefilterData(FilterProducts());
     window.addEventListener('click', handleClick);
     return () => { window.removeEventListener('click', handleClick); };
-  });
+  }, [FilterProducts, handleClick, setPrefilterData]);
 
   const handleMenuItem = type => () => {
-    console.log('################ START MENU ITEM #################'); // fixme
-    console.log('# DEBUG TYPE : ', type); // fixme
+    if (type === 'match') {
+      setDisplayData(true);
+    }
+  };
+
+  const handlePreviewClose = type => () => {
+    if (type === 'match') {
+      setDisplayData(false);
+    } else {
+      console.log('# DEBUG TYPE :', type); // fixme
+    }
+    handleClose();
   };
   return (
     open
@@ -43,10 +89,24 @@ function ContextMenu({
         <ul>
           {
             menuItem.map(item => (
-              <li key={item.key} onClick={handleMenuItem(item.key)}>{item.label}</li>
+              <li key={item.key} onClick={handleMenuItem(item.key)}>
+                {
+                  (item.key !== 'match') ? item.label : `${item.label}(${prefilterData.length})`
+                }
+              </li>
             ))
           }
         </ul>
+        {
+          displayData
+          && (
+            <PreviewProducts
+              open={displayData}
+              handleClose={handlePreviewClose('match')}
+              filterProducts={prefilterData}
+            />
+          )
+        }
       </div>
     )
   );
@@ -57,6 +117,17 @@ ContextMenu.propTypes = {
   handleClose: PropTypes.func.isRequired,
   info: PropTypes.object.isRequired,
   menuItem: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
+  attribute: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
+  products: PropTypes.array.isRequired,
+  valueDetails: PropTypes.array.isRequired,
 };
 
-export default ContextMenu;
+const mapStateToProps = store => ({
+  attribute: store.attributesData.attribute,
+});
+
+export default connect(
+  mapStateToProps,
+)(ContextMenu);

@@ -1,3 +1,4 @@
+import _union from 'lodash/union';
 import {
   AddSets,
   formatProductsData,
@@ -67,4 +68,12 @@ export const addNewRuleHistory = (ruleData, createHistory, Item, groupId, msgCur
         });
       }
     });
+};
+
+export const setUnionRules = (srcAttributes) => {
+  let srcAttributeRules = [];
+  srcAttributes.forEach((attritbueItem) => {
+    srcAttributeRules = _union(srcAttributeRules, attritbueItem.rules);
+  });
+  return srcAttributeRules;
 };

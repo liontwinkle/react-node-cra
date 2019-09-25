@@ -13,8 +13,10 @@ import { setPrefilterData } from 'redux/actions/categories';
 import { confirmMessage, getRules, getPreFilterData } from 'utils/index';
 import Loader from 'components/Loader/index';
 
+import { setUnionRules } from 'utils/ruleManagement';
 import RulesTable from './RulesTable/index';
 import RulesAction from './RulesAction/index';
+
 
 import './style.scss';
 
@@ -77,7 +79,7 @@ class NewRules extends Component {
         const groupChild = attributes.filter(item => (item.id === childListItem.groupId));
         filterAttribute = _union(filterAttribute, groupChild);
       });
-      const srcAttributeRules = this.getSrcAttributeRules(filterAttribute);
+      const srcAttributeRules = setUnionRules(filterAttribute);
 
       const attributeRules = getRules(srcAttributeRules, this.props.valueDetails);
       filterProduct = getPreFilterData(attributeRules.editRules, this.props.products);
@@ -89,14 +91,6 @@ class NewRules extends Component {
     this.setState({
       fetchingFlag: false,
     });
-  };
-
-  getSrcAttributeRules = (srcAttributes) => {
-    let srcAttributeRules = [];
-    srcAttributes.forEach((attritbueItem) => {
-      srcAttributeRules = _union(srcAttributeRules, attritbueItem.rules);
-    });
-    return srcAttributeRules;
   };
 
   setMap = (category) => {

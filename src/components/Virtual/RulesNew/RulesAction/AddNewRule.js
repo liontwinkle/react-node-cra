@@ -21,7 +21,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import { CustomInput, CustomSelect } from 'components/elements/index';
 import { confirmMessage } from 'utils/index';
-import { addNewRuleHistory } from '../../../../utils/ruleManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
