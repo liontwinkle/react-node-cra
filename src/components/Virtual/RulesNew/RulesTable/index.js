@@ -4,7 +4,7 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import { filterProducts } from 'utils/productManagement';
+import { filterProducts } from 'utils/ruleManagement';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
 

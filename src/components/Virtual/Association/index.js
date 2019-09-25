@@ -22,6 +22,7 @@ function Association({
 }) {
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
+  const [context, setContext] = useState([]);
 
   useEffect(() => {
     if (category) {
@@ -33,11 +34,38 @@ function Association({
       });
       setChecked(updateChecked);
     }
-  }, [category, attributes, setChecked]);
+    if (context.length > 0) {
+      const keys = Object.keys(context);
+      const handleClick = (event) => {
+        event.preventDefault();
+      };
+      keys.forEach((keyItem) => {
+        context[keyItem].addEventListener('contextmenu', handleClick);
+      });
+      return () => keys.forEach((keyItem) => {
+        context[keyItem].removeEventListener('contextmenu', handleClick);
+      });
+    }
+    setContext(document.getElementsByClassName('rct-title'));
+  }, [category, attributes, setChecked, context]);
 
 
   const handleExpanded = (expanded) => {
     setExpanded(expanded);
+    setTimeout(() => {
+      const newContext = document.getElementsByClassName('rct-title');
+      setContext(newContext);
+      const keys = Object.keys(newContext);
+      const handleClick = (event) => {
+        event.preventDefault();
+      };
+      keys.forEach((keyItem) => {
+        newContext[keyItem].addEventListener('contextmenu', handleClick);
+      });
+      return () => keys.forEach((keyItem) => {
+        newContext[keyItem].removeEventListener('contextmenu', handleClick);
+      });
+    }, 0);
   };
   const handleAttributeChange = (checked, nodeTarget) => {
     const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];

@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   AddSets,
   formatProductsData,
@@ -51,4 +50,21 @@ export const filterProducts = (products, rules, key) => {
   }
   AddSets(filterResult, 'union');
   return Array.from(getData().union);
+};
+
+export const addNewRuleHistory = (ruleData, createHistory, Item, groupId, msgCurrent, msgParent, type) => {
+  createHistory({
+    label: msgCurrent,
+    itemId: Item.id,
+    type,
+  })
+    .then(() => {
+      if (groupId !== '') {
+        createHistory({
+          label: msgParent,
+          itemId: groupId,
+          type,
+        });
+      }
+    });
 };

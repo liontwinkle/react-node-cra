@@ -20,6 +20,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
 import './style.scss';
+import { addNewRuleHistory } from '../../../../utils/ruleManagement';
 
 function EditRules({
   open,
@@ -107,32 +108,12 @@ function EditRules({
           match: newData.match,
           scope: newData.scope,
         });
-        createHistory({
-          label: `Create New Rule(basis: 
-            ${newData.basis.key}, 
-            refer: ${newData.refer.key},
-            detail: ${newData.detail.key},
-            match: ${newData.match.key},
-            criteria: ${newData.value}
-            )`,
-          itemId: attribute.id,
-          type: 'attributes',
-        })
-          .then(() => {
-            if (attribute.groupId !== '') {
-              createHistory({
-                label: `Add New Rule in Child ${attribute.name} (basis: 
-                  ${newData.basis.key}, 
-                  refer: ${newData.refer.key},
-                  detail: ${newData.detail.key},
-                  match: ${newData.match.key},
-                  criteria: ${newData.value}
-                  )`,
-                itemId: attribute.groupId,
-                type: 'attributes',
-              });
-            }
-          });
+        const msgCurrent = `Create New Rule(basis: ${newData.basis.key},refer: ${newData.refer.key},
+            detail: ${newData.detail.key},match: ${newData.match.key},criteria: ${newData.value})`;
+        const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${newData.basis.key}, 
+                  refer: ${newData.refer.key},detail: ${newData.detail.key},match: ${newData.match.key},
+                  criteria: ${newData.value})`;
+        addNewRuleHistory(newData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);
@@ -156,32 +137,12 @@ function EditRules({
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          createHistory({
-            label: `Update Rule as (basis: 
-            ${newData.basis}, 
-            refer: ${newData.refer},
-            detail: ${newData.detail},
-            match: ${newData.match},
-            criteria: ${newData.value}
-            )`,
-            itemId: attribute.id,
-            type: 'attributes',
-          })
-            .then(() => {
-              if (attribute.groupId !== '') {
-                createHistory({
-                  label: `Update Rule in Child ${attribute.name} (basis: 
-                  ${newData.basis}, 
-                  refer: ${newData.refer},
-                  detail: ${newData.detail},
-                  match: ${newData.match},
-                  criteria: ${newData.value}
-                  )`,
-                  itemId: attribute.groupId,
-                  type: 'attributes',
-                });
-              }
-            });
+          const msgCurrent = `Update Rule as (basis: ${newData.basis},refer: ${newData.refer},
+            detail: ${newData.detail},match: ${newData.match},criteria: ${newData.value})`;
+          const msgParent = `Update Rule in Child ${attribute.name} (basis: ${newData.basis}, 
+                  refer: ${newData.refer},detail: ${newData.detail},match: ${newData.match},
+                  criteria: ${newData.value})`;
+          addNewRuleHistory(newData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -197,32 +158,12 @@ function EditRules({
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
-        createHistory({
-          label: `Delete Rule (basis: 
-            ${oldData.basis}, 
-            refer: ${oldData.refer},
-            detail: ${oldData.detail},
-            match: ${oldData.match},
-            criteria: ${oldData.value}
-            )`,
-          itemId: attribute.id,
-          type: 'attributes',
-        })
-          .then(() => {
-            if (attribute.groupId !== '') {
-              createHistory({
-                label: `Rule is deleted in Child ${attribute.name} (basis: 
-                  ${oldData.basis}, 
-                  refer: ${oldData.refer},
-                  detail: ${oldData.detail},
-                  match: ${oldData.match},
-                  criteria: ${oldData.value}
-                  )`,
-                itemId: attribute.groupId,
-                type: 'attributes',
-              });
-            }
-          });
+        const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
+            detail: ${oldData.detail},match: ${oldData.match},criteria: ${oldData.value})`;
+        const msgParent = `Rule is deleted in Child ${attribute.name} (basis: ${oldData.basis}, 
+                  refer: ${oldData.refer},detail: ${oldData.detail},match: ${oldData.match},
+                  criteria: ${oldData.value})`;
+        addNewRuleHistory(oldData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);

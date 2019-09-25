@@ -21,6 +21,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import { CustomInput, CustomSelect } from 'components/elements/index';
 import { confirmMessage } from 'utils/index';
+import { addNewRuleHistory } from '../../../../utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -92,33 +93,6 @@ function AddNewRule({
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
-          console.log('HERE?'); // fixme
-          createHistory({
-            label: `Create New Rule(basis: 
-            ${ruleData.basis.key}, 
-            refer: ${ruleData.refer.key},
-            detail: ${ruleData.detail.key},
-            match: ${ruleData.match.key},
-            criteria: ${ruleData.value}
-            )`,
-            itemId: category.id,
-            type: 'virtual',
-          })
-            .then(() => {
-              if (category.parentId !== '') {
-                createHistory({
-                  label: `Add New Rule in Child ${category.name} (basis: 
-                  ${ruleData.basis.key}, 
-                  refer: ${ruleData.refer.key},
-                  detail: ${ruleData.detail.key},
-                  match: ${ruleData.match.key},
-                  criteria: ${ruleData.value}
-                  )`,
-                  itemId: category.parentId,
-                  type: 'virtual',
-                });
-              }
-            });
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
         })
@@ -136,6 +110,12 @@ function AddNewRule({
         && item.value === ruleData.value
       ))) {
         rules.push(ruleData);
+        const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
+            detail: ${ruleData.detail.key},match: ${ruleData.match.key},criteria: ${ruleData.value})`;
+        const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
+        refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
+        criteria: ${ruleData.value})`;
+        addNewRuleHistory(ruleData, createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');
