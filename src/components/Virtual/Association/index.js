@@ -21,6 +21,10 @@ function Association({
   client,
   associationAttributes,
 }) {
+  const menuItem = [
+    { label: 'EDIT ATTRIBUTE', key: 'edit' },
+    { label: 'MATCHED PRODUCTS', key: 'match' },
+  ];
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
   const [context, setContext] = useState([]);
@@ -33,7 +37,6 @@ function Association({
 
   const handleClick = (event) => {
     event.preventDefault();
-    console.log('#DEBUG EVENT: ', event); // fixme
     setDisplayMenu(true);
     setInfo({
       label: event.target.innerText,
@@ -149,7 +152,7 @@ function Association({
       </PerfectScrollbar>
       {
         displayMenu
-          && <ContextMenu handleClose={handleClose} open={displayMenu} info={info} />
+          && <ContextMenu handleClose={handleClose} open={displayMenu} info={info} menuItem={menuItem} />
       }
     </div>
   );

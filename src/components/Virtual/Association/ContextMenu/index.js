@@ -7,6 +7,7 @@ function ContextMenu({
   open,
   handleClose,
   info,
+  menuItem,
 }) {
   const handleClick = (event) => {
     const target = document.getElementsByClassName('context-menu-container');
@@ -24,6 +25,11 @@ function ContextMenu({
     window.addEventListener('click', handleClick);
     return () => { window.removeEventListener('click', handleClick); };
   });
+
+  const handleMenuItem = type => () => {
+    console.log('################ START MENU ITEM #################'); // fixme
+    console.log('# DEBUG TYPE : ', type); // fixme
+  };
   return (
     open
     && (
@@ -34,7 +40,13 @@ function ContextMenu({
           left: `${info.positionX}px`,
         }}
       >
-        {info.label}
+        <ul>
+          {
+            menuItem.map(item => (
+              <li key={item.key} onClick={handleMenuItem(item.key)}>{item.label}</li>
+            ))
+          }
+        </ul>
       </div>
     )
   );
@@ -44,6 +56,7 @@ ContextMenu.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   info: PropTypes.object.isRequired,
+  menuItem: PropTypes.array.isRequired,
 };
 
 export default ContextMenu;
