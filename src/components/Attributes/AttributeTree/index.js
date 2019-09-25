@@ -77,7 +77,7 @@ function AttributeNode({
                     createHistory({
                       label: `The Child ${attribute.name} Name is changed as ${node.title}`,
                       itemId: node.item.groupId,
-                      type: 'virtual',
+                      type: 'attributes',
                     });
                   }
                 });

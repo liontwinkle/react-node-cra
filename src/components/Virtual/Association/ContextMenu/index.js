@@ -1,14 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { useSnackbar } from 'notistack';
 
 import _intersection from 'lodash/intersection';
 import { setUnionRules } from 'utils/ruleManagement';
-import { getPreFilterData, getRules } from 'utils';
+import { confirmMessage, getPreFilterData, getRules } from 'utils';
 import PreviewProducts from 'components/Virtual/RulesNew/RulesAction/PreviewProducts';
 
 
 import './style.scss';
+import EditAttribute from '../editAttribute';
 
 
 function ContextMenu({
@@ -22,9 +25,11 @@ function ContextMenu({
   products,
   valueDetails,
 }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [prefilterData, setPrefilterData] = useState([]);
   const [displayData, setDisplayData] = useState(false);
-
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [isActive, setActive] = useState(false);
   const handleClick = (event) => {
     const target = document.getElementsByClassName('context-menu-container');
     const currentX = event.clientX;
@@ -34,7 +39,9 @@ function ContextMenu({
     const infY = info.positionY;
     const sufY = infY + target[0].clientHeight;
     if (currentX < infX || currentX > sufX || currentY < infY || currentY > sufY) {
-      handleClose();
+      if (!displayEdit && !displayData) {
+        handleClose();
+      }
     }
   };
   const getAttributeProducts = () => {
@@ -56,15 +63,25 @@ function ContextMenu({
     const categoriesData = getPreFilterData(categoriesRules.editRules, products);
     return _intersection(attributeProducts, categoriesData);
   };
+
   useEffect(() => {
-    setPrefilterData(FilterProducts());
+    if (!isActive) {
+      setPrefilterData(FilterProducts());
+      setActive(true);
+    }
     window.addEventListener('click', handleClick);
     return () => { window.removeEventListener('click', handleClick); };
-  }, [FilterProducts, handleClick, setPrefilterData]);
+  }, [isActive, setPrefilterData]);
 
   const handleMenuItem = type => () => {
     if (type === 'match') {
-      setDisplayData(true);
+      if (prefilterData.length > 0) {
+        setDisplayData(true);
+      } else {
+        confirmMessage(enqueueSnackbar, 'Matching data is not exist', 'info');
+      }
+    } else {
+      setDisplayEdit(true);
     }
   };
 
@@ -72,7 +89,7 @@ function ContextMenu({
     if (type === 'match') {
       setDisplayData(false);
     } else {
-      console.log('# DEBUG TYPE :', type); // fixme
+      setDisplayEdit(false);
     }
     handleClose();
   };
@@ -105,6 +122,11 @@ function ContextMenu({
               handleClose={handlePreviewClose('match')}
               filterProducts={prefilterData}
             />
+          )
+        }
+        {
+          displayEdit && (
+            <EditAttribute open={displayEdit} handleClose={handlePreviewClose('edit')} attribute={attribute} />
           )
         }
       </div>

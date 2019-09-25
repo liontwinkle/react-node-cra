@@ -9,10 +9,10 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { fetchProducts } from 'redux/actions/products';
+import Loader from 'components/Loader';
+import ContextMenu from './ContextMenu';
 
 import './style.scss';
-import ContextMenu from './ContextMenu';
-import Loader from '../../Loader';
 
 function Association({
   category,
