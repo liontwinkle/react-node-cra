@@ -10,6 +10,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 
 import './style.scss';
+import ContextMenu from './ContextMenu';
 
 function Association({
   category,
@@ -23,7 +24,26 @@ function Association({
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
   const [context, setContext] = useState([]);
+  const [displayMenu, setDisplayMenu] = useState(false);
+  const [info, setInfo] = useState({
+    label: '',
+    positionX: 0,
+    positionY: 0,
+  });
 
+  const handleClick = (event) => {
+    event.preventDefault();
+    console.log('#DEBUG EVENT: ', event); // fixme
+    setDisplayMenu(true);
+    setInfo({
+      label: event.target.innerText,
+      positionX: event.clientX,
+      positionY: event.clientY + 10,
+    });
+  };
+  const handleClose = () => {
+    setDisplayMenu(false);
+  };
   useEffect(() => {
     if (category) {
       const updateChecked = [];
@@ -36,9 +56,6 @@ function Association({
     }
     if (context.length > 0) {
       const keys = Object.keys(context);
-      const handleClick = (event) => {
-        event.preventDefault();
-      };
       keys.forEach((keyItem) => {
         context[keyItem].addEventListener('contextmenu', handleClick);
       });
@@ -56,9 +73,6 @@ function Association({
       const newContext = document.getElementsByClassName('rct-title');
       setContext(newContext);
       const keys = Object.keys(newContext);
-      const handleClick = (event) => {
-        event.preventDefault();
-      };
       keys.forEach((keyItem) => {
         newContext[keyItem].addEventListener('contextmenu', handleClick);
       });
@@ -67,6 +81,7 @@ function Association({
       });
     }, 0);
   };
+
   const handleAttributeChange = (checked, nodeTarget) => {
     const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
 
@@ -132,6 +147,10 @@ function Association({
             )
         }
       </PerfectScrollbar>
+      {
+        displayMenu
+          && <ContextMenu handleClose={handleClose} open={displayMenu} info={info} />
+      }
     </div>
   );
 }
