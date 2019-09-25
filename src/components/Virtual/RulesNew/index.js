@@ -49,6 +49,9 @@ class NewRules extends Component {
     if (this.props.category && (this.props.category !== prevProps.category)) {
       this.setMap(this.props.category);
     }
+    if (this.props.products.length > 0 && (this.props.products !== prevProps.products)) {
+      this.FilterProducts();
+    }
   }
 
   FilterProducts = () => {

@@ -4,12 +4,7 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
-import {
-  AddSets,
-  formatProductsData,
-  getData,
-  RuleEngine,
-} from 'utils/RuleEngine';
+import { filterProducts } from 'utils/productManagement';
 import PreviewProducts from '../RulesAction/PreviewProducts';
 import PreviewGrid from '../RulesAction/PreviewGrid';
 
@@ -21,54 +16,9 @@ function RulesTable({ rules, products, productViewType }) {
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
 
-  const getProducts = (field, match, value) => {
-    const rule = RuleEngine[match](value);
-    const returnValue = [];
-    let index = 0;
-
-    products.forEach((productItem) => {
-      if (rule.test(productItem[field])) {
-        returnValue[index] = productItem;
-        index++;
-      }
-    });
-    return returnValue;
-  };
-
-  const getAllmatched = (match, value) => {
-    const returnValue = [];
-    let index = 0;
-    const rule = RuleEngine[match](value);
-    products.forEach((proItem) => {
-      const values = Object.values(proItem);
-      if (values.filter(item => (rule.test(item))).length > 0) {
-        returnValue[index] = proItem;
-        index++;
-      }
-    });
-    return returnValue;
-  };
-
-  const filterProducts = (key) => {
-    const field = rules[key].detail.key;
-    const match = rules[key].match.key;
-    const { value } = rules[key];
-    let filterResult = new Set();
-
-    formatProductsData();
-
-    if (field === '*') {
-      filterResult = getAllmatched(match, value);
-    } else {
-      filterResult = getProducts(field, match, value);
-    }
-    AddSets(filterResult, 'union');
-    return Array.from(getData().union);
-  };
-
   const handleToggle = key => () => {
     if (key !== 'close') {
-      const data = filterProducts(key);
+      const data = filterProducts(products, rules, key);
       if (data.length === 0) {
         enqueueSnackbar('No Products match this rule.', {
           variant: 'info',
@@ -133,11 +83,11 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <Tooltip
-                    title={`Preview ${filterProducts(i).length}Products for Current Rule`}
+                    title={`Preview ${filterProducts(products, rules, i).length}Products for Current Rule`}
                     position="right"
                     arrow
                   >
-                    <span onClick={handleToggle(i)}>{filterProducts(i).length}</span>
+                    <span onClick={handleToggle(i)}>{filterProducts(products, rules, i).length}</span>
                   </Tooltip>
                 </td>
               </tr>

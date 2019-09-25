@@ -92,6 +92,7 @@ function AddNewRule({
     if (!isUpdating) {
       updateCategory(category.id, { newRules: updatedData })
         .then(() => {
+          console.log('HERE?'); // fixme
           createHistory({
             label: `Create New Rule(basis: 
             ${ruleData.basis.key}, 
