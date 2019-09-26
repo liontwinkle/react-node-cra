@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
 import _isEqual from 'lodash/isEqual';
 
 import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
-import Loader from 'components/Loader';
 import { confirmMessage } from 'utils';
+import Loader from 'components/Loader';
 
 import './style.scss';
 
@@ -125,6 +125,8 @@ class ProductTable extends Component {
                     'hidden_columns_show',
                     'make_read_only',
                   ],
+                  viewportRowRenderingOffset: 70,
+                  viewportColumnRenderingOffset: 10,
                   filters: true,
                   dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
                   manualColumnResize: true,
@@ -140,7 +142,7 @@ class ProductTable extends Component {
               />
             </PerfectScrollbar>
           ) : (
-            <div className="loader">
+            <div className="table-loader">
               <Loader size="small" color="dark" />
             </div>
           )

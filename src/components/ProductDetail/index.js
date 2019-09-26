@@ -41,8 +41,8 @@ function ProductsDataDetail({
   const [imageKeySet, setImageKeySet] = useState(imageKey);
 
   const handleExportCsv = () => {
-    const fieldValues = Object.values(fieldData);
-    const fieldKeys = Object.keys(fieldData);
+    const fieldValues = Object.values(productsField);
+    const fieldKeys = Object.keys(productsField);
     const checkStatus = [];
     fieldKeys.forEach((keyItem, key) => {
       checkStatus[keyItem] = fieldValues[key].data;
@@ -78,7 +78,7 @@ function ProductsDataDetail({
 
   const handleShow = (index, value) => {
     if (!isUpdating) {
-      const newFieldData = JSON.parse(JSON.stringify(fieldData));
+      const newFieldData = JSON.parse(JSON.stringify(productsField));
       headers.forEach((item, key) => {
         if (
           newFieldData[item] === undefined
@@ -104,16 +104,17 @@ function ProductsDataDetail({
           newFieldData[item].data = value;
         }
       });
+      updateProductsField(newFieldData);
       setFieldData(newFieldData);
 
-      setTimeout(() => { updateProductsField(newFieldData); }, 500);
+      // setTimeout(() => { updateProductsField(newFieldData); }, 500);
     }
   };
 
   const handleAllUpdate = (type) => {
     if (!isUpdating) {
       const value = (type === 'checked');
-      const updateFieldData = JSON.parse(JSON.stringify(fieldData));
+      const updateFieldData = JSON.parse(JSON.stringify(productsField));
       headers.forEach((headerItem) => {
         if ((updateFieldData[headerItem] === undefined)
           || (updateFieldData[headerItem].grid === undefined)) {
@@ -128,8 +129,12 @@ function ProductsDataDetail({
           };
         }
       });
+      const time1 = performance.now(); // fixme
+      updateProductsField(updateFieldData);
+      console.log('####DEBUG UPDATE FIELD', performance.now() - time1); // fixme
       setFieldData(updateFieldData);
-      setTimeout(() => { updateProductsField(updateFieldData); }, 500);
+      console.log('####DEBUG UPDATE FIELDDATA', performance.now() - time1); // fixme
+      // setTimeout(() => { updateProductsField(updateFieldData); }, 500);
     }
   };
 
