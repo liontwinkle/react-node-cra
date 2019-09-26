@@ -13,6 +13,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 import { createHistory } from 'redux/actions/history';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -74,20 +75,10 @@ function PropertyActions({
         if (!isEqual(attribute.properties, saveData)) {
           updateAttribute(attribute.id, { properties: saveData })
             .then(() => {
-              createHistory({
-                label: 'Update Attribute',
-                itemId: attribute.id,
-                type: 'attributes',
-              })
-                .then(() => {
-                  if (attribute.groupId !== '') {
-                    createHistory({
-                      label: `The properties of the Child ${attribute.name} is updated.`,
-                      itemId: attribute.groupId,
-                      type: 'attributes',
-                    });
-                  }
-                });
+              addNewRuleHistory(createHistory, attribute, attribute.groupId,
+                'Update Attribute',
+                `The properties of the Child ${attribute.name} is updated.`,
+                'attributes');
               confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
             })
             .catch(() => {

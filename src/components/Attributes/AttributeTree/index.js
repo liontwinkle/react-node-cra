@@ -9,6 +9,8 @@ import _find from 'lodash/find';
 import { updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey } from 'utils';
+import { checkNameDuplicate } from 'utils/attributeManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import NodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -24,17 +26,6 @@ function AttributeNode({
   setAttribute,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const checkNameDuplicate = (name, groupId) => {
-    let len = 0;
-    const filterAttr = attributes.filter(attrItem => (attrItem.groupId === groupId));
-    filterAttr.forEach((arrItem) => {
-      if (arrItem.name.toLowerCase() === name.toLowerCase()) {
-        len++;
-      }
-    });
-    return len;
-  };
 
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
@@ -64,23 +55,13 @@ function AttributeNode({
       const attribute = _find(attributes, { id: node.item.id });
 
       if (attribute && attribute.name !== node.title) {
-        if (checkNameDuplicate(node.title, node.item.groupId) === 0) {
+        if (checkNameDuplicate(attributes, node.title, node.item.groupId) === 0) {
           updateAttribute(node.item.id, { name: node.title })
             .then(() => {
-              createHistory({
-                label: `Name is changed as ${node.title}`,
-                itemId: node.item.id,
-                type: 'attributes',
-              })
-                .then(() => {
-                  if (node.item.groupId !== '') {
-                    createHistory({
-                      label: `The Child ${attribute.name} Name is changed as ${node.title}`,
-                      itemId: node.item.groupId,
-                      type: 'attributes',
-                    });
-                  }
-                });
+              addNewRuleHistory(createHistory, node.item, node.item.groupId,
+                `Name is changed as ${node.title}`,
+                `The Child ${attribute.name} Name is changed as ${node.title}`,
+                'attributes');
               confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
               handleConfirm(node, path);
             })
@@ -147,17 +128,17 @@ function AttributeNode({
       generateNodeProps={({ node, path }) => ({
         className: isSelected(node) ? 'selected' : '',
         buttons:
-          [
-            <NodeMenu
-              treeData={nodeData}
-              node={node}
-              path={path}
-              attributes={attributes}
-              setTreeData={setNodeData}
-              checkNameDuplicate={checkNameDuplicate}
-              history={history}
-            />,
-          ],
+        [
+          <NodeMenu
+            treeData={nodeData}
+            node={node}
+            path={path}
+            attributes={attributes}
+            setTreeData={setNodeData}
+            checkNameDuplicate={checkNameDuplicate}
+            history={history}
+          />,
+        ],
         title: (
           <input
             className={`tree-node-input${node.editable ? ' editable' : ''}`}

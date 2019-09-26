@@ -11,6 +11,7 @@ import { confirmMessage, getNodeKey } from 'utils/index';
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function NodeMenu({
   treeData,
@@ -47,20 +48,10 @@ function NodeMenu({
       parentId: node.item.id,
     })
       .then((category) => {
-        createHistory({
-          label: 'Create Node',
-          itemId: category._id,
-          type: 'virtual',
-        })
-          .then(() => {
-            if (node.item.id !== '') {
-              createHistory({
-                label: 'Add Child Node - New Category',
-                itemId: node.item.id,
-                type: 'virtual',
-              });
-            }
-          });
+        addNewRuleHistory(createHistory, category, category.parentId,
+          'Create Node',
+          'Add Child Node - New Category',
+          'virtual');
         confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
         setTreeData(
           addNodeUnderParent({

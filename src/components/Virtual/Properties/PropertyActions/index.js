@@ -13,6 +13,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements/index';
 import { confirmMessage } from 'utils/index';
 import { createHistory } from 'redux/actions/history';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -74,20 +75,10 @@ function PropertyActions({
         if (!isEqual(category.properties, saveData)) {
           updateCategory(category.id, { properties: saveData })
             .then(() => {
-              createHistory({
-                label: 'Update Properties',
-                itemId: category.id,
-                type: 'virtual',
-              })
-                .then(() => {
-                  if (category.parentId !== '') {
-                    createHistory({
-                      label: `The properties of the Child ${category.name} is updated.`,
-                      itemId: category.parentId,
-                      type: 'virtual',
-                    });
-                  }
-                });
+              addNewRuleHistory(createHistory, category, category.parentId,
+                'Update Properties',
+                `The properties of the Child ${category.name} is updated.`,
+                'virtual');
               confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
             })
             .catch(() => {

@@ -20,7 +20,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
 import './style.scss';
-import { addNewRuleHistory } from '../../../../utils/ruleManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function EditRules({
   open,
@@ -113,7 +113,7 @@ function EditRules({
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${newData.basis.key}, 
                   refer: ${newData.refer.key},detail: ${newData.detail.key},match: ${newData.match.key},
                   criteria: ${newData.value})`;
-        addNewRuleHistory(newData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);
@@ -142,7 +142,7 @@ function EditRules({
           const msgParent = `Update Rule in Child ${attribute.name} (basis: ${newData.basis}, 
                   refer: ${newData.refer},detail: ${newData.detail},match: ${newData.match},
                   criteria: ${newData.value})`;
-          addNewRuleHistory(newData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+          addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -163,7 +163,7 @@ function EditRules({
         const msgParent = `Rule is deleted in Child ${attribute.name} (basis: ${oldData.basis}, 
                   refer: ${oldData.refer},detail: ${oldData.detail},match: ${oldData.match},
                   criteria: ${oldData.value})`;
-        addNewRuleHistory(oldData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);

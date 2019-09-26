@@ -115,7 +115,7 @@ function AddNewRule({
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
         refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
         criteria: ${ruleData.value})`;
-        addNewRuleHistory(ruleData, createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');

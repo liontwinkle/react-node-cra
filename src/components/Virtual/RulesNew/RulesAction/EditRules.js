@@ -19,7 +19,7 @@ import {
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import './style.scss';
-import { addNewRuleHistory } from '../../../../utils/ruleManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function EditRules({
   open,
@@ -112,7 +112,7 @@ function EditRules({
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${newData.basis.key},
         refer: ${newData.refer.key},detail: ${newData.detail.key},match: ${newData.match.key},
         criteria: ${newData.value})`;
-        addNewRuleHistory(newData, createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       }
     },
@@ -142,7 +142,7 @@ function EditRules({
           const msgParent = `Update Rule in Child ${category.name} (basis: ${newData.basis}, 
                   refer: ${newData.refer},detail: ${newData.detail},match: ${newData.match},
                   criteria: ${newData.value})`;
-          addNewRuleHistory(newData, createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+          addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -163,7 +163,7 @@ function EditRules({
         const msgParent = `Rule is deleted in Child ${category.name} (basis: ${oldData.basis}, 
                   refer: ${oldData.refer},detail: ${oldData.detail},match: ${oldData.match},
                   criteria: ${oldData.value})`;
-        addNewRuleHistory(oldData, createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       }
     }, 600);

@@ -10,11 +10,13 @@ import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { confirmMessage, getNodeKey } from 'utils';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 import connect from 'react-redux/es/connect/connect';
 
 function NodeMenu({
   treeData,
+  attributes,
   history,
   node,
   path,
@@ -41,7 +43,7 @@ function NodeMenu({
   };
 
   const handleEdit = () => {
-    if (checkNameDuplicate(node.item.name, node.item.groupId) < 2) {
+    if (checkNameDuplicate(attributes, node.item.name, node.item.groupId) < 2) {
       setTreeData(
         changeNodeAtPath({
           treeData,
@@ -62,26 +64,17 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (checkNameDuplicate('New Attribute', node.item.id) === 0) {
+    if (checkNameDuplicate(attributes, 'New Attribute', node.item.id) === 0) {
       createAttribute({
         name: 'New Attribute',
         groupId: node.item.id,
       })
         .then((attribute) => {
-          createHistory({
-            label: 'Create Node',
-            itemId: attribute._id,
-            type: 'attributes',
-          })
-            .then(() => {
-              if (node.item.id !== '') {
-                createHistory({
-                  label: 'Add Child Node- New Attribute',
-                  itemId: node.item.id,
-                  type: 'virtual',
-                });
-              }
-            });
+          addNewRuleHistory(
+            createHistory,
+            attribute, node.item.id,
+            'Create Node', 'Add Child Node- New Attribute', 'attributes',
+          );
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
           setTreeData(
             addNodeUnderParent({
@@ -232,6 +225,7 @@ function NodeMenu({
 
 NodeMenu.propTypes = {
   treeData: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,

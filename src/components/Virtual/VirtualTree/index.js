@@ -9,6 +9,7 @@ import _find from 'lodash/find';
 import { confirmMessage, getNodeKey } from 'utils/index';
 import { updateCategory, setCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import TreeNodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -57,20 +58,10 @@ function VirtualSortableTree(props) {
       if (category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
-            createHistory({
-              label: `Name is changed as ${node.title}`,
-              itemId: category._id,
-              type: 'virtual',
-            })
-              .then(() => {
-                if (node.item.parentId !== '') {
-                  createHistory({
-                    label: `The Child ${category.name} Name is changed as ${node.title}`,
-                    itemId: node.item.parentId,
-                    type: 'virtual',
-                  });
-                }
-              });
+            addNewRuleHistory(createHistory, category, node.item.parentId,
+              `Name is changed as ${node.title}`,
+              `The Child ${category.name} Name is changed as ${node.title}`,
+              'virtual');
             confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
             handleConfirm(node, path);
           })
@@ -134,20 +125,10 @@ function VirtualSortableTree(props) {
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
         const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
-        createHistory({
-          label: msg,
-          itemId: category._id,
-          type: 'virtual',
-        })
-          .then(() => {
-            if (node.item.parentId !== '') {
-              createHistory({
-                label: `Move Child Node ${node.item.name}`,
-                itemId: node.item.parentId,
-                type: 'virtual',
-              });
-            }
-          });
+        addNewRuleHistory(createHistory, category, node.item.parentId,
+          msg,
+          `Move Child Node ${node.item.name}`,
+          'virtual');
         const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
         confirmMessage(enqueueSnackbar, string, 'success');
         handleConfirm(node, path);

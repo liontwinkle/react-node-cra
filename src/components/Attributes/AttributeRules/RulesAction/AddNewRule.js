@@ -21,7 +21,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import { CustomInput, CustomSelect } from 'components/elements';
 import { confirmMessage } from 'utils';
-import { addNewRuleHistory } from '../../../../utils/ruleManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -116,7 +116,7 @@ function AddNewRule({
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${ruleData.basis.key}, 
                   refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
                   criteria: ${ruleData.value})`;
-        addNewRuleHistory(ruleData, createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');

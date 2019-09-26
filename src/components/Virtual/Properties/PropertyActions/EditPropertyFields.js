@@ -12,6 +12,7 @@ import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { getTableData } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function EditPropertyFields({
   open,
@@ -46,11 +47,10 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            createHistory({
-              label: `Create Property(${newData.propertyType})`,
-              itemId: category.id,
-              type: 'virtual',
-            });
+            addNewRuleHistory(createHistory, category, category.groupId,
+              `Create Property(${newData.propertyType})`,
+              `Create Property(${newData.propertyType}) by ${category.name}`,
+              'virtual');
             confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
           })
           .catch(() => {
@@ -83,11 +83,10 @@ function EditPropertyFields({
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           updatePropertyField(propertyField.id, { propertyFields })
             .then(() => {
-              createHistory({
-                label: `Update the Property field(${newData.label} ${newData.propertyType})`,
-                itemId: category.id,
-                type: 'virtual',
-              });
+              addNewRuleHistory(createHistory, category, category.groupId,
+                `Update the Property field(${newData.label} ${newData.propertyType})`,
+                `Update the Property field(${newData.label} ${newData.propertyType}) by ${category.name}`,
+                'virtual');
               confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
             })
             .catch(() => {
@@ -110,11 +109,10 @@ function EditPropertyFields({
 
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
-            createHistory({
-              label: `Delete the property field (${oldData.label})`,
-              itemId: category.id,
-              type: 'virtual',
-            });
+            addNewRuleHistory(createHistory, category, category.groupId,
+              `Delete the property field (${oldData.label})`,
+              `Delete the property field (${oldData.label}) by ${category.name}`,
+              'virtual');
             confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
           })
           .catch(() => {

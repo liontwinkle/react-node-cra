@@ -53,7 +53,7 @@ export const filterProducts = (products, rules, key) => {
   return Array.from(getData().union);
 };
 
-export const addNewRuleHistory = (ruleData, createHistory, Item, groupId, msgCurrent, msgParent, type) => {
+export const addNewRuleHistory = (createHistory, Item, groupId, msgCurrent, msgParent, type) => {
   createHistory({
     label: msgCurrent,
     itemId: Item.id,

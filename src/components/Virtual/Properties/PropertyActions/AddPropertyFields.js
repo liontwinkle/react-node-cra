@@ -16,6 +16,7 @@ import { confirmMessage, isExist } from 'utils/index';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { propertyFieldTypes } from 'utils/constants';
 import { CustomInput, CustomSelectWithLabel } from 'components/elements/index';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -84,11 +85,10 @@ function AddPropertyFields({
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField(propertyField.id, { propertyFields })
             .then(() => {
-              createHistory({
-                label: `Create Property(${propertyFieldData.propertyType.key})`,
-                itemId: category.id,
-                type: 'virtual',
-              });
+              addNewRuleHistory(createHistory, category, category.parentId,
+                `Create Property(${propertyFieldData.propertyType.key})`,
+                `Create Property(${propertyFieldData.propertyType.key}) by ${category.name}`,
+                'virtual');
               confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
               handleClose();
             })

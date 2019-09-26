@@ -15,6 +15,8 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
+import { checkNameDuplicate } from 'utils/attributeManagement';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -40,36 +42,15 @@ function EditAttribute({
     setAttributeName(e.target.value);
   };
 
-  const checkNameDuplicate = (name, groupId) => {
-    let len = 0;
-    const filterAttr = attributes.filter(attrItem => (attrItem.groupId === groupId));
-    filterAttr.forEach((arrItem) => {
-      if (arrItem.name.toLowerCase() === name.toLowerCase()) {
-        len++;
-      }
-    });
-    return len;
-  };
-
   const disabled = !(attributeName === attribute.name || attribute === '' || !isUpdating);
   const handleSubmit = () => {
-    if (!checkNameDuplicate(attributeName, attribute.groupId) && !disabled) {
+    if (!checkNameDuplicate(attributes, attributeName, attribute.groupId) && !disabled) {
       updateAttribute(attribute._id, { name: attributeName })
         .then(() => {
-          createHistory({
-            label: `Name is changed as ${attributeName}`,
-            itemId: attribute._id,
-            type: 'attributes',
-          })
-            .then(() => {
-              if (attribute.groupId !== '') {
-                createHistory({
-                  label: `The Child ${attribute.name} Name is changed as ${attributeName}`,
-                  itemId: attribute.groupId,
-                  type: 'attributes',
-                });
-              }
-            });
+          addNewRuleHistory(createHistory, attribute, attribute.groupId,
+            `Name is changed as ${attributeName}`,
+            `The Child ${attribute.name} Name is changed as ${attributeName}`,
+            'attributes');
           confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
           handleClose();
         })
