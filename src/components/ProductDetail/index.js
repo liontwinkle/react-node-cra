@@ -104,10 +104,8 @@ function ProductsDataDetail({
           newFieldData[item].data = value;
         }
       });
-      updateProductsField(newFieldData);
       setFieldData(newFieldData);
-
-      // setTimeout(() => { updateProductsField(newFieldData); }, 500);
+      setTimeout(() => { updateProductsField(newFieldData); }, 500);
     }
   };
 
@@ -129,12 +127,8 @@ function ProductsDataDetail({
           };
         }
       });
-      const time1 = performance.now(); // fixme
-      updateProductsField(updateFieldData);
-      console.log('####DEBUG UPDATE FIELD', performance.now() - time1); // fixme
       setFieldData(updateFieldData);
-      console.log('####DEBUG UPDATE FIELDDATA', performance.now() - time1); // fixme
-      // setTimeout(() => { updateProductsField(updateFieldData); }, 500);
+      setTimeout(() => { updateProductsField(updateFieldData); }, 500);
     }
   };
 

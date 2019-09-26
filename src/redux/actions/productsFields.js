@@ -35,19 +35,15 @@ export const updateProductsField = updatedData => (dispatch, getState) => {
 
   const { client } = getState().clientsData;
 
-  const time2 = performance.now(); // fixme
   dispatch({
     type: types.PRODUCTS_UPDATE_FIELDS_REQUEST,
   });
-  console.log('### DEBUG TIME DELAY: ', performance.now() - time2); // fixme
   const data = {
     imageKey: getState().productsFieldsData.imageKey,
     fields: updatedData,
   };
-  console.log('### DEBUG PREPARE DELAY: ', performance.now() - time2); // fixme
   return productsFieldsService.update(client.id, data)
     .then(() => {
-      console.log('### DEBUG RECV DELAY: ', performance.now() - time2); // fixme
       dispatch({
         type: types.PRODUCTS_UPDATE_FIELDS_SUCCESS,
         payload: { data: JSON.stringify(data) },
