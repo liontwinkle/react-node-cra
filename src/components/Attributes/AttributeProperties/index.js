@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import isEqual from 'lodash/isEqual';
@@ -9,7 +9,6 @@ import { withSnackbar } from 'notistack';
 import { sortByOrder } from 'utils';
 import { initProperties, updateProperties, sectionRender } from 'utils/propertyManagement';
 import { CustomSection } from 'components/elements';
-
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';

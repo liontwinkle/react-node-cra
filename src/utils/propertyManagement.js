@@ -174,3 +174,27 @@ export const getTableData = (sections, propertyFields) => ({
   ],
   data: propertyFields,
 });
+
+export const setDefault = (properties, fields) => {
+  const tempProperties = properties;
+  tempProperties.chkFlag = true;
+  fields.forEach((item) => {
+    if (
+      tempProperties[item.key] === item.default
+      || tempProperties[item.key] === (item.default === 'true')
+      || tempProperties[item.key] === ''
+      || tempProperties[item.key] === undefined
+    ) {
+      delete tempProperties[item.key];
+    } else if (item.propertyType === 'array') {
+      let chkFlag = true;
+      try {
+        tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+      } catch (e) {
+        chkFlag = false;
+      }
+      tempProperties.chkFlag = chkFlag;
+    }
+  });
+  return tempProperties;
+};

@@ -1,11 +1,21 @@
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
+import { makeStyles } from '@material-ui/core';
 import {
   AddSets, DiffSets, formatDifference, RuleEngine,
 } from './RuleEngine';
 import {
   basis, match, refer, scope,
 } from './constants';
+
+export const useStyles = makeStyles(theme => ({
+  dialogAction: {
+    margin: theme.spacing(2),
+  },
+  dialogContent: {
+    overflow: 'unset',
+  },
+}));
 
 const AnaylsisDetails = (valueStr, valueDetails) => {
   const partValue = valueStr.split(']');

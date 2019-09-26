@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
