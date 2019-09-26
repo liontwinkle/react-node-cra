@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,11 +16,11 @@ import {
   scope,
   tableIcons,
 } from 'utils/constants';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
 import './style.scss';
-import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function EditRules({
   open,

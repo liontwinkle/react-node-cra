@@ -20,7 +20,6 @@ const PreviewGrid = ({
     <DialogTitle id="form-dialog-title">
       Preview Products
     </DialogTitle>
-
     <DialogContent
       className="preview-image"
     >

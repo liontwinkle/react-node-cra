@@ -1,28 +1,18 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  makeStyles,
 } from '@material-ui/core';
 
-import { confirmMessage, isExist } from 'utils/index';
+import { confirmMessage, isExist, useStyles } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { CustomInput } from 'components/elements/index';
-
-const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
-  dialogContent: {
-    overflow: 'unset',
-  },
-}));
+import { CustomInput } from 'components/elements';
 
 function AddSections({
   open,

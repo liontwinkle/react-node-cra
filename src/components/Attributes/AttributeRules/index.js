@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
@@ -9,17 +9,16 @@ import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
-import { confirmMessage } from 'utils';
-import Loader from 'components/Loader';
 import {
   basis,
   refer,
   match,
   scope,
 } from 'utils/constants';
+import { confirmMessage } from 'utils';
+import Loader from 'components/Loader';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
-
 
 import './style.scss';
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 import { confirmMessage, getObjectFromArray } from 'utils/index';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
   basis,
   refer,
@@ -18,8 +18,8 @@ import {
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
+
 import './style.scss';
-import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function EditRules({
   open,
@@ -32,7 +32,6 @@ function EditRules({
   valueDetails,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const tableData = {
     columns: [
       {

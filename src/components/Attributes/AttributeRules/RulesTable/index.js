@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 

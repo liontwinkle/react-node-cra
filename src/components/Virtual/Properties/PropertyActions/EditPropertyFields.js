@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,8 +11,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { getTableData } from 'utils/propertyManagement';
-import { updatePropertyField } from 'redux/actions/propertyFields';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditPropertyFields({
   open,

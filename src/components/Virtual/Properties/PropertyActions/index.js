@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
 import AddIcon from '@material-ui/icons/Add';
@@ -10,10 +10,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { updateCategory } from 'redux/actions/categories';
-import { IconButton } from 'components/elements/index';
-import { confirmMessage } from 'utils/index';
 import { createHistory } from 'redux/actions/history';
+import { confirmMessage } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { setDefault } from 'utils/propertyManagement';
+import { IconButton } from 'components/elements';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -44,32 +45,8 @@ function PropertyActions({
     });
   };
 
-  const setDefault = () => {
-    const tempProperties = properties;
-    tempProperties.chkFlag = true;
-    fields.forEach((item) => {
-      if (
-        tempProperties[item.key] === item.default
-        || tempProperties[item.key] === (item.default === 'true')
-        || tempProperties[item.key] === ''
-        || tempProperties[item.key] === undefined
-      ) {
-        delete tempProperties[item.key];
-      } else if (item.propertyType === 'array') {
-        let chkFlag = true;
-        try {
-          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
-        } catch (e) {
-          chkFlag = false;
-        }
-        tempProperties.chkFlag = chkFlag;
-      }
-    });
-    return tempProperties;
-  };
-
   const saveProperties = () => {
-    const saveData = setDefault();
+    const saveData = setDefault(properties, fields);
     if (saveData.chkFlag) {
       if (!isUpdating) {
         if (!isEqual(category.properties, saveData)) {

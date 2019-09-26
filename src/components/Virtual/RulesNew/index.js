@@ -1,22 +1,19 @@
 import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
 import _difference from 'lodash/difference';
 import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { confirmMessage, getRules, getPreFilterData } from 'utils/index';
-import Loader from 'components/Loader/index';
-
 import { setUnionRules } from 'utils/ruleManagement';
+import Loader from 'components/Loader/index';
 import RulesTable from './RulesTable/index';
 import RulesAction from './RulesAction/index';
-
 
 import './style.scss';
 

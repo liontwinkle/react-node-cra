@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
-import { useSnackbar } from 'notistack';
 import { Tooltip } from 'react-tippy';
+import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { IconButton } from 'components/elements/index';
 import { getPreFilterData } from 'utils/index';
+import { IconButton } from 'components/elements/index';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';
@@ -30,15 +30,12 @@ function RulesAction({
   });
 
   const [previewProducts, setProducts] = useState([]);
-
   const filterProducts = () => getPreFilterData(rules, products);
-
   const handleToggle = field => () => {
     let displayData = [];
     if (field === 'preview_products') {
       displayData = filterProducts();
     }
-
     if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', {
         variant: 'info',

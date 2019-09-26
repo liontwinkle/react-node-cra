@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { IconButton } from 'components/elements';
 import { getPreFilterData } from 'utils';
+import { IconButton } from 'components/elements';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
 import PreviewProducts from './PreviewProducts';

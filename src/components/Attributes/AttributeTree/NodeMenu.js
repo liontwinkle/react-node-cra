@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
-import { bindActionCreators } from 'redux';
-import { createAttribute, removeAttribute } from 'redux/actions/attribute';
-import { createHistory, removeHistory } from 'redux/actions/history';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import { confirmMessage, getNodeKey } from 'utils';
+import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import { createHistory, removeHistory } from 'redux/actions/history';
+import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
-import connect from 'react-redux/es/connect/connect';
 
 function NodeMenu({
   treeData,
@@ -146,19 +146,6 @@ function NodeMenu({
   };
   const handleDeleteDlgClose = () => {
     setDeleteDlgOpen(false);
-  };
-
-  const getSubItems = ({ children }) => {
-    let childLength = 0;
-
-    if (children) {
-      childLength = children.length;
-      children.forEach((item) => {
-        childLength += getSubItems(item);
-      });
-    }
-
-    return childLength;
   };
 
   const handleRemove = () => {

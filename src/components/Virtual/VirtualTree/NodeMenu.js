@@ -7,7 +7,7 @@ import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useSnackbar } from 'notistack';
 
-import { confirmMessage, getNodeKey } from 'utils/index';
+import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
@@ -128,19 +128,6 @@ function NodeMenu({
   };
   const handleDeleteDlgClose = () => {
     setDeleteDlgOpen(false);
-  };
-
-  const getSubItems = ({ children }) => {
-    let childLength = 0;
-
-    if (children) {
-      childLength = children.length;
-      children.forEach((item) => {
-        childLength += getSubItems(item);
-      });
-    }
-
-    return childLength;
   };
 
   const handleRemove = () => {

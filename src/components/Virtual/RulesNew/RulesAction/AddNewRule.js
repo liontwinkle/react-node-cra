@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  makeStyles,
 } from '@material-ui/core';
 
 import {
@@ -17,20 +16,11 @@ import {
   match,
   scope,
 } from 'utils/constants';
+import { confirmMessage, useStyles } from 'utils';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import { CustomInput, CustomSelect } from 'components/elements/index';
-import { confirmMessage } from 'utils/index';
-import { addNewRuleHistory } from 'utils/ruleManagement';
-
-const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
-  dialogContent: {
-    overflow: 'unset',
-  },
-}));
 
 function AddNewRule({
   open,

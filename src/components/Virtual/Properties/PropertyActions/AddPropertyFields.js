@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
 import { useSnackbar } from 'notistack';
 import isEqual from 'lodash/isEqual';
 import {
@@ -9,23 +10,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  makeStyles,
 } from '@material-ui/core';
 
-import { confirmMessage, isExist } from 'utils/index';
-import { updatePropertyField } from 'redux/actions/propertyFields';
+import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
-import { CustomInput, CustomSelectWithLabel } from 'components/elements/index';
 import { addNewRuleHistory } from 'utils/ruleManagement';
-
-const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
-  dialogContent: {
-    overflow: 'unset',
-  },
-}));
+import { updatePropertyField } from 'redux/actions/propertyFields';
+import { CustomInput, CustomSelectWithLabel } from 'components/elements';
 
 function AddPropertyFields({
   open,

@@ -17,6 +17,19 @@ export const useStyles = makeStyles(theme => ({
   },
 }));
 
+export const getSubItems = ({ children }) => {
+  let childLength = 0;
+
+  if (children) {
+    childLength = children.length;
+    children.forEach((item) => {
+      childLength += getSubItems(item);
+    });
+  }
+
+  return childLength;
+};
+
 const AnaylsisDetails = (valueStr, valueDetails) => {
   const partValue = valueStr.split(']');
   const detailValue = partValue[0].split(':');

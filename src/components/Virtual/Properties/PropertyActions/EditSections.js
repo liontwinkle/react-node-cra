@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { confirmMessage, isExist } from 'utils/index';
+import { confirmMessage, isExist } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
