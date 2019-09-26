@@ -26,8 +26,17 @@ export const getSubItems = ({ children }) => {
       childLength += getSubItems(item);
     });
   }
-
   return childLength;
+};
+
+export const setHandler = (context, callback) => {
+  const keys = Object.keys(context);
+  keys.forEach((keyItem) => {
+    context[keyItem].addEventListener('contextmenu', callback);
+  });
+  return () => keys.forEach((keyItem) => {
+    context[keyItem].removeEventListener('contextmenu', callback);
+  });
 };
 
 const AnaylsisDetails = (valueStr, valueDetails) => {

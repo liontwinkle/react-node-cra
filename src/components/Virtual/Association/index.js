@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { fetchProducts } from 'redux/actions/products';
+import { setHandler } from 'utils';
 import Loader from 'components/Loader';
 import ContextMenu from './ContextMenu';
 
@@ -38,27 +39,29 @@ function Association({
   const [displayMenu, setDisplayMenu] = useState(false);
   const [info, setInfo] = useState({
     label: '',
+    id: '',
     positionX: 0,
     positionY: 0,
   });
-
+  const handleClose = () => {
+    setDisplayMenu(false);
+  };
   const handleClick = useCallback((event) => {
+    handleClose();
     event.preventDefault();
     const strId = event.path[2].id.split('-');
     const attributeId = strId[strId.length - 1];
-    const attribute = attributes.filter(attributeItem => (attributeItem._id === attributeId));
-    setAttribute(attribute[0]);
-    setDisplayMenu(true);
+    const attribute = attributes.find(attributeItem => (attributeItem._id === attributeId));
+    setAttribute(attribute);
     setInfo({
       label: event.target.innerText,
       id: attributeId,
       positionX: event.clientX,
       positionY: event.clientY + 10,
     });
-  }, [attributes, setAttribute]);
-  const handleClose = () => {
-    setDisplayMenu(false);
-  };
+    setDisplayMenu(true);
+  }, [attributes, setAttribute, setDisplayMenu, setInfo]);
+
   useEffect(() => {
     if (category) {
       const updateChecked = [];
@@ -73,13 +76,7 @@ function Association({
       fetchProducts();
     }
     if (context.length > 0) {
-      const keys = Object.keys(context);
-      keys.forEach((keyItem) => {
-        context[keyItem].addEventListener('contextmenu', handleClick);
-      });
-      return () => keys.forEach((keyItem) => {
-        context[keyItem].removeEventListener('contextmenu', handleClick);
-      });
+      setHandler(context, handleClick);
     }
     setContext(document.getElementsByClassName('rct-title'));
   }, [category, attributes, setChecked, context, products, fetchProducts, handleClick, isFetchingList]);
@@ -90,13 +87,7 @@ function Association({
     setTimeout(() => {
       const newContext = document.getElementsByClassName('rct-title');
       setContext(newContext);
-      const keys = Object.keys(newContext);
-      keys.forEach((keyItem) => {
-        newContext[keyItem].addEventListener('contextmenu', handleClick);
-      });
-      return () => keys.forEach((keyItem) => {
-        newContext[keyItem].removeEventListener('contextmenu', handleClick);
-      });
+      setHandler(newContext, handleClick);
     }, 0);
   };
 
