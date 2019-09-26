@@ -54,7 +54,6 @@ export default (state = INITIAL_STATE, action) => {
         categories: tempDatas,
         category: null,
         trees: fetchSaveData.subTree,
-        // associations: fetchSaveData.association,
         associations: association,
       };
     case types.CATEGORIES_GET_FAIL:
@@ -81,7 +80,7 @@ export default (state = INITIAL_STATE, action) => {
       }
       categories.push(data);
       const updateSaveData = getCategoryTree(categories, state.trees);
-      const updatedAssociation = action.payload.categories.map(item => ({
+      const updatedAssociation = categories.map(item => ({
         label: item.name,
         value: item._id,
         appear: [],
