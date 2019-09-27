@@ -7,10 +7,10 @@ import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
 import _isEqual from 'lodash/isEqual';
 
-import { fetchProducts, setUpdatedProducts } from 'redux/actions/products';
+import { fetchProducts, setUpdatedProducts, setProducts } from 'redux/actions/products';
 import { confirmMessage } from 'utils';
 import Loader from 'components/Loader';
-
+import FilterEngine from './filterEngine';
 import './style.scss';
 
 class ProductTable extends Component {
@@ -19,6 +19,7 @@ class ProductTable extends Component {
     this.state = {
       fetchingFlag: true,
       hiddenColumns: [],
+      products: [],
     };
   }
 
@@ -53,7 +54,18 @@ class ProductTable extends Component {
       this.setFetchFg(true);
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
     }
+
+    if (prevProps.products !== this.props.products) {
+      this.setProducts(this.props.products);
+      this.setFetchFg(false);
+    }
   }
+
+  setProducts = (products) => {
+    this.setState({
+      products,
+    });
+  };
 
   setFetchFg = (value) => {
     this.setState({
@@ -92,11 +104,23 @@ class ProductTable extends Component {
     }
   };
 
+  makeFilterResult = (changes) => {
+    console.log('######### DEBUG START CUSTOM FILTER ##################'); // fixme
+    console.log('#### DEBUG CHANGES :', changes); // fixme
+    const condition = changes[0].conditions[0].name;
+    console.log('#### DEBUG CONDITION :', condition);
+    const column = this.props.headers[changes[0].column];
+    console.log('#### DEBUG COLUMN :', column);
+    const matchText = changes[0].conditions[0].args[0];
+    console.log('#### DEBUG ARGS :', matchText);
+    const updateData = FilterEngine[condition](this.props.products, column, matchText);
+    this.props.setProducts(updateData);
+  };
+
   render() {
     const {
       columns,
       headers,
-      products,
       tableRef,
     } = this.props;
 
@@ -110,8 +134,9 @@ class ProductTable extends Component {
                 root="hot"
                 licenseKey="non-commercial-and-evaluation"
                 afterChange={this.setChangeItem}
+                afterFilter={this.makeFilterResult}
                 settings={{
-                  data: products,
+                  data: this.state.products,
                   columns,
                   width: '100%',
                   height: '100%',
@@ -162,6 +187,7 @@ ProductTable.propTypes = {
   productsField: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setUpdatedProducts: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
@@ -177,6 +203,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
   setUpdatedProducts,
+  setProducts,
 }, dispatch);
 
 export default connect(
