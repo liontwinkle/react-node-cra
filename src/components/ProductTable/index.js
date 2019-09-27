@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import $ from 'jquery';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
@@ -56,6 +57,7 @@ class ProductTable extends Component {
     }
 
     if (prevProps.products !== this.props.products) {
+      console.log('products'); // fixme
       this.setProducts(this.props.products);
       this.setFetchFg(false);
     }
@@ -105,15 +107,10 @@ class ProductTable extends Component {
   };
 
   makeFilterResult = (changes) => {
-    console.log('######### DEBUG START CUSTOM FILTER ##################'); // fixme
-    console.log('#### DEBUG CHANGES :', changes); // fixme
     const condition = changes[0].conditions[0].name;
-    console.log('#### DEBUG CONDITION :', condition);
     const column = this.props.headers[changes[0].column];
-    console.log('#### DEBUG COLUMN :', column);
-    const matchText = changes[0].conditions[0].args[0];
-    console.log('#### DEBUG ARGS :', matchText);
-    const updateData = FilterEngine[condition](this.props.products, column, matchText);
+    const matchText = $('.htUIInput input').val();
+    const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
     this.props.setProducts(updateData);
   };
 
@@ -184,6 +181,7 @@ ProductTable.propTypes = {
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  originProducts: PropTypes.array.isRequired,
   productsField: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setUpdatedProducts: PropTypes.func.isRequired,
@@ -193,6 +191,7 @@ ProductTable.propTypes = {
 
 const mapStateToProps = store => ({
   products: store.productsData.data.products,
+  originProducts: store.productsData.originProducts,
   columns: store.productsData.data.columns,
   headers: store.productsData.data.headers,
   productsField: store.productsFieldsData.productsField,

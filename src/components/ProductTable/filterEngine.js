@@ -1,19 +1,32 @@
 const getEqFilter = (products, key, value, type) => {
-  const filter = [];
-  console.log('### DEBUG EQUAL VALUE: ', value, type);
-  return filter;
+  console.log('### DEBUG FILTER EQUAL: ', key, value, type);
+  if (type === 'eq') {
+    return products.filter(productItem => (productItem[key] === value));
+  }
+  return products.filter(productItem => (productItem[key] !== value));
 };
 
 const getWithFilter = (products, key, value, type) => {
-  const filter = [];
   console.log('### DEBUG FILTER VALUE: ', value, type);
-  return filter;
+  return products.filter((productItem) => {
+    if (typeof productItem[key] === 'string' && productItem[key].length >= value.length) {
+      if ((type === 'begin' && productItem[key].slice(0, value.length) === value)
+      || (type === 'end' && productItem[key].slice(productItem.length - value.length) === value)) {
+        return true;
+      }
+    }
+    return false;
+  });
 };
 
 const getCotainFilter = (products, key, value, type) => {
-  const filter = [];
   console.log('### DEBUG CONTAIN VALUE: ', value, type);
-  return filter;
+  return products.filter((productItem) => {
+    if (type === 'contains') {
+      return (productItem[key].includes(value) !== -1);
+    }
+    return (productItem[key].includes(value) === -1);
+  });
 };
 
 const FilterEngine = {
