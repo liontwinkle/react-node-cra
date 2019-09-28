@@ -49,7 +49,7 @@ export const sectionRender = (
       let value = '';
       if (p.propertyType === 'string') {
         if (state.properties[p.key] === undefined) {
-          value = p.default;
+          value = p.default || 'default';
         } else {
           value = state.properties[p.key];
         }
@@ -119,7 +119,7 @@ export const sectionRender = (
       } else if (p.propertyType === 'text') {
         let value = '';
         if (state.properties[p.key] === undefined) {
-          value = p.default;
+          value = p.default || 'default';
         } else {
           value = state.properties[p.key];
         }
@@ -135,7 +135,7 @@ export const sectionRender = (
       } else if (p.propertyType === 'array') {
         let value = '';
         if (state.properties[p.key] === undefined) {
-          value = p.default;
+          value = p.default || 'default';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
         } else {
