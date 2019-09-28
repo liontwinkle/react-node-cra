@@ -57,18 +57,18 @@ export const updateProducts = updateData => (dispatch, getState) => {
 };
 
 export const setProducts = updateData => (dispatch) => {
-  setTimeout(() => {
-    dispatch({
-      type: types.PRODUCTS_UPDATE_REQUEST,
-    });
-  }, 300);
-  setTimeout(() => {
-    dispatch({
-      type: types.PRODUCTS_SET_PRODUCTS,
-      payload: { updateData: JSON.stringify(updateData) },
-    });
-  }, 500);
-  return 'update';
+  // setTimeout(() => {
+  //   dispatch({
+  //     type: types.PRODUCTS_UPDATE_REQUEST,
+  //   });
+  // }, 300);
+  // setTimeout(() => {
+  dispatch({
+    type: types.PRODUCTS_SET_PRODUCTS,
+    payload: { updateData: JSON.stringify(updateData) },
+  });
+  // }, 500);
+  // return 'update';
 };
 
 export const setUpdatedProducts = changes => (dispatch) => {
