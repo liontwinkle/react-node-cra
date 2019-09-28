@@ -21,6 +21,7 @@ class ProductTable extends Component {
       isUpdating: false,
       isUpdatingList: false,
       hiddenColumns: [],
+      productsData: [],
       data: [],
     };
   }
@@ -48,12 +49,15 @@ class ProductTable extends Component {
         fetchingFlag: nextProps.isUpdating,
         isUpdating: nextProps.isUpdating,
         data: nextProps.products.slice(0, 100),
+        productsData: nextProps.products,
       };
     }
 
     if (!_isEqual(nextProps.products.slice(0, 100), prevState.data.slice(0, 100))) {
+      console.log('HERE??'); // fixme
       return {
         data: nextProps.products.slice(0, 100),
+        productsData: nextProps.products,
         fetchingFlag: false,
       };
     }
@@ -63,6 +67,7 @@ class ProductTable extends Component {
         fetchingFlag: nextProps.isUpdatingList,
         isUpdatingList: nextProps.isUpdatingList,
         data: nextProps.products.slice(0, 100),
+        productsData: nextProps.products,
       };
     }
     return null;
@@ -101,6 +106,7 @@ class ProductTable extends Component {
   };
 
   setChangeItem = (changes) => {
+    console.log('#### DEBUG CHANGES: ', changes); // fixme
     if (!(changes && changes[0][2] !== changes[0][3])) {
       return;
     }
@@ -122,6 +128,27 @@ class ProductTable extends Component {
     this.props.setProducts(updateData);
   };
 
+  sortResult = (changes) => {
+    const newData = JSON.parse(JSON.stringify(this.props.products));
+    if (changes && changes.length > 0 && changes[0].column) {
+      if (changes[0].sortOrder === 'asc') {
+        newData.sort((a, b) => (
+          (a[this.props.headers[changes[0].column]] > b[this.props.headers[changes[0].column]]) ? 1 : -1));
+      } else {
+        newData.sort((a, b) => (
+          (a[this.props.headers[changes[0].column]] < b[this.props.headers[changes[0].column]]) ? 1 : -1));
+      }
+      console.log(this.props.headers[changes[0].column]);
+      console.log(changes[0].sortOrder);
+      console.log('### DEBUG PREPAREDATA: ', newData.slice(0, 100)); // fixme
+      this.setState({
+        productsData: [...newData],
+        data: [...newData.slice(0, 100)],
+      });
+      setTimeout(() => { console.log('TEST: ', this.state.data); }, 500);
+    }
+  };
+
   computeWindow = () => {
     const rowCount = this.props.tableRef.current.hotInstance.countRows();
     const rowOffset = this.props.tableRef.current.hotInstance.rowOffset();
@@ -137,7 +164,7 @@ class ProductTable extends Component {
 
   loadMoreData = (viewCount, endIndex) => {
     this.setState(prevState => ({
-      data: [...prevState.data, ...this.props.products.slice(endIndex, viewCount)],
+      data: [...prevState.data, ...prevState.productsData.slice(endIndex, viewCount)],
     }));
   };
 
@@ -148,6 +175,8 @@ class ProductTable extends Component {
       tableRef,
     } = this.props;
 
+    console.log('### DEBUG PRODUCTS: ', this.state.productsData); // fixme
+    console.log('### DEBUG RENDER: ', this.state.data); // fixme
     return (
       <div id="hot-app">
         {(!this.state.fetchingFlag)
@@ -158,6 +187,7 @@ class ProductTable extends Component {
               licenseKey="non-commercial-and-evaluation"
               afterChange={this.setChangeItem}
               afterFilter={this.makeFilterResult}
+              afterColumnSort={this.sortResult}
               settings={{
                 afterScrollVertically: this.computeWindow,
                 data: this.state.data,
