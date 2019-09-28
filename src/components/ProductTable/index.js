@@ -20,7 +20,6 @@ class ProductTable extends Component {
     this.state = {
       fetchingFlag: true,
       hiddenColumns: [],
-      products: [],
     };
   }
 
@@ -43,6 +42,7 @@ class ProductTable extends Component {
 
   componentDidUpdate(prevProps) {
     if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
+      console.log('#### DEBUG FLAG IS UPDATED#####', performance.now()); // fixme
       this.setFetchFg(this.props.isUpdating);
     }
 
@@ -55,19 +55,7 @@ class ProductTable extends Component {
       this.setFetchFg(true);
       this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
     }
-
-    if (prevProps.products !== this.props.products) {
-      console.log('products'); // fixme
-      this.setProducts(this.props.products);
-      this.setFetchFg(false);
-    }
   }
-
-  setProducts = (products) => {
-    this.setState({
-      products,
-    });
-  };
 
   setFetchFg = (value) => {
     this.setState({
@@ -118,6 +106,7 @@ class ProductTable extends Component {
     const {
       columns,
       headers,
+      products,
       tableRef,
     } = this.props;
 
@@ -133,7 +122,7 @@ class ProductTable extends Component {
                 afterChange={this.setChangeItem}
                 afterFilter={this.makeFilterResult}
                 settings={{
-                  data: this.state.products,
+                  data: products,
                   columns,
                   width: '100%',
                   height: '100%',

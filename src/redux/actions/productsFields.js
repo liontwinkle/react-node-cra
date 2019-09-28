@@ -1,6 +1,18 @@
 import productsFieldsService from 'services/productsFields.service';
 import types from '../actionTypes';
 
+export const testDetach = value => (dispatch, getState) => {
+  if (getState().productsFieldsData.isUpdating) {
+    return Promise.reject();
+  }
+  const time1 = performance.now();
+  console.log('### DEBUG MEASURE TIME: ', time1); // fixme
+  dispatch({
+    type: types.TEST_ACTION, // fixme
+    payload: { value },
+  });
+  console.log('### DEBUG MEASURE TIME: ', performance.now()); // fixme
+};
 export const fetchProductsField = () => (dispatch, getState) => {
   if (getState().productsFieldsData.isFetchingList) {
     return Promise.reject();

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// import ReactDom from 'react-dom';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,7 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 
 import { confirmMessage } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
-import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
+import { updateProductsField, setImageKey, testDetach } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection, IconButton } from 'components/elements';
 import DisplaySetting from './DisplaySetting';
 import ExportDataSection from './ExportDataSection';
@@ -30,6 +31,7 @@ function ProductsDataDetail({
   productsField,
   updated,
   updateProductsField,
+  testDetach,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [fieldData, setFieldData] = useState(productsField);
@@ -48,6 +50,7 @@ function ProductsDataDetail({
       checkStatus[keyItem] = fieldValues[key].data;
     });
     const updateData = [checkStatus, ...products];
+    console.log('#DEBUG updateData', tableRef); // fixme
     tableRef.current.hotInstance.loadData(updateData);
     tableRef.current.hotInstance
       .getPlugin('exportFile')
@@ -109,27 +112,42 @@ function ProductsDataDetail({
     }
   };
 
-  const handleAllUpdate = (type) => {
+  const handleAllUpdate = (/* type */) => {
     if (!isUpdating) {
-      const value = (type === 'checked');
-      const updateFieldData = JSON.parse(JSON.stringify(productsField));
-      headers.forEach((headerItem) => {
-        if ((updateFieldData[headerItem] === undefined)
-          || (updateFieldData[headerItem].grid === undefined)) {
-          updateFieldData[headerItem] = {
-            data: value,
-            grid: true,
-          };
-        } else {
-          updateFieldData[headerItem] = {
-            data: value,
-            grid: fieldData[headerItem].grid,
-          };
-        }
-      });
-      setFieldData(updateFieldData);
-      setTimeout(() => { updateProductsField(updateFieldData); }, 500);
+      // console.log('##### DEBUG TABLE REF: ', tableRef); // fixme
+      // console.log('##### DEBUG TABLE REF MOUNT: ', tableRef); // fixme
+      // const mountNode = ReactDom.findDOMNode(tableRef.current);
+      // console.log('##### DEBUG TABLE DOM: ', mountNode); // fixme
+      // try {
+      //   ReactDom.unmountComponentAtNode(mountNode);
+      console.log('##### DEBUG TABLE DOM MOUNTED?:'); // fixme
+      testDetach(false);
+      console.log('##### DEBUG FINISHED? :', performance.now()); // fixme
+      // } catch (e) {
+      //   console.error(e);
+      // }
+      // const time1 = performance.now();// // .then(() => {
+      // console.log('Set Flag'); // fixme
+      // const value = (type === 'checked');
+      // const updateFieldData = JSON.parse(JSON.stringify(productsField));
+      // headers.forEach((headerItem) => {
+      //   if ((updateFieldData[headerItem] === undefined)
+      //       || (updateFieldData[headerItem].grid === undefined)) {
+      //     updateFieldData[headerItem] = {
+      //       data: value,
+      //       grid: true,
+      //     };
+      //   } else {
+      //     updateFieldData[headerItem] = {
+      //       data: value,
+      //       grid: fieldData[headerItem].grid,
+      //     };
+      //   }
+      // });
+      // setFieldData(updateFieldData);
+      // setTimeout(() => { updateProductsField(updateFieldData); }, 500);
     }
+    // }
   };
 
   const setEmpty = (updateData, type) => {
@@ -267,6 +285,7 @@ ProductsDataDetail.propTypes = {
   setImageKey: PropTypes.func.isRequired,
   productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
+  testDetach: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -286,6 +305,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setProducts,
   setImageKey,
   updateProductsField,
+  testDetach,
 }, dispatch);
 
 export default connect(

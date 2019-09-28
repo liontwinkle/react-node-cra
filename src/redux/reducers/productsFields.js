@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   isFetchingList: false,
   isUpdating: false,
   isDeleting: false,
-
+  isChange: false, // fixme
   productsField: {},
   errors: '',
   imageKey: 'image',
@@ -87,6 +87,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         hoverSize: action.payload.size,
+      };
+    case types.TEST_ACTION: // fixme
+      return {
+        ...state,
+        isUpdating: true,
       };
     default:
       return state;
