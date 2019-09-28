@@ -44,22 +44,21 @@ class ProductTable extends Component {
     if (nextProps.isUpdating !== prevState.fetchingFlag && !prevState.fetchingFlag) {
       return {
         fetchingFlag: nextProps.isUpdating,
-        data: nextProps.products.slice(0, 100),
+        data: nextProps.products.slice(0, 30),
       };
     }
 
-    if (nextProps.products.length > 0 && !_isEqual(nextProps.products.slice(0, 100), prevState.data.slice(0, 100))) {
+    if (!_isEqual(nextProps.products.slice(0, 30), prevState.data.slice(0, 30))) {
       return {
-        data: nextProps.products.slice(0, 100),
+        data: nextProps.products.slice(0, 30),
         fetchingFlag: false,
-
       };
     }
 
     if (nextProps.isUpdatingList !== prevState.fetchingFlag && !prevState.fetchingFlag) {
       return {
         fetchingFlag: nextProps.isUpdatingList,
-        data: nextProps.products.slice(0, 100),
+        data: nextProps.products.slice(0, 30),
       };
     }
     return null;
@@ -170,15 +169,13 @@ class ProductTable extends Component {
                   'hidden_columns_show',
                   'make_read_only',
                 ],
-                // viewportRowRenderingOffset: 70,
-                // viewportColumnRenderingOffset: 10,
                 filters: true,
                 dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
                 manualColumnResize: true,
                 manualRowResize: true,
                 manualColumnMove: true,
                 manualRowMove: true,
-                // multiColumnSorting: true,
+                multiColumnSorting: true,
                 hiddenColumns: {
                   columns: this.state.hiddenColumns,
                   indicators: true,
