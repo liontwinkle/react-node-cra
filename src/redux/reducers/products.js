@@ -60,10 +60,12 @@ export default (state = INITIAL_STATE, action) => {
 
       const willSaveData = state.data;
       willSaveData.products = newProducts;
+
       return {
         ...state,
         originProducts: orgProducts,
         data: willSaveData,
+        updatedData: [],
         isUpdatingList: false,
       };
     case types.PRODUCTS_UPDATE_FAIL:

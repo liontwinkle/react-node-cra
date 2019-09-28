@@ -17,7 +17,9 @@ class ProductTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fetchingFlag: true,
+      fetchingFlag: false,
+      isUpdating: false,
+      isUpdatingList: false,
       hiddenColumns: [],
       data: [],
     };
@@ -41,24 +43,26 @@ class ProductTable extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.isUpdating !== prevState.fetchingFlag && !prevState.fetchingFlag) {
+    if (nextProps.isUpdating !== prevState.isUpdating) {
       return {
         fetchingFlag: nextProps.isUpdating,
-        data: nextProps.products.slice(0, 30),
+        isUpdating: nextProps.isUpdating,
+        data: nextProps.products.slice(0, 100),
       };
     }
 
-    if (!_isEqual(nextProps.products.slice(0, 30), prevState.data.slice(0, 30))) {
+    if (!_isEqual(nextProps.products.slice(0, 100), prevState.data.slice(0, 100))) {
       return {
-        data: nextProps.products.slice(0, 30),
+        data: nextProps.products.slice(0, 100),
         fetchingFlag: false,
       };
     }
 
-    if (nextProps.isUpdatingList !== prevState.fetchingFlag && !prevState.fetchingFlag) {
+    if (nextProps.isUpdatingList !== prevState.isUpdatingList) {
       return {
         fetchingFlag: nextProps.isUpdatingList,
-        data: nextProps.products.slice(0, 30),
+        isUpdatingList: nextProps.isUpdatingList,
+        data: nextProps.products.slice(0, 100),
       };
     }
     return null;
@@ -97,15 +101,16 @@ class ProductTable extends Component {
   };
 
   setChangeItem = (changes) => {
-    if (changes) {
-      if (changes[1] === 'id') {
-        const duplicate = this.props.products.filter(item => (item.id === changes[3]));
-        if (duplicate.length === 0) {
-          this.props.setUpdatedProducts(changes);
-        }
-      } else {
+    if (!(changes && changes[0][2] !== changes[0][3])) {
+      return;
+    }
+    if (changes[0][1] === 'id') {
+      const duplicate = this.props.products.find(item => (item.id === changes[0][3]));
+      if (duplicate) {
         this.props.setUpdatedProducts(changes);
       }
+    } else {
+      this.props.setUpdatedProducts(changes);
     }
   };
 

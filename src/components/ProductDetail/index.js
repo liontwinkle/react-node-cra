@@ -54,7 +54,7 @@ function ProductsDataDetail({
     tableRef.current.hotInstance
       .getPlugin('exportFile')
       .downloadFile('csv', { filename: 'CSV Export File' });
-    tableRef.current.hotInstance.loadData(products);
+    tableRef.current.hotInstance.loadData(products.slice(0, 100));
   };
 
   const handleExportStr = () => {
