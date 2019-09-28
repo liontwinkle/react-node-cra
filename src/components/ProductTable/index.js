@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 import PropTypes from 'prop-types';
-// import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
 import _isEqual from 'lodash/isEqual';
@@ -20,6 +19,7 @@ class ProductTable extends Component {
     this.state = {
       fetchingFlag: true,
       hiddenColumns: [],
+      data: [],
     };
   }
 
@@ -40,25 +40,32 @@ class ProductTable extends Component {
     }
   }
 
-  // UNSAFE_componentWillUpdate(nextProps) {
-  //   if (nextProps.isUpdating !== this.props.isUpdating) {
-  //     console.log('#### DEBUG FLAG IS WillUPDATED#####', performance.now()); // fixme
-  //     this.setFetchFg(nextProps.isUpdating);
-  //   }
-  // }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isUpdating !== prevState.fetchingFlag && !prevState.fetchingFlag) {
+      return {
+        fetchingFlag: nextProps.isUpdating,
+        data: nextProps.products.slice(0, 100),
+      };
+    }
+
+    if (nextProps.products.length > 0 && !_isEqual(nextProps.products.slice(0, 100), prevState.data.slice(0, 100))) {
+      return {
+        data: nextProps.products.slice(0, 100),
+        fetchingFlag: false,
+
+      };
+    }
+
+    if (nextProps.isUpdatingList !== prevState.fetchingFlag && !prevState.fetchingFlag) {
+      return {
+        fetchingFlag: nextProps.isUpdatingList,
+        data: nextProps.products.slice(0, 100),
+      };
+    }
+    return null;
+  }
 
   componentDidUpdate(prevProps) {
-    console.log('### DEBUG FETCHING FLAG RENDERED: ', this.state.fetchingFlag); // fixme
-    if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
-      console.log('#### DEBUG FLAG IS UPDATED#####', performance.now()); // fixme
-      this.isChanged = false;
-      // this.setFetchFg(this.props.isUpdating);
-    }
-
-    if ((prevProps.isUpdatingList !== this.props.isUpdatingList) && this.props.isUpdatingList) {
-      this.setFetchFg(this.props.isUpdatingList);
-    }
-
     const diffFlag = _isEqual(prevProps.productsField, this.props.productsField);
     if (prevProps.columns.length > 0 && !diffFlag) {
       this.setFetchFg(true);
@@ -111,15 +118,32 @@ class ProductTable extends Component {
     this.props.setProducts(updateData);
   };
 
+  computeWindow = () => {
+    const rowCount = this.props.tableRef.current.hotInstance.countRows();
+    const rowOffset = this.props.tableRef.current.hotInstance.rowOffset();
+    const visibleRows = this.props.tableRef.current.hotInstance.countVisibleRows();
+    const lastRow = rowOffset + visibleRows;
+    const lastVisibleRow = rowOffset + visibleRows + (visibleRows / 2);
+    const threshold = 15;
+
+    if (lastVisibleRow > (rowCount - threshold)) {
+      this.loadMoreData(rowCount, lastRow);
+    }
+  };
+
+  loadMoreData = (viewCount, endIndex) => {
+    this.setState(prevState => ({
+      data: [...prevState.data, ...this.props.products.slice(endIndex, viewCount)],
+    }));
+  };
+
   render() {
     const {
       columns,
       headers,
-      products,
       tableRef,
     } = this.props;
 
-    console.log('### DEBUG FETCHING FLAG: ', this.state.fetchingFlag, !!this.isChanged);
     return (
       <div id="hot-app">
         {(!this.state.fetchingFlag)
@@ -131,7 +155,8 @@ class ProductTable extends Component {
               afterChange={this.setChangeItem}
               afterFilter={this.makeFilterResult}
               settings={{
-                data: products,
+                afterScrollVertically: this.computeWindow,
+                data: this.state.data,
                 columns,
                 width: '100%',
                 height: '100%',
@@ -172,8 +197,6 @@ class ProductTable extends Component {
 }
 
 ProductTable.propTypes = {
-  isUpdating: PropTypes.bool.isRequired,
-  isUpdatingList: PropTypes.bool.isRequired,
   tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,

@@ -88,11 +88,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         hoverSize: action.payload.size,
       };
-    case types.TEST_ACTION: // fixme
-      return {
-        ...state,
-        isUpdating: true,
-      };
     default:
       return state;
   }
