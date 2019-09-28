@@ -48,8 +48,10 @@ class ProductTable extends Component {
   // }
 
   componentDidUpdate(prevProps) {
+    console.log('### DEBUG FETCHING FLAG RENDERED: ', this.state.fetchingFlag); // fixme
     if ((prevProps.isUpdating !== this.props.isUpdating) && this.props.isUpdating) {
       console.log('#### DEBUG FLAG IS UPDATED#####', performance.now()); // fixme
+      this.isChanged = false;
       // this.setFetchFg(this.props.isUpdating);
     }
 
@@ -117,7 +119,7 @@ class ProductTable extends Component {
       tableRef,
     } = this.props;
 
-    // console.log('')
+    console.log('### DEBUG FETCHING FLAG: ', this.state.fetchingFlag, !!this.isChanged);
     return (
       <div id="hot-app">
         {(!this.state.fetchingFlag)
@@ -143,8 +145,8 @@ class ProductTable extends Component {
                   'hidden_columns_show',
                   'make_read_only',
                 ],
-                viewportRowRenderingOffset: 70,
-                viewportColumnRenderingOffset: 10,
+                // viewportRowRenderingOffset: 70,
+                // viewportColumnRenderingOffset: 10,
                 filters: true,
                 dropdownMenu: ['filter_by_condition', 'filter_action_bar'],
                 manualColumnResize: true,
