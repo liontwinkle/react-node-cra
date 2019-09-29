@@ -47,19 +47,36 @@ function handleEntityNotFound(res) {
 }
 
 function handleExistingRemove(collection, req, res) {
-  collection.updateOne({ clientId: req.params.clientId },
-    {
-      $set: {
-        clientId: req.params.clientId,
-        imageKey: req.body.imageKey,
-        fields: req.body.fields,
+  collection.find({ clientId: req.params.clientId }, (err, findRes) => {
+    if (!err) {
+      if (findRes.length > 0) {
+        collection.updateOne({ clientId: req.params.clientId },
+          {
+            $set: {
+              clientId: req.params.clientId,
+              imageKey: req.body.imageKey,
+              fields: req.body.fields,
+            }
+          }, (err, findRes) => {
+            if (!err) {
+              res.status(200)
+                .json(findRes);
+            }
+          });
+      } else {
+        collection.create({
+          clientId: req.params.clientId,
+          imageKey: req.body.imageKey,
+          fields: req.body.fields,
+        }, (err, insertResult) => {
+          if (!err) {
+            res.status(200)
+              .json(insertResult);
+          }
+        });
       }
-    }, (err, findRes) => {
-      if (!err) {
-        res.status(200)
-          .json(findRes);
-      }
-    });
+    }
+  });
 }
 
 function saveUpdates(updates) {

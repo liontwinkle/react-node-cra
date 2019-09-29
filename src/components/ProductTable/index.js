@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import $ from 'jquery';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 import { withSnackbar } from 'notistack';
 import { HotTable } from '@handsontable/react';
 import _isEqual from 'lodash/isEqual';
@@ -11,6 +11,7 @@ import { fetchProducts, setUpdatedProducts, setProducts } from 'redux/actions/pr
 import { confirmMessage } from 'utils';
 import Loader from 'components/Loader';
 import FilterEngine from './filterEngine';
+
 import './style.scss';
 
 class ProductTable extends Component {
@@ -23,23 +24,6 @@ class ProductTable extends Component {
       hiddenColumns: [],
       data: [],
     };
-  }
-
-  componentDidMount() {
-    if (this.props.products.length === 0) {
-      this.setFetchFg(true);
-
-      this.props.fetchProducts()
-        .then(() => {
-          this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
-          confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
-        })
-        .catch(() => {
-          confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
-        });
-    } else {
-      this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
-    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -66,6 +50,23 @@ class ProductTable extends Component {
       };
     }
     return null;
+  }
+
+  componentDidMount() {
+    if (this.props.products.length === 0) {
+      this.setFetchFg(true);
+
+      this.props.fetchProducts()
+        .then(() => {
+          this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
+          confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
+        });
+    } else {
+      this.setHiddenColumns(this.gethiddenColumns(this.props.productsField));
+    }
   }
 
   componentDidUpdate(prevProps) {

@@ -28,14 +28,9 @@ exports.update = (req, res) => {
 
 // Update an existing ImageKey in the DB
 exports.updateImageKey = (req, res) => {
-  const newData = {
-    clientId: req.params.clientId,
-    imageKey: req.body.imageKey,
-    fields: req.body.fields,
-  };
   ProductsField
     .find({ clientId: req.params.clientId })
-    .then(handleExistingRemove(ProductsField, req, newData, res))
+    .then(handleExistingRemove(ProductsField, req, res))
     .catch(handleError(res));
 };
 

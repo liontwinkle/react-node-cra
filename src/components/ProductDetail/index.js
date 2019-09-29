@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useSnackbar } from 'notistack';
 import { Tooltip } from 'react-tippy';
+import { useSnackbar } from 'notistack';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { confirmMessage } from 'utils';

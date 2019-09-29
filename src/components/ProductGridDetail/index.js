@@ -82,10 +82,11 @@ function ProductsGridDetail({
   return (
     <PerfectScrollbar>
       <div className="product-details">
-        <CustomSection title="Setting Hover Size" key="show_setting">
+        <CustomSection title="Setting Hover Size" key="show_setting_size">
           <CustomInput
             className="mb-3"
             label="Hover Width(px)"
+            key="width"
             inline
             value={hoverSize.width}
             onChange={handleSizeInput('width')}
@@ -93,6 +94,7 @@ function ProductsGridDetail({
           <CustomInput
             className="mb-3"
             label="Hover Height(px)"
+            key="height"
             inline
             value={hoverSize.height}
             onChange={handleSizeInput('height')}
