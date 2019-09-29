@@ -60,7 +60,7 @@ class Properties extends Component {
       });
     }
 
-    if (!isEqual(propertyField.sections, propertyField.sections)) {
+    if (!isEqual(propertyField.sections, prevProps.propertyField.sections)) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });
@@ -136,7 +136,6 @@ class Properties extends Component {
     } = this.state;
 
     const { propertyFields } = this.props.propertyField;
-
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
