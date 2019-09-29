@@ -6,7 +6,6 @@
   white-space: nowrap;
 
   .mg-properties-content {
-    //padding: 1rem;
     flex: 1;
 
     .mg-select-section {
@@ -34,20 +33,19 @@
       flex-wrap: wrap;
       .attribute-item {
         width: 50%;
-        .group{
-          .custom-check-container
-          {
+        .group {
+          .custom-check-container {
             font-size: 18px;
             font-weight: bolder;
             padding: 0 10px;
             border-bottom: solid 1px black;
-            margin: 0!important;
-            label{
+            margin: 0 !important;
+            label {
               margin-left: 10px;
             }
           }
         }
-        .custom-check-container{
+        .custom-check-container {
           margin: 10px 20px;
         }
       }

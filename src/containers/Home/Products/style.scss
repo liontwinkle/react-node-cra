@@ -1,16 +1,16 @@
 .app-tree-container {
   height: 100%;
 
-  .product-table{
+  .product-table {
     width: 100%;
     height: 100vh;
   }
 }
 
-.product-details{
+.product-details {
   width: 100%;
-  height:100%;
+  height: 100%;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   overflow: auto;
 }

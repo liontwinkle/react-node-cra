@@ -1,11 +1,12 @@
-.product-details{
+.product-details {
   width: 100%;
-  height:100%;
+  height: 100%;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   overflow: auto;
 }
-.set_imageKey{
+
+.set_imageKey {
   display: flex;
   justify-content: space-around;
 }
