@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -29,8 +29,8 @@ function ContextMenu({
   const [displayData, setDisplayData] = useState(false);
   const [displayEdit, setDisplayEdit] = useState(false);
   const [isActive, setActive] = useState(false);
-  const handleClick = (event) => {
-    console.log(displayEdit); // fixme
+
+  const handleClick = useCallback((event) => {
     const target = document.getElementsByClassName('context-menu-container');
     const currentX = event.clientX;
     const currentY = event.clientY;
@@ -43,8 +43,9 @@ function ContextMenu({
         handleClose();
       }
     }
-  };
-  const getAttributeProducts = () => {
+  }, [displayData, displayEdit, handleClose, info.positionX, info.positionY]);
+
+  const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
     if (attribute.groupId === '') {
       filterAttribute = attributes.filter(attributeItem => (attributeItem.groupId === attribute._id));
@@ -55,14 +56,14 @@ function ContextMenu({
     const srcAttributeRules = setUnionRules(filterAttribute);
     const attributeRules = getRules(srcAttributeRules, valueDetails);
     return getPreFilterData(attributeRules.editRules, products);
-  };
+  }, [attribute, attributes, products, valueDetails]);
 
-  const FilterProducts = () => {
+  const FilterProducts = useCallback(() => {
     const attributeProducts = getAttributeProducts();
     const categoriesRules = getRules(category.newRules, valueDetails);
     const categoriesData = getPreFilterData(categoriesRules.editRules, products);
     return _intersection(attributeProducts, categoriesData);
-  };
+  }, [category.newRules, getAttributeProducts, products, valueDetails]);
 
   useEffect(() => {
     if (!isActive) {

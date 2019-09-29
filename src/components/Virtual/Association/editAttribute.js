@@ -57,6 +57,8 @@ function EditAttribute({
         .catch(() => {
           confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
         });
+    } else {
+      confirmMessage(enqueueSnackbar, 'Attribute name is duplicated.', 'info');
     }
   };
 
@@ -83,7 +85,7 @@ function EditAttribute({
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
-          // onClick={handleClose}
+          onClick={handleClose}
         >
           Cancel
         </button>
