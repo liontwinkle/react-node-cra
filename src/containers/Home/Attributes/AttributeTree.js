@@ -11,7 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import AttributeNode from 'components/Attributes/AttributeTree';
+import { AttributeNode } from 'components/Attributes';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 

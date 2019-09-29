@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import AttributeSetting from 'components/Attributes/AttributeSetting';
-import AttributeRules from 'components/Attributes/AttributeRules';
+import { AttributeSetting, AttributeRules, AttributeProperties } from 'components/Attributes';
 import { CustomTab } from 'components/elements';
-import AttributeProperties from 'components/Attributes/AttributeProperties';
 import DetailTable from 'components/DetailTable';
 
 const tabs = [
