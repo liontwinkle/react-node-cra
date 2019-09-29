@@ -1,8 +1,8 @@
-@import "../../../../scss/mixin";
+@import "scss/mixin.scss";
 
 .mg-rule-actions {
-  width: fit-content;
-
+  width: fit-content !important;
+  padding: 0 !important;
   table {
     width: 100%;
     padding: 0;

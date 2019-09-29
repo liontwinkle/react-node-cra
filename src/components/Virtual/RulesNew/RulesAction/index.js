@@ -51,7 +51,7 @@ function RulesAction({
   };
 
   return (
-    <div className="mg-rules-actions d-flex flex-column align-items-center">
+    <div className="rules-action mg-rules-actions d-flex flex-column align-items-center">
       <Tooltip
         title="Add New Rule"
         position="left"

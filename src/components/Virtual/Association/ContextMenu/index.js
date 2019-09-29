@@ -7,10 +7,9 @@ import _intersection from 'lodash/intersection';
 import { setUnionRules } from 'utils/ruleManagement';
 import { confirmMessage, getPreFilterData, getRules } from 'utils';
 import PreviewProducts from 'components/Virtual/RulesNew/RulesAction/PreviewProducts';
-
+import EditAttribute from '../editAttribute';
 
 import './style.scss';
-import EditAttribute from '../editAttribute';
 
 
 function ContextMenu({
