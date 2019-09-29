@@ -60,7 +60,7 @@ class AttributeProperties extends Component {
       });
     }
 
-    if (!isEqual(propertyField.sections, propertyField.sections)) {
+    if (!isEqual(propertyField.sections, prevProps.propertyField.sections)) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });

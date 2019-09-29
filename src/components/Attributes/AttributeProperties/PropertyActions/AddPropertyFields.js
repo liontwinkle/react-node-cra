@@ -77,8 +77,8 @@ function AddPropertyFields({
           updatePropertyField(propertyField.id, { propertyFields })
             .then(() => {
               addNewRuleHistory(createHistory, attribute, attribute.groupId,
-                `Create Property(${attribute.propertyType})`,
-                `Create Property(${attribute.propertyType}) by ${attribute.name}`,
+                `Create Property(${propertyFieldData.propertyType.key})`,
+                `Create Property(${propertyFieldData.propertyType.key}) by ${attribute.name}`,
                 'attributes');
               confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
               handleClose();

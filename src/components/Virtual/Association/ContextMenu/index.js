@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -31,6 +30,7 @@ function ContextMenu({
   const [displayEdit, setDisplayEdit] = useState(false);
   const [isActive, setActive] = useState(false);
   const handleClick = (event) => {
+    console.log(displayEdit); // fixme
     const target = document.getElementsByClassName('context-menu-container');
     const currentX = event.clientX;
     const currentY = event.clientY;
@@ -71,7 +71,7 @@ function ContextMenu({
     }
     window.addEventListener('click', handleClick);
     return () => { window.removeEventListener('click', handleClick); };
-  }, [isActive, setPrefilterData]);
+  }, [FilterProducts, handleClick, isActive, setPrefilterData]);
 
   const handleMenuItem = type => () => {
     if (type === 'match') {
