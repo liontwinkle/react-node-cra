@@ -14,9 +14,7 @@ const tabs = [
 function Content() {
   const [tab, setTab] = useState('detail');
 
-  const handleClick = value => () => {
-    setTab(value);
-  };
+  const handleClick = value => () => { setTab(value); };
 
   return (
     <div className="virtual-container">

@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import _find from 'lodash/find';
 import { useSnackbar } from 'notistack';
 
@@ -45,15 +45,10 @@ function ClientSelect({
 
   useEffect(() => {
     fetchClients()
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in fetching clients.', 'error');
-      });
+      .catch(() => { confirmMessage(enqueueSnackbar, 'Error in fetching clients.', 'error'); });
   }, [fetchClients, enqueueSnackbar]);
 
-  const items = clients.map(c => ({
-    key: c.id,
-    label: c.name,
-  }));
+  const items = clients.map(c => ({ key: c.id, label: c.name }));
 
   const actionChangeType = (type, client) => {
     setClientType(type);
@@ -71,9 +66,7 @@ function ClientSelect({
     fetchProductsField();
   };
 
-  const handleChangeType = (type) => {
-    actionChangeType(type, client);
-  };
+  const handleChangeType = (type) => { actionChangeType(type, client); };
 
   const handleChangeProductViewType = (productViewType) => {
     setProductViewType(productViewType);

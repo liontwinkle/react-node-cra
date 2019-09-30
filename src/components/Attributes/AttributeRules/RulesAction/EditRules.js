@@ -81,12 +81,8 @@ function EditRules({
 
     if (!isUpdating) {
       updateAttribute(attribute.id, { rules: updatedData })
-        .then(() => {
-          confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success');
-        })
-        .catch(() => {
-          confirmMessage(enqueueSnackbar, 'Error in updating new rules.', 'error');
-        });
+        .then(() => { confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success'); })
+        .catch(() => { confirmMessage(enqueueSnackbar, 'Error in updating new rules.', 'error'); });
     }
   };
 

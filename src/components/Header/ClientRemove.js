@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -12,13 +13,12 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Tooltip } from 'react-tippy';
 
 import { removeClient } from 'redux/actions/clients';
 import { removePropertyField } from 'redux/actions/propertyFields';
 import { removeProductsField } from 'redux/actions/productsFields';
 import { IconButton } from 'components/elements';
-import { confirmMessage } from '../../utils';
+import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -38,9 +38,7 @@ function ClientRemove({
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-  };
+  const handleOpen = () => { setOpen(!open); };
 
   const handleRemove = () => {
     if (!isDeleting) {
@@ -74,10 +72,7 @@ function ClientRemove({
         position="bottom"
         arrow
       >
-        <IconButton
-          className="danger"
-          onClick={handleOpen}
-        >
+        <IconButton className="danger" onClick={handleOpen}>
           <DeleteIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>

@@ -17,12 +17,8 @@ import { CustomInput, CustomSelectWithLabel } from 'components/elements/index';
 import { confirmMessage } from 'utils/index';
 
 const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
-  dialogContent: {
-    overflow: 'unset',
-  },
+  dialogAction: { margin: theme.spacing(2) },
+  dialogContent: { overflow: 'unset' },
 }));
 
 function AddRuleKeys(props) {

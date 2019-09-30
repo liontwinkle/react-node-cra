@@ -1,16 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { ruleTypes, tableIcons } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
-import { confirmMessage } from '../../../../utils/index';
+import { ruleTypes, tableIcons } from 'utils/constants';
+import { confirmMessage } from 'utils';
 
 function EditRuleKeys(props) {
   const { enqueueSnackbar } = useSnackbar();

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Grid } from 'react-virtualized';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Grid } from 'react-virtualized';
 import { withSnackbar } from 'notistack';
 import $ from 'jquery';
 import { fetchProducts } from 'redux/actions/products';
@@ -36,9 +36,7 @@ class ProductGridView extends Component {
     if (this.props.imageKey !== '') {
       if (this.props.filterProducts.length === 0) {
         this.props.fetchProducts()
-          .then(() => {
-            this.fetchData(this.props.products);
-          })
+          .then(() => { this.fetchData(this.props.products); })
           .catch(() => {
             confirmMessage(this.props.enqueueSnackbar, 'Error in fetching products data.', 'error');
           });
@@ -57,17 +55,10 @@ class ProductGridView extends Component {
       if (key % MAX_LENGTH_NUM === MAX_LENGTH_NUM - 1) {
         data.push(temp);
         temp = [];
-      } else {
-        temp.push(item);
-      }
+      } else { temp.push(item); }
     });
-    if (temp.length > 0) {
-      data.push(temp);
-    }
-    this.setState({
-      fetchingFlag: false,
-      data,
-    });
+    if (temp.length > 0) { data.push(temp); }
+    this.setState({ fetchingFlag: false, data });
     confirmMessage(this.props.enqueueSnackbar, 'Success fetching products data.', 'success');
   };
 
@@ -96,9 +87,7 @@ class ProductGridView extends Component {
   };
 
   handleClose = () => {
-    this.setState({
-      viewDetailFlag: false,
-    });
+    this.setState({ viewDetailFlag: false });
   };
 
   cellRenderer = ({

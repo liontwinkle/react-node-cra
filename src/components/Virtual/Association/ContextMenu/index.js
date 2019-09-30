@@ -31,16 +31,12 @@ function ContextMenu({
 
   const handleClick = useCallback((event) => {
     const target = document.getElementsByClassName('context-menu-container');
-    const currentX = event.clientX;
-    const currentY = event.clientY;
     const infX = info.positionX;
     const sufX = infX + target[0].clientWidth;
     const infY = info.positionY;
     const sufY = infY + target[0].clientHeight;
-    if (currentX < infX || currentX > sufX || currentY < infY || currentY > sufY) {
-      if (!displayEdit && !displayData) {
-        handleClose();
-      }
+    if (event.clientX < infX || event.clientX > sufX || event.clientY < infY || event.clientY > sufY) {
+      if (!displayEdit && !displayData) { handleClose(); }
     }
   }, [displayData, displayEdit, handleClose, info.positionX, info.positionY]);
 
@@ -98,10 +94,7 @@ function ContextMenu({
     && (
       <div
         className="context-menu-container"
-        style={{
-          top: `${info.positionY}px`,
-          left: `${info.positionX}px`,
-        }}
+        style={{ top: `${info.positionY}px`, left: `${info.positionX}px` }}
       >
         <ul>
           {

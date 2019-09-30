@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -17,9 +17,7 @@ import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
+  dialogAction: { margin: theme.spacing(2) },
 }));
 
 function ClientForm({

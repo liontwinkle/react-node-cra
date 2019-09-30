@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
+import { Tooltip } from 'react-tippy';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import { Tooltip } from 'react-tippy';
 
 import { updateCategory } from 'redux/actions/categories';
 import { IconButton } from 'components/elements/index';
+import { confirmMessage } from 'utils';
 import AddRuleKeys from './AddRuleKeys';
 import EditRuleKeys from './EditRuleKeys';
-import { confirmMessage } from '../../../../utils/index';
 
 function RuleActions(props) {
   const { enqueueSnackbar } = useSnackbar();
-
   const {
     rules,
     isUpdating,
     category,
     updateCategory,
   } = props;
-
   const [open, setOpen] = useState({ add: false, edit: false });
   const handleToggle = field => () => {
     setOpen({

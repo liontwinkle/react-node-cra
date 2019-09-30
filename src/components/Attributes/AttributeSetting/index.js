@@ -34,10 +34,7 @@ class AttributeSetting extends Component {
   }
 
   setChecked = (attribute) => {
-    this.setState({
-      checked: attribute.appear,
-      categoryList: attribute.appear,
-    });
+    this.setState({ checked: attribute.appear, categoryList: attribute.appear });
   };
 
   checkGroupPermission= (value) => {
@@ -115,10 +112,7 @@ class AttributeSetting extends Component {
     return (
       <div className="mg-attr-setting-container d-flex">
         <PerfectScrollbar
-          options={{
-            suppressScrollX: true,
-            minScrollbarLength: 50,
-          }}
+          options={{ suppressScrollX: true, minScrollbarLength: 50 }}
         >
           <CheckboxTree
             nodes={assoicationCategories}

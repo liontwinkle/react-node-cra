@@ -34,13 +34,9 @@ function NodeMenu({
     event.stopPropagation();
   };
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = (event) => { setAnchorEl(event.currentTarget); };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => { setAnchorEl(null); };
 
   const handleEdit = () => {
     if (checkNameDuplicate(attributes, node.item.name, node.item.groupId) < 2) {
@@ -65,10 +61,7 @@ function NodeMenu({
 
   const handleAdd = () => {
     if (checkNameDuplicate(attributes, 'New Attribute', node.item.id) === 0) {
-      createAttribute({
-        name: 'New Attribute',
-        groupId: node.item.id,
-      })
+      createAttribute({ name: 'New Attribute', groupId: node.item.id })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,
@@ -144,9 +137,7 @@ function NodeMenu({
     deleteItem();
     setDeleteDlgOpen(false);
   };
-  const handleDeleteDlgClose = () => {
-    setDeleteDlgOpen(false);
-  };
+  const handleDeleteDlgClose = () => { setDeleteDlgOpen(false); };
 
   const handleRemove = () => {
     const childNum = getSubItems(node);
@@ -168,14 +159,8 @@ function NodeMenu({
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <div className="d-flex flex-column">
           {

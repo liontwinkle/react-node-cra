@@ -79,9 +79,7 @@ function AttributeNode({
   };
 
   const handleKeyDown = (node, path) => (e) => {
-    if (e.key === 'Enter') {
-      handleBlur(node, path)();
-    }
+    if (e.key === 'Enter') { handleBlur(node, path)(); }
   };
 
   const handleChange = (node, path) => (e) => {
@@ -99,9 +97,7 @@ function AttributeNode({
   };
 
   const handleClick = node => () => {
-    if (!node.editable) {
-      setAttribute(node.item);
-    }
+    if (!node.editable) { setAttribute(node.item); }
   };
 
   const handleDoubleClick = (node, path) => () => {

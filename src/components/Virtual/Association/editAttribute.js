@@ -19,9 +19,7 @@ import { checkNameDuplicate } from 'utils/attributeManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 
 const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
+  dialogAction: { margin: theme.spacing(2) },
 }));
 
 function EditAttribute({
@@ -38,9 +36,7 @@ function EditAttribute({
 
   const [attributeName, setAttributeName] = useState(attribute.name);
 
-  const handleChange = (e) => {
-    setAttributeName(e.target.value);
-  };
+  const handleChange = (e) => { setAttributeName(e.target.value); };
 
   const disabled = !(attributeName === attribute.name || attribute === '' || !isUpdating);
   const handleSubmit = () => {

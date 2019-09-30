@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import { Tooltip } from 'react-tippy';
 
 import { IconButton } from 'components/elements';
 import ClientRemove from './ClientRemove';
@@ -14,10 +14,7 @@ function ClientAction(props) {
 
   const [formState, setFormState] = useState({ open: false, type: '' });
   const handleOpen = type => () => {
-    setFormState({
-      open: true,
-      type,
-    });
+    setFormState({ open: true, type });
   };
   const handleClose = () => {
     setFormState({
@@ -45,18 +42,13 @@ function ClientAction(props) {
             position="bottom"
             arrow
           >
-            <IconButton
-              className="mx-2"
-              onClick={handleOpen('Edit')}
-            >
+            <IconButton className="mx-2" onClick={handleOpen('Edit')}>
               <EditIcon style={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
-
           <ClientRemove />
         </Fragment>
       )}
-
       {formState.open && (
         <ClientForm status={formState} handleClose={handleClose} />
       )}

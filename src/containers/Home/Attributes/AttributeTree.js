@@ -1,10 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { createAttribute, updateNodeData } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
-import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -45,9 +45,7 @@ function AttributeTree({
     }
   };
 
-  const setNodeData = (data) => {
-    updateNodeData(data);
-  };
+  const setNodeData = (data) => { updateNodeData(data); };
 
   return (
     <div className="app-tree-container d-flex flex-column">

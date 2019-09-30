@@ -41,15 +41,10 @@ function RulesAction({
 
   const handleToggle = field => () => {
     let displayData = [];
-    if (field === 'preview_products') {
-      displayData = filterProducts();
-    }
+    if (field === 'preview_products') { displayData = filterProducts(); }
 
     if (displayData.length === 0 && field === 'preview_products') {
-      enqueueSnackbar('No Products match this rule.', {
-        variant: 'info',
-        autoHideDuration: 4000,
-      });
+      enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
     } else {
       setProducts(displayData);
       setOpen({

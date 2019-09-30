@@ -18,9 +18,7 @@ function AttributeContent({
 }) {
   const [tab, setTab] = useState('setting');
 
-  const handleClick = value => () => {
-    setTab(value);
-  };
+  const handleClick = value => () => { setTab(value); };
 
   return (
     <div className="attribute-container">

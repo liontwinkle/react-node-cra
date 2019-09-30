@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Section, Bar } from 'react-simple-resizer';
+import PropTypes from 'prop-types';
 
 import { VirtualTree, VirtualDetail } from './Virtual';
 import { AttributeTree, AttributeContent } from './Attributes';

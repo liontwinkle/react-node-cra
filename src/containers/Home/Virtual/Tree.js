@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Tooltip } from 'react-tippy';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { createCategory, updateTreeData } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 
@@ -25,9 +25,7 @@ function Tree(props) {
     treeData,
   } = props;
 
-  const setTreeData = (data) => {
-    updateTreeData(data);
-  };
+  const setTreeData = (data) => { updateTreeData(data); };
 
   const addRootCategory = () => {
     createCategory({ name: 'New Category' })

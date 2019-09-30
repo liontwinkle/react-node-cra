@@ -10,10 +10,7 @@ import _union from 'lodash/union';
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import {
-  basis,
-  refer,
-  match,
-  scope,
+  basis, refer, match, scope,
 } from 'utils/constants';
 import { confirmMessage } from 'utils';
 import Loader from 'components/Loader';

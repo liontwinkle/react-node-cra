@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import { Tooltip } from 'react-tippy';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Tooltip } from 'react-tippy';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import SaveIcon from '@material-ui/icons/Save';
 
@@ -65,16 +65,12 @@ function ProductsDataDetail({
   const handleSaveData = () => {
     if (!isUpdatingList && updated.length > 0) {
       updateProducts(updated)
-        .then(() => {
-          confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success');
-        })
+        .then(() => { confirmMessage(enqueueSnackbar, 'The data is saved successfully.', 'success'); })
         .catch(() => {
           const errMsg = 'Error is detected to save the table data1.';
           confirmMessage(enqueueSnackbar, errMsg, 'error');
         });
-    } else {
-      confirmMessage(enqueueSnackbar, 'The Update data is not exist.', 'error');
-    }
+    } else { confirmMessage(enqueueSnackbar, 'The Update data is not exist.', 'error'); }
   };
 
 
@@ -87,24 +83,13 @@ function ProductsDataDetail({
           || (newFieldData[item].data === undefined
           && newFieldData[item].grid === undefined)
         ) {
-          newFieldData[item] = {
-            data: true,
-            grid: true,
-          };
+          newFieldData[item] = { data: true, grid: true };
         } else if (newFieldData[item].data === undefined) {
-          newFieldData[item] = {
-            data: true,
-            grid: newFieldData[item].grid,
-          };
+          newFieldData[item] = { data: true, grid: newFieldData[item].grid };
         } else if (newFieldData[item].grid === undefined) {
-          newFieldData[item] = {
-            data: newFieldData[item].data,
-            grid: true,
-          };
+          newFieldData[item] = { data: newFieldData[item].data, grid: true };
         }
-        if (key === index) {
-          newFieldData[item].data = value;
-        }
+        if (key === index) { newFieldData[item].data = value; }
       });
       setFieldData(newFieldData);
       setTimeout(() => { updateProductsField(newFieldData); }, 500);
@@ -118,15 +103,9 @@ function ProductsDataDetail({
       headers.forEach((headerItem) => {
         if ((updateFieldData[headerItem] === undefined)
             || (updateFieldData[headerItem].grid === undefined)) {
-          updateFieldData[headerItem] = {
-            data: value,
-            grid: true,
-          };
+          updateFieldData[headerItem] = { data: value, grid: true };
         } else {
-          updateFieldData[headerItem] = {
-            data: value,
-            grid: fieldData[headerItem].grid,
-          };
+          updateFieldData[headerItem] = { data: value, grid: fieldData[headerItem].grid };
         }
       });
       setFieldData(updateFieldData);
@@ -185,8 +164,7 @@ function ProductsDataDetail({
 
   const handleSaveImageKey = () => {
     const caseInsensitiveMatch = new RegExp('http', 'i');
-    if (!isFetchingList
-      && !isUpdating
+    if (!isFetchingList && !isUpdating
       && products[0][imageKeySet]
       && caseInsensitiveMatch.test(products[0][imageKeySet])) {
       setImageKey(imageKeySet)

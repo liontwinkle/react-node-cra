@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 

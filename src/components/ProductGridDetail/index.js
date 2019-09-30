@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
 import { updateProductsField, setSizeSet } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection } from 'components/elements';
 import ShowFields from 'components/ProductDetail/ShowFields';
@@ -28,24 +28,13 @@ function ProductsGridDetail({
           || (newFieldData[item].data === undefined
           && newFieldData[item].grid === undefined)
         ) {
-          newFieldData[item] = {
-            data: true,
-            grid: true,
-          };
+          newFieldData[item] = { data: true, grid: true };
         } else if (newFieldData[item].data === undefined) {
-          newFieldData[item] = {
-            data: true,
-            grid: newFieldData[item].grid,
-          };
+          newFieldData[item] = { data: true, grid: newFieldData[item].grid };
         } else if (newFieldData[item].grid === undefined) {
-          newFieldData[item] = {
-            data: newFieldData[item].data,
-            grid: true,
-          };
+          newFieldData[item] = { data: newFieldData[item].data, grid: true };
         }
-        if (key === index) {
-          newFieldData[item].grid = value;
-        }
+        if (key === index) { newFieldData[item].grid = value; }
       });
       updateProductsField(newFieldData);
     }
@@ -58,15 +47,9 @@ function ProductsGridDetail({
       headers.forEach((headerItem) => {
         if ((updateData[headerItem] === undefined)
           || (updateData[headerItem].data === undefined)) {
-          updateData[headerItem] = {
-            data: true,
-            grid: value,
-          };
+          updateData[headerItem] = { data: true, grid: value };
         } else {
-          updateData[headerItem] = {
-            data: fieldData[headerItem].grid,
-            grid: value,
-          };
+          updateData[headerItem] = { data: fieldData[headerItem].grid, grid: value };
         }
       });
       setFieldData(updateData);

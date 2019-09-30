@@ -43,10 +43,7 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    createCategory({
-      name: 'New Category',
-      parentId: node.item.id,
-    })
+    createCategory({ name: 'New Category', parentId: node.item.id })
       .then((category) => {
         addNewRuleHistory(createHistory, category, category.parentId,
           'Create Node',
@@ -150,14 +147,8 @@ function NodeMenu({
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <div className="d-flex flex-column">
           <button className="mg-button transparent" onClick={handleAdd}>

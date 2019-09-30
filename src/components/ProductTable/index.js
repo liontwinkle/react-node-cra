@@ -78,9 +78,7 @@ class ProductTable extends Component {
   }
 
   setFetchFg = (value) => {
-    this.setState({
-      fetchingFlag: value,
-    });
+    this.setState({ fetchingFlag: value });
   };
 
   gethiddenColumns = (fieldData) => {
@@ -95,10 +93,7 @@ class ProductTable extends Component {
   };
 
   setHiddenColumns = (data) => {
-    this.setState({
-      hiddenColumns: data,
-      fetchingFlag: false,
-    });
+    this.setState({ hiddenColumns: data, fetchingFlag: false });
   };
 
   setChangeItem = (changes) => {

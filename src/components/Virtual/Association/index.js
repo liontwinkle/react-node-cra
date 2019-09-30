@@ -72,12 +72,8 @@ function Association({
       });
       setChecked(updateChecked);
     }
-    if (products.length === 0 && !isFetchingList) {
-      fetchProducts();
-    }
-    if (context.length > 0) {
-      setHandler(context, handleClick);
-    }
+    if (products.length === 0 && !isFetchingList) { fetchProducts(); }
+    if (context.length > 0) { setHandler(context, handleClick); }
     setContext(document.getElementsByClassName('rct-title'));
   }, [category, attributes, setChecked, context, products, fetchProducts, handleClick, isFetchingList]);
 
@@ -118,14 +114,10 @@ function Association({
       const groupAddAppear = groupAdd.appear;
       groupAddAppear.push(category._id);
       updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
-        .then(() => {
-          fetchAttributes(client.id, 'attributes');
-        });
+        .then(() => { fetchAttributes(client.id, 'attributes'); });
     } else {
       updateAttribute(targetAppear._id, { appear: appearData, checked: nodeTarget.checked })
-        .then(() => {
-          fetchAttributes(client.id, 'attributes');
-        });
+        .then(() => { fetchAttributes(client.id, 'attributes'); });
     }
   };
 
@@ -134,10 +126,7 @@ function Association({
       ? (
         <div className="mg-attributes-container d-flex">
           <PerfectScrollbar
-            options={{
-              suppressScrollX: true,
-              minScrollbarLength: 50,
-            }}
+            options={{ suppressScrollX: true, minScrollbarLength: 50 }}
           >
             {
               nodes.length > 0

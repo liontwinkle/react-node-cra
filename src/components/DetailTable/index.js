@@ -36,10 +36,7 @@ function DetailTable({
   return (
     <div className="mg-detail-table">
       <PerfectScrollbar
-        options={{
-          minScrollbarLength: 50,
-          suppressScrollX: true,
-        }}
+        options={{ minScrollbarLength: 50, suppressScrollX: true }}
       >
         <MaterialTable
           icons={tableIcons}

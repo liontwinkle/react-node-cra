@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { OrderedMap } from 'immutable';
 import isEqual from 'lodash/isEqual';
 
-import { getMapFromJson, getJsonFromMap } from 'utils/index';
+import { getMapFromJson, getJsonFromMap } from 'utils';
 import { RuleBuilder } from 'components/elements/index';
-import RuleActions from './RuleActions/index';
+import RuleActions from './RuleActions';
 
 import './style.scss';
 
@@ -42,7 +42,6 @@ class Rules extends Component {
 
   render() {
     const { map, ruleKeys } = this.state;
-
     const json = getJsonFromMap(map, '', '');
 
     return (

@@ -49,10 +49,7 @@ function EditPropertyFields({
       let updateFlag = true;
       if (selectItems.items) {
         if (isExist(selectItems.items, newData.key) === 0) {
-          selectItems.items.push({
-            key: newData.key,
-            label: newData.label,
-          });
+          selectItems.items.push({ key: newData.key, label: newData.label });
         } else {
           updateFlag = false;
           const errMsg = `Error: Another item is using the key (${newData.key})
@@ -60,10 +57,7 @@ function EditPropertyFields({
           confirmMessage(enqueueSnackbar, errMsg, 'error');
         }
       } else {
-        selectItems.items = {
-          key: newData.key,
-          label: newData.label,
-        };
+        selectItems.items = { key: newData.key, label: newData.label };
       }
 
       if (updateFlag) {
