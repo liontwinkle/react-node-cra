@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { FilePond } from 'react-filepond';
 import PropTypes from 'prop-types';
 // import { useSnackbar } from 'notistack';
 import {
@@ -13,6 +14,7 @@ import {
 
 import { createClient, updateClient } from 'redux/actions/clients';
 import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
+
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -34,6 +36,17 @@ function ClientImport({
     console.log('#### DEBUG SUBMIT ####'); // fixme
   };
 
+  const onChangeHandle = (fileItem) => {
+    if (fileItem.length > 0) {
+      const { file } = fileItem[0];
+      console.log('####EVENT FILE: ', file);
+      const { fileSize } = fileItem[0];
+      console.log('####EVENT FILE SIZE: ', fileSize);
+      const { fileType } = fileItem[0];
+      console.log('####EVENT FILE SIZE: ', fileType);
+    }
+  };
+
   const disabled = (importData !== undefined);
   return (
     <Dialog
@@ -45,7 +58,9 @@ function ClientImport({
         {`Import Data to ${type.label} for ${client.name}`}
       </DialogTitle>
 
-      <DialogContent />
+      <DialogContent>
+        <FilePond onupdatefiles={fileItems => onChangeHandle(fileItems)} />
+      </DialogContent>
 
       <DialogActions className={classes.dialogAction}>
         <button

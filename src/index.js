@@ -6,6 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import 'react-sortable-tree/style.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'react-tippy/dist/tippy.css';
+import 'filepond/dist/filepond.css';
 import 'handsontable/dist/handsontable.full.css';
 import 'react-checkbox-tree-enhanced/lib/react-checkbox-tree.css';
 import './style.scss';
