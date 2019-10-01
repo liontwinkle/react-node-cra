@@ -16,10 +16,13 @@ const getWithFilter = (products, key, value, type) => products.filter((productIt
 });
 
 const getCotainFilter = (products, key, value, type) => products.filter((productItem) => {
-  if (type === 'contains') {
-    return (productItem[key].includes(value) !== -1);
+  if (productItem[key]) {
+    if (type === 'contains') {
+      return (productItem[key].includes(value) !== -1);
+    }
+    return (productItem[key].includes(value) === -1);
   }
-  return (productItem[key].includes(value) === -1);
+  return false;
 });
 
 const FilterEngine = {

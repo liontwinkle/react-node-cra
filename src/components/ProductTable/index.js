@@ -115,6 +115,7 @@ class ProductTable extends Component {
     const column = this.props.headers[changes[0].column];
     const matchText = $('.htUIInput input').val();
     const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+    console.log('### DEBUG UPDATE DATA: ', updateData); // fixme
     this.props.setProducts(updateData);
   };
 
