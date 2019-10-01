@@ -120,7 +120,7 @@ class ProductTable extends Component {
 
   sortResult = (changes) => {
     const newData = JSON.parse(JSON.stringify(this.props.products));
-    if (changes && changes.length > 0 && changes[0].column) {
+    if (changes && changes.length > 0) {
       if (changes[0].sortOrder === 'asc') {
         newData.sort((a, b) => (
           (a[this.props.headers[changes[0].column]] > b[this.props.headers[changes[0].column]]) ? 1 : -1));
