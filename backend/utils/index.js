@@ -173,9 +173,10 @@ function removeAttribute(req, id) {
 function createCollection(body) {
   const fileName = [
     `${body.code}_virtuals`,
-    `${body.code}_native`,
+    `${body.code}_natives`,
     `${body.code}_products`,
     `${body.code}_attributes`,
+    `${body.code}_histories`,
   ];
   fileName.forEach((item) => {
     db.createCollection(item, () => {
