@@ -54,7 +54,8 @@ function ClientSelect({
     setClientType(type);
     if (type.key !== 'products') {
       fetchPropertyField(client.id, type.key);
-      fetchHistories(client.id, type.key);
+      const fetchType = (type.key === 'native') ? 'virtual' : type.key;
+      fetchHistories(client.id, fetchType);
       if (type.key === 'attributes') {
         fetchCategories(client.id, 'virtual');
         fetchAttributes(client.id, type.key);
