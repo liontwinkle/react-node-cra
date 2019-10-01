@@ -102,12 +102,8 @@ class ProductTable extends Component {
     }
     if (changes[0][1] === 'id') {
       const duplicate = this.props.products.find(item => (item.id === changes[0][3]));
-      if (duplicate) {
-        this.props.setUpdatedProducts(changes);
-      }
-    } else {
-      this.props.setUpdatedProducts(changes);
-    }
+      if (duplicate) { this.props.setUpdatedProducts(changes); }
+    } else { this.props.setUpdatedProducts(changes); }
   };
 
   makeFilterResult = (changes) => {
