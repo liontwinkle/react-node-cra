@@ -1,9 +1,12 @@
-const getEqFilter = (products, key, value, type) => {
-  if (type === 'eq') {
-    return products.filter(productItem => (productItem[key] === value));
+const getEqFilter = (products, key, value, type) => products.filter((productItem) => {
+  if (productItem[key]) {
+    if (type === 'eq') {
+      return productItem[key].match(value, 'i');
+    }
+    return !productItem[key].match(value, 'i');
   }
-  return products.filter(productItem => (productItem[key] !== value));
-};
+  return false;
+});
 
 const getWithFilter = (products, key, value, type) => products.filter((productItem) => {
   if (typeof productItem[key] === 'string' && productItem[key].length >= value.length) {
@@ -18,9 +21,9 @@ const getWithFilter = (products, key, value, type) => products.filter((productIt
 const getCotainFilter = (products, key, value, type) => products.filter((productItem) => {
   if (productItem[key]) {
     if (type === 'contains') {
-      return (productItem[key].includes(value) !== -1);
+      return (productItem[key].indexOf(value) !== -1);
     }
-    return (productItem[key].includes(value) === -1);
+    return (productItem[key].indexOf(value) === -1);
   }
   return false;
 });
@@ -28,7 +31,7 @@ const getCotainFilter = (products, key, value, type) => products.filter((product
 const FilterEngine = {
   eq: (products, key, value, type = 'eq') => getEqFilter(products, key, value, type),
   neq: (products, key, value, type = 'neq') => getEqFilter(products, key, value, type),
-  begins_with: (products, value, key, type = 'begin') => getWithFilter(products, key, value, type),
+  begins_with: (products, key, value, type = 'begin') => getWithFilter(products, key, value, type),
   ends_with: (products, key, value, type = 'end') => getWithFilter(products, key, value, type),
   contains: (products, key, value, type = 'contains') => getCotainFilter(products, key, value, type),
   not_contains: (products, key, value, type = 'not_contains') => getCotainFilter(products, key, value, type),

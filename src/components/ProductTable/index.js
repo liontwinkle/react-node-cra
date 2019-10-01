@@ -111,12 +111,19 @@ class ProductTable extends Component {
   };
 
   makeFilterResult = (changes) => {
+    console.log('#### DEBUG CHANGES: ', changes); // fixme
     const condition = changes[0].conditions[0].name;
-    const column = this.props.headers[changes[0].column];
-    const matchText = $('.htUIInput input').val();
-    const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
-    console.log('### DEBUG UPDATE DATA: ', updateData); // fixme
-    this.props.setProducts(updateData);
+    if (condition !== 'empty' && condition !== 'not_empty') {
+      const column = this.props.headers[changes[0].column];
+      const matchText = $('.htUIInput input').val();
+      const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+      console.log('### DEBUG UPDATE DATA: ', updateData); // fixme
+      setTimeout(() => {
+        this.setFetchFg(true);
+        this.props.setProducts(updateData);
+        this.setFetchFg(false);
+      }, 0);
+    }
   };
 
   sortResult = (changes) => {
@@ -159,6 +166,7 @@ class ProductTable extends Component {
       tableRef,
     } = this.props;
 
+    console.log('### DEBUG FILTER:', this.state.data); // fixme
     return (
       <div id="hot-app">
         {(!this.state.fetchingFlag)
