@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import CopyIcon from '@material-ui/icons/ImportantDevices';
 
 import { IconButton } from 'components/elements';
 import ClientRemove from './ClientRemove';
 import ClientForm from './ClientForm';
+import ClientImport from './ClientImport';
 
 function ClientAction(props) {
-  const { client } = props;
+  const { client, type } = props;
 
   const [formState, setFormState] = useState({ open: false, type: '' });
   const handleOpen = type => () => {
@@ -34,7 +36,6 @@ function ClientAction(props) {
           <AddIcon />
         </IconButton>
       </Tooltip>
-
       {client && (
         <Fragment>
           <Tooltip
@@ -49,8 +50,21 @@ function ClientAction(props) {
           <ClientRemove />
         </Fragment>
       )}
+      {type && (
+        <Tooltip
+          title={`Import Data for ${type.label}`}
+          position="bottom"
+          arrow
+        >
+          <IconButton className="mx-2" onClick={handleOpen('Type')}>
+            <CopyIcon style={{ fontSize: 20 }} />
+          </IconButton>
+        </Tooltip>
+      )}
       {formState.open && (
-        <ClientForm status={formState} handleClose={handleClose} />
+        formState.type === 'Type'
+          ? <ClientImport status={formState} handleClose={handleClose} client={client} type={type} />
+          : <ClientForm status={formState} handleClose={handleClose} />
       )}
     </Fragment>
   );
@@ -58,14 +72,17 @@ function ClientAction(props) {
 
 ClientAction.propTypes = {
   client: PropTypes.object,
+  type: PropTypes.object,
 };
 
 ClientAction.defaultProps = {
   client: null,
+  type: null,
 };
 
 const mapStateToProps = store => ({
   client: store.clientsData.client,
+  type: store.clientsData.type,
 });
 
 export default connect(mapStateToProps)(ClientAction);
