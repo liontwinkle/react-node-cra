@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import CopyIcon from '@material-ui/icons/ImportantDevices';
+import CopyIcon from '@material-ui/icons/CloudUpload';
 
 import { IconButton } from 'components/elements';
 import ClientRemove from './ClientRemove';
