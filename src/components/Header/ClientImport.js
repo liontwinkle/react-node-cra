@@ -11,10 +11,9 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-
-import { createClient, updateClient } from 'redux/actions/clients';
-import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
-
+import fileUpload from 'redux/actions/upload';
+import Loader from '../Loader';
+// import { confirmMessage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -22,18 +21,33 @@ const useStyles = makeStyles(theme => ({
 
 function ClientImport({
   status,
-  isSaving,
+  isUploading,
   client,
   type,
   handleClose,
+  // fileUpload,
 }) {
   const classes = useStyles();
   // const { enqueueSnackbar } = useSnackbar();
 
-  const [importData] = useState();
+  const [importData, setImportData] = useState();
+  const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
     console.log('#### DEBUG SUBMIT ####'); // fixme
+    console.log('#### DEBUG DATA: ', importData); // fixme
+    setUploadFlag(true);
+    // fileUpload(importData)
+    //   .then(() => {
+    //     setImportData(null);
+    //     setUploadFlag(false);
+    //     confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
+    //   })
+    //   .catch(() => {
+    //     setImportData(null);
+    //     setUploadFlag(false);
+    //     confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
+    //   });
   };
 
   const onChangeHandle = (fileItem) => {
@@ -44,10 +58,16 @@ function ClientImport({
       console.log('####EVENT FILE SIZE: ', fileSize);
       const { fileType } = fileItem[0];
       console.log('####EVENT FILE SIZE: ', fileType);
+      if (fileType === 'application/json') {
+        console.log('FILE DATA: ', file); // fixme
+        setImportData(file);
+      }
     }
   };
 
-  const disabled = (importData !== undefined);
+  const disabled = (importData === undefined);
+  console.log('## DEBUG IS UPLOADING: ', isUploading); // fixme
+  console.log('## DEBUG DISABLE: ', disabled); // fixme
   return (
     <Dialog
       open={status.open}
@@ -59,23 +79,41 @@ function ClientImport({
       </DialogTitle>
 
       <DialogContent>
-        <FilePond onupdatefiles={fileItems => onChangeHandle(fileItems)} />
+        {
+          !uploadFlag ? (
+            <FilePond onupdatefiles={fileItems => onChangeHandle(fileItems)} />
+          ) : (
+            <div
+              className="upload_loader"
+              style={
+                {
+                  width: 'fit-content',
+                  height: 'fit-content',
+                  position: 'relative',
+                  left: '45%',
+                }
+              }
+            >
+              <Loader size="small" color="dark" />
+            </div>
+          )
+        }
       </DialogContent>
 
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
-          disabled={isSaving}
+          disabled={isUploading}
           onClick={handleClose}
         >
-          Cancel
+            Cancel
         </button>
         <button
           className="mg-button primary"
-          disabled={isSaving || disabled}
+          disabled={isUploading || disabled}
           onClick={handleSubmit}
         >
-          Save
+            Save
         </button>
       </DialogActions>
     </Dialog>
@@ -84,10 +122,11 @@ function ClientImport({
 
 ClientImport.propTypes = {
   status: PropTypes.object.isRequired,
-  isSaving: PropTypes.bool.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
+  isUploading: PropTypes.bool.isRequired,
+  // fileUpload: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
@@ -96,14 +135,11 @@ ClientImport.defaultProps = {
 };
 
 const mapStateToProps = store => ({
-  isSaving: store.clientsData.isCreating || store.clientsData.isUpdating,
+  isUploading: store.uploadData.isUploading,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  createClient,
-  updateClient,
-  createPropertyField,
-  updatePropertyField,
+  fileUpload,
 }, dispatch);
 
 export default connect(

@@ -1,25 +1,31 @@
-import attributesService from 'services/attributes.service';
+import uploadService from 'services/upload.service';
 import types from '../actionTypes';
 
-const fileUpload = (clientId, type) => (dispatch, getState) => {
-  if (getState().attributesData.isFetchingList) {
+const fileUpload = data => (dispatch, getState) => {
+  if (getState().uploadData.isUploading) {
     return Promise.reject();
   }
 
+  const { client, type } = getState().clientsData;
+
+  console.log('####### DEBUG UPLOADING #########'); // fixme
+  console.log('### DEBUG DATA: ', data); // fixme
+  console.log('### DEBUG CLIENT: ', client.id); // fixme
+  console.log('### DEBUG TYPE: ', type.key); // fixme
   dispatch({
-    type: types.ATTRIBUTE_FETCH_REQUEST,
+    type: types.UPLOAD_DATA_REQUEST,
   });
 
-  return attributesService.fetch(clientId, type)
-    .then((attributes) => {
+  return uploadService.upload(client.id, type.key, data)
+    .then((data) => {
       dispatch({
-        type: types.ATTRIBUTE_FETCH_SUCCESS,
-        payload: { attributes },
+        type: types.UPLOAD_DATA_SUCCESS,
+        payload: { data },
       });
     })
     .catch((error) => {
       dispatch({
-        type: types.ATTRIBUTE_FETCH_FAIL,
+        type: types.UPLOAD_DATA_FAIL,
         payload: { error },
       });
 
