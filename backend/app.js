@@ -30,6 +30,7 @@ dotenv.config({ path: '.env' });
 const clientsRoute = require('./modules/clients/clients.route');
 const propertyFieldsRoute = require('./modules/property-fields/property-fields.route');
 const ProductsFieldsRoute = require('./modules/products-fields/products-fields.route');
+const uploadRoute = require('./modules/upload/upload.route');
 /**
  * Create Express server.
  */
@@ -84,6 +85,7 @@ app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 3155760000
  * Notes routes.
  */
 app.use('/api/clients', clientsRoute);
+app.use('/api/upload', uploadRoute);
 app.use('/api/property-fields', propertyFieldsRoute);
 app.use('/api/products-fields', ProductsFieldsRoute);
 
