@@ -11,12 +11,14 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isUploading: true,
+        errors: '',
       };
     case types.UPLOAD_DATA_SUCCESS:
       console.log(action.payload);
       return {
         ...state,
         isUploading: false,
+        errors: '',
       };
     case types.UPLOAD_DATA_FAIL:
       return {

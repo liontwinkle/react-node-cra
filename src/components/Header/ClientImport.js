@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FilePond } from 'react-filepond';
 import PropTypes from 'prop-types';
-// import { useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 import {
   Dialog,
   DialogActions,
@@ -12,7 +12,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import fileUpload from 'redux/actions/upload';
-// import { confirmMessage } from 'utils';
+import { confirmMessage, validateData } from 'utils';
 import Loader from '../Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -28,14 +28,18 @@ function ClientImport({
   fileUpload,
 }) {
   const classes = useStyles();
-  // const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [importData, setImportData] = useState();
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    fileUpload(importData);
+    if (validateData(type.key, importData).length > 0) {
+      fileUpload(importData);
+    } else {
+      confirmMessage(enqueueSnackbar, 'Data is invalidate', 'error');
+    }
     // .then(() => {
     //   setImportData(null);
     //   setUploadFlag(false);

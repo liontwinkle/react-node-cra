@@ -8,6 +8,38 @@ import {
   basis, match, refer, scope,
 } from './constants';
 
+const validateKey = {
+  virtual: ['parentId', 'name'],
+  attributes: ['groupId', 'name', 'appear'],
+  native: ['parentId', 'name'],
+  products: [],
+};
+
+export const validateData = (type, data) => {
+  console.log('### DEBUG VALIDATE VIRTUAL DATA', data);
+  const validateData = [];
+  if (validateKey[type]) {
+    data.forEach((dataItem) => {
+      console.log('### DEBUG SUB ITEM: ', dataItem); // fixme
+      const keys = Object.keys(dataItem);
+      console.log('### DEBUG SUB KEYS: ', keys); // fixme
+      if (keys.length > 0) {
+        let validateFlag = true;
+        validateKey[type].forEach((validateItem) => {
+          if (keys.findIndex(item => (item === validateItem)) === -1) {
+            validateFlag = false;
+          }
+        });
+        if (validateFlag) {
+          validateData.push(dataItem);
+        }
+      }
+    });
+    console.log('### DEBUG VALIDATE DATA: ', validateData); // fixme
+  }
+  return validateData;
+};
+
 export const useStyles = makeStyles(theme => ({
   dialogAction: {
     margin: theme.spacing(2),
