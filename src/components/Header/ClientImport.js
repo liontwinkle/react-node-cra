@@ -36,20 +36,20 @@ function ClientImport({
   const handleSubmit = () => {
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0) {
-      fileUpload(importData);
+      fileUpload(importData)
+        .then(() => {
+          setImportData(null);
+          setUploadFlag(false);
+          confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
+        })
+        .catch(() => {
+          setImportData(null);
+          setUploadFlag(false);
+          confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
+        });
     } else {
       confirmMessage(enqueueSnackbar, 'Data is invalidate', 'error');
     }
-    // .then(() => {
-    //   setImportData(null);
-    //   setUploadFlag(false);
-    //   confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
-    // })
-    // .catch(() => {
-    //   setImportData(null);
-    //   setUploadFlag(false);
-    //   confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
-    // });
   };
 
   const onChangeHandle = (fileItem) => {
