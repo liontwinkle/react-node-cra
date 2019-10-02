@@ -1,4 +1,4 @@
-import uploadService from 'services/upload.service';
+// import uploadService from 'services/upload.service';
 import types from '../actionTypes';
 
 const fileUpload = data => (dispatch, getState) => {
@@ -16,21 +16,21 @@ const fileUpload = data => (dispatch, getState) => {
     type: types.UPLOAD_DATA_REQUEST,
   });
 
-  return uploadService.upload(client.id, type.key, data)
-    .then((data) => {
-      dispatch({
-        type: types.UPLOAD_DATA_SUCCESS,
-        payload: { data },
-      });
-    })
-    .catch((error) => {
-      dispatch({
-        type: types.UPLOAD_DATA_FAIL,
-        payload: { error },
-      });
-
-      throw error;
-    });
+  // return uploadService.upload(client.id, type.key, data)
+  //   .then((data) => {
+  //     dispatch({
+  //       type: types.UPLOAD_DATA_SUCCESS,
+  //       payload: { data },
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     dispatch({
+  //       type: types.UPLOAD_DATA_FAIL,
+  //       payload: { error },
+  //     });
+  //
+  //     throw error;
+  //   });
 };
 
 export default fileUpload;

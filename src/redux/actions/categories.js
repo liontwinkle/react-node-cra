@@ -34,7 +34,6 @@ export const createCategory = category => (dispatch, getState) => {
 
   const { client, type } = getState().clientsData;
 
-  console.log('### DEBUG NATIVE TYPE: ', type); // fixme
   dispatch({
     type: types.CATEGORY_CREATE_REQUEST,
   });

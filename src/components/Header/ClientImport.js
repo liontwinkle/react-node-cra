@@ -12,8 +12,8 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import fileUpload from 'redux/actions/upload';
+// import { confirmMessage } from 'utils';
 import Loader from '../Loader';
-// import { confirmMessage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -25,7 +25,7 @@ function ClientImport({
   client,
   type,
   handleClose,
-  // fileUpload,
+  fileUpload,
 }) {
   const classes = useStyles();
   // const { enqueueSnackbar } = useSnackbar();
@@ -34,40 +34,39 @@ function ClientImport({
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
-    console.log('#### DEBUG SUBMIT ####'); // fixme
-    console.log('#### DEBUG DATA: ', importData); // fixme
     setUploadFlag(true);
-    // fileUpload(importData)
-    //   .then(() => {
-    //     setImportData(null);
-    //     setUploadFlag(false);
-    //     confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
-    //   })
-    //   .catch(() => {
-    //     setImportData(null);
-    //     setUploadFlag(false);
-    //     confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
-    //   });
+    fileUpload(importData);
+    // .then(() => {
+    //   setImportData(null);
+    //   setUploadFlag(false);
+    //   confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
+    // })
+    // .catch(() => {
+    //   setImportData(null);
+    //   setUploadFlag(false);
+    //   confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
+    // });
   };
 
   const onChangeHandle = (fileItem) => {
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
-      console.log('####EVENT FILE: ', file);
-      const { fileSize } = fileItem[0];
-      console.log('####EVENT FILE SIZE: ', fileSize);
       const { fileType } = fileItem[0];
-      console.log('####EVENT FILE SIZE: ', fileType);
       if (fileType === 'application/json') {
-        console.log('FILE DATA: ', file); // fixme
-        setImportData(file);
+        const reader = new FileReader();
+        reader.addEventListener(
+          'load',
+          () => {
+            setImportData(JSON.parse(reader.result));
+          },
+          false,
+        );
+        reader.readAsText(file);
       }
     }
   };
 
   const disabled = (importData === undefined);
-  console.log('## DEBUG IS UPLOADING: ', isUploading); // fixme
-  console.log('## DEBUG DISABLE: ', disabled); // fixme
   return (
     <Dialog
       open={status.open}
@@ -126,7 +125,7 @@ ClientImport.propTypes = {
   type: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
-  // fileUpload: PropTypes.func.isRequired,
+  fileUpload: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
