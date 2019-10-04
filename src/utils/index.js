@@ -36,10 +36,43 @@ export const validateData = (type, data) => {
   return validateData;
 };
 
-// const sectionKeys = ['label', 'key', 'order'];
-// const propertyFieldKeys = ['label', 'key', 'order', 'propertyType', 'section'];
+const sectionKeys = ['label', 'key', 'order'];
+const propertyFieldKeys = ['label', 'key', 'order', 'propertyType', 'section'];
 export const validateKeyData = (data) => {
-  console.log('### DEBUG KEYS DATA: ', data); // fixme
+  let result = [];
+  const keys = Object.keys(data[0]);
+  console.log('### DEBUG KEYS: ', keys); // fixme
+  const sectionValidate = keys.findIndex(keyItem => (keyItem === 'sections'))
+    * keys.findIndex(keyItem => (keyItem === 'propertyFields'));
+  console.log('### DEBUG KEYS INVALIDATE: ', sectionValidate); // fixme
+  if (sectionValidate > 0) {
+    const section = [];
+    data[0].sections.forEach((item) => {
+      const secKeys = Object.keys(item);
+      let match = 1;
+      sectionKeys.forEach((keyItem) => {
+        match *= secKeys.findIndex(secItem => (secItem === keyItem));
+      });
+      if (match < 0) {
+        section.push(item);
+      }
+    });
+    const propertyFields = [];
+    data[0].propertyFields.forEach((item) => {
+      const secKeys = Object.keys(item);
+      let match = 1;
+      propertyFieldKeys.forEach((keyItem) => {
+        match *= secKeys.findIndex(secItem => (secItem === keyItem));
+      });
+      if (match < 0) {
+        propertyFields.push(item);
+      }
+    });
+  } else {
+    result = false;
+  }
+
+  return result;
 };
 export const useStyles = makeStyles(theme => ({
   dialogAction: {
