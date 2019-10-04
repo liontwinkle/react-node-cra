@@ -52,7 +52,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
-        category: state.category || tempDatas[0],
+        category: tempDatas[0] || null,
         trees: fetchSaveData.subTree,
         associations: association,
       };
