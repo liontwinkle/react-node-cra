@@ -16,7 +16,7 @@ const tabs = [
 function AttributeContent({
   attribute,
 }) {
-  const [tab, setTab] = useState('setting');
+  const [tab, setTab] = useState('properties');
 
   const handleClick = value => () => { setTab(value); };
 

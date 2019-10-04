@@ -12,7 +12,7 @@ const tabs = [
 ];
 
 function Content() {
-  const [tab, setTab] = useState('detail');
+  const [tab, setTab] = useState('properties');
 
   const handleClick = value => () => { setTab(value); };
 
