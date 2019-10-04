@@ -40,6 +40,7 @@ function ClientImport({
         .then(() => {
           setImportData(null);
           setUploadFlag(false);
+          handleClose();
           confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
         })
         .catch(() => {
