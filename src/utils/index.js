@@ -37,14 +37,12 @@ export const validateData = (type, data) => {
 };
 
 const sectionKeys = ['label', 'key', 'order'];
-const propertyFieldKeys = ['label', 'key', 'order', 'propertyType', 'section'];
+const propertyFieldKeys = ['label', 'key', 'default', 'propertyType', 'section'];
 export const validateKeyData = (data) => {
   let result = [];
   const keys = Object.keys(data[0]);
-  console.log('### DEBUG KEYS: ', keys); // fixme
   const sectionValidate = keys.findIndex(keyItem => (keyItem === 'sections'))
     * keys.findIndex(keyItem => (keyItem === 'propertyFields'));
-  console.log('### DEBUG KEYS INVALIDATE: ', sectionValidate); // fixme
   if (sectionValidate > 0) {
     const section = [];
     data[0].sections.forEach((item) => {
@@ -53,7 +51,7 @@ export const validateKeyData = (data) => {
       sectionKeys.forEach((keyItem) => {
         match *= secKeys.findIndex(secItem => (secItem === keyItem));
       });
-      if (match < 0) {
+      if (match > 0) {
         section.push(item);
       }
     });
@@ -64,14 +62,19 @@ export const validateKeyData = (data) => {
       propertyFieldKeys.forEach((keyItem) => {
         match *= secKeys.findIndex(secItem => (secItem === keyItem));
       });
-      if (match < 0) {
+      if (match > 0) {
         propertyFields.push(item);
       }
     });
+    result = [{
+      ...data[0],
+      sections: section,
+      propertyFields,
+    }];
   } else {
-    result = false;
+    result = [];
   }
-
+  console.log('### DEBUG NEW RESULT: ', result); // fixme
   return result;
 };
 export const useStyles = makeStyles(theme => ({

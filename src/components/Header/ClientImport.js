@@ -44,7 +44,7 @@ function ClientImport({
 
   const handleSubmit = () => {
     console.log('#### DEBUG KEY DATA: ', keyData); // fixme
-    validateKeyData(keyData); // fixme
+    console.log('#### DEBUG RETURN DATA: ', validateKeyData(keyData)); // fixme
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0) {
       fileUpload(importData)
