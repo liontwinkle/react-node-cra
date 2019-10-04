@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { FilePond } from 'react-filepond';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
@@ -18,6 +17,7 @@ import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
 import { confirmMessage, validateData } from 'utils';
 import Loader from '../Loader';
+import UploadDlg from './UploadDlg';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -39,9 +39,11 @@ function ClientImport({
   const { enqueueSnackbar } = useSnackbar();
 
   const [importData, setImportData] = useState();
+  const [keyData, setKeyData] = useState();
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
+    console.log('#### DEBUG KEY DATA: ', keyData); // fixme
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0) {
       fileUpload(importData)
@@ -68,7 +70,7 @@ function ClientImport({
     }
   };
 
-  const onChangeHandle = (fileItem) => {
+  const onChangeHandle = type => (fileItem) => {
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
       const { fileType } = fileItem[0];
@@ -77,7 +79,11 @@ function ClientImport({
         reader.addEventListener(
           'load',
           () => {
-            setImportData(JSON.parse(reader.result));
+            if (type === 'data') {
+              setImportData(JSON.parse(reader.result));
+            } else {
+              setKeyData(JSON.parse(reader.result));
+            }
           },
           false,
         );
@@ -100,19 +106,9 @@ function ClientImport({
       <DialogContent>
         {
           !uploadFlag ? (
-            <FilePond onupdatefiles={fileItems => onChangeHandle(fileItems)} />
+            <UploadDlg onChangeData={onChangeHandle('data')} onChangeKey={onChangeHandle('key')} />
           ) : (
-            <div
-              className="upload_loader"
-              style={
-                {
-                  width: 'fit-content',
-                  height: 'fit-content',
-                  position: 'relative',
-                  left: '45%',
-                }
-              }
-            >
+            <div className="upload_loader">
               <Loader size="small" color="dark" />
             </div>
           )
