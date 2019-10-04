@@ -49,7 +49,7 @@ function ClientImport({
           setImportData(null);
           if (type.key === 'virtual' || type.key === 'native') {
             fetchCategories(client.id, type.key);
-          } else if (type.key === 'attribtues') {
+          } else if (type.key === 'attributes') {
             fetchAttributes(client.id, type.key);
           } else {
             fetchProducts();

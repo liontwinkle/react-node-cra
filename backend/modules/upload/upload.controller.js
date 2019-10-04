@@ -13,7 +13,8 @@ const checkType = {
   attributes: ['rules', 'properties', 'name'],
 };
 
-const removeList = ['createdAt', 'updateAt'];
+const removeList = ['createdAt', 'updatedAt', '__v', '_id'];
+
 const removeUnnecessaryData = (data) => {
   console.log('### REMOVE CHECK DATA: ', data); // fixme
   const addData = {};
