@@ -12,6 +12,10 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import fileUpload from 'redux/actions/upload';
+import { fetchCategories } from 'redux/actions/categories';
+import { fetchAttributes } from 'redux/actions/attribute';
+import { fetchPropertyField } from 'redux/actions/propertyFields';
+import { fetchProducts } from 'redux/actions/products';
 import { confirmMessage, validateData } from 'utils';
 import Loader from '../Loader';
 
@@ -26,6 +30,10 @@ function ClientImport({
   type,
   handleClose,
   fileUpload,
+  // fetchPropertyField,
+  fetchCategories,
+  fetchAttributes,
+  fetchProducts,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -39,6 +47,13 @@ function ClientImport({
       fileUpload(importData)
         .then(() => {
           setImportData(null);
+          if (type.key === 'virtual' || type.key === 'native') {
+            fetchCategories(client.id, type.key);
+          } else if (type.key === 'attribtues') {
+            fetchAttributes(client.id, type.key);
+          } else {
+            fetchProducts();
+          }
           setUploadFlag(false);
           handleClose();
           confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
@@ -131,6 +146,10 @@ ClientImport.propTypes = {
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
+  fetchCategories: PropTypes.func.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
+  // fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
@@ -144,6 +163,10 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fileUpload,
+  fetchPropertyField,
+  fetchCategories,
+  fetchAttributes,
+  fetchProducts,
 }, dispatch);
 
 export default connect(

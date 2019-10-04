@@ -13,6 +13,19 @@ const checkType = {
   attributes: ['rules', 'properties', 'name'],
 };
 
+const removeList = ['createdAt', 'updateAt'];
+const removeUnnecessaryData = (data) => {
+  console.log('### REMOVE CHECK DATA: ', data); // fixme
+  const addData = {};
+  const keys = Object.keys(data);
+  console.log('### REMOVE CHECK KEYS: ', keys); // fixme
+  keys.forEach((keyItem) => {
+    if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
+      addData[keyItem] = data[keyItem];
+    }
+  });
+  return addData;
+};
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
@@ -20,14 +33,12 @@ const checkDuplicateData = (currentData, newData, type) => {
     currentData.forEach((currentItem) => {
       checkType[type].forEach((checkItem) => {
         if (currentItem[checkItem] === newItem[checkItem]) {
-          console.log('### DEBUG MATCHING TEST: ', currentItem[checkItem], newItem[checkItem]);
           matchFlag = true;
         }
       });
-      console.log('### DEBUG MATCHING RESULT: ', matchFlag);
     });
     if (!matchFlag) {
-      newCreateData.push(newItem);
+      newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
   return newCreateData;
