@@ -15,7 +15,7 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
-import { confirmMessage, validateData } from 'utils';
+import { confirmMessage, validateData, validateKeyData } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
@@ -38,12 +38,13 @@ function ClientImport({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [importData, setImportData] = useState();
-  const [keyData, setKeyData] = useState();
+  const [importData, setImportData] = useState([]);
+  const [keyData, setKeyData] = useState([]);
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
     console.log('#### DEBUG KEY DATA: ', keyData); // fixme
+    validateKeyData(keyData); // fixme
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0) {
       fileUpload(importData)

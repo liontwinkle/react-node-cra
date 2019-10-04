@@ -16,13 +16,10 @@ const validateKey = {
 };
 
 export const validateData = (type, data) => {
-  console.log('### DEBUG VALIDATE VIRTUAL DATA', data);
   const validateData = [];
   if (validateKey[type]) {
     data.forEach((dataItem) => {
-      console.log('### DEBUG SUB ITEM: ', dataItem); // fixme
       const keys = Object.keys(dataItem);
-      console.log('### DEBUG SUB KEYS: ', keys); // fixme
       if (keys.length > 0) {
         let validateFlag = true;
         validateKey[type].forEach((validateItem) => {
@@ -35,11 +32,15 @@ export const validateData = (type, data) => {
         }
       }
     });
-    console.log('### DEBUG VALIDATE DATA: ', validateData); // fixme
   }
   return validateData;
 };
 
+// const sectionKeys = ['label', 'key', 'order'];
+// const propertyFieldKeys = ['label', 'key', 'order', 'propertyType', 'section'];
+export const validateKeyData = (data) => {
+  console.log('### DEBUG KEYS DATA: ', data); // fixme
+};
 export const useStyles = makeStyles(theme => ({
   dialogAction: {
     margin: theme.spacing(2),
