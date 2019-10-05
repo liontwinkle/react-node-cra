@@ -5,7 +5,7 @@ const {
 const CategoryModel = require('../categories/categories.model');
 const ProductsModel = require('../products/products.model');
 const AttributesModel = require('../attributes/attributes.model');
-const PropertyFields = require('../property-fields/property-fields.model');
+const PropertyFieldsCollection = require('../property-fields/property-fields.model');
 
 const checkType = {
   virtual: ['newRules', 'properties', 'name'],
@@ -14,7 +14,7 @@ const checkType = {
   attributes: ['rules', 'properties', 'name'],
 };
 
-const removeList = ['createdAt', 'updatedAt', '__v', '_id'];
+const removeList = ['createdAt', 'updatedAt', '__v', '_id', '$oid'];
 
 const removeUnnecessaryData = (data) => {
   const addData = {};
@@ -97,7 +97,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   const updatePropertyFields = [];
   currentPropertyFields.forEach((currentItem) => {
     updatePropertyFields.push({
-      items: currentItem.items,
+      items: currentItem.items.map(item => (removeUnnecessaryData(item))),
       key: currentItem.key,
       label: currentItem.label,
       default: currentItem.default,
@@ -121,19 +121,36 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   return updatePropertyFields;
 };
 exports.keyUpload = (req, /* res */) => {
-  PropertyFields.find({
+  let UpdateSections = [];
+  let UpdatePropertyFields = [];
+  PropertyFieldsCollection.find({
     clientId: req.params.clientId,
     type: req.params.type
   }, (err, result) => {
     if (!err) {
-      console.log('#### DEBUG RESULT: ', result); // fixme
-      const { sections } = result[0];
-      const UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
-      console.log('#### DEBUG COMPARE NEW SECTION: ', UpdateSections); // fixme
-      const { propertyFields } = result[0];
-      const newPropertyFields = req.body[0].propertyFields;
-      const UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
-      console.log('#### DEBUG COMPARE NEW PROPERTIES: ', UpdatePropertyFields); // fixme
+      if (result) {
+        console.log('#### DEBUG RESULT: ', result); // fixme
+        const { sections } = result[0];
+        UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
+        console.log('#### DEBUG COMPARE NEW SECTION: ', UpdateSections); // fixme
+        const { propertyFields } = result[0];
+        const newPropertyFields = req.body[0].propertyFields;
+        UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
+        console.log('#### DEBUG COMPARE NEW PROPERTIES: ', UpdatePropertyFields); // fixme
+        PropertyFieldsCollection.deleteMany({
+          clientId: req.params.clientId,
+          type: req.params.type
+        }, (err) => {
+          if (!err) {
+            PropertyFieldsCollection.insertMany({
+              clientId: req.params.clientId,
+              type: req.params.type,
+              sections: UpdateSections,
+              propertyFields: UpdatePropertyFields,
+            });
+          }
+        });
+      }
     }
   });
 };
