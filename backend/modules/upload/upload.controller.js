@@ -21,7 +21,23 @@ const removeUnnecessaryData = (data) => {
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
     if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
-      addData[keyItem] = data[keyItem];
+      // addData[keyItem] = data[keyItem];
+      console.log('### DEBUG DATA: ', data[keyItem]); // fixme
+      if (typeof data[keyItem] === 'object') {
+        const key = Object.keys(data[keyItem]);
+        console.log('### DEBUG CHILD KEY: ', key); // fixme
+        if (key.length > 0) {
+          if (key[0].indexOf('$') > 0) {
+            console.log('Here');
+            addData[keyItem] = data[keyItem][key[0]];
+            console.log('### CHANGE CHILD KEY: ', data[keyItem][key[0]]); // fixme
+          }
+        } else {
+          addData[keyItem] = data[keyItem];
+        }
+      } else {
+        addData[keyItem] = data[keyItem];
+      }
     }
   });
   return addData;
@@ -38,7 +54,11 @@ const checkDuplicateData = (currentData, newData, type) => {
       });
     });
     if (!matchFlag) {
-      newCreateData.push(removeUnnecessaryData(newItem));
+      try {
+        newCreateData.push(removeUnnecessaryData(newItem));
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
   return newCreateData;
@@ -59,7 +79,7 @@ exports.upload = (req, res) => {
       if (updateData.length > 0) {
         try {
           collection.insertMany(updateData);
-          res.status(201).json(updateData);
+          res.status(201).json(updateData[0]);
         } catch (e) {
           handleError(res);
         }

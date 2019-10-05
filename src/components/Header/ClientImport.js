@@ -19,6 +19,8 @@ import { confirmMessage, validateData, validateKeyData } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
+import './style.scss';
+
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
 }));
@@ -47,6 +49,7 @@ function ClientImport({
   const handleSubmit = () => {
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0 && !isUploading) {
+      console.log('### DEBUG MESS DATA: ', importData); // fixme
       fileUpload(importData)
         .then(() => {
           setImportData([]);
@@ -67,18 +70,20 @@ function ClientImport({
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
         });
     }
-    setTimeout(() => {
-      if (validateKeyData(keyData).length > 0 && !isKeyUploading) {
-        keyUpload(keyData)
-          .then(() => {
-            setKeyData([]);
-            fetchPropertyField(client.id, type.key);
-          })
-          .catch((err) => {
-            console.error('### DEBUG ERROR: ', err);
-          });
-      }
-    }, 0);
+    if (type.key !== 'products') {
+      setTimeout(() => {
+        if (validateKeyData(keyData).length > 0 && !isKeyUploading) {
+          keyUpload(keyData)
+            .then(() => {
+              setKeyData([]);
+              fetchPropertyField(client.id, type.key);
+            })
+            .catch((err) => {
+              console.error('### DEBUG ERROR: ', err);
+            });
+        }
+      }, 0);
+    }
   };
 
   const onChangeHandle = type => (fileItem) => {
@@ -116,7 +121,7 @@ function ClientImport({
 
       <DialogContent>
         {
-          !uploadFlag ? (
+          !uploadFlag && !isKeyUploading ? (
             <UploadDlg
               onChangeData={onChangeHandle('data')}
               onChangeKey={onChangeHandle('key')}
