@@ -71,7 +71,36 @@ exports.upload = (req, res) => {
     }
   });
 };
+/*
+const checkDuplicateSection = (currentSection, newSection) => {
+  console.log('#### DEBUG CURRENT SECTIONS ####'); // fixme
+  console.log('#### DEBUG NEW SECTIONS: ', newSection); // fixme
+  const compareUpdateSection = [];
+  currentSection.forEach((currentItem) => {
+    compareUpdateSection.push({
+      label: currentItem.label,
+      key: currentItem.key,
+      order: currentItem.order,
+    });
+  });
+  console.log('#### DEBUG COMPARE CURRENT SECTION: ', compareUpdateSection); // fixme
+  newSection.forEach((newItem) => {
+    if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
+      compareUpdateSection.push({
+        label: newItem.label,
+        key: newItem.key,
+        order: parseInt(newItem.order.$numberInt, 10) || newItem.order,
+      });
+    }
+  });
+  console.log('#### DEBUG COMPARE NEW SECTION: ', compareUpdateSection); // fixme
+  return compareUpdateSection;
+};
 
+const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
+
+};
+*/
 exports.keyUpload = (req, /* res */) => {
   PropertyFields.find({
     clientId: req.params.clientId,
@@ -79,9 +108,11 @@ exports.keyUpload = (req, /* res */) => {
   }, (err, result) => {
     if (!err) {
       console.log('#### DEBUG RESULT: ', result); // fixme
-      // const sections = result.sections;
-
-      // const propertyFields = result.propertyFields;
+      // const { sections } = result[0];
+      // const UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
+      // const { propertyFields } = result[0];
+      // const UpdatePropertyFields =
+      // checkDuplicateProperties(propertyFields, req.body[0].propertyFields);
     }
   });
 };
