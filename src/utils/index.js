@@ -38,6 +38,7 @@ export const validateData = (type, data) => {
 
 const sectionKeys = ['label', 'key', 'order'];
 const propertyFieldKeys = ['label', 'key', 'default', 'propertyType', 'section'];
+
 export const validateKeyData = (data) => {
   let result = [];
   const keys = Object.keys(data[0]);
