@@ -49,19 +49,16 @@ function ClientImport({
   const handleSubmit = () => {
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0 && !isUploading) {
-      console.log('### DEBUG MESS DATA: ', importData); // fixme
       fileUpload(importData)
         .then(() => {
           setImportData([]);
           if (type.key === 'virtual' || type.key === 'native') {
-            fetchCategories(client.id, type.key);
+            fetchCategories(client.id, type.key).then(() => { setUploadFlag(false); });
           } else if (type.key === 'attributes') {
-            fetchAttributes(client.id, type.key);
+            fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
           } else {
-            fetchProducts();
+            fetchProducts().then(() => { setUploadFlag(false); });
           }
-          setUploadFlag(false);
-          handleClose();
           confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
         })
         .catch(() => {

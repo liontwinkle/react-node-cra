@@ -21,16 +21,11 @@ const removeUnnecessaryData = (data) => {
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
     if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
-      // addData[keyItem] = data[keyItem];
-      console.log('### DEBUG DATA: ', data[keyItem]); // fixme
-      if (typeof data[keyItem] === 'object') {
+      if (data[keyItem] && typeof data[keyItem] === 'object') {
         const key = Object.keys(data[keyItem]);
-        console.log('### DEBUG CHILD KEY: ', key); // fixme
         if (key.length > 0) {
           if (key[0].indexOf('$') > 0) {
-            console.log('Here');
             addData[keyItem] = data[keyItem][key[0]];
-            console.log('### CHANGE CHILD KEY: ', data[keyItem][key[0]]); // fixme
           }
         } else {
           addData[keyItem] = data[keyItem];
@@ -72,7 +67,6 @@ exports.upload = (req, res) => {
   } else {
     collection = AttributesModel(`${req.params.clientId}_${req.params.type}`);
   }
-
   collection.find({}, (err, result) => {
     if (!err) {
       const updateData = checkDuplicateData(result, req.body, req.params.type);

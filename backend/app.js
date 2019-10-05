@@ -61,8 +61,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
   app.use(cors());
 }
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+app.use(bodyParser.json({ limit: '150mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '150mb' }));
 app.use(expressValidator());
 app.use(session({
   resave: true,
