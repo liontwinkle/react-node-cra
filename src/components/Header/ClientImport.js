@@ -31,7 +31,7 @@ function ClientImport({
   handleClose,
   fileUpload,
   keyUpload,
-  // fetchPropertyField,
+  fetchPropertyField,
   fetchCategories,
   fetchAttributes,
   fetchProducts,
@@ -44,21 +44,10 @@ function ClientImport({
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
-    console.log('#### DEBUG KEY DATA: ', keyData); // fixme
-    console.log('#### DEBUG RETURN DATA: ', validateKeyData(keyData)); // fixme
     setUploadFlag(true);
     if (validateData(type.key, importData).length > 0) {
       fileUpload(importData)
         .then(() => {
-          if (validateKeyData(keyData).length > 0) {
-            keyUpload(keyData)
-              .then(() => {
-                setKeyData([]);
-              })
-              .catch((err) => {
-                console.error('### DEBUG ERROR: ', err);
-              });
-          }
           setImportData([]);
           if (type.key === 'virtual' || type.key === 'native') {
             fetchCategories(client.id, type.key);
@@ -75,6 +64,15 @@ function ClientImport({
           setImportData(null);
           setUploadFlag(false);
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
+        });
+    } else if (validateKeyData(keyData).length > 0) {
+      keyUpload(keyData)
+        .then(() => {
+          setKeyData([]);
+          fetchPropertyField(client.id, type.key);
+        })
+        .catch((err) => {
+          console.error('### DEBUG ERROR: ', err);
         });
     } else {
       confirmMessage(enqueueSnackbar, 'Data is invalidate', 'error');
@@ -157,7 +155,7 @@ ClientImport.propTypes = {
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
-  // fetchPropertyField: PropTypes.func.isRequired,
+  fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {

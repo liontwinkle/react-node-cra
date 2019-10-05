@@ -120,7 +120,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   });
   return updatePropertyFields;
 };
-exports.keyUpload = (req, /* res */) => {
+exports.keyUpload = (req, res) => {
   let UpdateSections = [];
   let UpdatePropertyFields = [];
   PropertyFieldsCollection.find({
@@ -129,14 +129,11 @@ exports.keyUpload = (req, /* res */) => {
   }, (err, result) => {
     if (!err) {
       if (result) {
-        console.log('#### DEBUG RESULT: ', result); // fixme
         const { sections } = result[0];
         UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
-        console.log('#### DEBUG COMPARE NEW SECTION: ', UpdateSections); // fixme
         const { propertyFields } = result[0];
         const newPropertyFields = req.body[0].propertyFields;
         UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
-        console.log('#### DEBUG COMPARE NEW PROPERTIES: ', UpdatePropertyFields); // fixme
         PropertyFieldsCollection.deleteMany({
           clientId: req.params.clientId,
           type: req.params.type
@@ -147,6 +144,10 @@ exports.keyUpload = (req, /* res */) => {
               type: req.params.type,
               sections: UpdateSections,
               propertyFields: UpdatePropertyFields,
+            }, (err) => {
+              if (!err) {
+                res.status(201).json([]);
+              }
             });
           }
         });
