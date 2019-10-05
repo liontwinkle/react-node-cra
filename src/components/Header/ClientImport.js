@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 function ClientImport({
   status,
   isUploading,
+  isKeyUploading,
   client,
   type,
   handleClose,
@@ -45,7 +46,7 @@ function ClientImport({
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    if (validateData(type.key, importData).length > 0) {
+    if (validateData(type.key, importData).length > 0 && !isUploading) {
       fileUpload(importData)
         .then(() => {
           setImportData([]);
@@ -65,18 +66,19 @@ function ClientImport({
           setUploadFlag(false);
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
         });
-    } else if (validateKeyData(keyData).length > 0) {
-      keyUpload(keyData)
-        .then(() => {
-          setKeyData([]);
-          fetchPropertyField(client.id, type.key);
-        })
-        .catch((err) => {
-          console.error('### DEBUG ERROR: ', err);
-        });
-    } else {
-      confirmMessage(enqueueSnackbar, 'Data is invalidate', 'error');
     }
+    setTimeout(() => {
+      if (validateKeyData(keyData).length > 0 && !isKeyUploading) {
+        keyUpload(keyData)
+          .then(() => {
+            setKeyData([]);
+            fetchPropertyField(client.id, type.key);
+          })
+          .catch((err) => {
+            console.error('### DEBUG ERROR: ', err);
+          });
+      }
+    }, 0);
   };
 
   const onChangeHandle = type => (fileItem) => {
@@ -115,7 +117,11 @@ function ClientImport({
       <DialogContent>
         {
           !uploadFlag ? (
-            <UploadDlg onChangeData={onChangeHandle('data')} onChangeKey={onChangeHandle('key')} />
+            <UploadDlg
+              onChangeData={onChangeHandle('data')}
+              onChangeKey={onChangeHandle('key')}
+              clientType={type.key}
+            />
           ) : (
             <div className="upload_loader">
               <Loader size="small" color="dark" />
@@ -150,6 +156,7 @@ ClientImport.propTypes = {
   type: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
+  isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
   keyUpload: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
@@ -165,6 +172,7 @@ ClientImport.defaultProps = {
 
 const mapStateToProps = store => ({
   isUploading: store.uploadData.isUploading,
+  isKeyUploading: store.uploadData.isKeyUploading,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
