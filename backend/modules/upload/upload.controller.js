@@ -71,10 +71,8 @@ exports.upload = (req, res) => {
     }
   });
 };
-/*
+
 const checkDuplicateSection = (currentSection, newSection) => {
-  console.log('#### DEBUG CURRENT SECTIONS ####'); // fixme
-  console.log('#### DEBUG NEW SECTIONS: ', newSection); // fixme
   const compareUpdateSection = [];
   currentSection.forEach((currentItem) => {
     compareUpdateSection.push({
@@ -83,7 +81,6 @@ const checkDuplicateSection = (currentSection, newSection) => {
       order: currentItem.order,
     });
   });
-  console.log('#### DEBUG COMPARE CURRENT SECTION: ', compareUpdateSection); // fixme
   newSection.forEach((newItem) => {
     if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
       compareUpdateSection.push({
@@ -93,14 +90,36 @@ const checkDuplicateSection = (currentSection, newSection) => {
       });
     }
   });
-  console.log('#### DEBUG COMPARE NEW SECTION: ', compareUpdateSection); // fixme
   return compareUpdateSection;
 };
 
 const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
+  const updatePropertyFields = [];
+  currentPropertyFields.forEach((currentItem) => {
+    updatePropertyFields.push({
+      items: currentItem.items,
+      key: currentItem.key,
+      label: currentItem.label,
+      default: currentItem.default,
+      propertyType: currentItem.propertyType,
+      section: currentItem.section,
+    });
+  });
 
+  newPropertyFields.forEach((newItem) => {
+    if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
+      updatePropertyFields.push({
+        items: newItem.items,
+        key: newItem.key,
+        label: newItem.label,
+        default: newItem.default,
+        propertyType: newItem.propertyType,
+        section: newItem.section,
+      });
+    }
+  });
+  return updatePropertyFields;
 };
-*/
 exports.keyUpload = (req, /* res */) => {
   PropertyFields.find({
     clientId: req.params.clientId,
@@ -108,11 +127,13 @@ exports.keyUpload = (req, /* res */) => {
   }, (err, result) => {
     if (!err) {
       console.log('#### DEBUG RESULT: ', result); // fixme
-      // const { sections } = result[0];
-      // const UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
-      // const { propertyFields } = result[0];
-      // const UpdatePropertyFields =
-      // checkDuplicateProperties(propertyFields, req.body[0].propertyFields);
+      const { sections } = result[0];
+      const UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
+      console.log('#### DEBUG COMPARE NEW SECTION: ', UpdateSections); // fixme
+      const { propertyFields } = result[0];
+      const newPropertyFields = req.body[0].propertyFields;
+      const UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
+      console.log('#### DEBUG COMPARE NEW PROPERTIES: ', UpdatePropertyFields); // fixme
     }
   });
 };
