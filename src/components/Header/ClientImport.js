@@ -66,6 +66,12 @@ function ClientImport({
           setUploadFlag(false);
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
         });
+    } else {
+      setImportData(null);
+      setUploadFlag(false);
+      if (importData.length > 0) {
+        confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
+      }
     }
     if (type.key !== 'products') {
       setTimeout(() => {
@@ -74,10 +80,14 @@ function ClientImport({
             .then(() => {
               setKeyData([]);
               fetchPropertyField(client.id, type.key);
+              confirmMessage(enqueueSnackbar, 'Uploading of the Key data is success.', 'success');
             })
             .catch((err) => {
               console.error('### DEBUG ERROR: ', err);
+              confirmMessage(enqueueSnackbar, 'Uploading of the Key data not success.', 'error');
             });
+        } else if (keyData.length > 0) {
+          confirmMessage(enqueueSnackbar, 'Key data is invalidate.', 'error');
         }
       }, 0);
     }

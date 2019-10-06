@@ -42,9 +42,9 @@ const propertyFieldKeys = ['label', 'key', 'default', 'propertyType', 'section']
 export const validateKeyData = (data) => {
   let result = [];
   const keys = Object.keys(data[0]);
-  const sectionValidate = keys.findIndex(keyItem => (keyItem === 'sections'))
-    * keys.findIndex(keyItem => (keyItem === 'propertyFields'));
-  if (sectionValidate > 0) {
+  const sectionValidate = keys.findIndex(keyItem => (keyItem === 'sections')) > 0
+   && keys.findIndex(keyItem => (keyItem === 'propertyFields')) > 0;
+  if (sectionValidate) {
     const section = [];
     data[0].sections.forEach((item) => {
       const secKeys = Object.keys(item);
