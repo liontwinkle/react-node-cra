@@ -107,8 +107,9 @@ class ProductTable extends Component {
   };
 
   makeFilterResult = (changes) => {
-    const condition = changes[0].conditions[0].name;
-    if (condition !== 'empty' && condition !== 'not_empty') {
+    const condition = (changes.length > 0) ? changes[0].conditions[0].name : null;
+    const conditionGrp = ['neq', 'eq', 'begin', 'end', 'contains', 'not_contains'];
+    if (condition && (conditionGrp.findIndex(grpItem => (grpItem === condition)) > 0)) {
       const column = this.props.headers[changes[0].column];
       const matchText = $('.htUIInput input').val();
       const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
