@@ -14,7 +14,7 @@ const checkType = {
   attributes: ['rules', 'properties', 'name'],
 };
 
-const removeList = ['createdAt', 'updatedAt', '__v', '_id', '$oid'];
+const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
 
 const removeUnnecessaryData = (data) => {
   const addData = {};
