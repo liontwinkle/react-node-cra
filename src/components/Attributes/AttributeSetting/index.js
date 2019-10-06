@@ -37,15 +37,6 @@ class AttributeSetting extends Component {
     this.setState({ checked: attribute.appear, categoryList: attribute.appear });
   };
 
-  checkGroupPermission= (value) => {
-    const group = this.props.nodes.filter(nodeItem => (nodeItem.item._id === this.props.attribute.groupId));
-    let updateFlag = true;
-    if (group.length > 0) {
-      updateFlag = !(group[0].item.appear.find(arrItem => (arrItem === value)));
-    }
-    return updateFlag;
-  };
-
   getSubCategory = (array, source) => {
     source.children.forEach((childItem) => {
       array.push(childItem.value);
@@ -79,25 +70,21 @@ class AttributeSetting extends Component {
   };
 
   handleCheck = (checked, targetNode) => {
-    if (this.checkGroupPermission(targetNode.value)) {
-      let updateData = [];
-      if (targetNode.checked) {
-        updateData = _union(this.updateList(targetNode), this.state.categoryList);
-        this.setState({
-          categoryList: updateData,
-          checked,
-        });
-      } else {
-        updateData = _difference(this.state.categoryList, this.updateList(targetNode));
-        this.setState({
-          categoryList: updateData,
-          checked,
-        });
-      }
-      this.updateAttribute(updateData);
+    let updateData = [];
+    if (targetNode.checked) {
+      updateData = _union(this.updateList(targetNode), this.state.categoryList);
+      this.setState({
+        categoryList: updateData,
+        checked,
+      });
     } else {
-      confirmMessage(this.props.enqueueSnackbar, 'This attribute is changeable on the group only', 'info');
+      updateData = _difference(this.state.categoryList, this.updateList(targetNode));
+      this.setState({
+        categoryList: updateData,
+        checked,
+      });
     }
+    this.updateAttribute(updateData);
   };
 
   handleExpand = (expanded) => {
@@ -136,7 +123,6 @@ class AttributeSetting extends Component {
 AttributeSetting.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
-  nodes: PropTypes.array.isRequired,
   assoicationCategories: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
@@ -145,7 +131,6 @@ AttributeSetting.propTypes = {
 
 const mapStateToProps = store => ({
   attribute: store.attributesData.attribute,
-  nodes: store.attributesData.nodes,
   assoicationCategories: store.categoriesData.associations,
   categories: store.categoriesData.categories,
   client: store.clientsData.client,
