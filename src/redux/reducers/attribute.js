@@ -51,7 +51,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         attributes: action.payload.attributes,
-        attribute: action.payload.attributes[0] || null,
+        attribute: state.attribute || action.payload.attributes[0] || null,
         associations: fetchedTrees.association,
         nodes: convertedTrees,
       };

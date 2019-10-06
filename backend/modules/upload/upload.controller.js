@@ -135,6 +135,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   });
   return updatePropertyFields;
 };
+
 exports.keyUpload = (req, res) => {
   let UpdateSections = [];
   let UpdatePropertyFields = [];

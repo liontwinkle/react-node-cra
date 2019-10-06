@@ -75,7 +75,6 @@ export const validateKeyData = (data) => {
   } else {
     result = [];
   }
-  console.log('### DEBUG NEW RESULT: ', result); // fixme
   return result;
 };
 export const useStyles = makeStyles(theme => ({
@@ -289,10 +288,7 @@ export const getMapFromJson = (data, pKey) => {
 
   if (glue) {
     const parentKey = uuidv4();
-    map = map.set(parentKey, {
-      glue,
-      parentKey: pKey,
-    });
+    map = map.set(parentKey, { glue, parentKey: pKey });
 
     if (rules) {
       for (let i = 0; i < rules.length; i++) {

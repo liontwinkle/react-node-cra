@@ -62,12 +62,12 @@ function ClientImport({
           confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
         })
         .catch(() => {
-          setImportData(null);
+          setImportData([]);
           setUploadFlag(false);
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
         });
     } else {
-      setImportData(null);
+      setImportData([]);
       setUploadFlag(false);
       if (importData.length > 0) {
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
