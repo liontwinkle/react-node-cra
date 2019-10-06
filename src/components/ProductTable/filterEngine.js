@@ -1,9 +1,9 @@
 const getEqFilter = (products, key, value, type) => products.filter((productItem) => {
   if (productItem[key]) {
     if (type === 'eq') {
-      return productItem[key].match(value, 'i');
+      return productItem[key].match(value) && (productItem[key] === value);
     }
-    return !productItem[key].match(value, 'i');
+    return !(productItem[key].match(value) && (productItem[key] === value));
   }
   return false;
 });
