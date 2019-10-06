@@ -48,7 +48,7 @@ function ClientImport({
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    if (validateData(type.key, importData).length > 0 && !isUploading) {
+    if (importData.length > 0 && validateData(type.key, importData).length > 0 && !isUploading) {
       fileUpload(importData)
         .then(() => {
           setImportData([]);
@@ -69,7 +69,7 @@ function ClientImport({
     }
     if (type.key !== 'products') {
       setTimeout(() => {
-        if (validateKeyData(keyData).length > 0 && !isKeyUploading) {
+        if (keyData.length > 0 && validateKeyData(keyData).length > 0 && !isKeyUploading) {
           keyUpload(keyData)
             .then(() => {
               setKeyData([]);

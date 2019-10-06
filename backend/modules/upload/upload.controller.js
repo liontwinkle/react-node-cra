@@ -37,6 +37,7 @@ const removeUnnecessaryData = (data) => {
   });
   return addData;
 };
+
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
