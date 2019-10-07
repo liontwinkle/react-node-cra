@@ -42,19 +42,20 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       const fetchSaveData = getCategoryTree(action.payload.categories, []);
-      const association = action.payload.categories.map(item => ({
-        label: item.name,
-        value: item._id,
-        appear: [],
-        children: [],
-      }));
+      // const association = action.payload.categories.map(item => ({
+      //   label: item.name,
+      //   value: item._id,
+      //   appear: [],
+      //   children: [],
+      // }));
       return {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
         category: tempDatas[0] || null,
         trees: fetchSaveData.subTree,
-        associations: association,
+        // associations: association,
+        associations: fetchSaveData.association,
       };
     case types.CATEGORIES_GET_FAIL:
       return {
@@ -80,19 +81,20 @@ export default (state = INITIAL_STATE, action) => {
       }
       categories.push(data);
       const updateSaveData = getCategoryTree(categories, state.trees);
-      const updatedAssociation = categories.map(item => ({
-        label: item.name,
-        value: item._id,
-        appear: [],
-        children: [],
-      }));
+      // const updatedAssociation = categories.map(item => ({
+      //   label: item.name,
+      //   value: item._id,
+      //   appear: [],
+      //   children: [],
+      // }));
 
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
         trees: updateSaveData.subTree,
-        associations: updatedAssociation,
+        // associations: updatedAssociation,
+        associations: updateSaveData.association,
         category: action.payload.data,
       };
     case types.CATEGORY_CREATE_FAIL:
@@ -126,18 +128,18 @@ export default (state = INITIAL_STATE, action) => {
         categories.push(updateData);
       }
       const newSaveData = getCategoryTree(categories, state.trees);
-      const newAssociations = categories.map(item => ({
-        label: item.name,
-        value: item._id,
-        appear: [],
-        children: [],
-      }));
+      // const newAssociations = categories.map(item => ({
+      //   label: item.name,
+      //   value: item._id,
+      //   appear: [],
+      //   children: [],
+      // }));
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
         trees: newSaveData.subTree,
-        associations: newAssociations,
+        associations: newSaveData.association,
         category: action.payload.data,
       };
     case types.CATEGORY_UPDATE_FAIL:
