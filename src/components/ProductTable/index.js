@@ -107,19 +107,25 @@ class ProductTable extends Component {
   };
 
   makeFilterResult = (changes) => {
+    console.log('### DEBUG CHANGES: ', changes); // fixme
     const condition = (changes.length > 0) ? changes[0].conditions[0].name : null;
-    const conditionGrp = ['neq', 'eq', 'begin', 'end', 'contains', 'not_contains'];
-    if (condition && (conditionGrp.findIndex(grpItem => (grpItem === condition)) !== -1)) {
+    console.log('### DEBUG CONDITION: ', condition); // fixme
+    // const conditionGrp = ['empty', 'not_empty', 'neq', 'eq', 'begin', 'end', 'contains', 'not_contains',
+    //   'gt', 'gte', 'lt', 'lte', 'between', 'not_between'];
+    if (condition) {
+      // switch (condition) {
+      //   case 'empty':
+      //   case 'not_empty':
+      //     const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+      // }
       const column = this.props.headers[changes[0].column];
       const matchText = $('.htUIInput input').val();
-      if (typeof this.props.originProducts[column] !== 'string') {
-        const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
-        setTimeout(() => {
-          this.setFetchFg(true);
-          this.props.setProducts(updateData);
-          this.setFetchFg(false);
-        }, 0);
-      }
+      const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+      setTimeout(() => {
+        this.setFetchFg(true);
+        this.props.setProducts(updateData);
+        this.setFetchFg(false);
+      }, 0);
     }
   };
 
