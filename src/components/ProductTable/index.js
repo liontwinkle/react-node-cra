@@ -107,11 +107,7 @@ class ProductTable extends Component {
   };
 
   makeFilterResult = (changes) => {
-    console.log('### DEBUG CHANGES: ', changes); // fixme
     const condition = (changes.length > 0) ? changes[0].conditions[0].name : null;
-    console.log('### DEBUG CONDITION: ', condition); // fixme
-    // const conditionGrp = ['empty', 'not_empty', 'neq', 'eq', 'begin', 'end', 'contains', 'not_contains',
-    //   'gt', 'gte', 'lt', 'lte', 'between', 'not_between'];
     let updateData = [];
     if (condition) {
       const column = this.props.headers[changes[0].column];
@@ -122,8 +118,8 @@ class ProductTable extends Component {
           break;
         case 'neq':
         case 'eq':
-        case 'begin':
-        case 'end':
+        case 'begins_with':
+        case 'ends_with':
         case 'contains':
         case 'not_contains':
           const matchText = $('.htUIInput input').val();
@@ -134,15 +130,12 @@ class ProductTable extends Component {
         case 'lt':
         case 'lte':
           const value = parseInt(changes[0].conditions[0].args[0], 10);
-          console.log('#### DEBUG SINGLE NUMBER VALUE: ', value); // fixme
           updateData = FilterEngine[condition](this.props.originProducts, column, value);
           break;
         case 'between':
         case 'not_between':
           const startVal = parseInt(changes[0].conditions[0].args[0], 10);
           const endVal = parseInt(changes[0].conditions[0].args[1], 10);
-          console.log('#### DEBUG SINGLE START VALUE: ', startVal); // fixme
-          console.log('#### DEBUG SINGLE END VALUE: ', endVal); // fixme
           updateData = FilterEngine[condition](this.props.originProducts, column, startVal, endVal);
           break;
         default:

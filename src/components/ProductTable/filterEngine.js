@@ -7,11 +7,11 @@ const getEqFilter = (products, key, value, type) => products.filter((productItem
       return !(productItem[key] === (value === 'true'));
     }
 
-    if (typeof productItem[key] === 'number') {
+    if (parseFloat(productItem[key])) {
       if (type === 'eq') {
-        return productItem[key] === value;
+        return parseFloat(productItem[key]) === parseFloat(value);
       }
-      return !(productItem[key] === value);
+      return !(parseFloat(productItem[key]) === parseFloat(value));
     }
 
     if (type === 'eq') {
@@ -23,7 +23,7 @@ const getEqFilter = (products, key, value, type) => products.filter((productItem
 });
 
 const getWithFilter = (products, key, value, type) => products.filter((productItem) => {
-  if (typeof productItem[key] === 'string' && productItem[key].length >= value.length) {
+  if (productItem[key] && typeof productItem[key] === 'string' && productItem[key].length >= value.length) {
     if ((type === 'begin' && productItem[key].slice(0, value.length) === value)
       || (type === 'end' && productItem[key].slice(productItem.length - value.length) === value)) {
       return true;
@@ -33,7 +33,7 @@ const getWithFilter = (products, key, value, type) => products.filter((productIt
 });
 
 const getCotainFilter = (products, key, value, type) => products.filter((productItem) => {
-  if (productItem[key]) {
+  if (productItem[key] && typeof productItem[key] === 'string') {
     if (type === 'contains') {
       return (productItem[key].indexOf(value) !== -1);
     }
