@@ -109,17 +109,17 @@ class ProductTable extends Component {
   makeFilterResult = (changes) => {
     const condition = (changes.length > 0) ? changes[0].conditions[0].name : null;
     const conditionGrp = ['neq', 'eq', 'begin', 'end', 'contains', 'not_contains'];
-    console.log('#### DEBUG UPDATE CONDITION: ', condition); // fixme
     if (condition && (conditionGrp.findIndex(grpItem => (grpItem === condition)) !== -1)) {
       const column = this.props.headers[changes[0].column];
       const matchText = $('.htUIInput input').val();
-      const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
-      console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
-      setTimeout(() => {
-        this.setFetchFg(true);
-        this.props.setProducts(updateData);
-        this.setFetchFg(false);
-      }, 0);
+      if (typeof this.props.originProducts[column] !== 'string') {
+        const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+        setTimeout(() => {
+          this.setFetchFg(true);
+          this.props.setProducts(updateData);
+          this.setFetchFg(false);
+        }, 0);
+      }
     }
   };
 

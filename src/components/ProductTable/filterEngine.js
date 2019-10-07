@@ -1,5 +1,19 @@
 const getEqFilter = (products, key, value, type) => products.filter((productItem) => {
   if (productItem[key]) {
+    if (typeof productItem[key] === 'boolean') {
+      if (type === 'eq') {
+        return productItem[key] === (value === 'true');
+      }
+      return !(productItem[key] === (value === 'true'));
+    }
+
+    if (typeof productItem[key] === 'number') {
+      if (type === 'eq') {
+        return productItem[key] === value;
+      }
+      return !(productItem[key] === value);
+    }
+
     if (type === 'eq') {
       return productItem[key].match(value) && (productItem[key] === value);
     }
