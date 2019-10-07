@@ -112,15 +112,42 @@ class ProductTable extends Component {
     console.log('### DEBUG CONDITION: ', condition); // fixme
     // const conditionGrp = ['empty', 'not_empty', 'neq', 'eq', 'begin', 'end', 'contains', 'not_contains',
     //   'gt', 'gte', 'lt', 'lte', 'between', 'not_between'];
+    let updateData = [];
     if (condition) {
-      // switch (condition) {
-      //   case 'empty':
-      //   case 'not_empty':
-      //     const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
-      // }
       const column = this.props.headers[changes[0].column];
-      const matchText = $('.htUIInput input').val();
-      const updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+      switch (condition) {
+        case 'empty':
+        case 'not_empty':
+          updateData = FilterEngine[condition](this.props.originProducts, column);
+          break;
+        case 'neq':
+        case 'eq':
+        case 'begin':
+        case 'end':
+        case 'contains':
+        case 'not_contains':
+          const matchText = $('.htUIInput input').val();
+          updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
+          break;
+        case 'gt':
+        case 'gte':
+        case 'lt':
+        case 'lte':
+          const value = parseInt(changes[0].conditions[0].args[0], 10);
+          console.log('#### DEBUG SINGLE NUMBER VALUE: ', value); // fixme
+          updateData = FilterEngine[condition](this.props.originProducts, column, value);
+          break;
+        case 'between':
+        case 'not_between':
+          const startVal = parseInt(changes[0].conditions[0].args[0], 10);
+          const endVal = parseInt(changes[0].conditions[0].args[1], 10);
+          console.log('#### DEBUG SINGLE START VALUE: ', startVal); // fixme
+          console.log('#### DEBUG SINGLE END VALUE: ', endVal); // fixme
+          updateData = FilterEngine[condition](this.props.originProducts, column, startVal, endVal);
+          break;
+        default:
+          break;
+      }
       setTimeout(() => {
         this.setFetchFg(true);
         this.props.setProducts(updateData);
