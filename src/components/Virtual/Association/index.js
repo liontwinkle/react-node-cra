@@ -17,6 +17,7 @@ import './style.scss';
 
 function Association({
   category,
+  categories,
   nodes,
   attributes,
   products,
@@ -87,13 +88,35 @@ function Association({
     }, 0);
   };
 
+  const getNewAppearData = (currentLsit, currentCategoryItem) => {
+    let result = [];
+    if (currentCategoryItem.parentId !== '') {
+      const siblings = categories.filter(item => (item.parentId === currentCategoryItem.parentId));
+      let checkContainAttr = true;
+      siblings.forEach((siblingItem) => {
+        if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem._id)) === -1) {
+          checkContainAttr = false;
+        }
+      });
+      if (siblings.length === 1 || checkContainAttr) {
+        result.push(currentCategoryItem.parentId);
+      }
+      const nextCategory = categories.filter(item => (item._id === currentCategoryItem.parentId));
+      result = [...result, ...getNewAppearData(currentLsit, nextCategory[0])];
+    }
+    return result;
+  };
+
   const handleAttributeChange = (checked, nodeTarget) => {
     const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
 
     let checkGrp = false;
     let appearData = [];
     if (nodeTarget.checked) {
-      appearData = [...targetAppear.appear, category._id];
+      const willCheckedCategory = getNewAppearData(targetAppear.appear, category);
+      willCheckedCategory.push(category._id);
+      console.log('### DEBUG CHECKED LIST: ', willCheckedCategory); // fixme
+      appearData = [...targetAppear.appear, ...willCheckedCategory];
       if (targetAppear.groupId) {
         const includeCategoryList = attributes.filter(
           attrItem => (!!attrItem.appear.find(
@@ -173,6 +196,7 @@ function Association({
 
 Association.propTypes = {
   category: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   nodes: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
@@ -194,6 +218,7 @@ const mapStateToProps = store => ({
   valueDetails: store.productsData.data.valueDetails,
   associationAttributes: store.attributesData.associations,
   category: store.categoriesData.category,
+  categories: store.categoriesData.categories,
   client: store.clientsData.client,
 });
 

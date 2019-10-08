@@ -9,8 +9,8 @@ import {
 } from './constants';
 
 const validateKey = {
-  virtual: ['parentId', 'name'],
-  attributes: ['groupId', 'name', 'appear'],
+  virtual: ['parentId', 'name', 'newRules'],
+  attributes: ['groupId', 'name', 'appear', 'rules'],
   native: ['parentId', 'name'],
   products: [],
 };
