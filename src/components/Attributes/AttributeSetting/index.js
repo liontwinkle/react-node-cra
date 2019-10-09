@@ -14,6 +14,7 @@ import { confirmMessage } from 'utils';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 
 import './style.scss';
+import { getAllChildData, getNewAppearData } from '../../../utils/attributeManagement';
 
 class AttributeSetting extends Component {
   state = {
@@ -45,9 +46,14 @@ class AttributeSetting extends Component {
   };
 
   updateList = (target) => {
-    const updateCategory = [];
-    updateCategory.push(target.value);
-    this.getSubCategory(updateCategory, target);
+    const targetCategory = this.props.categories.filter(item => (item._id === target.value));
+    const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
+    const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
+    willCheckedCategory.push(targetCategory[0]._id);
+    const updateCategory = _union(willCheckedCategory, allChildData);
+    // console.log('#### DEBUG TARGET: ', target); // fixme
+    // updateCategory.push(target.value);
+    // this.getSubCategory(updateCategory, target);
     return updateCategory;
   };
 
@@ -71,6 +77,7 @@ class AttributeSetting extends Component {
 
   handleCheck = (checked, targetNode) => {
     let updateData = [];
+    console.log('#### Update List: ', this.updateList(targetNode)); // fixme
     if (targetNode.checked) {
       updateData = _union(this.updateList(targetNode), this.state.categoryList);
       this.setState({
@@ -121,6 +128,7 @@ class AttributeSetting extends Component {
 }
 
 AttributeSetting.propTypes = {
+  categories: PropTypes.array.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   assoicationCategories: PropTypes.array.isRequired,

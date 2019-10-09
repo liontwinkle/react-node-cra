@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
 
+import _union from 'lodash/union';
+import _difference from 'lodash/difference';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { fetchProducts } from 'redux/actions/products';
 import { setHandler } from 'utils';
+import { getNewAppearData, getAllChildData } from 'utils/attributeManagement';
 import Loader from 'components/Loader';
 import ContextMenu from './ContextMenu';
 
@@ -88,35 +91,18 @@ function Association({
     }, 0);
   };
 
-  const getNewAppearData = (currentLsit, currentCategoryItem) => {
-    let result = [];
-    if (currentCategoryItem.parentId !== '') {
-      const siblings = categories.filter(item => (item.parentId === currentCategoryItem.parentId));
-      let checkContainAttr = true;
-      siblings.forEach((siblingItem) => {
-        if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem._id)) === -1) {
-          checkContainAttr = false;
-        }
-      });
-      if (siblings.length === 1 || checkContainAttr) {
-        result.push(currentCategoryItem.parentId);
-      }
-      const nextCategory = categories.filter(item => (item._id === currentCategoryItem.parentId));
-      result = [...result, ...getNewAppearData(currentLsit, nextCategory[0])];
-    }
-    return result;
-  };
-
   const handleAttributeChange = (checked, nodeTarget) => {
     const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
 
     let checkGrp = false;
     let appearData = [];
+    const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
+    const allChildData = getAllChildData(categories, category);
+    willCheckedCategory.push(category._id);
+    const updateNewAppear = _union(willCheckedCategory, allChildData);
+
     if (nodeTarget.checked) {
-      const willCheckedCategory = getNewAppearData(targetAppear.appear, category);
-      willCheckedCategory.push(category._id);
-      console.log('### DEBUG CHECKED LIST: ', willCheckedCategory); // fixme
-      appearData = [...targetAppear.appear, ...willCheckedCategory];
+      appearData = _union(targetAppear.appear, updateNewAppear);
       if (targetAppear.groupId) {
         const includeCategoryList = attributes.filter(
           attrItem => (!!attrItem.appear.find(
@@ -129,7 +115,7 @@ function Association({
         }
       }
     } else {
-      appearData = targetAppear.appear.filter(item => (item !== category._id));
+      appearData = _difference(targetAppear.appear, updateNewAppear);
     }
 
     if (checkGrp) {
