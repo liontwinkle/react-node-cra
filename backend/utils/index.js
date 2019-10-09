@@ -79,6 +79,20 @@ function handleExistingRemove(collection, req, res) {
   });
 }
 
+function handleCreate(collection, type, createData) {
+  return (entity) => {
+    console.log('#### DEBUG ENTITY: ', entity); // fixme
+    let newId = 1;
+    if (entity) {
+      newId = entity.categoryId + 1;
+      console.log('#### DEBUG ID: ', newId); // fixme
+    }
+    createData[`${type}Id`] = newId;
+    console.log('#### DEBUG DATA: ', createData); // fixme
+    return collection.create(createData);
+  };
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
@@ -192,6 +206,7 @@ module.exports = {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  handleCreate,
   removeEntity,
   createCollection,
   handleExistingRemove,

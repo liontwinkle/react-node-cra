@@ -25,6 +25,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PRODUCTS_GET_DATA_SUCCESS:
+      console.log('#### DEBUG GET PRODUCTS: ', action.payload.products); // fixme
       const data = getProducts(action.payload.products);
       return {
         ...state,

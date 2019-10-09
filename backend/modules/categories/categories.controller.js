@@ -3,6 +3,7 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  handleCreate,
   removeEntity,
   removeChildren
 } = require('../../utils');
@@ -20,7 +21,9 @@ exports.index = (req, res) => {
 // Creates a new Category in the DB
 exports.create = (req, res) => {
   req.category
-    .createAsync(req.body)
+    .findOne({ $query: {}, $orderby: { categoryId: -1 } })
+    .then(handleCreate(req.category, 'category', req.body))
+    // .createAsync(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };

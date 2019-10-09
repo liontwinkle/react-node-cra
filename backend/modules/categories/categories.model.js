@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   name: String,
+  categoryId: {
+    type: Number,
+    default: 0,
+  },
   parentId: {
     type: String,
     default: '',
