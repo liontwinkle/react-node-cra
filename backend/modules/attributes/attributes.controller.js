@@ -3,6 +3,7 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveAttributeUpdates,
+  handleCreate,
   removeEntity,
   removeAttribute
 } = require('../../utils');
@@ -20,7 +21,8 @@ exports.index = (req, res) => {
 // Creates a new Category in the DB
 exports.create = (req, res) => {
   req.attributes
-    .createAsync(req.body)
+    .find()
+    .then(handleCreate(req.attributes, 'attribute', req.body))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };

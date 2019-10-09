@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const AttributeSchema = new Schema({
   name: String,
+  attributeId: {
+    type: Number,
+    default: 0
+  },
   groupId: {
     type: String,
     default: '',
