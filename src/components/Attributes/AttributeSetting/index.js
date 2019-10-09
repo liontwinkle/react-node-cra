@@ -50,11 +50,10 @@ class AttributeSetting extends Component {
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
     const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
     willCheckedCategory.push(targetCategory[0]._id);
-    const updateCategory = _union(willCheckedCategory, allChildData);
+    return _union(willCheckedCategory, allChildData);
     // console.log('#### DEBUG TARGET: ', target); // fixme
     // updateCategory.push(target.value);
     // this.getSubCategory(updateCategory, target);
-    return updateCategory;
   };
 
   updateAttribute = (updateData) => {
@@ -77,21 +76,22 @@ class AttributeSetting extends Component {
 
   handleCheck = (checked, targetNode) => {
     let updateData = [];
-    console.log('#### Update List: ', this.updateList(targetNode)); // fixme
-    if (targetNode.checked) {
-      updateData = _union(this.updateList(targetNode), this.state.categoryList);
-      this.setState({
-        categoryList: updateData,
-        checked,
-      });
-    } else {
-      updateData = _difference(this.state.categoryList, this.updateList(targetNode));
-      this.setState({
-        categoryList: updateData,
-        checked,
-      });
+    if (!this.props.isUpdating) {
+      if (targetNode.checked) {
+        updateData = _union(this.updateList(targetNode), this.state.categoryList);
+        this.setState({
+          categoryList: updateData,
+          checked,
+        });
+      } else {
+        updateData = _difference(this.state.categoryList, this.updateList(targetNode));
+        this.setState({
+          categoryList: updateData,
+          checked,
+        });
+      }
+      this.updateAttribute(updateData);
     }
-    this.updateAttribute(updateData);
   };
 
   handleExpand = (expanded) => {
@@ -128,6 +128,7 @@ class AttributeSetting extends Component {
 }
 
 AttributeSetting.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
@@ -139,6 +140,7 @@ AttributeSetting.propTypes = {
 
 const mapStateToProps = store => ({
   attribute: store.attributesData.attribute,
+  isUpdating: store.attributesData.isUpdating,
   assoicationCategories: store.categoriesData.associations,
   categories: store.categoriesData.categories,
   client: store.clientsData.client,

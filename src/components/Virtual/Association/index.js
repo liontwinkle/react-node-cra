@@ -19,6 +19,7 @@ import ContextMenu from './ContextMenu';
 import './style.scss';
 
 function Association({
+  isUpdating,
   category,
   categories,
   nodes,
@@ -92,41 +93,42 @@ function Association({
   };
 
   const handleAttributeChange = (checked, nodeTarget) => {
-    const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
+    if (!isUpdating) {
+      const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
+      let checkGrp = false;
+      let appearData = [];
+      const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
+      const allChildData = getAllChildData(categories, category);
+      willCheckedCategory.push(category._id);
+      const updateNewAppear = _union(willCheckedCategory, allChildData);
 
-    let checkGrp = false;
-    let appearData = [];
-    const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
-    const allChildData = getAllChildData(categories, category);
-    willCheckedCategory.push(category._id);
-    const updateNewAppear = _union(willCheckedCategory, allChildData);
-
-    if (nodeTarget.checked) {
-      appearData = _union(targetAppear.appear, updateNewAppear);
-      if (targetAppear.groupId) {
-        const includeCategoryList = attributes.filter(
-          attrItem => (!!attrItem.appear.find(
-            (arrItem => (arrItem === category._id)),
-          ) && (attrItem.groupId === targetAppear.groupId)),
-        );
-        const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
-        if (includeCategoryList.length === groupList.length - 1) {
-          checkGrp = true;
+      if (nodeTarget.checked) {
+        appearData = _union(targetAppear.appear, updateNewAppear);
+        if (targetAppear.groupId) {
+          const includeCategoryList = attributes.filter(
+            attrItem => (!!attrItem.appear.find(
+              (arrItem => (arrItem === category._id)),
+            ) && (attrItem.groupId === targetAppear.groupId)),
+          );
+          const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
+          if (includeCategoryList.length === groupList.length - 1) {
+            checkGrp = true;
+          }
         }
+      } else {
+        appearData = _difference(targetAppear.appear, updateNewAppear);
       }
-    } else {
-      appearData = _difference(targetAppear.appear, updateNewAppear);
-    }
 
-    if (checkGrp) {
-      const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
-      const groupAddAppear = groupAdd.appear;
-      groupAddAppear.push(category._id);
-      updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
-        .then(() => { fetchAttributes(client.id, 'attributes'); });
-    } else {
-      updateAttribute(targetAppear._id, { appear: appearData, checked: nodeTarget.checked })
-        .then(() => { fetchAttributes(client.id, 'attributes'); });
+      if (checkGrp) {
+        const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
+        const groupAddAppear = groupAdd.appear;
+        groupAddAppear.push(category._id);
+        updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
+          .then(() => { fetchAttributes(client.id, 'attributes'); });
+      } else {
+        updateAttribute(targetAppear._id, { appear: appearData, checked: nodeTarget.checked })
+          .then(() => { fetchAttributes(client.id, 'attributes'); });
+      }
     }
   };
 
@@ -181,6 +183,7 @@ function Association({
 }
 
 Association.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   nodes: PropTypes.array.isRequired,
@@ -199,6 +202,7 @@ Association.propTypes = {
 const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
   attributes: store.attributesData.attributes,
+  isUpdating: store.attributesData.isUpdating,
   products: store.productsData.data.products,
   isFetchingList: store.productsData.isFetchingList,
   valueDetails: store.productsData.data.valueDetails,
