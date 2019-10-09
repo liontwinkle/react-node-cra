@@ -43,7 +43,7 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    createCategory({ name: 'New Category', parentId: node.item.id })
+    createCategory({ name: 'New Category', parentId: node.item.categoryId })
       .then((category) => {
         addNewRuleHistory(createHistory, category, category.parentId,
           'Create Node',

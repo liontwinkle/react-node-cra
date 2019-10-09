@@ -63,7 +63,8 @@ class NewRules extends Component {
 
     let filterProduct = [];
     let filterAttribute = [];
-    let attributeList = attributes.filter(Item => (!!Item.appear.find(appearItem => (appearItem === category._id))));
+    let attributeList = attributes.filter(Item => (
+      !!Item.appear.find(appearItem => (appearItem === category.categoryId))));
     filterAttribute = attributeList;
     if (attributeList.length > 0) {
       const groups = attributeList.filter(item => (!item.groupId));
