@@ -55,8 +55,10 @@ function Association({
     handleClose();
     event.preventDefault();
     const strId = event.path[2].id.split('-');
+    console.log('####DEBUG EVENT: ', strId); // fixme
     const attributeId = strId[strId.length - 1];
-    const attribute = attributes.find(attributeItem => (attributeItem._id === attributeId));
+    console.log('####DEBUG EVENT: ', attributeId); // fixme
+    const attribute = attributes.find(attributeItem => (attributeItem.attributeId.toString() === attributeId));
     setAttribute(attribute);
     setInfo({
       label: event.target.innerText,
@@ -71,8 +73,8 @@ function Association({
     if (category) {
       const updateChecked = [];
       attributes.forEach((attrItem) => {
-        if (attrItem.appear.find(appearItem => (appearItem === category._id))) {
-          updateChecked.push(attrItem._id);
+        if (attrItem.appear.find(appearItem => (appearItem === category.categoryId))) {
+          updateChecked.push(attrItem.attributeId);
         }
       });
       setChecked(updateChecked);
@@ -94,12 +96,12 @@ function Association({
 
   const handleAttributeChange = (checked, nodeTarget) => {
     if (!isUpdating) {
-      const targetAppear = attributes.filter(attrItem => (attrItem._id === nodeTarget.value))[0];
+      const targetAppear = attributes.filter(attrItem => (attrItem.attributeId === nodeTarget.value))[0];
       let checkGrp = false;
       let appearData = [];
       const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
       const allChildData = getAllChildData(categories, category);
-      willCheckedCategory.push(category._id);
+      willCheckedCategory.push(category.categoryId);
       const updateNewAppear = _union(willCheckedCategory, allChildData);
 
       if (nodeTarget.checked) {
@@ -107,7 +109,7 @@ function Association({
         if (targetAppear.groupId) {
           const includeCategoryList = attributes.filter(
             attrItem => (!!attrItem.appear.find(
-              (arrItem => (arrItem === category._id)),
+              (arrItem => (arrItem === category.categoryId)),
             ) && (attrItem.groupId === targetAppear.groupId)),
           );
           const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
@@ -120,9 +122,9 @@ function Association({
       }
 
       if (checkGrp) {
-        const groupAdd = attributes.filter(attrItem => (attrItem._id === targetAppear.groupId))[0];
+        const groupAdd = attributes.filter(attrItem => (attrItem.attributeId.toString() === targetAppear.groupId))[0];
         const groupAddAppear = groupAdd.appear;
-        groupAddAppear.push(category._id);
+        groupAddAppear.push(category.categoryId);
         updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
           .then(() => { fetchAttributes(client.id, 'attributes'); });
       } else {

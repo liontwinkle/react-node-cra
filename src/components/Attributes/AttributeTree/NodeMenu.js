@@ -61,7 +61,7 @@ function NodeMenu({
 
   const handleAdd = () => {
     if (checkNameDuplicate(attributes, 'New Attribute', node.item.id) === 0) {
-      createAttribute({ name: 'New Attribute', groupId: node.item.id })
+      createAttribute({ name: 'New Attribute', groupId: node.item.attributeId })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,

@@ -15,16 +15,16 @@ export const getNewAppearData = (categories, currentLsit, currentCategoryItem) =
     const siblings = categories.filter(item => (item.parentId === currentCategoryItem.parentId));
     let checkContainAttr = true;
     siblings.forEach((siblingItem) => {
-      if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem._id)) === -1) {
-        if (siblingItem._id !== currentCategoryItem._id) {
+      if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem.categoryId)) === -1) {
+        if (siblingItem.categoryId !== currentCategoryItem.categoryId) {
           checkContainAttr = false;
         }
       }
     });
     if (siblings.length === 1 || checkContainAttr) {
-      result.push(currentCategoryItem.parentId);
+      result.push(parseInt(currentCategoryItem.parentId, 10));
     }
-    const nextCategory = categories.filter(item => (item._id === currentCategoryItem.parentId));
+    const nextCategory = categories.filter(item => (item.categoryId.toString() === currentCategoryItem.parentId));
     result = [...result, ...getNewAppearData(categories, currentLsit, nextCategory[0])];
   }
   return result;
@@ -32,10 +32,10 @@ export const getNewAppearData = (categories, currentLsit, currentCategoryItem) =
 
 export const getAllChildData = (categories, currentCategoryItem) => {
   let result = [];
-  const childArray = categories.filter(item => (item.parentId === currentCategoryItem._id));
+  const childArray = categories.filter(item => (item.parentId === currentCategoryItem.categoryId.toString()));
   if (childArray.length > 0) {
     childArray.forEach((item) => {
-      result.push(item._id);
+      result.push(item.categoryId);
       result = [...result, ...getAllChildData(categories, item)];
     });
   }

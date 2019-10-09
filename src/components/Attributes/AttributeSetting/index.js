@@ -11,10 +11,10 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { confirmMessage } from 'utils';
+import { getAllChildData, getNewAppearData } from 'utils/attributeManagement';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 
 import './style.scss';
-import { getAllChildData, getNewAppearData } from '../../../utils/attributeManagement';
 
 class AttributeSetting extends Component {
   state = {
@@ -49,7 +49,7 @@ class AttributeSetting extends Component {
     const targetCategory = this.props.categories.filter(item => (item.categoryId === target.value));
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
     const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
-    willCheckedCategory.push(targetCategory[0]._id);
+    willCheckedCategory.push(targetCategory[0].categoryId);
     return _union(willCheckedCategory, allChildData);
   };
 
@@ -74,14 +74,15 @@ class AttributeSetting extends Component {
   handleCheck = (checked, targetNode) => {
     let updateData = [];
     if (!this.props.isUpdating) {
+      const updateAppear = this.updateList(targetNode);
       if (targetNode.checked) {
-        updateData = _union(this.updateList(targetNode), this.state.categoryList);
+        updateData = _union(updateAppear, this.state.categoryList);
         this.setState({
           categoryList: updateData,
           checked,
         });
       } else {
-        updateData = _difference(this.state.categoryList, this.updateList(targetNode));
+        updateData = _difference(updateAppear, this.updateList(targetNode));
         this.setState({
           categoryList: updateData,
           checked,
