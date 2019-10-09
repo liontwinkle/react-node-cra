@@ -23,7 +23,6 @@ exports.create = (req, res) => {
   req.category
     .find()
     .then(handleCreate(req.category, 'category', req.body))
-    // .createAsync(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };

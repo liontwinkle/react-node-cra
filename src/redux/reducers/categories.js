@@ -42,19 +42,13 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       const fetchSaveData = getCategoryTree(action.payload.categories, []);
-      // const association = action.payload.categories.map(item => ({
-      //   label: item.name,
-      //   value: item._id,
-      //   appear: [],
-      //   children: [],
-      // }));
+      console.log('###DEBUG RESPONSE: ', fetchSaveData); // fixme
       return {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
         category: tempDatas[0] || null,
         trees: fetchSaveData.subTree,
-        // associations: association,
         associations: fetchSaveData.association,
       };
     case types.CATEGORIES_GET_FAIL:

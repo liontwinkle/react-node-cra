@@ -227,22 +227,23 @@ export const getPreFilterData = (rules, products) => {
 const getSubTree = (list, parentId, type, originNode) => {
   const subTree = [];
   const association = [];
-  const sublist = list.filter(item => item[type] === parentId);
+  const sublist = list.filter(item => item[type] === parentId.toString());
+  const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
   if (sublist.length > 0) {
     sublist.forEach((item, key) => {
       const subNode = (originNode && originNode.length > 0 && originNode[key]) ? originNode[key] : null;
       association.push({
         label: item.name,
-        value: item._id,
+        value: item[identifier],
         appear: item.appear || [],
-        children: getSubTree(list, item._id, type).association,
+        children: getSubTree(list, item[identifier], type).association,
       });
       subTree.push({
         title: item.name,
         editable: false,
         expanded: (subNode) ? subNode.expanded : false,
         item,
-        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null).subTree,
+        children: getSubTree(list, item[identifier], type, (subNode) ? subNode.children : null).subTree,
       });
     });
   }

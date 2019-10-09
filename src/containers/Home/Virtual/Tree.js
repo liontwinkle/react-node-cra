@@ -32,7 +32,7 @@ function Tree(props) {
       .then((category) => {
         createHistory({
           label: 'Create Node',
-          itemId: category._id,
+          itemId: category.id,
           type: 'virtual',
         });
         confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
