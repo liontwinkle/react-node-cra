@@ -109,7 +109,7 @@ function saveAttributeUpdates(req) {
     const old = entity.appear;
     if (req.body) {
       if (!req.body.checked && entity.groupId !== '') {
-        req.attributes.find({ _id: entity.groupId })
+        req.attributes.find({ attributeId: entity.groupId })
           .then((result) => {
             if (result.length > 0) {
               const diff = _.difference(old, req.body.appear);
@@ -119,7 +119,7 @@ function saveAttributeUpdates(req) {
             }
           });
       }
-      req.attributes.find({ groupId: entity._id })
+      req.attributes.find({ groupId: entity.attributeId })
         .then((results) => {
           results.forEach((resItem) => {
             const newAppear = _.union(req.body.appear,

@@ -55,9 +55,7 @@ function Association({
     handleClose();
     event.preventDefault();
     const strId = event.path[2].id.split('-');
-    console.log('####DEBUG EVENT: ', strId); // fixme
     const attributeId = strId[strId.length - 1];
-    console.log('####DEBUG EVENT: ', attributeId); // fixme
     const attribute = attributes.find(attributeItem => (attributeItem.attributeId.toString() === attributeId));
     setAttribute(attribute);
     setInfo({
@@ -125,7 +123,8 @@ function Association({
         const groupAdd = attributes.filter(attrItem => (attrItem.attributeId.toString() === targetAppear.groupId))[0];
         const groupAddAppear = groupAdd.appear;
         groupAddAppear.push(category.categoryId);
-        updateAttribute(targetAppear.groupId, { appear: groupAddAppear })
+        const updateItemId = attributes.find(item => (item.attributeId.toString() === targetAppear.groupId))._id;
+        updateAttribute(updateItemId, { appear: groupAddAppear })
           .then(() => { fetchAttributes(client.id, 'attributes'); });
       } else {
         updateAttribute(targetAppear._id, { appear: appearData, checked: nodeTarget.checked })

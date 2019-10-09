@@ -14,13 +14,17 @@ export const getNewAppearData = (categories, currentLsit, currentCategoryItem) =
   if (currentCategoryItem.parentId !== '') {
     const siblings = categories.filter(item => (item.parentId === currentCategoryItem.parentId));
     let checkContainAttr = true;
-    siblings.forEach((siblingItem) => {
-      if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem.categoryId)) === -1) {
-        if (siblingItem.categoryId !== currentCategoryItem.categoryId) {
-          checkContainAttr = false;
+    if (currentLsit.length === 0) {
+      checkContainAttr = false;
+    } else {
+      siblings.forEach((siblingItem) => {
+        if (currentLsit.find(currentLsitItem => (currentLsitItem === siblingItem.categoryId)) === -1) {
+          if (siblingItem.categoryId !== currentCategoryItem.categoryId) {
+            checkContainAttr = false;
+          }
         }
-      }
-    });
+      });
+    }
     if (siblings.length === 1 || checkContainAttr) {
       result.push(parseInt(currentCategoryItem.parentId, 10));
     }

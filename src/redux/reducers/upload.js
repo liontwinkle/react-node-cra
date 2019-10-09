@@ -15,7 +15,6 @@ export default (state = INITIAL_STATE, action) => {
         errors: '',
       };
     case types.UPLOAD_DATA_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         isUploading: false,

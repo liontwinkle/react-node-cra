@@ -42,7 +42,6 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       const fetchSaveData = getCategoryTree(action.payload.categories, []);
-      console.log('###DEBUG RESPONSE: ', fetchSaveData); // fixme
       return {
         ...state,
         isFetchingList: false,

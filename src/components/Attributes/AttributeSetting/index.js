@@ -82,7 +82,7 @@ class AttributeSetting extends Component {
           checked,
         });
       } else {
-        updateData = _difference(updateAppear, this.updateList(targetNode));
+        updateData = _difference(this.state.categoryList, updateAppear);
         this.setState({
           categoryList: updateData,
           checked,
