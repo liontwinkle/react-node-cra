@@ -81,14 +81,16 @@ function handleExistingRemove(collection, req, res) {
 
 function handleCreate(collection, type, createData) {
   return (entity) => {
-    console.log('#### DEBUG ENTITY: ', entity); // fixme
     let newId = 1;
-    if (entity) {
-      newId = entity.categoryId + 1;
-      console.log('#### DEBUG ID: ', newId); // fixme
+    if (entity.length > 0) {
+      entity.forEach((item) => {
+        if (item[`${type}Id`] > newId) {
+          newId = item[`${type}Id`];
+        }
+      });
+      newId++;
     }
     createData[`${type}Id`] = newId;
-    console.log('#### DEBUG DATA: ', createData); // fixme
     return collection.create(createData);
   };
 }
