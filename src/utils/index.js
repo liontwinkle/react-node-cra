@@ -9,12 +9,20 @@ import {
 } from './constants';
 
 const validateKey = {
-  virtual: ['parentId', 'name', 'newRules'],
+  virtual: ['categoryid', 'name'],
   attributes: ['groupId', 'name', 'appear', 'rules'],
   native: ['parentId', 'name'],
   products: [],
 };
 
+// const model = {
+//   virtual: {
+//     name: '',
+//     categoryId: 0,
+//     parentId: '',
+//     rules: [],
+//   },
+// };
 export const validateData = (type, data) => {
   const validateData = [];
   if (validateKey[type]) {
