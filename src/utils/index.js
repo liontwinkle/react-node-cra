@@ -15,14 +15,6 @@ const validateKey = {
   products: [],
 };
 
-// const model = {
-//   virtual: {
-//     name: '',
-//     categoryId: 0,
-//     parentId: '',
-//     rules: [],
-//   },
-// };
 export const validateData = (type, data) => {
   const validateData = [];
   if (validateKey[type]) {
@@ -41,6 +33,7 @@ export const validateData = (type, data) => {
       }
     });
   }
+  console.log('### DEBUG IMPORT DATA: ', validateData); // fixme
   return validateData;
 };
 
