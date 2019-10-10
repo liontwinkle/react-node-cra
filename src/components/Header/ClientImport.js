@@ -48,8 +48,9 @@ function ClientImport({
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    if (importData.length > 0 && validateData(type.key, importData).length > 0 && !isUploading) {
-      fileUpload(importData)
+    const sendingData = validateData(type.key, importData);
+    if (importData.length > 0 && sendingData.length > 0 && !isUploading) {
+      fileUpload(sendingData)
         .then(() => {
           setImportData([]);
           if (type.key === 'virtual' || type.key === 'native') {

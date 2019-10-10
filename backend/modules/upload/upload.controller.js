@@ -8,55 +8,28 @@ const AttributesModel = require('../attributes/attributes.model');
 const PropertyFieldsCollection = require('../property-fields/property-fields.model');
 
 const checkType = {
-  virtual: ['newRules', 'properties', 'name'],
-  native: ['newRules', 'properties', 'name'],
+  virtual: 'categoryId',
+  native: 'categoryId',
   products: [],
-  attributes: ['rules', 'properties', 'name'],
-};
-
-const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
-
-const removeUnnecessaryData = (data) => {
-  const addData = {};
-  const keys = Object.keys(data);
-  keys.forEach((keyItem) => {
-    if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
-      if (data[keyItem] && typeof data[keyItem] === 'object') {
-        const key = Object.keys(data[keyItem]);
-        if (key.length > 0) {
-          if (key[0].indexOf('$') > 0) {
-            addData[keyItem] = data[keyItem][key[0]];
-          }
-        } else {
-          addData[keyItem] = data[keyItem];
-        }
-      } else {
-        addData[keyItem] = data[keyItem];
-      }
-    }
-  });
-  return addData;
+  attributes: 'attributeId',
 };
 
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
-    let matchFlag = false;
-    currentData.forEach((currentItem) => {
-      checkType[type].forEach((checkItem) => {
-        if (currentItem[checkItem] === newItem[checkItem]) {
-          matchFlag = true;
-        }
-      });
-    });
-    if (!matchFlag) {
+    const duplicateFilter = currentData.find(currentItem =>
+      (currentItem[checkType[type]] === newItem[checkType[type]]));
+    console.log('#### DEBUG FILTER: ', duplicateFilter); // fixme
+    if (!duplicateFilter) {
       try {
-        newCreateData.push(removeUnnecessaryData(newItem));
+        console.log('#### DEBUG ITEM: ', newItem); // fixme
+        newCreateData.push(newItem);
       } catch (e) {
         console.error(e);
       }
     }
   });
+  console.log('#### DEBUG WILL SAVED DATA: ', newCreateData); // fixme
   return newCreateData;
 };
 exports.upload = (req, res) => {
@@ -112,7 +85,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   const updatePropertyFields = [];
   currentPropertyFields.forEach((currentItem) => {
     updatePropertyFields.push({
-      items: currentItem.items.map(item => (removeUnnecessaryData(item))),
+      items: currentItem.items,
       key: currentItem.key,
       label: currentItem.label,
       default: currentItem.default,

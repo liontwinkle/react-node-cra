@@ -10,13 +10,14 @@ import {
 
 const validateKey = {
   virtual: ['categoryid', 'name'],
-  attributes: ['groupId', 'name', 'appear', 'rules'],
+  attributes: ['attributeid', 'name'],
   native: ['parentId', 'name'],
   products: [],
 };
 
 export const validateData = (type, data) => {
   const validateData = [];
+  let tempData = {};
   if (validateKey[type]) {
     data.forEach((dataItem) => {
       const keys = Object.keys(dataItem);
@@ -28,7 +29,23 @@ export const validateData = (type, data) => {
           }
         });
         if (validateFlag) {
-          validateData.push(dataItem);
+          if (type === 'virtual') {
+            tempData.rules = dataItem.rules || [];
+            tempData.categoryId = (typeof dataItem.categoryid === 'string')
+              ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid;
+            tempData.name = dataItem.name || [];
+            tempData.parentId = dataItem.parent_id || '';
+          } else if (type === 'attributes') {
+            tempData.rules = dataItem.rules || [];
+            tempData.appear = dataItem.appear || [];
+            tempData.attributeId = (typeof dataItem.attributeid === 'string')
+              ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid;
+            tempData.name = dataItem.name || [];
+            tempData.groupId = dataItem.group_id || '';
+          } else {
+            tempData = JSON.parse(JSON.stringify(dataItem));
+          }
+          validateData.push(tempData);
         }
       }
     });
