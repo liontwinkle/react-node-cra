@@ -44,6 +44,7 @@ export default (state = INITIAL_STATE, action) => {
             convertedTrees[pKey].item = fetchedTrees.subTree[pKey].item;
           }
         });
+        convertedTrees = _merge(fetchedTrees.subTree, convertedTrees);
       } else {
         convertedTrees = fetchedTrees.subTree;
       }
