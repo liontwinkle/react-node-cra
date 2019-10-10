@@ -7,12 +7,12 @@ const ProductsModel = require('../products/products.model');
 const AttributesModel = require('../attributes/attributes.model');
 const PropertyFieldsCollection = require('../property-fields/property-fields.model');
 
-const checkType = {
-  virtual: ['newRules', 'properties', 'name'],
-  native: ['newRules', 'properties', 'name'],
-  products: [],
-  attributes: ['rules', 'properties', 'name'],
-};
+// const checkType = {
+//   virtual: ['newRules', 'properties', 'name'],
+//   native: ['newRules', 'properties', 'name'],
+//   products: [],
+//   attributes: ['rules', 'properties', 'name'],
+// };
 
 const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
 
@@ -41,15 +41,18 @@ const removeUnnecessaryData = (data) => {
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
-    let matchFlag = false;
-    currentData.forEach((currentItem) => {
-      checkType[type].forEach((checkItem) => {
-        if (currentItem[checkItem] === newItem[checkItem]) {
-          matchFlag = true;
-        }
-      });
-    });
-    if (!matchFlag) {
+    let matchFlag = [];
+    if (type === 'virtual') {
+      matchFlag = currentData.filter(item => (item.categoryId === newItem.categoryId));
+    }
+    // currentData.forEach((currentItem) => {
+    //   checkType[type].forEach((checkItem) => {
+    //     if (currentItem[checkItem] === newItem[checkItem]) {
+    //       matchFlag = true;
+    //     }
+    //   });
+    // });
+    if (matchFlag.length === 0) {
       try {
         newCreateData.push(removeUnnecessaryData(newItem));
       } catch (e) {
@@ -71,6 +74,7 @@ exports.upload = (req, res) => {
   collection.find({}, (err, result) => {
     if (!err) {
       const updateData = checkDuplicateData(result, req.body, req.params.type);
+      console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
       if (updateData.length > 0) {
         try {
           collection.insertMany(updateData);

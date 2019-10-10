@@ -14,7 +14,7 @@ const validateKey = {
   native: ['parentId', 'name'],
   products: [],
 };
-
+//
 // const model = {
 //   virtual: {
 //     name: '',
@@ -23,11 +23,31 @@ const validateKey = {
 //     rules: [],
 //   },
 // };
+
 export const validateData = (type, data) => {
   const validateData = [];
-  if (validateKey[type]) {
-    data.forEach((dataItem) => {
-      const keys = Object.keys(dataItem);
+  // if (validateKey[type]) {
+  //   data.forEach((dataItem) => {
+  //     const keys = Object.keys(dataItem);
+  //     if (keys.length > 0) {
+  //       let validateFlag = true;
+  //       validateKey[type].forEach((validateItem) => {
+  //         if (keys.findIndex(item => (item === validateItem)) === -1) {
+  //           validateFlag = false;
+  //         }
+  //       });
+  //       if (validateFlag) {
+  //         validateData.push(dataItem);
+  //       }
+  //     }
+  //   });
+  // }
+  console.log('#### DEBUG TYPE: ', type); // fixme
+  console.log('#### DEBUG DATA: ', data); // fixme
+  if (type === 'virtual') {
+    if (typeof data === 'object') {
+      const keys = Object.keys(data);
+      console.log('#### DEBUG OBJECT KEYS: ', keys); // fixme
       if (keys.length > 0) {
         let validateFlag = true;
         validateKey[type].forEach((validateItem) => {
@@ -36,11 +56,25 @@ export const validateData = (type, data) => {
           }
         });
         if (validateFlag) {
-          validateData.push(dataItem);
+          const newData = {};
+          newData.categoryId = data.categoryid;
+          newData.name = data.name;
+          newData.parentId = (data.parent_id) ? data.parent_id : '';
+          newData.rules = (data.rules) ? data.rules : [];
+          validateData.push(newData);
         }
       }
-    });
+    } else {
+      data.forEach((dataItem) => {
+        const keys = Object.keys(dataItem);
+        console.log('#### DEBUG ARRAY KEYS: ', keys); // fixme
+      });
+    }
   }
+  console.log('##### DEBUG RETURN: ', validateData); // fixme
+  // else if(type === 'attributes'){
+  //
+  // }
   return validateData;
 };
 
