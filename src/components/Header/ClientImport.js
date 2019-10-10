@@ -15,7 +15,7 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
-import { confirmMessage, validateData, validateKeyData } from 'utils';
+import { confirmMessage, validateData /* validateKeyData */ } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
@@ -33,8 +33,8 @@ function ClientImport({
   type,
   handleClose,
   fileUpload,
-  keyUpload,
-  fetchPropertyField,
+  /* keyUpload,
+  fetchPropertyField, */
   fetchCategories,
   fetchAttributes,
   fetchProducts,
@@ -43,13 +43,19 @@ function ClientImport({
   const { enqueueSnackbar } = useSnackbar();
 
   const [importData, setImportData] = useState([]);
-  const [keyData, setKeyData] = useState([]);
+  // const [keyData, setKeyData] = useState([]);
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    const sendingData = validateData(type.key, importData);
-    if (importData.length > 0 && sendingData.length > 0 && !isUploading) {
+    let uploadData = [];
+    if (typeof importData === 'object') {
+      uploadData.push(importData);
+    } else {
+      uploadData = importData;
+    }
+    const sendingData = validateData(type.key, uploadData);
+    if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
       fileUpload(sendingData)
         .then(() => {
           setImportData([]);
@@ -74,6 +80,7 @@ function ClientImport({
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
       }
     }
+    /*
     if (type.key !== 'products') {
       setTimeout(() => {
         if (keyData.length > 0 && validateKeyData(keyData).length > 0 && !isKeyUploading) {
@@ -91,7 +98,7 @@ function ClientImport({
           confirmMessage(enqueueSnackbar, 'Key data is invalidate.', 'error');
         }
       }, 0);
-    }
+    } */
   };
 
   const onChangeHandle = type => (fileItem) => {
@@ -105,9 +112,9 @@ function ClientImport({
           () => {
             if (type === 'data') {
               setImportData(JSON.parse(reader.result));
-            } else {
+            }/* else {
               setKeyData(JSON.parse(reader.result));
-            }
+            } */
           },
           false,
         );
@@ -132,7 +139,7 @@ function ClientImport({
           !uploadFlag && !isKeyUploading ? (
             <UploadDlg
               onChangeData={onChangeHandle('data')}
-              onChangeKey={onChangeHandle('key')}
+              // onChangeKey={onChangeHandle('key')}
               clientType={type.key}
             />
           ) : (
@@ -171,11 +178,11 @@ ClientImport.propTypes = {
   isUploading: PropTypes.bool.isRequired,
   isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
-  keyUpload: PropTypes.func.isRequired,
+  // keyUpload: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
-  fetchPropertyField: PropTypes.func.isRequired,
+  // fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {

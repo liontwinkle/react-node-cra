@@ -50,10 +50,10 @@ export const validateData = (type, data) => {
       }
     });
   }
-  console.log('### DEBUG IMPORT DATA: ', validateData); // fixme
   return validateData;
 };
 
+/*
 const sectionKeys = ['label', 'key', 'order'];
 const propertyFieldKeys = ['label', 'key', 'default', 'propertyType', 'section'];
 
@@ -95,6 +95,7 @@ export const validateKeyData = (data) => {
   }
   return result;
 };
+*/
 export const useStyles = makeStyles(theme => ({
   dialogAction: {
     margin: theme.spacing(2),

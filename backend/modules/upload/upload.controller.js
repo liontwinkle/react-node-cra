@@ -19,17 +19,14 @@ const checkDuplicateData = (currentData, newData, type) => {
   newData.forEach((newItem) => {
     const duplicateFilter = currentData.find(currentItem =>
       (currentItem[checkType[type]] === newItem[checkType[type]]));
-    console.log('#### DEBUG FILTER: ', duplicateFilter); // fixme
     if (!duplicateFilter) {
       try {
-        console.log('#### DEBUG ITEM: ', newItem); // fixme
         newCreateData.push(newItem);
       } catch (e) {
         console.error(e);
       }
     }
   });
-  console.log('#### DEBUG WILL SAVED DATA: ', newCreateData); // fixme
   return newCreateData;
 };
 exports.upload = (req, res) => {
