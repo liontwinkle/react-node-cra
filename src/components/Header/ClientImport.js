@@ -33,8 +33,6 @@ function ClientImport({
   type,
   handleClose,
   fileUpload,
-  /* keyUpload,
-  fetchPropertyField, */
   fetchCategories,
   fetchAttributes,
   fetchProducts,
@@ -43,7 +41,6 @@ function ClientImport({
   const { enqueueSnackbar } = useSnackbar();
 
   const [importData, setImportData] = useState([]);
-  // const [keyData, setKeyData] = useState([]);
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
@@ -80,25 +77,6 @@ function ClientImport({
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
       }
     }
-    /*
-    if (type.key !== 'products') {
-      setTimeout(() => {
-        if (keyData.length > 0 && validateKeyData(keyData).length > 0 && !isKeyUploading) {
-          keyUpload(keyData)
-            .then(() => {
-              setKeyData([]);
-              fetchPropertyField(client.id, type.key);
-              confirmMessage(enqueueSnackbar, 'Uploading of the Key data is success.', 'success');
-            })
-            .catch((err) => {
-              console.error('### DEBUG ERROR: ', err);
-              confirmMessage(enqueueSnackbar, 'Uploading of the Key data not success.', 'error');
-            });
-        } else if (keyData.length > 0) {
-          confirmMessage(enqueueSnackbar, 'Key data is invalidate.', 'error');
-        }
-      }, 0);
-    } */
   };
 
   const onChangeHandle = type => (fileItem) => {
@@ -112,9 +90,7 @@ function ClientImport({
           () => {
             if (type === 'data') {
               setImportData(JSON.parse(reader.result));
-            }/* else {
-              setKeyData(JSON.parse(reader.result));
-            } */
+            }
           },
           false,
         );
@@ -139,7 +115,6 @@ function ClientImport({
           !uploadFlag && !isKeyUploading ? (
             <UploadDlg
               onChangeData={onChangeHandle('data')}
-              // onChangeKey={onChangeHandle('key')}
               clientType={type.key}
             />
           ) : (
@@ -178,11 +153,9 @@ ClientImport.propTypes = {
   isUploading: PropTypes.bool.isRequired,
   isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
-  // keyUpload: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
-  // fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {

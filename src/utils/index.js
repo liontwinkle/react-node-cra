@@ -53,49 +53,6 @@ export const validateData = (type, data) => {
   return validateData;
 };
 
-/*
-const sectionKeys = ['label', 'key', 'order'];
-const propertyFieldKeys = ['label', 'key', 'default', 'propertyType', 'section'];
-
-export const validateKeyData = (data) => {
-  let result = [];
-  const keys = Object.keys(data[0]);
-  const sectionValidate = keys.findIndex(keyItem => (keyItem === 'sections')) > 0
-   && keys.findIndex(keyItem => (keyItem === 'propertyFields')) > 0;
-  if (sectionValidate) {
-    const section = [];
-    data[0].sections.forEach((item) => {
-      const secKeys = Object.keys(item);
-      let match = 1;
-      sectionKeys.forEach((keyItem) => {
-        match *= secKeys.findIndex(secItem => (secItem === keyItem));
-      });
-      if (match > 0) {
-        section.push(item);
-      }
-    });
-    const propertyFields = [];
-    data[0].propertyFields.forEach((item) => {
-      const secKeys = Object.keys(item);
-      let match = 1;
-      propertyFieldKeys.forEach((keyItem) => {
-        match *= secKeys.findIndex(secItem => (secItem === keyItem));
-      });
-      if (match > 0) {
-        propertyFields.push(item);
-      }
-    });
-    result = [{
-      ...data[0],
-      sections: section,
-      propertyFields,
-    }];
-  } else {
-    result = [];
-  }
-  return result;
-};
-*/
 export const useStyles = makeStyles(theme => ({
   dialogAction: {
     margin: theme.spacing(2),
