@@ -78,7 +78,7 @@ function EditRules({
     });
 
     if (!isUpdating) {
-      updateCategory(category.id, { newRules: updatedData })
+      updateCategory(category.id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success');
         })

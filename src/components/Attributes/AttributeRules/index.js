@@ -91,7 +91,8 @@ class AttributeRules extends Component {
 
   setMap = (attribute) => {
     let currentRules = [];
-    const grpRules = this.props.attributes.filter(attributeItem => (attributeItem.id === attribute.groupId));
+    const grpRules = this.props.attributes.filter(attributeItem => (
+      attributeItem.attributeId.toString() === attribute.groupId));
     if (attribute.rules) {
       currentRules = _union(currentRules, attribute.rules);
     }

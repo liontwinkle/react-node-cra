@@ -70,11 +70,12 @@ class NewRules extends Component {
       const groups = attributeList.filter(item => (!item.groupId));
       attributeList = _difference(attributeList, groups);
       groups.forEach((groupItem) => {
-        const childrenList = attributeList.filter(childItem => (childItem.groupId === groupItem._id));
+        const childrenList = attributeList.filter(childItem => (
+          childItem.groupId === groupItem.attributeId.toString()));
         attributeList = _difference(attributeList, childrenList);
       });
       attributeList.forEach((childListItem) => {
-        const groupChild = attributes.filter(item => (item.id === childListItem.groupId));
+        const groupChild = attributes.filter(item => (item.attributeId.toString() === childListItem.groupId));
         filterAttribute = _union(filterAttribute, groupChild);
       });
       const srcAttributeRules = setUnionRules(filterAttribute);
@@ -92,7 +93,7 @@ class NewRules extends Component {
   };
 
   setMap = (category) => {
-    const recvNewRules = category.newRules || [];
+    const recvNewRules = category.rules || [];
     const attributeRules = getRules(recvNewRules, this.props.valueDetails);
     this.setState({
       newRules: attributeRules.newRules,

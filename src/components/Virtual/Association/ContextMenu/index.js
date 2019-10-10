@@ -43,7 +43,8 @@ function ContextMenu({
   const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
     if (attribute.groupId === '') {
-      filterAttribute = attributes.filter(attributeItem => (attributeItem.groupId === attribute._id));
+      filterAttribute = attributes.filter(attributeItem => (
+        attributeItem.groupId === attribute.attributeId.toString()));
       filterAttribute.push(attribute);
     } else {
       filterAttribute.push(attribute);

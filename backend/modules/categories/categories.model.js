@@ -13,17 +13,11 @@ const CategorySchema = new Schema({
     default: '',
   },
   properties: Object,
-  rules: Object,
-  newRules: [{
+  rules: [{
     basis: String,
     refer: String,
     value: String,
     scope: Number
-  }],
-  ruleKeys: [{
-    key: String,
-    label: String,
-    ruleType: String,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 
