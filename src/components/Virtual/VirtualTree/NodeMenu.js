@@ -8,8 +8,8 @@ import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { createCategory, removeCategory } from 'redux/actions/categories';
+import { fetchAttributes } from 'redux/actions/attribute';
 import { createHistory, removeHistory } from 'redux/actions/history';
-import { removeAppear } from 'redux/actions/attribute';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
@@ -24,8 +24,9 @@ function NodeMenu({
   createHistory,
   removeCategory,
   removeHistory,
-  removeAppear,
+  fetchAttributes,
   editable,
+  client,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -47,24 +48,27 @@ function NodeMenu({
   const handleAdd = () => {
     createCategory({ name: 'New Category', parentId: node.item.categoryId })
       .then((category) => {
-        addNewRuleHistory(createHistory, category, category.parentId,
-          'Create Node',
-          'Add Child Node - New Category',
-          'virtual');
-        confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
-        setTreeData(
-          addNodeUnderParent({
-            treeData,
-            parentKey: path[path.length - 1],
-            expandParent: true,
-            getNodeKey,
-            newNode: {
-              title: category.name,
-              editable: false,
-              item: category,
-            },
-          }).treeData,
-        );
+        fetchAttributes(client.id, 'attributes')
+          .then(() => {
+            addNewRuleHistory(createHistory, category, category.parentId,
+              'Create Node',
+              'Add Child Node - New Category',
+              'virtual');
+            confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
+            setTreeData(
+              addNodeUnderParent({
+                treeData,
+                parentKey: path[path.length - 1],
+                expandParent: true,
+                getNodeKey,
+                newNode: {
+                  title: category.name,
+                  editable: false,
+                  item: category,
+                },
+              }).treeData,
+            );
+          });
       })
       .catch(() => {
         confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
@@ -91,28 +95,30 @@ function NodeMenu({
     const removeId = node.item.id;
     removeCategory(removeId)
       .then(() => {
-        const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
-        if (deleteHistory.length > 0) {
-          removeHistory(removeId)
-            .then(() => {
-              if (node.item.parentId !== '') {
-                removeAppear(node.item.categoryId);
-                createHistory({
-                  label: `Delete Child Node ${node.item.name}`,
-                  itemId: node.item.parentId,
-                  type: 'virtual',
+        fetchAttributes(client.id, 'attributes')
+          .then(() => {
+            const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+            if (deleteHistory.length > 0) {
+              removeHistory(removeId)
+                .then(() => {
+                  if (node.item.parentId !== '') {
+                    createHistory({
+                      label: `Delete Child Node ${node.item.name}`,
+                      itemId: node.item.parentId,
+                      type: 'virtual',
+                    });
+                  }
                 });
-              }
-            });
-        }
-        confirmMessage(enqueueSnackbar, 'The category has been deleted successfully.', 'success');
-        setTreeData(
-          removeNodeAtPath({
-            treeData,
-            path,
-            getNodeKey,
-          }),
-        );
+            }
+            confirmMessage(enqueueSnackbar, 'The category has been deleted successfully.', 'success');
+            setTreeData(
+              removeNodeAtPath({
+                treeData,
+                path,
+                getNodeKey,
+              }),
+            );
+          });
       })
       .catch(() => {
         confirmMessage(enqueueSnackbar, 'Error in deleting category.', 'error');
@@ -187,25 +193,30 @@ NodeMenu.propTypes = {
   treeData: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
+  client: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
   removeHistory: PropTypes.func.isRequired,
-  removeAppear: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
+
+const mapStateToProps = store => ({
+  client: store.clientsData.client,
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
   createHistory,
   removeCategory,
   removeHistory,
-  removeAppear,
+  fetchAttributes,
 }, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(NodeMenu);

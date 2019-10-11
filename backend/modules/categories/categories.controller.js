@@ -22,7 +22,7 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
   req.category
     .find()
-    .then(handleCreate(req.category, 'category', req.body))
+    .then(handleCreate(req))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -57,7 +57,7 @@ exports.remove = (req, res) => {
   req.category
     .findByIdAsync(req.params.categoryId)
     .then(handleEntityNotFound(res))
-    .then(removeEntity(res))
+    .then(removeEntity(req, res))
     .then(removeChildren(req, req.params.categoryId))
     .catch(handleError(res));
 };

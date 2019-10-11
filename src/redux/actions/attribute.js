@@ -116,36 +116,6 @@ export const removeAttribute = id => (dispatch, getState) => {
     });
 };
 
-export const removeAppear = appearId => (dispatch, getState) => {
-  if (getState().attributesData.isDeleting) {
-    return;
-  }
-
-  console.log('#### DEBUG APPEARID: ', appearId); // fixme
-  const { client } = getState().clientsData;
-
-  dispatch({
-    type: types.ATTRIBUTE_UPDATE_APPEAR_REQUEST,
-  });
-
-  return attributesService.removeAppear(client.id, 'attributes', appearId)
-    .then(() => {
-      dispatch({
-        type: types.ATTRIBUTE_UPDATE_APPEAR_SUCCESS,
-        payload: { appearId },
-      });
-
-      return 'success';
-    })
-    .catch((error) => {
-      dispatch({
-        type: types.ATTRIBUTE_UPDATE_APPEAR_FAIL,
-        payload: { error },
-      });
-
-      throw error;
-    });
-};
 export const setAttribute = attribute => (dispatch) => {
   dispatch({
     type: types.ATTRIBUTE_SET,

@@ -91,18 +91,34 @@ function handleExistingRemove(collection, req, res) {
   });
 }
 
-function handleCreate(collection, type, createData) {
+function handleCreate(req) {
+  const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+  const collection = req.category;
+  const createData = req.body;
   return (entity) => {
     let newId = 1;
     if (entity.length > 0) {
       entity.forEach((item) => {
-        if (item[`${type}Id`] > newId) {
-          newId = item[`${type}Id`];
+        if (item.categoryId > newId) {
+          newId = item.categoryId;
         }
       });
       newId++;
     }
-    createData[`${type}Id`] = newId;
+    if (createData.parentId !== '') {
+      collectionAppear.find({ categoryId: parseInt(createData.parentId, 10) })
+        .then((result) => {
+          if (result.length > 0) {
+            const attributs = result.map(item => ({
+              attributeId: item.attributeId,
+              categoryId: newId,
+            }));
+            collectionAppear.insertMany(attributs)
+              .then(() => {});
+          }
+        });
+    }
+    createData.categoryId = newId;
     return collection.create(createData);
   };
 }
@@ -262,31 +278,44 @@ function saveAttributeUpdates(req, res) {
   };
 }
 
-function removeEntity(res) {
-  return entity => entity && entity.removeAsync()
-    .then(respondWith(res, 204));
+function removeEntity(req, res) {
+  const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+  return (entity) => {
+    if (entity) {
+      collectionAppear.find({ categoryId: entity.categoryId })
+        .then((result) => {
+          if (result.length > 0) {
+            collectionAppear.deleteMany({ categoryId: entity.categoryId })
+              .then(() => {});
+          }
+        });
+      entity.removeAsync()
+        .then(respondWith(res, 204));
+    }
+  };
 }
 
 function removeChildren(req, id) {
+  const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   req.category.find({ parentId: id })
     .then((result) => {
-      req.category
-        .deleteMany({ parentId: id }, (err, result) => {
-          if (!result) {
-            console.log(err);
-          }
-        });
       if (result.length > 0) {
-        result.forEach((item) => {
-          removeChildren(req, item._id);
-        });
-      } else {
         req.category
-          .deleteOne({ parentId: id }, (err, result) => {
+          .deleteMany({ parentId: id }, (err, result) => {
             if (!result) {
               console.log(err);
             }
           });
+        result.forEach((item) => {
+          collectionAppear.find({ categoryId: item.categoryId })
+            .then((result) => {
+              if (result.length > 0) {
+                collectionAppear.deleteMany({ categoryId: item.categoryId })
+                  .then(() => {});
+              }
+            });
+          removeChildren(req, item._id);
+        });
       }
     });
 }
