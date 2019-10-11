@@ -6,7 +6,6 @@ const AppearCollection = require('../modules/appear/appear.model');
 
 function insertAppear(collection, attributeId, appear) {
   const addAppearData = [];
-  console.log('### DEBUG ID: ', attributeId); // fixme
   appear.forEach((item) => {
     addAppearData.push({
       attributeId,
@@ -114,7 +113,7 @@ function handleCreate(collection, type, createData) {
  * @param req
  * @returns {function(*): *}
  */
-function handleAttributeCreate(req) {
+function handleAttributeCreate(req, res) {
   const createData = req.body;
   const collectionAttr = req.attributes;
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
@@ -133,7 +132,12 @@ function handleAttributeCreate(req) {
       insertAppear(collectionAppear, newId, createData.appear);
     }
     createData.attributeId = newId;
-    return collectionAttr.create(createData);
+    collectionAttr.create(createData)
+      .then((result) => {
+        const returnValue = JSON.parse(JSON.stringify(result));
+        returnValue.appear = createData.appear || [];
+        res.status(201).json(returnValue);
+      });
   };
 }
 
@@ -146,17 +150,17 @@ function handleAttributeFetch(req, res) {
         .then((result) => {
           if (result.length > 0) {
             entity.forEach((entityItem, index) => {
-              attributeData[index].appear = result.filter((apearItem =>
-                (apearItem.attributeId === entityItem.attributeId)
+              attributeData[index].appear = result.filter((appearItem =>
+                (appearItem.attributeId === entityItem.attributeId)
               )).map(item => (item.categoryId));
             });
-            res.status(200).json(attributeData);
+            res.status(201).json(attributeData);
           } else {
-            res.status(200).json(attributeData);
+            res.status(201).json(attributeData);
           }
         });
     } else {
-      res.status(200).json(entity);
+      res.status(201).json(entity);
     }
   };
 }
@@ -176,7 +180,6 @@ function getAppear(appearArray) {
 
 function saveAttributeUpdates(req, res) {
   return (entity) => {
-    const returnValue = JSON.parse(JSON.stringify(entity));
     const collectionAppear = AppearCollection(`${req.client.code}_appears`);
 
     /** *** Management of the group check status***** */
@@ -186,14 +189,21 @@ function saveAttributeUpdates(req, res) {
         if (req.body) {
           if (!req.body.checked && entity.groupId !== '') {
             const diff = _.difference(old, req.body.appear);
-            collectionAppear.find({ attributeId: entity.groupId }, { categoryId: 1, _id: 0 })
+            collectionAppear.find({
+              attributeId: parseInt(entity.groupId, 10)
+            }, { categoryId: 1, _id: 0 })
               .then((result) => {
                 if (result.length > 0) {
-                  const deletedAppear = _.intersection(getAppear(result), diff);
-                  collectionAppear.deleteMany({ attributeId: entity.groupId })
-                    .then(() => {
-                      insertAppear(collectionAppear, entity.groupId, deletedAppear);
-                    });
+                  const deletedAppear = _.difference(getAppear(result), diff);
+                  if (deletedAppear.length > 0) {
+                    collectionAppear.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+                      .then(() => {
+                        insertAppear(collectionAppear, parseInt(entity.groupId, 10), deletedAppear);
+                      });
+                  } else {
+                    collectionAppear.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+                      .then(() => {});
+                  }
                 }
               });
           }
@@ -218,6 +228,7 @@ function saveAttributeUpdates(req, res) {
 
     /** *** Update the Attributes and Apears Collection***** */
     _.assign(entity, req.body);
+    const returnValue = JSON.parse(JSON.stringify(entity));
 
     collectionAppear.find({ attributeId: entity.attributeId })
       .then((result) => {
@@ -227,7 +238,7 @@ function saveAttributeUpdates(req, res) {
             entity.saveAsync()
               .then(() => {
                 returnValue.appear = req.body.appear;
-                res.status(200).json(returnValue);
+                res.status(201).json(returnValue);
               });
           } else {
             collectionAppear.deleteMany({ attributeId: entity.attributeId })
@@ -236,7 +247,7 @@ function saveAttributeUpdates(req, res) {
                 entity.saveAsync()
                   .then(() => {
                     returnValue.appear = req.body.appear;
-                    res.status(200).json(returnValue);
+                    res.status(201).json(returnValue);
                   });
               });
           }
@@ -244,7 +255,7 @@ function saveAttributeUpdates(req, res) {
           entity.saveAsync()
             .then(() => {
               returnValue.appear = getAppear(result);
-              res.status(200).json(returnValue);
+              res.status(201).json(returnValue);
             });
         }
       });
@@ -304,24 +315,6 @@ function removeAttribute(req, id) {
     });
 }
 
-function handleAppearRemove(req) {
-  return (entity) => {
-    console.log('##### DEBUG ENTITY: ', entity); // fixme
-    console.log('##### DEBUG BODY: ', req.body); // fixme
-    const updateArray = [];
-    if (entity.length > 0) {
-      entity.forEach((item) => {
-        const index = item.appear.findIndex(appearItem => (appearItem === req.body.appearId));
-        if (index !== -1) {
-          item.appear.splice(index, 1);
-          console.log('#####DEBUG ARRAY: ', item); // fixme
-          updateArray.push(item);
-        }
-      });
-      console.log('#####DEBUG ARRAY: ', updateArray); // fixme
-    }
-  };
-}
 function createCollection(body) {
   const fileName = [
     `${body.code}_virtuals`,
@@ -350,6 +343,5 @@ module.exports = {
   removeEntity,
   createCollection,
   handleExistingRemove,
-  handleAppearRemove,
   saveAttributeUpdates,
 };

@@ -53,7 +53,7 @@ class AttributeSetting extends Component {
     return _union(willCheckedCategory, allChildData);
   };
 
-  updateAttribute = (updateData) => {
+  updateAttribute = (updateData, checked) => {
     const {
       attribute,
       enqueueSnackbar,
@@ -61,7 +61,7 @@ class AttributeSetting extends Component {
       fetchAttributes,
     } = this.props;
 
-    updateAttribute(attribute._id, { appear: updateData })
+    updateAttribute(attribute._id, { appear: updateData, checked })
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');
         fetchAttributes(this.props.client.id, 'attributes');
@@ -88,7 +88,7 @@ class AttributeSetting extends Component {
           checked,
         });
       }
-      this.updateAttribute(updateData);
+      this.updateAttribute(updateData, targetNode.checked);
     }
   };
 

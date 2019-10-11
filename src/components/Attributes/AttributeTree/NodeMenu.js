@@ -60,7 +60,7 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (checkNameDuplicate(attributes, 'New Attribute', node.item.id) === 0) {
+    if (checkNameDuplicate(attributes, 'New Attribute', node.item.attributeId.toString()) === 0) {
       createAttribute({ name: 'New Attribute', groupId: node.item.attributeId, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(

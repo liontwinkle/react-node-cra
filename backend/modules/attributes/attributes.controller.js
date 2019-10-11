@@ -25,8 +25,7 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
   req.attributes
     .find()
-    .then(handleAttributeCreate(req))
-    .then(responseWithResult(res, 201))
+    .then(handleAttributeCreate(req, res))
     .catch(handleError(res));
 };
 
