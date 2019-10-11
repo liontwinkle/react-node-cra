@@ -4,6 +4,16 @@ const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
 const AppearCollection = require('../modules/appear/appear.model');
 
+function insertAppear(collection, attributeId, appear) {
+  const addAppearData = [];
+  appear.forEach((item) => {
+    addAppearData.push({
+      attributeId,
+      categoryId: item,
+    });
+  });
+  collection.insertMany(addAppearData);
+}
 
 function handleError(res, statusCode = 500) {
   return (err) => {
@@ -103,11 +113,9 @@ function handleCreate(collection, type, createData) {
  * @param req
  * @returns {function(*): *}
  */
-
 function handleAttributeCreate(req) {
   const createData = req.body;
   const collectionAttr = req.attributes;
-  console.log('#### DEBUG PARAMS: ', req.client.code); // fixme
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
 
   return (entity) => {
@@ -120,7 +128,9 @@ function handleAttributeCreate(req) {
       });
       newId++;
     }
-    collectionAppear.create({ attributeId: 1, categoryId: 1 }); // fixme
+    if (createData.appear) {
+      insertAppear(collectionAppear, newId, createData.appear);
+    }
     createData.attributeId = newId;
     return collectionAttr.create(createData);
   };
@@ -135,32 +145,58 @@ function saveUpdates(updates) {
   };
 }
 
+function getAppear(collection, attributeId) {
+  const result = [];
+  collection.find({ attributeId }, { categoryId: 1, _id: 0 }, (err, res) => {
+    if (!err) {
+      res.forEach((item) => {
+        result.push(item.categoryId);
+      });
+      return result;
+    }
+  });
+}
+
 function saveAttributeUpdates(req) {
   return (entity) => {
-    const old = entity.appear;
-    if (req.body) {
-      if (!req.body.checked && entity.groupId !== '') {
-        req.attributes.find({ attributeId: entity.groupId })
-          .then((result) => {
-            if (result.length > 0) {
-              const diff = _.difference(old, req.body.appear);
-              const deletedAppear = _.intersection(result.appear, diff);
-              req.attributes.update({ _id: result._id }, { $set: { appear: deletedAppear } })
-                .then(() => {});
-            }
-          });
-      }
-      req.attributes.find({ groupId: entity.attributeId })
-        .then((results) => {
-          results.forEach((resItem) => {
-            const newAppear = _.union(req.body.appear,
-              _.difference(resItem.appear, old));
-            req.attributes.update({ _id: resItem._id }, { $set: { appear: newAppear } })
-              .then(() => {});
-          });
-        });
-    }
-    _.assign(entity, req.body);
+    const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+    getAppear(collectionAppear, entity.attributeId)
+      .then((result) => {
+        const old = result;
+        if (req.body) {
+          if (!req.body.checked && entity.groupId !== '') {
+            const diff = _.difference(old, req.body.appear);
+            getAppear(collectionAppear, entity.groupId)
+              .then((result) => {
+                if (result.length > 0) {
+                  const deletedAppear = _.intersection(result.appear, diff);
+                  collectionAppear.deleteMany({ attributeId: result._id })
+                    .then(() => {
+                      insertAppear(collectionAppear, result._id, deletedAppear);
+                    });
+                }
+              });
+          }
+          req.attributes.find({ groupId: entity.attributeId })
+            .then((results) => {
+              results.forEach((resItem) => {
+                getAppear(collectionAppear, resItem._id)
+                  .then((result) => {
+                    const newAppear = _.union(req.body.appear,
+                      _.difference(result, old));
+                    collectionAppear.deleteMany({ attributeId: resItem._id })
+                      .then(() => {
+                        insertAppear(collectionAppear, result._id, newAppear);
+                      });
+                  });
+              });
+            });
+          _.assign(entity, req.body);
+          if (req.body.appear.length > 0) {
+            insertAppear(collectionAppear, req.body._id, req.body.appear);
+          }
+        }
+      });
     return entity.saveAsync();
   };
 }
