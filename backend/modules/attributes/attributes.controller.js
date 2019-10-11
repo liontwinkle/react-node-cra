@@ -3,7 +3,7 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveAttributeUpdates,
-  handleCreate,
+  handleAttributeCreate,
   removeEntity,
   removeAttribute,
   handleAppearRemove
@@ -23,7 +23,7 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
   req.attributes
     .find()
-    .then(handleCreate(req.attributes, 'attribute', req.body))
+    .then(handleAttributeCreate(req))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };

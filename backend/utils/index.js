@@ -2,6 +2,8 @@
 const db = require('mongoose').connection;
 const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
+const AppearCollection = require('../modules/appear/appear.model');
+
 
 function handleError(res, statusCode = 500) {
   return (err) => {
@@ -92,6 +94,35 @@ function handleCreate(collection, type, createData) {
     }
     createData[`${type}Id`] = newId;
     return collection.create(createData);
+  };
+}
+
+/**
+ * To Handle creating the Attribute Made by Igor
+ * It need to be required to handle two model `attributes` and `appears`
+ * @param req
+ * @returns {function(*): *}
+ */
+
+function handleAttributeCreate(req) {
+  const createData = req.body;
+  const collectionAttr = req.attributes;
+  console.log('#### DEBUG PARAMS: ', req.client.code); // fixme
+  const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+
+  return (entity) => {
+    let newId = 1;
+    if (entity.length > 0) {
+      entity.forEach((item) => {
+        if (item.attributeId > newId) {
+          newId = item.attributeId;
+        }
+      });
+      newId++;
+    }
+    collectionAppear.create({ attributeId: 1, categoryId: 1 }); // fixme
+    createData.attributeId = newId;
+    return collectionAttr.create(createData);
   };
 }
 
@@ -228,6 +259,7 @@ module.exports = {
   handleEntityNotFound,
   saveUpdates,
   handleCreate,
+  handleAttributeCreate,
   removeEntity,
   createCollection,
   handleExistingRemove,

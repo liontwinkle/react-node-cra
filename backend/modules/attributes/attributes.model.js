@@ -19,7 +19,6 @@ const AttributeSchema = new Schema({
     value: String,
     scope: Number
   }],
-  appear: [],
 }, { toJSON: { virtuals: true }, timestamps: true });
 
 AttributeSchema.virtual('id').get(function () {
@@ -32,7 +31,7 @@ let Attributes = mongoose.model('Attributes', AttributeSchema);
  *
  * @param type
  * @returns {Model}
- * Category collections will be changed or created dynamically
+ * Attribute collections will be changed or created dynamically
  */
 const AttributeModel = (type = 'taxonomy') => {
   Attributes = mongoose.model(type, AttributeSchema);
