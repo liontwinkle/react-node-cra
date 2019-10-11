@@ -40,16 +40,16 @@ function ClientImport({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [importData, setImportData] = useState([]);
+  const [importData, setImportData] = useState(null);
   const [uploadFlag, setUploadFlag] = useState(false);
 
   const handleSubmit = () => {
     setUploadFlag(true);
     let uploadData = [];
-    if (typeof importData === 'object') {
-      uploadData.push(importData);
-    } else {
+    if (Array.isArray(importData)) {
       uploadData = importData;
+    } else {
+      uploadData.push(importData);
     }
     const sendingData = validateData(type.key, uploadData);
     if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
@@ -66,16 +66,16 @@ function ClientImport({
           confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
         })
         .catch(() => {
-          setImportData([]);
+          setImportData(null);
           setUploadFlag(false);
           confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
         });
     } else {
-      setImportData([]);
-      setUploadFlag(false);
-      if (importData.length > 0) {
+      if (importData) {
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
       }
+      setImportData(null);
+      setUploadFlag(false);
     }
   };
 
