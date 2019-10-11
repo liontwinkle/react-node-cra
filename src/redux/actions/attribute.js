@@ -122,13 +122,13 @@ export const removeAppear = appearId => (dispatch, getState) => {
   }
 
   console.log('#### DEBUG APPEARID: ', appearId); // fixme
-  const { client, type } = getState().clientsData;
+  const { client } = getState().clientsData;
 
   dispatch({
     type: types.ATTRIBUTE_UPDATE_APPEAR_REQUEST,
   });
 
-  return attributesService.removeAppear(client.id, type.key, appearId)
+  return attributesService.removeAppear(client.id, 'attributes', appearId)
     .then(() => {
       dispatch({
         type: types.ATTRIBUTE_UPDATE_APPEAR_SUCCESS,

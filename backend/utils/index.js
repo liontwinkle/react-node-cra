@@ -191,6 +191,18 @@ function handleAppearRemove(req) {
   return (entity) => {
     console.log('##### DEBUG ENTITY: ', entity); // fixme
     console.log('##### DEBUG BODY: ', req.body); // fixme
+    const updateArray = [];
+    if (entity.length > 0) {
+      entity.forEach((item) => {
+        const index = item.appear.findIndex(appearItem => (appearItem === req.body.appearId));
+        if (index !== -1) {
+          item.appear.splice(index, 1);
+          console.log('#####DEBUG ARRAY: ', item); // fixme
+          updateArray.push(item);
+        }
+      });
+      console.log('#####DEBUG ARRAY: ', updateArray); // fixme
+    }
   };
 }
 function createCollection(body) {
