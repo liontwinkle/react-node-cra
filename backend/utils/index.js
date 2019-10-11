@@ -6,6 +6,7 @@ const AppearCollection = require('../modules/appear/appear.model');
 
 function insertAppear(collection, attributeId, appear) {
   const addAppearData = [];
+  console.log('### DEBUG ID: ', attributeId); // fixme
   appear.forEach((item) => {
     addAppearData.push({
       attributeId,
@@ -136,6 +137,29 @@ function handleAttributeCreate(req) {
   };
 }
 
+function handleAttributeFetch(req, res) {
+  const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+  return (entity) => {
+    if (entity.length > 0) {
+      const attributeData = JSON.parse(JSON.stringify(entity));
+      collectionAppear.find()
+        .then((result) => {
+          if (result.length > 0) {
+            entity.forEach((entityItem, index) => {
+              const appear = result.filter((apearItem =>
+                (apearItem.attributeId === entityItem.attributeId)
+              )).map(item => (item.categoryId));
+              attributeData[index].appear = appear;
+            });
+            res.status(200).json(attributeData);
+          }
+        });
+    } else {
+      res.status(200).json(entity);
+    }
+  };
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
@@ -145,34 +169,26 @@ function saveUpdates(updates) {
   };
 }
 
-function getAppear(collection, attributeId) {
-  const result = [];
-  collection.find({ attributeId }, { categoryId: 1, _id: 0 }, (err, res) => {
-    if (!err) {
-      res.forEach((item) => {
-        result.push(item.categoryId);
-      });
-      return result;
-    }
-  });
+function getAppear(appearArray) {
+  return appearArray.map(item => item.categoryId);
 }
 
-function saveAttributeUpdates(req) {
+function saveAttributeUpdates(req, res) {
   return (entity) => {
     const collectionAppear = AppearCollection(`${req.client.code}_appears`);
-    getAppear(collectionAppear, entity.attributeId)
+    collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
       .then((result) => {
-        const old = result;
+        const old = getAppear(result);
         if (req.body) {
           if (!req.body.checked && entity.groupId !== '') {
             const diff = _.difference(old, req.body.appear);
-            getAppear(collectionAppear, entity.groupId)
+            collectionAppear.find({ attributeId: entity.groupId }, { categoryId: 1, _id: 0 })
               .then((result) => {
                 if (result.length > 0) {
-                  const deletedAppear = _.intersection(result.appear, diff);
-                  collectionAppear.deleteMany({ attributeId: result._id })
+                  const deletedAppear = _.intersection(getAppear(result), diff);
+                  collectionAppear.deleteMany({ attributeId: entity.groupId })
                     .then(() => {
-                      insertAppear(collectionAppear, result._id, deletedAppear);
+                      insertAppear(collectionAppear, entity.groupId, deletedAppear);
                     });
                 }
               });
@@ -180,24 +196,51 @@ function saveAttributeUpdates(req) {
           req.attributes.find({ groupId: entity.attributeId })
             .then((results) => {
               results.forEach((resItem) => {
-                getAppear(collectionAppear, resItem._id)
+                collectionAppear.find({ attributeId: resItem._id }, { categoryId: 1, _id: 0 })
                   .then((result) => {
                     const newAppear = _.union(req.body.appear,
-                      _.difference(result, old));
+                      _.difference(getAppear(result), old));
                     collectionAppear.deleteMany({ attributeId: resItem._id })
                       .then(() => {
-                        insertAppear(collectionAppear, result._id, newAppear);
+                        insertAppear(collectionAppear, resItem._id, newAppear);
                       });
                   });
               });
             });
-          _.assign(entity, req.body);
-          if (req.body.appear.length > 0) {
-            insertAppear(collectionAppear, req.body._id, req.body.appear);
-          }
         }
       });
-    return entity.saveAsync();
+    _.assign(entity, req.body);
+    collectionAppear.find({ attributeId: entity.attributeId })
+      .then((result) => {
+        if (req.body.appear) {
+          if (result.length <= 0) {
+            insertAppear(collectionAppear, entity.attributeId, req.body.appear);
+            entity.saveAsync()
+              .then(() => {
+                entity.appear = req.body.appear;
+                res.status(200)
+                  .json(entity);
+              });
+          } else {
+            collectionAppear.deleteMany({ attributeId: entity.attributeId })
+              .then(() => {
+                insertAppear(collectionAppear, entity.attributeId, req.body.appear);
+                entity.saveAsync()
+                  .then(() => {
+                    entity.appear = req.body.appear;
+                    res.status(200)
+                      .json(entity);
+                  });
+              });
+          }
+        } else {
+          entity.saveAsync()
+            .then(() => {
+              entity.appear = getAppear(result);
+              res.status(200).json(entity);
+            });
+        }
+      });
   };
 }
 
@@ -296,6 +339,7 @@ module.exports = {
   saveUpdates,
   handleCreate,
   handleAttributeCreate,
+  handleAttributeFetch,
   removeEntity,
   createCollection,
   handleExistingRemove,

@@ -4,6 +4,7 @@ const {
   handleEntityNotFound,
   saveAttributeUpdates,
   handleAttributeCreate,
+  handleAttributeFetch,
   removeEntity,
   removeAttribute,
   handleAppearRemove
@@ -15,7 +16,8 @@ exports.index = (req, res) => {
     .find()
     .select('-__v')
     .execAsync()
-    .then(responseWithResult(res))
+    .then(handleAttributeFetch(req, res))
+    // .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
@@ -48,8 +50,7 @@ exports.update = (req, res) => {
   req.attributes
     .findByIdAsync(req.params.attributeId)
     .then(handleEntityNotFound(res))
-    .then(saveAttributeUpdates(req))
-    .then(responseWithResult(res))
+    .then(saveAttributeUpdates(req, res))
     .catch(handleError(res));
 };
 
