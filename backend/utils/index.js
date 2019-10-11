@@ -146,11 +146,12 @@ function handleAttributeFetch(req, res) {
         .then((result) => {
           if (result.length > 0) {
             entity.forEach((entityItem, index) => {
-              const appear = result.filter((apearItem =>
+              attributeData[index].appear = result.filter((apearItem =>
                 (apearItem.attributeId === entityItem.attributeId)
               )).map(item => (item.categoryId));
-              attributeData[index].appear = appear;
             });
+            res.status(200).json(attributeData);
+          } else {
             res.status(200).json(attributeData);
           }
         });
@@ -175,7 +176,10 @@ function getAppear(appearArray) {
 
 function saveAttributeUpdates(req, res) {
   return (entity) => {
+    const returnValue = JSON.parse(JSON.stringify(entity));
     const collectionAppear = AppearCollection(`${req.client.code}_appears`);
+
+    /** *** Management of the group check status***** */
     collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
       .then((result) => {
         const old = getAppear(result);
@@ -196,20 +200,25 @@ function saveAttributeUpdates(req, res) {
           req.attributes.find({ groupId: entity.attributeId })
             .then((results) => {
               results.forEach((resItem) => {
-                collectionAppear.find({ attributeId: resItem._id }, { categoryId: 1, _id: 0 })
+                collectionAppear.find({
+                  attributeId: resItem.attributeId
+                }, { categoryId: 1, _id: 0 })
                   .then((result) => {
                     const newAppear = _.union(req.body.appear,
                       _.difference(getAppear(result), old));
-                    collectionAppear.deleteMany({ attributeId: resItem._id })
+                    collectionAppear.deleteMany({ attributeId: resItem.attributeId })
                       .then(() => {
-                        insertAppear(collectionAppear, resItem._id, newAppear);
+                        insertAppear(collectionAppear, resItem.attributeId, newAppear);
                       });
                   });
               });
             });
         }
       });
+
+    /** *** Update the Attributes and Apears Collection***** */
     _.assign(entity, req.body);
+
     collectionAppear.find({ attributeId: entity.attributeId })
       .then((result) => {
         if (req.body.appear) {
@@ -217,9 +226,8 @@ function saveAttributeUpdates(req, res) {
             insertAppear(collectionAppear, entity.attributeId, req.body.appear);
             entity.saveAsync()
               .then(() => {
-                entity.appear = req.body.appear;
-                res.status(200)
-                  .json(entity);
+                returnValue.appear = req.body.appear;
+                res.status(200).json(returnValue);
               });
           } else {
             collectionAppear.deleteMany({ attributeId: entity.attributeId })
@@ -227,17 +235,16 @@ function saveAttributeUpdates(req, res) {
                 insertAppear(collectionAppear, entity.attributeId, req.body.appear);
                 entity.saveAsync()
                   .then(() => {
-                    entity.appear = req.body.appear;
-                    res.status(200)
-                      .json(entity);
+                    returnValue.appear = req.body.appear;
+                    res.status(200).json(returnValue);
                   });
               });
           }
         } else {
           entity.saveAsync()
             .then(() => {
-              entity.appear = getAppear(result);
-              res.status(200).json(entity);
+              returnValue.appear = getAppear(result);
+              res.status(200).json(returnValue);
             });
         }
       });
