@@ -5,7 +5,8 @@ const {
   saveAttributeUpdates,
   handleCreate,
   removeEntity,
-  removeAttribute
+  removeAttribute,
+  handleAppearRemove
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -59,5 +60,14 @@ exports.remove = (req, res) => {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .then(removeAttribute(req, req.params.attributeId))
+    .catch(handleError(res));
+};
+
+// Remove a Appear Id from the Attribute
+exports.removeAppearId = (req, res) => {
+  req.attributes
+    .find()
+    .then(handleAppearRemove(req))
+    .then(responseWithResult(res))
     .catch(handleError(res));
 };

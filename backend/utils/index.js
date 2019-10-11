@@ -186,6 +186,13 @@ function removeAttribute(req, id) {
       }
     });
 }
+
+function handleAppearRemove(req) {
+  return (entity) => {
+    console.log('##### DEBUG ENTITY: ', entity); // fixme
+    console.log('##### DEBUG BODY: ', req.body); // fixme
+  };
+}
 function createCollection(body) {
   const fileName = [
     `${body.code}_virtuals`,
@@ -212,5 +219,6 @@ module.exports = {
   removeEntity,
   createCollection,
   handleExistingRemove,
+  handleAppearRemove,
   saveAttributeUpdates,
 };

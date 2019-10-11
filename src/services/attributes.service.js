@@ -22,9 +22,20 @@ const remove = (clientId, type, id) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
+const removeAppear = (clientId, type, id) => httpService
+  .post(`${getAttributesRoute(clientId, type)}/appear/`, { appearId: id })
+  .then(() => {})
+  .catch(err => Promise.reject(err.response));
+
+const updateAppear = (clientId, type, idData) => httpService
+  .post(`${getAttributesRoute(clientId, type)}/appear`, idData)
+  .then(() => {})
+  .catch(err => Promise.reject(err.response));
 export default {
   fetch,
   create,
   update,
   remove,
+  removeAppear,
+  updateAppear,
 };

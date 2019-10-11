@@ -9,6 +9,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { createCategory, removeCategory } from 'redux/actions/categories';
 import { createHistory, removeHistory } from 'redux/actions/history';
+import { removeAppear } from 'redux/actions/attribute';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
@@ -23,6 +24,7 @@ function NodeMenu({
   createHistory,
   removeCategory,
   removeHistory,
+  removeAppear,
   editable,
 }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -94,6 +96,7 @@ function NodeMenu({
           removeHistory(removeId)
             .then(() => {
               if (node.item.parentId !== '') {
+                removeAppear(node.item.id);
                 createHistory({
                   label: `Delete Child Node ${node.item.name}`,
                   itemId: node.item.parentId,
@@ -190,6 +193,7 @@ NodeMenu.propTypes = {
   createHistory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
   removeHistory: PropTypes.func.isRequired,
+  removeAppear: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
 
@@ -198,6 +202,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   createHistory,
   removeCategory,
   removeHistory,
+  removeAppear,
 }, dispatch);
 
 export default connect(
