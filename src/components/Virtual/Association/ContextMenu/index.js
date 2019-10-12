@@ -56,10 +56,10 @@ function ContextMenu({
 
   const FilterProducts = useCallback(() => {
     const attributeProducts = getAttributeProducts();
-    const categoriesRules = getRules(category.newRules, valueDetails);
+    const categoriesRules = getRules(category.rules, valueDetails);
     const categoriesData = getPreFilterData(categoriesRules.editRules, products);
     return _intersection(attributeProducts, categoriesData);
-  }, [category.newRules, getAttributeProducts, products, valueDetails]);
+  }, [category.rules, getAttributeProducts, products, valueDetails]);
 
   useEffect(() => {
     if (!isActive) {

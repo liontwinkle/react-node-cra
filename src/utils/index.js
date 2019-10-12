@@ -25,21 +25,27 @@ export const validateData = (type, data) => {
         let validateFlag = true;
         validateKey[type].forEach((validateItem) => {
           if (keys.findIndex(item => (item === validateItem)) === -1) {
-            validateFlag = false;
+            if (validateItem === 'categoryid' || validateItem === 'attributeid') {
+              if (keys.findIndex(item => (item === '_id')) === -1) {
+                validateFlag = false;
+              }
+            } else {
+              validateFlag = false;
+            }
           }
         });
         if (validateFlag) {
           if (type === 'virtual') {
             tempData.rules = dataItem.rules || [];
-            tempData.categoryId = (typeof dataItem.categoryid === 'string')
-              ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid;
+            tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
+              ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
             tempData.name = dataItem.name || [];
             tempData.parentId = dataItem.parent_id || '';
           } else if (type === 'attributes') {
             tempData.rules = dataItem.rules || [];
             tempData.appear = dataItem.appear || [];
-            tempData.attributeId = (typeof dataItem.attributeid === 'string')
-              ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid;
+            tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
+              ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
             tempData.name = dataItem.name || [];
             tempData.groupId = dataItem.group_id || '';
           } else {

@@ -10,8 +10,32 @@ const PropertyFieldsCollection = require('../property-fields/property-fields.mod
 const checkType = {
   virtual: 'categoryId',
   native: 'categoryId',
-  products: [],
+  products: 'id',
   attributes: 'attributeId',
+};
+
+const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
+
+const removeUnnecessaryData = (data) => {
+  const addData = {};
+  const keys = Object.keys(data);
+  keys.forEach((keyItem) => {
+    if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
+      if (data[keyItem] && typeof data[keyItem] === 'object') {
+        const key = Object.keys(data[keyItem]);
+        if (key.length > 0) {
+          if (key[0].indexOf('$') > 0) {
+            addData[keyItem] = data[keyItem][key[0]];
+          }
+        } else {
+          addData[keyItem] = data[keyItem];
+        }
+      } else {
+        addData[keyItem] = data[keyItem];
+      }
+    }
+  });
+  return addData;
 };
 
 const checkDuplicateData = (currentData, newData, type) => {
@@ -21,7 +45,7 @@ const checkDuplicateData = (currentData, newData, type) => {
       (currentItem[checkType[type]] === newItem[checkType[type]]));
     if (!duplicateFilter) {
       try {
-        newCreateData.push(newItem);
+        newCreateData.push(removeUnnecessaryData(newItem));
       } catch (e) {
         console.error(e);
       }

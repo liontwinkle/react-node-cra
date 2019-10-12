@@ -109,15 +109,24 @@ export default (state = INITIAL_STATE, action) => {
         if (pItem.children.length > 0) {
           const cNewItem = [];
           pItem.children.forEach((cItem, cKey) => {
-            cNewItem.push(cItem);
-            cNewItem[cKey].item = recvTrees.subTree[pKey].children[cKey].item;
+            cNewItem.push({
+              ...cItem,
+              item: recvTrees.subTree[pKey].children[cKey].item,
+              title: recvTrees.subTree[pKey].children[cKey].title,
+            });
           });
-          newTrees.push(pItem);
-          newTrees[pKey].children = cNewItem;
-          newTrees[pKey].item = recvTrees.subTree[pKey].item;
+          newTrees.push({
+            ...pItem,
+            children: cNewItem,
+            item: recvTrees.subTree[pKey].item,
+            title: recvTrees.subTree[pKey].title,
+          });
         } else {
-          newTrees.push(pItem);
-          newTrees[pKey].item = recvTrees.subTree[pKey].item;
+          newTrees.push({
+            ...pItem,
+            item: recvTrees.subTree[pKey].item,
+            title: recvTrees.subTree[pKey].title,
+          });
         }
       });
 

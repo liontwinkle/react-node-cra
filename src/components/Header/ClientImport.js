@@ -53,6 +53,7 @@ function ClientImport({
     }
     const sendingData = validateData(type.key, uploadData);
     if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
+      console.log('#### DEBUG UPLOAD: ', sendingData); // fixme
       fileUpload(sendingData)
         .then(() => {
           setImportData([]);
