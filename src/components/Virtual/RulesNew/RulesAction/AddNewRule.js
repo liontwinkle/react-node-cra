@@ -81,7 +81,7 @@ function AddNewRule({
     });
 
     if (!isUpdating) {
-      updateCategory(category.id, { rules: updatedData })
+      updateCategory(category._id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();

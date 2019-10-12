@@ -199,10 +199,10 @@ function saveAttributeUpdates(req, res) {
     const collectionAppear = AppearCollection(`${req.client.code}_appears`);
 
     /** *** Management of the group check status***** */
-    collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
-      .then((result) => {
-        const old = getAppear(result);
-        if (req.body) {
+    if (req.body.appear) {
+      collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
+        .then((result) => {
+          const old = getAppear(result);
           if (!req.body.checked && entity.groupId !== '') {
             const diff = _.difference(old, req.body.appear);
             collectionAppear.find({
@@ -239,8 +239,8 @@ function saveAttributeUpdates(req, res) {
                   });
               });
             });
-        }
-      });
+        });
+    }
 
     /** *** Update the Attributes and Apears Collection***** */
     _.assign(entity, req.body);
