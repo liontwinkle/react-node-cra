@@ -127,6 +127,7 @@ function handleCreate(req) {
  * To Handle creating the Attribute Made by Igor
  * It need to be required to handle two model `attributes` and `appears`
  * @param req
+ * @param res
  * @returns {function(*): *}
  */
 function handleAttributeCreate(req, res) {
@@ -170,10 +171,8 @@ function handleAttributeFetch(req, res) {
                 (appearItem.attributeId === entityItem.attributeId)
               )).map(item => (item.categoryId));
             });
-            res.status(201).json(attributeData);
-          } else {
-            res.status(201).json(attributeData);
           }
+          res.status(201).json(attributeData);
         });
     } else {
       res.status(201).json(entity);

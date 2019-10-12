@@ -17,7 +17,6 @@ exports.index = (req, res) => {
     .select('-__v')
     .execAsync()
     .then(handleAttributeFetch(req, res))
-    // .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
