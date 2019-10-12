@@ -15,6 +15,8 @@ import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 
 function NodeMenu({
+  isCreating,
+  isDeleting,
   treeData,
   attributes,
   history,
@@ -60,7 +62,7 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (checkNameDuplicate(attributes, 'New Attribute', node.item.attributeId.toString()) === 0) {
+    if (!isCreating && checkNameDuplicate(attributes, 'New Attribute', node.item.attributeId.toString()) === 0) {
       createAttribute({ name: 'New Attribute', groupId: node.item.attributeId, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
@@ -94,40 +96,42 @@ function NodeMenu({
 
   const deleteItem = () => {
     const removeId = node.item.id;
-    removeAttribute(removeId)
-      .then(() => {
-        const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
-        if (deleteHistory.length > 0) {
-          removeHistory(removeId)
-            .then(() => {
-              if (node.item.groupId !== '') {
-                createHistory({
-                  label: `Delete Child Node ${node.item.name}`,
-                  itemId: node.item.groupId,
-                  type: 'attributes',
-                });
-              }
-            });
-        }
-        confirmMessage(enqueueSnackbar, 'The attribute has been deleted successfully.', 'success');
-        setTreeData(
-          removeNodeAtPath({
-            treeData,
-            path,
-            getNodeKey,
-          }),
-        );
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in deleting attribute.', 'error');
-      });
-    setTreeData(
-      removeNodeAtPath({
-        treeData,
-        path,
-        getNodeKey,
-      }),
-    );
+    if (!isDeleting) {
+      removeAttribute(removeId)
+        .then(() => {
+          const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+          if (deleteHistory.length > 0) {
+            removeHistory(removeId)
+              .then(() => {
+                if (node.item.groupId !== '') {
+                  createHistory({
+                    label: `Delete Child Node ${node.item.name}`,
+                    itemId: node.item.groupId,
+                    type: 'attributes',
+                  });
+                }
+              });
+          }
+          confirmMessage(enqueueSnackbar, 'The attribute has been deleted successfully.', 'success');
+          setTreeData(
+            removeNodeAtPath({
+              treeData,
+              path,
+              getNodeKey,
+            }),
+          );
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in deleting attribute.', 'error');
+        });
+      setTreeData(
+        removeNodeAtPath({
+          treeData,
+          path,
+          getNodeKey,
+        }),
+      );
+    }
   };
 
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
@@ -196,6 +200,8 @@ function NodeMenu({
 }
 
 NodeMenu.propTypes = {
+  isCreating: PropTypes.bool.isRequired,
+  isDeleting: PropTypes.bool.isRequired,
   treeData: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,

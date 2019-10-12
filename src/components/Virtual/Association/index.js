@@ -42,6 +42,7 @@ function Association({
   const [expanded, setExpanded] = useState([]);
   const [context, setContext] = useState([]);
   const [displayMenu, setDisplayMenu] = useState(false);
+  const [gotProducts, setGotProducts] = useState(false);
   const [info, setInfo] = useState({
     label: '',
     id: '',
@@ -71,16 +72,20 @@ function Association({
     if (category) {
       const updateChecked = [];
       attributes.forEach((attrItem) => {
-        if (attrItem.appear.find(appearItem => (appearItem === category.categoryId))) {
+        if (attrItem.appear && attrItem.appear.find(appearItem => (appearItem === category.categoryId))) {
           updateChecked.push(attrItem.attributeId);
         }
       });
       setChecked(updateChecked);
     }
-    if (products.length === 0 && !isFetchingList) { fetchProducts(); }
+    if (!gotProducts && products.length === 0 && !isFetchingList) {
+      fetchProducts().then(() => { setGotProducts(true); });
+    }
     if (context.length > 0) { setHandler(context, handleClick); }
     setContext(document.getElementsByClassName('rct-title'));
-  }, [category, attributes, setChecked, context, products, fetchProducts, handleClick, isFetchingList]);
+  }, [category, attributes, products, fetchProducts,
+    setChecked, setGotProducts, context, handleClick,
+    isFetchingList, gotProducts]);
 
 
   const handleExpanded = (expanded) => {
@@ -134,7 +139,7 @@ function Association({
   };
 
   return (
-    products.length > 0
+    products.length > 0 || gotProducts
       ? (
         <div className="mg-attributes-container d-flex">
           <PerfectScrollbar

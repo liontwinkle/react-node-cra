@@ -19,6 +19,9 @@ function AttributeNode({
   nodeData,
   history,
   setNodeData,
+  isUpdating,
+  isDeleting,
+  isCreating,
   attributes,
   attribute,
   updateAttribute,
@@ -54,7 +57,7 @@ function AttributeNode({
     if (node.editable) {
       const attribute = _find(attributes, { id: node.item.id });
 
-      if (attribute && attribute.name !== node.title) {
+      if (attribute && attribute.name !== node.title && !isUpdating) {
         if (checkNameDuplicate(attributes, node.title, node.item.groupId) === 0) {
           updateAttribute(node.item.id, { name: node.title })
             .then(() => {
@@ -133,6 +136,8 @@ function AttributeNode({
             setTreeData={setNodeData}
             checkNameDuplicate={checkNameDuplicate}
             history={history}
+            isCreating={isCreating}
+            isDeleting={isDeleting}
           />,
         ],
         title: (
@@ -155,6 +160,9 @@ function AttributeNode({
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+  isDeleting: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   attribute: PropTypes.object,
   setNodeData: PropTypes.func.isRequired,
@@ -171,6 +179,9 @@ const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
   history: store.historyData.history,
   attribute: store.attributesData.attribute,
+  isUpdating: store.attributesData.isUpdating,
+  isCreating: store.attributesData.isCreating,
+  isDeleting: store.attributesData.isDeleting,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -16,6 +16,7 @@ import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 
 function AttributeTree({
+  isCreating,
   createAttribute,
   createHistory,
   attributes,
@@ -27,7 +28,7 @@ function AttributeTree({
   const addRootCategory = () => {
     const filterGroup = attributes.filter(attrItem => (attrItem.groupId === '' && attrItem.name === 'New Group'));
     const flag = (filterGroup.length === 0);
-    if (flag) {
+    if (flag && !isCreating) {
       createAttribute({ name: 'New Group' })
         .then((attribute) => {
           createHistory({
@@ -83,6 +84,7 @@ function AttributeTree({
 }
 
 AttributeTree.propTypes = {
+  isCreating: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   nodeData: PropTypes.array.isRequired,
   createAttribute: PropTypes.func.isRequired,
@@ -92,6 +94,7 @@ AttributeTree.propTypes = {
 
 const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
+  isCreating: store.attributesData.isCreating,
   nodeData: store.attributesData.nodes,
 });
 
