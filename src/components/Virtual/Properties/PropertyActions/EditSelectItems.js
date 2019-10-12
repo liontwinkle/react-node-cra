@@ -61,7 +61,7 @@ function EditPropertyFields({
       }
 
       if (updateFlag) {
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();
@@ -86,7 +86,7 @@ function EditPropertyFields({
           _id: newData._id,
         });
 
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
           })
@@ -110,7 +110,7 @@ function EditPropertyFields({
 
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1);
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             updateCategory(category.id, { properties })
               .then(() => {

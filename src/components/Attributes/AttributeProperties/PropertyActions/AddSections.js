@@ -47,7 +47,7 @@ function AddSections({
       if (isExist(sections, sectionsData.key) === 0) {
         sections.push(sectionsData);
 
-        updatePropertyField(propertyField.id, { sections })
+        updatePropertyField({ sections })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Section has been added successfully.', 'success');
             handleClose();

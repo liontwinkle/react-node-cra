@@ -71,8 +71,7 @@ export const updatePropertyField = updatedData => (dispatch, getState) => {
   }
 
   const { client, type } = getState().clientsData;
-  console.log('#### DEBUG :', getState().propertyFieldsData.propertyField); // fixme
-  const { id } = getState().propertyFieldsData.propertyField;
+  const id = getState().propertyFieldsData.propertyField._id;
   dispatch({
     type: types.PROPERTY_FIELD_UPDATE_REQUEST,
   });

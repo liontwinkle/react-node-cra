@@ -45,7 +45,7 @@ function EditPropertyFields({
           section: newData.section,
         });
 
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             addNewRuleHistory(createHistory, attribute, attribute.groupId,
               `Create Property(${newData.propertyType})`,
@@ -81,7 +81,7 @@ function EditPropertyFields({
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          updatePropertyField(propertyField.id, { propertyFields })
+          updatePropertyField({ propertyFields })
             .then(() => {
               addNewRuleHistory(createHistory, attribute, attribute.groupId,
                 `Update the Property field(${newData.label} ${newData.propertyType})`,
@@ -107,7 +107,7 @@ function EditPropertyFields({
       if (ruleKeyIndex > -1) {
         propertyFields.splice(ruleKeyIndex, 1);
 
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             createHistory({
               label: `Delete the property field (${oldData.label})`,

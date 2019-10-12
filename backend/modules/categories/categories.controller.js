@@ -4,7 +4,7 @@ const {
   handleEntityNotFound,
   saveUpdates,
   handleCreate,
-  removeEntity,
+  removeCategoryEntity,
   removeChildren
 } = require('../../utils');
 
@@ -57,7 +57,7 @@ exports.remove = (req, res) => {
   req.category
     .findByIdAsync(req.params.categoryId)
     .then(handleEntityNotFound(res))
-    .then(removeEntity(req, res))
+    .then(removeCategoryEntity(req, res))
     .then(removeChildren(req, req.params.categoryId))
     .catch(handleError(res));
 };

@@ -278,7 +278,7 @@ function saveAttributeUpdates(req, res) {
   };
 }
 
-function removeEntity(req, res) {
+function removeCategoryEntity(req, res) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   return (entity) => {
     if (entity) {
@@ -293,6 +293,11 @@ function removeEntity(req, res) {
         .then(respondWith(res, 204));
     }
   };
+}
+
+function removeEntity(res) {
+  return entity => entity && entity.removeAsync()
+    .then(respondWith(res, 204));
 }
 
 function removeChildren(req, id) {
@@ -370,6 +375,7 @@ module.exports = {
   handleAttributeCreate,
   handleAttributeFetch,
   removeEntity,
+  removeCategoryEntity,
   createCollection,
   handleExistingRemove,
   saveAttributeUpdates,

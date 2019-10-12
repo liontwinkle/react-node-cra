@@ -59,7 +59,7 @@ function AddSelectItems({
       }
 
       if (updateFlag) {
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();

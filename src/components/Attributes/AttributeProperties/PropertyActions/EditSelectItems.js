@@ -92,7 +92,7 @@ function EditPropertyFields({
           _id: newData._id,
         });
 
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
           })
@@ -116,7 +116,7 @@ function EditPropertyFields({
 
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1);
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             updateAttribute(attribute.id, { properties })
               .then(() => {

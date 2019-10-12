@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   isFetchingList: false,
   isUpdating: false,
   isDeleting: false,
-  isChange: false, // fixme
+  isChange: false,
   productsField: {},
   errors: '',
   imageKey: 'image',

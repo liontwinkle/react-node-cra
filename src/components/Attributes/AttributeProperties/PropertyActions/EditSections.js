@@ -41,7 +41,7 @@ function EditSections({
           order: newData.order,
         });
 
-        updatePropertyField(propertyField.id, { sections })
+        updatePropertyField({ sections })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
           })
@@ -69,7 +69,7 @@ function EditSections({
           _id: newData._id,
         });
 
-        updatePropertyField(propertyField.id, { sections })
+        updatePropertyField({ sections })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
           })
@@ -88,7 +88,7 @@ function EditSections({
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1);
 
-        updatePropertyField(propertyField.id, { sections })
+        updatePropertyField({ sections })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
           })

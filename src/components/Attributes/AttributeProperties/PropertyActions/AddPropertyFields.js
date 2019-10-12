@@ -74,7 +74,7 @@ function AddPropertyFields({
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
-          updatePropertyField(propertyField.id, { propertyFields })
+          updatePropertyField({ propertyFields })
             .then(() => {
               addNewRuleHistory(createHistory, attribute, attribute.groupId,
                 `Create Property(${propertyFieldData.propertyType.key})`,
