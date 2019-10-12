@@ -15,7 +15,7 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
-import { confirmMessage, validateData /* validateKeyData */ } from 'utils';
+import { confirmMessage, validateData } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 

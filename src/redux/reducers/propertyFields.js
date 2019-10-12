@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   isDeleting: false,
 
   propertyField: {
+    id: '',
     sections: [],
     propertyFields: [],
   },

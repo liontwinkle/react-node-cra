@@ -55,7 +55,7 @@ export const createClient = client => (dispatch, getState) => {
     });
 };
 
-export const updateClient = (id, updatedData) => (dispatch, getState) => {
+export const updateClient = updatedData => (dispatch, getState) => {
   if (getState().clientsData.isUpdating) {
     return;
   }
@@ -64,6 +64,8 @@ export const updateClient = (id, updatedData) => (dispatch, getState) => {
     type: types.CLIENT_UPDATE_REQUEST,
   });
 
+  const { id } = getState().clientsData.client;
+  console.log('#### DEBUG ID: ', id); // fixme
   return clientService.update(id, updatedData)
     .then((data) => {
       dispatch({
@@ -83,7 +85,7 @@ export const updateClient = (id, updatedData) => (dispatch, getState) => {
     });
 };
 
-export const removeClient = id => (dispatch, getState) => {
+export const removeClient = () => (dispatch, getState) => {
   if (getState().clientsData.isDeleting) {
     return;
   }
@@ -91,6 +93,9 @@ export const removeClient = id => (dispatch, getState) => {
   dispatch({
     type: types.CLIENT_DELETE_REQUEST,
   });
+
+  const { id } = getState().clientsData.client;
+  console.log('#### DEBUG ID: ', id); // fixme
 
   return clientService.remove(id)
     .then(() => {

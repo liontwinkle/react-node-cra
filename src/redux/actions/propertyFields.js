@@ -65,13 +65,14 @@ export const createPropertyField = clientData => (dispatch, getState) => {
     });
 };
 
-export const updatePropertyField = (id, updatedData) => (dispatch, getState) => {
+export const updatePropertyField = updatedData => (dispatch, getState) => {
   if (getState().propertyFieldsData.isUpdating) {
     return;
   }
 
   const { client, type } = getState().clientsData;
-
+  console.log('#### DEBUG :', getState().propertyFieldsData.propertyField); // fixme
+  const { id } = getState().propertyFieldsData.propertyField;
   dispatch({
     type: types.PROPERTY_FIELD_UPDATE_REQUEST,
   });
