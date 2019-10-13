@@ -48,17 +48,18 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
   const deletedData = [];
+  const recvGroupId = dataItem.groupid || dataItem.group_id;
   const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
-  const groupItem = groupIds.filter(item => (item.attributeId === dataItem.groupid));
+  const groupItem = groupIds.filter(item => (item.attributeId === recvGroupId));
   let groupData = [];
-  if (dataItem.groupid !== '' && groupItem.length < 0) {
+  if (recvGroupId !== '' && groupItem.length < 0) {
     if (newData.findIndex(newItem => (
-      newItem.attributeId === dataItem.groupid || newItem._id === dataItem.groupid
+      newItem.attributeId === recvGroupId || newItem._id === recvGroupId
     ) === -1)) {
       passFlag = false;
     }
   } else {
-    groupData = (dataItem.groupid === '') ? [] : groupItem[0].appear || [];
+    groupData = (recvGroupId === '') ? [] : groupItem[0].appear || [];
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {
@@ -73,7 +74,6 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
     returnData: _union(returnData, groupData),
   };
 };
-
 
 export const validateData = (type, data, categories, attributes) => {
   const validateData = [];
@@ -108,7 +108,7 @@ export const validateData = (type, data, categories, attributes) => {
               tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
                 ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
               tempData.name = dataItem.name || [];
-              tempData.groupId = dataItem.groupid || '';
+              tempData.groupId = dataItem.groupid || dataItem.group_id || '';
             }
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));

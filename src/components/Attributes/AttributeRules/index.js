@@ -77,15 +77,17 @@ class AttributeRules extends Component {
       const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
       const referObj = refer.find(referItem => (referItem.key === item.refer));
       const otherObj = this.AnaylsisDetails(item.value);
-      ruleArray.push({
-        _id: item._id,
-        basis: (type) ? basisObj.key : basisObj,
-        refer: (type) ? referObj.key : referObj,
-        detail: (type) ? otherObj.detailObj.key : otherObj.detailObj,
-        match: (type) ? otherObj.matchObj.key : otherObj.matchObj,
-        value: (type) ? otherObj.valueKey : otherObj.valueKey,
-        scope: (type) ? scope[0].key : scope[0],
-      });
+      if (otherObj.detailObj) {
+        ruleArray.push({
+          _id: item._id,
+          basis: (type) ? basisObj.key : basisObj,
+          refer: (type) ? referObj.key : referObj,
+          detail: (type) ? otherObj.detailObj.key : otherObj.detailObj,
+          match: (type) ? otherObj.matchObj.key : otherObj.matchObj,
+          value: (type) ? otherObj.valueKey : otherObj.valueKey,
+          scope: (type) ? scope[0].key : scope[0],
+        });
+      }
     });
   };
 
