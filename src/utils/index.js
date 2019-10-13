@@ -15,27 +15,47 @@ const validateKey = {
   products: [],
 };
 
-export const validateData = (type, data) => {
+const checkException = (keys, dataItem, type) => {
+  let passFlag = true;
+  validateKey[type].forEach((validateItem) => {
+    if (keys.findIndex(item => (item === validateItem)) === -1) {
+      if (validateItem === 'categoryid' || validateItem === 'attributeid') {
+        if (keys.findIndex(item => (item === '_id')) === -1) {
+          passFlag = false;
+        }
+      } else {
+        passFlag = false;
+      }
+    }
+  });
+  return passFlag;
+};
+
+const handleExceptionVirtual = (newData, dataItem, categories) => {
+  let passFlag = true;
+  if (categories.findIndex(item => (item.categoryId === dataItem.parent_id)) === -1) {
+    if (newData.findIndex(newItem => (
+      newItem.categoryid === dataItem.parent_id || newItem._id === dataItem.parent_id
+    ) === -1)) {
+      passFlag = false;
+    }
+  }
+  return passFlag;
+};
+
+export const validateData = (type, data, categories/* , attributes */) => {
   const validateData = [];
   let tempData = {};
   if (validateKey[type]) {
     data.forEach((dataItem) => {
       const keys = Object.keys(dataItem);
       if (keys.length > 0) {
-        let validateFlag = true;
-        validateKey[type].forEach((validateItem) => {
-          if (keys.findIndex(item => (item === validateItem)) === -1) {
-            if (validateItem === 'categoryid' || validateItem === 'attributeid') {
-              if (keys.findIndex(item => (item === '_id')) === -1) {
-                validateFlag = false;
-              }
-            } else {
-              validateFlag = false;
-            }
-          }
-        });
+        const validateFlag = checkException(keys, dataItem, type);
         if (validateFlag) {
+          console.log('##### DEBUG VALIDATE PASS #####'); // fixme
+          let pushFlag = true;
           if (type === 'virtual') {
+            pushFlag = handleExceptionVirtual(data, dataItem, categories);
             tempData.rules = dataItem.rules || [];
             tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
               ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
@@ -51,7 +71,7 @@ export const validateData = (type, data) => {
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));
           }
-          validateData.push(tempData);
+          if (pushFlag) validateData.push(tempData);
         }
       }
     });

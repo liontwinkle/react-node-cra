@@ -32,6 +32,8 @@ function ClientImport({
   client,
   type,
   handleClose,
+  categories,
+  attributes,
   fileUpload,
   fetchCategories,
   fetchAttributes,
@@ -51,7 +53,7 @@ function ClientImport({
     } else {
       uploadData.push(importData);
     }
-    const sendingData = validateData(type.key, uploadData);
+    const sendingData = validateData(type.key, uploadData, categories, attributes);
     if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
       console.log('#### DEBUG UPLOAD: ', sendingData); // fixme
       fileUpload(sendingData)
@@ -147,6 +149,8 @@ function ClientImport({
 }
 
 ClientImport.propTypes = {
+  categories: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   status: PropTypes.object.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
@@ -165,6 +169,8 @@ ClientImport.defaultProps = {
 };
 
 const mapStateToProps = store => ({
+  categories: store.categoriesData.categories,
+  attributes: store.attributesData.attributes,
   isUploading: store.uploadData.isUploading,
   isKeyUploading: store.uploadData.isKeyUploading,
 });
