@@ -33,7 +33,7 @@ const checkException = (keys, dataItem, type) => {
 
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
-  if (categories.findIndex(item => (item.categoryId === dataItem.parent_id)) === -1) {
+  if (dataItem.parent_id !== '' && categories.findIndex(item => (item.categoryId === dataItem.parent_id)) === -1) {
     if (newData.findIndex(newItem => (
       newItem.categoryid === dataItem.parent_id || newItem._id === dataItem.parent_id
     ) === -1)) {
@@ -43,7 +43,43 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
   return passFlag;
 };
 
-export const validateData = (type, data, categories/* , attributes */) => {
+const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
+  let passFlag = true;
+  let returnData = [];
+  console.log('###### DEBUG PARAMS FOR NEW DATA: ', newData); // fixme
+  console.log('###### DEBUG PARAMS FOR DATA ITEM: ', dataItem); // fixme
+  console.log('###### DEBUG PARAMS FOR ATTRIBUTES: ', attributes); // fixme
+  console.log('###### DEBUG PARAMS FOR CATEGORIES: ', categories); // fixme
+  const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
+  console.log('###### DEBUG PARAMS FOR ATTRIBUTE GROUP: ', groupIds); // fixme
+  if (dataItem.groupid !== '' && groupIds.findIndex(item => (item.attributeId === dataItem.groupid)) === -1) {
+    console.log('###### CHECKING ID DUPLICATE: '); // fixme
+    if (newData.findIndex(newItem => (
+      newItem.attributeId === dataItem.groupid || newItem._id === dataItem.groupid
+    ) === -1)) {
+      passFlag = false;
+    }
+  }
+  if (dataItem.appear) {
+    console.log('###### CHECKING APPEAR: '); // fixme
+    returnData = dataItem.appear;
+    console.log('###### DEBUG ORIGIN DATA: ', returnData);
+    dataItem.appear.forEach((appearItem, index) => {
+      if (categories.findIndex(categoryItem => categoryItem.categoryId === appearItem) === -1) {
+        console.log('#### DEBUG INDEX: ', index); // fixme
+        returnData.splice(index, 1);
+      }
+    });
+  }
+  console.log('###### DEBUG RETURN DATA: ', returnData); // fixme
+  return {
+    passFlag,
+    returnData,
+  };
+};
+
+
+export const validateData = (type, data, categories, attributes) => {
   const validateData = [];
   let tempData = {};
   if (validateKey[type]) {
@@ -56,18 +92,28 @@ export const validateData = (type, data, categories/* , attributes */) => {
           let pushFlag = true;
           if (type === 'virtual') {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
-            tempData.rules = dataItem.rules || [];
-            tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
-              ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
-            tempData.name = dataItem.name || [];
-            tempData.parentId = dataItem.parent_id || '';
+            console.log('##### RETURN DATA FOR VIRTUAL: ', pushFlag); // fixme
+            if (pushFlag) {
+              console.log('##### DEBUG PUSH PASS FOR VIRTUAL #####'); // fixme
+              tempData.rules = dataItem.rules || [];
+              tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
+                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
+              tempData.name = dataItem.name || [];
+              tempData.parentId = dataItem.parent_id || '';
+            }
           } else if (type === 'attributes') {
-            tempData.rules = dataItem.rules || [];
-            tempData.appear = dataItem.appear || [];
-            tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
-              ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
-            tempData.name = dataItem.name || [];
-            tempData.groupId = dataItem.group_id || '';
+            const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
+            console.log('##### RETURN DATA FOR ATTRIBUTES: ', validateData); // fixme
+            pushFlag = validateData.passFlag;
+            if (pushFlag) {
+              console.log('##### DEBUG PUSH PASS FOR ATTRIBUTES #####'); // fixme
+              tempData.rules = dataItem.rules || [];
+              tempData.appear = validateData.returnData || [];
+              tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
+                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
+              tempData.name = dataItem.name || [];
+              tempData.groupId = dataItem.groupid || '';
+            }
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));
           }
