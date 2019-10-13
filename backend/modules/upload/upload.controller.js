@@ -1,6 +1,7 @@
 const {
   handleError,
   uploadAppear,
+  setAppearForCategory,
 } = require('../../utils');
 
 const CategoryModel = require('../categories/categories.model');
@@ -71,6 +72,8 @@ exports.upload = (req, res) => {
           if (req.params.type === 'attributes') {
             console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
             uploadAppear(updateData, req.params.clientId);
+          } else if (req.params.type === 'virtual') {
+            setAppearForCategory(updateData, req.params.clientId);
           }
           collection.insertMany(updateData);
           res.status(201).json(updateData[0]);

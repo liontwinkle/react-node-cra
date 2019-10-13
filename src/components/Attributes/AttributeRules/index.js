@@ -77,7 +77,7 @@ class AttributeRules extends Component {
       const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
       const referObj = refer.find(referItem => (referItem.key === item.refer));
       const otherObj = this.AnaylsisDetails(item.value);
-      if (otherObj.detailObj) {
+      if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
         ruleArray.push({
           _id: item._id,
           basis: (type) ? basisObj.key : basisObj,

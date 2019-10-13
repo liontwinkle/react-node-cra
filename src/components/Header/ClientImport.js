@@ -55,12 +55,16 @@ function ClientImport({
     }
     const sendingData = validateData(type.key, uploadData, categories, attributes);
     if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
-      console.log('#### DEBUG UPLOAD: ', sendingData); // fixme
       fileUpload(sendingData)
         .then(() => {
           setImportData([]);
           if (type.key === 'virtual' || type.key === 'native') {
-            fetchCategories(client.id, type.key).then(() => { setUploadFlag(false); });
+            fetchCategories(client.id, type.key).then(() => {
+              fetchAttributes(client.id, 'attributes')
+                .then(() => {
+                  setUploadFlag(false);
+                });
+            });
           } else if (type.key === 'attributes') {
             fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
           } else {

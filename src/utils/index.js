@@ -35,9 +35,10 @@ const checkException = (keys, dataItem, type) => {
 
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
-  if (dataItem.parent_id !== '' && categories.findIndex(item => (item.categoryId === dataItem.parent_id)) === -1) {
+  const parentId = dataItem.parent_id || dataItem.parentid || '';
+  if (parentId !== '' && categories.findIndex(item => (item.categoryId === parentId)) === -1) {
     if (newData.findIndex(newItem => (
-      newItem.categoryid === dataItem.parent_id || newItem._id === dataItem.parent_id
+      newItem.categoryid === parentId || newItem._id === parentId
     ) === -1)) {
       passFlag = false;
     }
@@ -48,7 +49,7 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
   const deletedData = [];
-  const recvGroupId = dataItem.groupid || dataItem.group_id;
+  const recvGroupId = dataItem.groupid || dataItem.group_id || '';
   const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
   const groupItem = groupIds.filter(item => (item.attributeId === recvGroupId));
   let groupData = [];
@@ -84,13 +85,10 @@ export const validateData = (type, data, categories, attributes) => {
       if (keys.length > 0) {
         const validateFlag = checkException(keys, dataItem, type);
         if (validateFlag) {
-          console.log('##### DEBUG VALIDATE PASS #####'); // fixme
           let pushFlag = true;
           if (type === 'virtual') {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
-            console.log('##### RETURN DATA FOR VIRTUAL: ', pushFlag); // fixme
             if (pushFlag) {
-              console.log('##### DEBUG PUSH PASS FOR VIRTUAL #####'); // fixme
               tempData.rules = dataItem.rules || [];
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
                 ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
@@ -99,10 +97,8 @@ export const validateData = (type, data, categories, attributes) => {
             }
           } else if (type === 'attributes') {
             const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
-            console.log('##### RETURN DATA FOR ATTRIBUTES: ', validateData); // fixme
             pushFlag = validateData.passFlag;
             if (pushFlag) {
-              console.log('##### DEBUG PUSH PASS FOR ATTRIBUTES #####'); // fixme
               tempData.rules = dataItem.rules || [];
               tempData.appear = validateData.returnData || [];
               tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
@@ -176,24 +172,26 @@ export const getRules = (srcRules, valueDetails) => {
     const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
     const referObj = refer.find(referItem => (referItem.key === item.refer));
     const otherObj = AnaylsisDetails(item.value, valueDetails);
-    newRules.push({
-      _id: item._id,
-      basis: basisObj,
-      refer: referObj,
-      detail: otherObj.detailObj,
-      match: otherObj.matchObj,
-      value: otherObj.valueKey,
-      scope: scope[0],
-    });
-    editRules.push({
-      _id: item._id,
-      basis: basisObj.key,
-      refer: referObj.key,
-      detail: otherObj.detailObj.key,
-      match: otherObj.matchObj.key,
-      value: otherObj.valueKey,
-      scope: scope[0].key,
-    });
+    if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
+      newRules.push({
+        _id: item._id,
+        basis: basisObj,
+        refer: referObj,
+        detail: otherObj.detailObj,
+        match: otherObj.matchObj,
+        value: otherObj.valueKey,
+        scope: scope[0],
+      });
+      editRules.push({
+        _id: item._id,
+        basis: basisObj.key,
+        refer: referObj.key,
+        detail: otherObj.detailObj.key,
+        match: otherObj.matchObj.key,
+        value: otherObj.valueKey,
+        scope: scope[0].key,
+      });
+    }
   });
   return {
     newRules,

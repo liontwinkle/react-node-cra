@@ -123,6 +123,24 @@ function handleCreate(req) {
   };
 }
 
+function setAppearForCategory(data, client) {
+  const collectionAppear = AppearCollection(`${client}_appears`);
+  data.forEach((item) => {
+    if (item.parentId !== '') {
+      collectionAppear.find({ categoryId: parseInt(item.parentId, 10) })
+        .then((result) => {
+          if (result.length > 0) {
+            const attributs = result.map(attributeItem => ({
+              attributeId: attributeItem.attributeId,
+              categoryId: item.categoryId,
+            }));
+            collectionAppear.insertMany(attributs)
+              .then(() => {});
+          }
+        });
+    }
+  });
+}
 /**
  * To Handle creating the Attribute Made by Igor
  * It need to be required to handle two model `attributes` and `appears`
@@ -387,4 +405,5 @@ module.exports = {
   handleExistingRemove,
   saveAttributeUpdates,
   uploadAppear,
+  setAppearForCategory,
 };
