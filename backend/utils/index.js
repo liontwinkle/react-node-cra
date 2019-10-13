@@ -277,6 +277,14 @@ function saveAttributeUpdates(req, res) {
   };
 }
 
+function uploadAppear(data, client) {
+  const collectionAppear = AppearCollection(`${client}_appears`);
+  data.forEach((dataItem) => {
+    if (dataItem.appear) {
+      insertAppear(collectionAppear, dataItem.attributeId, dataItem.appear);
+    }
+  });
+}
 function removeCategoryEntity(req, res) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   return (entity) => {
@@ -378,4 +386,5 @@ module.exports = {
   createCollection,
   handleExistingRemove,
   saveAttributeUpdates,
+  uploadAppear,
 };

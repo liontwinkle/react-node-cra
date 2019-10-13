@@ -1,4 +1,6 @@
 import { OrderedMap } from 'immutable';
+import _difference from 'lodash/difference';
+import _union from 'lodash/union';
 import uuidv4 from 'uuid/v4';
 import { makeStyles } from '@material-ui/core';
 import {
@@ -45,36 +47,30 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
-  let returnData = [];
-  console.log('###### DEBUG PARAMS FOR NEW DATA: ', newData); // fixme
-  console.log('###### DEBUG PARAMS FOR DATA ITEM: ', dataItem); // fixme
-  console.log('###### DEBUG PARAMS FOR ATTRIBUTES: ', attributes); // fixme
-  console.log('###### DEBUG PARAMS FOR CATEGORIES: ', categories); // fixme
+  const deletedData = [];
   const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
-  console.log('###### DEBUG PARAMS FOR ATTRIBUTE GROUP: ', groupIds); // fixme
-  if (dataItem.groupid !== '' && groupIds.findIndex(item => (item.attributeId === dataItem.groupid)) === -1) {
-    console.log('###### CHECKING ID DUPLICATE: '); // fixme
+  const groupItem = groupIds.filter(item => (item.attributeId === dataItem.groupid));
+  let groupData = [];
+  if (dataItem.groupid !== '' && groupItem.length < 0) {
     if (newData.findIndex(newItem => (
       newItem.attributeId === dataItem.groupid || newItem._id === dataItem.groupid
     ) === -1)) {
       passFlag = false;
     }
+  } else {
+    groupData = (dataItem.groupid === '') ? [] : groupItem[0].appear || [];
   }
   if (dataItem.appear) {
-    console.log('###### CHECKING APPEAR: '); // fixme
-    returnData = dataItem.appear;
-    console.log('###### DEBUG ORIGIN DATA: ', returnData);
-    dataItem.appear.forEach((appearItem, index) => {
+    dataItem.appear.forEach((appearItem) => {
       if (categories.findIndex(categoryItem => categoryItem.categoryId === appearItem) === -1) {
-        console.log('#### DEBUG INDEX: ', index); // fixme
-        returnData.splice(index, 1);
+        deletedData.push(appearItem);
       }
     });
   }
-  console.log('###### DEBUG RETURN DATA: ', returnData); // fixme
+  const returnData = _difference(dataItem.appear, deletedData);
   return {
     passFlag,
-    returnData,
+    returnData: _union(returnData, groupData),
   };
 };
 

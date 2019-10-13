@@ -1,5 +1,6 @@
 const {
   handleError,
+  uploadAppear,
 } = require('../../utils');
 
 const CategoryModel = require('../categories/categories.model');
@@ -21,7 +22,7 @@ const removeUnnecessaryData = (data) => {
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
     if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
-      if (data[keyItem] && typeof data[keyItem] === 'object') {
+      if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object') {
         const key = Object.keys(data[keyItem]);
         if (key.length > 0) {
           if (key[0].indexOf('$') > 0) {
@@ -67,6 +68,10 @@ exports.upload = (req, res) => {
       const updateData = checkDuplicateData(result, req.body, req.params.type);
       if (updateData.length > 0) {
         try {
+          if (req.params.type === 'attributes') {
+            console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
+            uploadAppear(updateData, req.params.clientId);
+          }
           collection.insertMany(updateData);
           res.status(201).json(updateData[0]);
         } catch (e) {
