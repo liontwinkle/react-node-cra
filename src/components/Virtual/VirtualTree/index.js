@@ -18,6 +18,7 @@ function VirtualSortableTree(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
+    isUpdating,
     categories,
     history,
     category,
@@ -55,7 +56,7 @@ function VirtualSortableTree(props) {
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const category = _find(categories, { id: node.item.id });
-      if (category && category.name !== node.title) {
+      if (!isUpdating && category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
             addNewRuleHistory(createHistory, category, node.item.parentId,
@@ -117,10 +118,8 @@ function VirtualSortableTree(props) {
 
   const handleMoveTree = (data) => {
     const { node, path } = data;
-    const currentParentNode = data.nextParentNode;
-    const movedNodeItemName = node.item.name;
-    const currentParentItemName = (currentParentNode) ? currentParentNode.item.name : 'root';
-    const currentParentItemId = (currentParentNode) ? currentParentNode.item.categoryId.toString() : '';
+    const currentParentItemName = (data.nextParentNode) ? data.nextParentNode.item.name : 'root';
+    const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item.categoryId.toString() : '';
 
     updateCategory(node.item.id, { parentId: currentParentItemId })
       .then(() => {
@@ -129,7 +128,7 @@ function VirtualSortableTree(props) {
           msg,
           `Move Child Node ${node.item.name}`,
           'virtual');
-        const string = `${movedNodeItemName}has been updated as children of ${currentParentItemName}`;
+        const string = `${node.item.name}has been updated as children of ${currentParentItemName}`;
         confirmMessage(enqueueSnackbar, string, 'success');
         handleConfirm(node, path);
       })
@@ -179,6 +178,7 @@ function VirtualSortableTree(props) {
 }
 
 VirtualSortableTree.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   category: PropTypes.object,
@@ -195,6 +195,7 @@ VirtualSortableTree.defaultProps = {
 };
 
 const mapStateToProps = store => ({
+  isUpdating: store.categoriesData.isUpdating,
   categories: store.categoriesData.categories,
   category: store.categoriesData.category,
   clientType: store.clientsData.type,

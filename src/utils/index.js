@@ -60,7 +60,8 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
       passFlag = false;
     }
   } else {
-    groupData = (recvGroupId === '') ? [] : groupItem[0].appear || [];
+    const appearData = (groupItem.length > 0) ? groupItem[0].appear : [];
+    groupData = (recvGroupId === '') ? [] : appearData;
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {

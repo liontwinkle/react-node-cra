@@ -100,6 +100,7 @@ function Association({
   const handleAttributeChange = (checked, nodeTarget) => {
     if (!isUpdating) {
       const targetAppear = attributes.filter(attrItem => (attrItem.attributeId === nodeTarget.value))[0];
+      console.log('#### DEBUG TARGET: ', targetAppear); // fixme
       let checkGrp = false;
       let appearData = [];
       const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);

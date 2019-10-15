@@ -183,13 +183,17 @@ function handleAttributeFetch(req, res) {
       const attributeData = JSON.parse(JSON.stringify(entity));
       collectionAppear.find()
         .then((result) => {
-          if (result.length > 0) {
-            entity.forEach((entityItem, index) => {
+          console.log('###### DEBUG RESULT: ', result); // fxime
+          entity.forEach((entityItem, index) => {
+            if (result.length > 0) {
               attributeData[index].appear = result.filter((appearItem =>
                 (appearItem.attributeId === entityItem.attributeId)
-              )).map(item => (item.categoryId));
-            });
-          }
+              ))
+                .map(item => (item.categoryId));
+            } else {
+              attributeData[index].appear = [];
+            }
+          });
           res.status(201).json(attributeData);
         });
     } else {
