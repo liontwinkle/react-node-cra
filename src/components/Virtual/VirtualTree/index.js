@@ -19,6 +19,7 @@ function VirtualSortableTree(props) {
 
   const {
     isUpdating,
+    isCreating,
     categories,
     history,
     category,
@@ -56,7 +57,7 @@ function VirtualSortableTree(props) {
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const category = _find(categories, { id: node.item.id });
-      if (!isUpdating && category && category.name !== node.title) {
+      if (!isUpdating && !isCreating && category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
             addNewRuleHistory(createHistory, category, node.item.parentId,
@@ -121,21 +122,23 @@ function VirtualSortableTree(props) {
     const currentParentItemName = (data.nextParentNode) ? data.nextParentNode.item.name : 'root';
     const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item.categoryId.toString() : '';
 
-    updateCategory(node.item.id, { parentId: currentParentItemId })
-      .then(() => {
-        const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
-        addNewRuleHistory(createHistory, category, node.item.parentId,
-          msg,
-          `Move Child Node ${node.item.name}`,
-          'virtual');
-        const string = `${node.item.name}has been updated as children of ${currentParentItemName}`;
-        confirmMessage(enqueueSnackbar, string, 'success');
-        handleConfirm(node, path);
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
-        handleConfirm(node, path, category.name);
-      });
+    if (!isUpdating && !isCreating) {
+      updateCategory(node.item.id, { parentId: currentParentItemId })
+        .then(() => {
+          const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
+          addNewRuleHistory(createHistory, category, node.item.parentId,
+            msg,
+            `Move Child Node ${node.item.name}`,
+            'virtual');
+          const string = `${node.item.name}has been updated as children of ${currentParentItemName}`;
+          confirmMessage(enqueueSnackbar, string, 'success');
+          handleConfirm(node, path);
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
+          handleConfirm(node, path, category.name);
+        });
+    }
   };
 
   const isSelected = node => (category && category.id) === node.item.id;
@@ -179,6 +182,7 @@ function VirtualSortableTree(props) {
 
 VirtualSortableTree.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   category: PropTypes.object,
@@ -200,6 +204,7 @@ const mapStateToProps = store => ({
   category: store.categoriesData.category,
   clientType: store.clientsData.type,
   history: store.historyData.history,
+  isCreating: store.historyData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

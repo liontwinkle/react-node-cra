@@ -53,7 +53,7 @@ function PropertyActions({
         if (!isEqual(attribute.properties, saveData)) {
           updateAttribute(attribute.id, { properties: saveData })
             .then(() => {
-              // todo: bug on render history after create child attribute
+              // todo: bug for render history after create child attribute
               addNewRuleHistory(createHistory, attribute, attribute.groupId,
                 'Update Attribute',
                 `The properties of the Child ${attribute.name} is updated.`,

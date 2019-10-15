@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MaterialTable from 'material-table';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+
 import { convertDateFormat } from 'utils';
 import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
 function DetailTable({
-  category, attribute, history, type,
+  category, attribute, history, type, historyStr,
 }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (history) {
+    if (historyStr !== '') {
       const item = (type === 'virtual') ? category : attribute;
       const parentId = item ? item.id : '';
       const displayHistory = history.filter(historyItem => (historyItem.itemId === parentId));
@@ -24,7 +25,7 @@ function DetailTable({
         updatedAt: convertDateFormat(c.updatedAt),
       })));
     }
-  }, [attribute, category, history, type]);
+  }, [attribute, category, history, type, historyStr]);
 
 
   const columns = [
@@ -55,6 +56,7 @@ function DetailTable({
 
 DetailTable.propTypes = {
   history: PropTypes.array.isRequired,
+  historyStr: PropTypes.string.isRequired,
   category: PropTypes.object,
   attribute: PropTypes.object,
   type: PropTypes.string.isRequired,
@@ -66,9 +68,10 @@ DetailTable.defaultProps = {
 };
 
 const mapStateToProps = store => ({
+  history: store.historyData.history,
+  historyStr: store.historyData.historyStr,
   category: store.categoriesData.category,
   attribute: store.attributesData.attribute,
-  history: store.historyData.history,
 });
 
 export default connect(mapStateToProps)(DetailTable);

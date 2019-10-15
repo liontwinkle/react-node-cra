@@ -24,6 +24,7 @@ function EditRules({
   createHistory,
   handleClose,
   isUpdating,
+  isCreating,
   category,
   valueDetails,
 }) {
@@ -68,7 +69,7 @@ function EditRules({
     setTimeout(() => {
       resolve();
 
-      if (!rules.find(item => (
+      if (!isCreating && !rules.find(item => (
         item.detail === newData.detail
         && item.match === newData.match
         && item.value === newData.value
@@ -100,7 +101,7 @@ function EditRules({
 
       const data = JSON.parse(JSON.stringify(oldData));
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
-      if (ruleKeyIndex > -1) {
+      if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
           _id: newData._id,
           basis: newData.basis,
@@ -131,7 +132,7 @@ function EditRules({
       resolve();
 
       const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
-      if (ruleKeyIndex > -1) {
+      if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
             detail: ${oldData.detail},match: ${oldData.match},criteria: ${oldData.value})`;
@@ -190,6 +191,7 @@ EditRules.propTypes = {
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
 };
@@ -198,6 +200,7 @@ const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
   category: store.categoriesData.category,
   valueDetails: store.productsData.data.valueDetails,
+  isCreating: store.historyData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

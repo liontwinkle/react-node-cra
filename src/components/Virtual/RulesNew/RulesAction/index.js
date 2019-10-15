@@ -118,7 +118,6 @@ RulesAction.propTypes = {
 const mapStateToProps = store => ({
   products: store.categoriesData.preProducts,
   productViewType: store.clientsData.productViewType,
-
 });
 
 export default connect(

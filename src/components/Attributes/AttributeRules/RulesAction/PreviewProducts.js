@@ -51,7 +51,6 @@ PreviewProducts.propTypes = {
 };
 
 const mapStateToProps = store => ({
-  isUpdating: store.categoriesData.isUpdating,
   columns: store.productsData.data.columns,
   headers: store.productsData.data.headers,
 });

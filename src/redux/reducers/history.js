@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   isDeleting: false,
 
   history: [],
+  historyStr: '',
   errors: '',
 };
 
@@ -25,6 +26,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         history: action.payload.data,
+        historyStr: JSON.stringify(action.payload.data),
       };
     case types.HISTORY_FETCH_FAIL:
       return {
@@ -46,6 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isCreating: false,
         history,
+        historyStr: JSON.stringify(history),
       };
     case types.HISTORY_CREATE_FAIL:
       return {
@@ -66,6 +69,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isDeleting: false,
         history: updatedHistory,
+        historyStr: JSON.stringify(updatedHistory),
       };
     case types.HISTORY_REMOVE_FAIL:
       return {
