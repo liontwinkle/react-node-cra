@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import isEqual from 'lodash/isEqual';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Dialog, DialogActions, DialogContent, DialogTitle,
 } from '@material-ui/core';
 
 import { confirmMessage, isExist, useStyles } from 'utils';

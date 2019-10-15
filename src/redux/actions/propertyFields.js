@@ -67,7 +67,7 @@ export const createPropertyField = clientData => (dispatch, getState) => {
 
 export const updatePropertyField = updatedData => (dispatch, getState) => {
   if (getState().propertyFieldsData.isUpdating) {
-    return;
+    return Promise.reject();
   }
 
   const { client, type } = getState().clientsData;

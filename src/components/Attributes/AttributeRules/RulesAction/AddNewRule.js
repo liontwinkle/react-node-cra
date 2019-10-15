@@ -25,6 +25,7 @@ import AddNewRuleBody from '../../../Virtual/RulesNew/RulesAction/AddNewRuleBody
 function AddNewRule({
   open,
   isUpdating,
+  isCreating,
   handleClose,
   updateAttribute,
   createHistory,
@@ -94,7 +95,7 @@ function AddNewRule({
   };
 
   const handleSubmit = () => {
-    if (!isUpdating && !disabled) {
+    if (!isUpdating && !isCreating && !disabled) {
       if (!displayRules.find(item => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
@@ -158,6 +159,7 @@ function AddNewRule({
 AddNewRule.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
@@ -171,6 +173,7 @@ const mapStateToProps = store => ({
   isUpdating: store.attributesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
   attribute: store.attributesData.attribute,
+  isCreating: store.historyData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

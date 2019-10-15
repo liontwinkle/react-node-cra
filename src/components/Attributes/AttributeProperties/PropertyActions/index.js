@@ -23,6 +23,7 @@ import EditPropertyFields from './EditPropertyFields';
 function PropertyActions({
   properties,
   isUpdating,
+  isCreating,
   attribute,
   updateAttribute,
   createHistory,
@@ -48,10 +49,11 @@ function PropertyActions({
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
     if (saveData.chkFlag) {
-      if (!isUpdating) {
+      if (!isUpdating && !isCreating) {
         if (!isEqual(attribute.properties, saveData)) {
           updateAttribute(attribute.id, { properties: saveData })
             .then(() => {
+              // todo: bug on render history after create child attribute
               addNewRuleHistory(createHistory, attribute, attribute.groupId,
                 'Update Attribute',
                 `The properties of the Child ${attribute.name} is updated.`,
@@ -157,6 +159,7 @@ PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
   fields: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
@@ -165,6 +168,7 @@ PropertyActions.propTypes = {
 const mapStateToProps = store => ({
   isUpdating: store.attributesData.isUpdating,
   attribute: store.attributesData.attribute,
+  isCreating: store.historyData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

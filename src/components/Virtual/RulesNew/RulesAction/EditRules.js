@@ -10,11 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { confirmMessage, getObjectFromArray } from 'utils/index';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
-  basis,
-  refer,
-  match,
-  scope,
-  tableIcons,
+  basis, refer, match, scope, tableIcons,
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
@@ -34,32 +30,12 @@ function EditRules({
   const { enqueueSnackbar } = useSnackbar();
   const tableData = {
     columns: [
-      {
-        title: 'Basis',
-        field: 'basis',
-        lookup: getObjectFromArray(basis),
-      },
-      {
-        title: 'Refer',
-        field: 'refer',
-        lookup: getObjectFromArray(refer),
-      },
-      {
-        title: 'Detail',
-        field: 'detail',
-        lookup: getObjectFromArray(valueDetails),
-      },
-      {
-        title: 'Match',
-        field: 'match',
-        lookup: getObjectFromArray(match),
-      },
+      { title: 'Basis', field: 'basis', lookup: getObjectFromArray(basis) },
+      { title: 'Refer', field: 'refer', lookup: getObjectFromArray(refer) },
+      { title: 'Detail', field: 'detail', lookup: getObjectFromArray(valueDetails) },
+      { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
       { title: 'Value', field: 'value' },
-      {
-        title: 'Scope',
-        field: 'scope',
-        lookup: getObjectFromArray(scope),
-      },
+      { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
     ],
     data: rules,
   };

@@ -59,7 +59,7 @@ export const createAttribute = attribute => (dispatch, getState) => {
 
 export const updateAttribute = (id, updatedData) => (dispatch, getState) => {
   if (getState().attributesData.isUpdating) {
-    return;
+    return Promise.reject();
   }
 
   const { client } = getState().clientsData;

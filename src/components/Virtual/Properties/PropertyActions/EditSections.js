@@ -15,6 +15,7 @@ import { updatePropertyField } from 'redux/actions/propertyFields';
 function EditSections({
   open,
   propertyField,
+  isUpdating,
   updatePropertyField,
   handleClose,
 }) {
@@ -40,14 +41,15 @@ function EditSections({
           label: newData.label,
           order: newData.order,
         });
-
-        updatePropertyField({ sections })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ sections })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+            });
+        }
       } else {
         const errMsg = `Error: Another section is using the key (${newData.key}) you specified.
          Please update section key name.`;
@@ -68,14 +70,15 @@ function EditSections({
           order: newData.order,
           _id: newData._id,
         });
-
-        updatePropertyField({ sections })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ sections })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+            });
+        }
       }
     }, 600);
   });
@@ -87,14 +90,15 @@ function EditSections({
       const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1);
-
-        updatePropertyField({ sections })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ sections })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
+            });
+        }
       }
     }, 600);
   });
@@ -134,12 +138,14 @@ function EditSections({
 EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   propertyField: store.propertyFieldsData.propertyField,
+  isUpdating: store.propertyFieldsData.isUpdating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

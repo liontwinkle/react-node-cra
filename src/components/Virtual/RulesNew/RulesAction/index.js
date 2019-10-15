@@ -37,10 +37,7 @@ function RulesAction({
       displayData = filterProducts();
     }
     if (displayData.length === 0 && field === 'preview_products') {
-      enqueueSnackbar('No Products match this rule.', {
-        variant: 'info',
-        autoHideDuration: 4000,
-      });
+      enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
     } else {
       setProducts(displayData);
       setOpen({

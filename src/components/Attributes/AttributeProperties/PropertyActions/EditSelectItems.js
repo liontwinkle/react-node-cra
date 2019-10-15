@@ -16,6 +16,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 function EditPropertyFields({
   open,
   propertyField,
+  isUpdating,
   updatePropertyField,
   updateAttribute,
   attribute,
@@ -66,7 +67,7 @@ function EditPropertyFields({
         };
       }
 
-      if (updateFlag) {
+      if (updateFlag && !isUpdating) {
         updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
@@ -91,14 +92,15 @@ function EditPropertyFields({
           label: newData.label,
           _id: newData._id,
         });
-
-        updatePropertyField({ propertyFields })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ propertyFields })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+            });
+        }
       }
     }, 600);
   });
@@ -116,19 +118,21 @@ function EditPropertyFields({
 
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1);
-        updatePropertyField({ propertyFields })
-          .then(() => {
-            updateAttribute(attribute.id, { properties })
-              .then(() => {
-                confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
-              })
-              .catch(() => {
-                confirmMessage(enqueueSnackbar, 'Error in deleting Property.', 'error');
-              });
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ propertyFields })
+            .then(() => {
+              updateAttribute(attribute.id, { properties })
+                .then(() => {
+                  confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
+                })
+                .catch(() => {
+                  confirmMessage(enqueueSnackbar, 'Error in deleting Property.', 'error');
+                });
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
+            });
+        }
       }
     }, 600);
   });
@@ -168,6 +172,7 @@ function EditPropertyFields({
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
   attribute: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   updateAttribute: PropTypes.func.isRequired,
@@ -177,6 +182,7 @@ EditPropertyFields.propTypes = {
 
 const mapStateToProps = store => ({
   propertyField: store.propertyFieldsData.propertyField,
+  isUpdating: store.propertyFieldsData.isUpdating,
   attribute: store.attributesData.attribute,
 });
 

@@ -58,7 +58,7 @@ function AddSelectItems({
         selectItems.items = sectionsData;
       }
 
-      if (updateFlag) {
+      if (updateFlag && !isUpdating) {
         updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');

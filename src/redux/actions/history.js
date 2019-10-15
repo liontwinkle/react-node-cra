@@ -29,7 +29,7 @@ export const fetchHistories = (clientId, type) => (dispatch, getState) => {
 
 export const createHistory = history => (dispatch, getState) => {
   if (getState().historyData.isCreating) {
-    return;
+    return Promise.reject();
   }
 
   const { client } = getState().clientsData;
