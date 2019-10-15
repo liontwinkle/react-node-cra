@@ -28,7 +28,7 @@ class NewRules extends Component {
     this.setState({
       fetchingFlag: true,
     });
-    if (this.props.products.length === 0) {
+    if (this.props.products.length === 0 && !this.props.isFetchingList) {
       this.props.fetchProducts()
         .then(() => {
           this.setMap(this.props.category);
@@ -62,10 +62,10 @@ class NewRules extends Component {
     } = this.props;
 
     let filterProduct = [];
-    let filterAttribute = [];
     let attributeList = attributes.filter(Item => (
       !!Item.appear.find(appearItem => (appearItem === category.categoryId))));
-    filterAttribute = attributeList;
+    let filterAttribute = attributeList;
+
     if (attributeList.length > 0) {
       const groups = attributeList.filter(item => (!item.groupId));
       attributeList = _difference(attributeList, groups);
@@ -130,6 +130,7 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
@@ -142,6 +143,7 @@ const mapStateToProps = store => ({
   category: store.categoriesData.category,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
+  isFetchingList: store.productsData.isFetchingList,
   attributes: store.attributesData.attributes,
 });
 

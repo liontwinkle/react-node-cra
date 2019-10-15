@@ -4,23 +4,18 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Dialog, DialogActions, DialogContent, DialogTitle,
 } from '@material-ui/core';
 
 import {
-  basis,
-  refer,
-  match,
-  scope,
+  basis, refer, match, scope,
 } from 'utils/constants';
+
 import { confirmMessage, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
-import { CustomInput, CustomSelect } from 'components/elements/index';
+import AddNewRuleBody from './AddNewRuleBody';
 
 function AddNewRule({
   open,
@@ -81,7 +76,7 @@ function AddNewRule({
     });
 
     if (!isUpdating) {
-      updateCategory(category._id, { rules: updatedData })
+      updateCategory(category.id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
@@ -126,52 +121,11 @@ function AddNewRule({
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
-        <CustomSelect
-          className="mb-3"
-          label="Basis"
-          placeholder="Select Basis of Rule"
-          value={ruleData.basis}
-          items={basis}
-          onChange={handleSelectChange('basis')}
-        />
-        <CustomSelect
-          className="mb-3"
-          label="Refer"
-          placeholder="Select Refer of Rule"
-          value={ruleData.refer}
-          items={refer}
-          onChange={handleSelectChange('refer')}
-        />
-        <CustomSelect
-          className="mb-3"
-          label="Detail"
-          placeholder="Select Detail of Rule"
-          value={ruleData.detail}
-          items={valueDetails}
-          onChange={handleSelectChange('detail')}
-        />
-        <CustomSelect
-          className="mb-3"
-          label="Match"
-          placeholder="Select matches of Rule"
-          value={ruleData.match}
-          items={match}
-          onChange={handleSelectChange('match')}
-        />
-        <CustomInput
-          className="mb-3"
-          label="Criteria"
-          inline
-          value={ruleData.value}
-          onChange={handleChange}
-        />
-        <CustomSelect
-          className="mb-3"
-          label="Scope"
-          placeholder="Select Scope of Rule"
-          value={ruleData.scope}
-          items={scope}
-          onChange={handleSelectChange('scope')}
+        <AddNewRuleBody
+          handleSelectChange={handleSelectChange}
+          ruleData={ruleData}
+          handleChange={handleChange}
+          valueDetails={valueDetails}
         />
       </DialogContent>
 

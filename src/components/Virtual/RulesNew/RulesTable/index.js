@@ -21,8 +21,7 @@ function RulesTable({ rules, products, productViewType }) {
       const data = filterProducts(products, rules, key);
       if (data.length === 0) {
         enqueueSnackbar('No Products match this rule.', {
-          variant: 'info',
-          autoHideDuration: 4000,
+          variant: 'info', autoHideDuration: 4000,
         });
       } else {
         setProducts(data);

@@ -27,7 +27,7 @@ const NodeButton = ({
 );
 
 NodeButton.propTypes = {
-  path: PropTypes.string.isRequired,
+  path: PropTypes.array.isRequired,
   handleRemove: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   handleAdd: PropTypes.func.isRequired,
