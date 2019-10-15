@@ -13,6 +13,7 @@ import { createHistory, removeHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
+import NodeButton from './NodeButton';
 
 function NodeMenu({
   isCreating,
@@ -166,24 +167,7 @@ function NodeMenu({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <div className="d-flex flex-column">
-          {
-            (path.length <= 1)
-            && (
-              <button className="mg-button transparent" onClick={handleAdd}>
-              Add Attribute
-              </button>
-            )
-          }
-
-          <button className="mg-button transparent" onClick={handleEdit}>
-            Edit
-          </button>
-
-          <button className="mg-button transparent" onClick={handleRemove}>
-            Delete
-          </button>
-        </div>
+        <NodeButton handleAdd={handleAdd} handleRemove={handleRemove} path={path} handleEdit={handleEdit} />
       </Popover>
 
       {deleteDlgOpen && (

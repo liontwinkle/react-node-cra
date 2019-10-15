@@ -163,12 +163,7 @@ function NodeMenu({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <NodeButton
-          editable={editable}
-          handleRemove={handleRemove}
-          handleEdit={handleEdit}
-          handleAdd={handleAdd}
-        />
+        <NodeButton editable={editable} handleRemove={handleRemove} handleEdit={handleEdit} handleAdd={handleAdd} />
       </Popover>
 
       {deleteDlgOpen && (
