@@ -28,7 +28,6 @@ AttributeSchema.virtual('id').get(function () {
 let Attributes = mongoose.model('Attributes', AttributeSchema);
 
 /**
- *
  * @param type
  * @returns {Model}
  * Attribute collections will be changed or created dynamically

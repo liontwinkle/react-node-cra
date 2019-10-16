@@ -34,7 +34,6 @@ exports.create = (req, res) => {
 exports.show = (req, res) => {
   PropertyFields
     .find({ clientId: req.params.clientId, type: req.params.type })
-    // .select('id name code url createdAt')
     .execAsync()
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))

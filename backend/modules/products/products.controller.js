@@ -10,7 +10,6 @@ exports.show = (req, res) => {
   req.products
     .find()
     .sort('_id')
-    // .limit(100)
     .execAsync()
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
