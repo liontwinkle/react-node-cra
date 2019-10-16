@@ -105,7 +105,6 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         updatedAttributes = [...updatedAttributes, updateData];
       }
-      console.log('ATTRIBUTES : ', updatedAttributes); // fixme
       const newTrees = [];
       const recvTrees = getAttribute(updatedAttributes);
       state.nodes.forEach((pItem, pKey) => {
