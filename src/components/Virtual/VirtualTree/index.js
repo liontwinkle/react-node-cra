@@ -57,10 +57,12 @@ function VirtualSortableTree(props) {
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const category = _find(categories, { id: node.item.id });
+      const parent = _find(categories, { categoryId: parseInt(node.item.parentId, 10) });
+      const parentId = (parent) ? parent.id : '';
       if (!isUpdating && !isCreating && category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {
-            addNewRuleHistory(createHistory, category, node.item.parentId,
+            addNewRuleHistory(createHistory, category, parentId,
               `Name is changed as ${node.title}`,
               `The Child ${category.name} Name is changed as ${node.title}`,
               'virtual');

@@ -1,6 +1,8 @@
 export const checkNameDuplicate = (attributes, name, groupId) => {
   let len = 0;
   const filterAttr = attributes.filter(attrItem => (attrItem.groupId === groupId));
+  console.log('#### DEBUG FILTER: ', filterAttr); // fixme
+  console.log('#### DEBUG FILTER: ', name); // fixme
   filterAttr.forEach((arrItem) => {
     if (arrItem.name.toLowerCase() === name.toLowerCase()) {
       len++;
