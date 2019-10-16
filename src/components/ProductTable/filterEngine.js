@@ -25,7 +25,7 @@ const getEqFilter = (products, key, value, type) => products.filter((productItem
 const getWithFilter = (products, key, value, type) => products.filter((productItem) => {
   if (productItem[key] && typeof productItem[key] === 'string' && productItem[key].length >= value.length) {
     if ((type === 'begin' && productItem[key].slice(0, value.length) === value)
-      || (type === 'end' && productItem[key].slice(productItem.length - value.length) === value)) {
+      || (type === 'end' && productItem[key].slice(productItem[key].length - value.length) === value)) {
       return true;
     }
   }
