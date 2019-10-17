@@ -13,10 +13,9 @@ export const fileUpload = data => (dispatch, getState) => {
   });
 
   return uploadService.upload(client.code, type.key, data)
-    .then((data) => {
+    .then(() => {
       dispatch({
         type: types.UPLOAD_DATA_SUCCESS,
-        payload: { data },
       });
     })
     .catch((error) => {

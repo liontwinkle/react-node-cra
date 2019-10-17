@@ -17,7 +17,7 @@ const validateKey = {
   products: [],
 };
 
-// const LIMIT_SIZE = 80000000;
+const LIMIT_SIZE = 100 * 1024 * 1024;
 const checkException = (keys, dataItem, type) => {
   let passFlag = true;
   validateKey[type].forEach((validateItem) => {
@@ -78,13 +78,25 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   };
 };
 
-// export const makeUploadData = (size, sourceData) => {
-//   console.log('#### DEBUG SIZE : ', size); // fixme
-//   console.log('#### DEBUG SOURCE DATA : ', sourceData); // fixme
-//   if (size > LIMIT_SIZE) {
-//     console.log('#### DEBUG LARGE FILE: ');
-//   }
-// };
+export const makeUploadData = (size, sourceData) => {
+  console.log('#### DEBUG SIZE : ', size); // fixme
+  console.log('#### DEBUG SOURCE DATA : ', sourceData); // fixme
+  const uploadData = [];
+  if (size > LIMIT_SIZE) {
+    console.log('#### DEBUG LARGE FILE ###');
+    const dataNum = Math.ceil(size / LIMIT_SIZE);
+    console.log('###### DEBUG DATA NUM: ', dataNum);
+    const unitNum = sourceData.length / dataNum;
+    console.log('###### DEBUG UNIT NUM: ', unitNum);
+    for (let i = 0; i < dataNum; i++) {
+      uploadData.push(sourceData.slice(i * unitNum, (i + 1) * unitNum - 1));
+    }
+  } else {
+    uploadData.push(sourceData);
+  }
+  console.log('##### DEBUG UPLOAD RESULT: ', uploadData); // fixme
+  return uploadData;
+};
 
 export const validateData = (type, data, categories, attributes) => {
   const validateData = [];

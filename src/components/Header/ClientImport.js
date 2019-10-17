@@ -15,7 +15,7 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
-import { confirmMessage, validateData } from 'utils';
+import { confirmMessage, validateData, makeUploadData } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
@@ -44,21 +44,22 @@ function ClientImport({
 
   const [importData, setImportData] = useState(null);
   const [uploadFlag, setUploadFlag] = useState(false);
-  // const [fileSize, setFileSize] = useState(0);
+  const [fileSize, setFileSize] = useState(0);
 
   const handleSubmit = () => {
     setUploadFlag(true);
-    let uploadData = [];
+    let readData = [];
     if (Array.isArray(importData)) {
-      uploadData = importData;
+      readData = importData;
     } else {
-      uploadData.push(importData);
+      readData.push(importData);
     }
     console.log('#### DEBUG UPLOAD DATA: ', importData); // fixme
+    const sendingData = validateData(type.key, readData, categories, attributes);
+    const uploadData = makeUploadData(fileSize, sendingData);
     console.log('#### DEBUG FINAL UPLOAD DATA: ', uploadData); // fixme
-    const sendingData = validateData(type.key, uploadData, categories, attributes);
-    if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
-      fileUpload(sendingData)
+    if (readData.length > 0 && sendingData.length > 0 && !isUploading) {
+      fileUpload(uploadData)
         .then(() => {
           setImportData([]);
           if (type.key === 'virtual' || type.key === 'native') {
@@ -93,7 +94,7 @@ function ClientImport({
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
       console.log('##### DEBUG INPUT FILE: ', file); // fixme
-      // setFileSize(file.size);
+      setFileSize(file.size);
       const { fileType } = fileItem[0];
       if (fileType === 'application/json') {
         const reader = new FileReader();
