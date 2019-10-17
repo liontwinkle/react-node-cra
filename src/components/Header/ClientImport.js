@@ -44,6 +44,7 @@ function ClientImport({
 
   const [importData, setImportData] = useState(null);
   const [uploadFlag, setUploadFlag] = useState(false);
+  // const [fileSize, setFileSize] = useState(0);
 
   const handleSubmit = () => {
     setUploadFlag(true);
@@ -53,6 +54,8 @@ function ClientImport({
     } else {
       uploadData.push(importData);
     }
+    console.log('#### DEBUG UPLOAD DATA: ', importData); // fixme
+    console.log('#### DEBUG FINAL UPLOAD DATA: ', uploadData); // fixme
     const sendingData = validateData(type.key, uploadData, categories, attributes);
     if (uploadData.length > 0 && sendingData.length > 0 && !isUploading) {
       fileUpload(sendingData)
@@ -89,6 +92,8 @@ function ClientImport({
   const onChangeHandle = type => (fileItem) => {
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
+      console.log('##### DEBUG INPUT FILE: ', file); // fixme
+      // setFileSize(file.size);
       const { fileType } = fileItem[0];
       if (fileType === 'application/json') {
         const reader = new FileReader();

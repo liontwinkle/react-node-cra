@@ -17,6 +17,7 @@ const validateKey = {
   products: [],
 };
 
+// const LIMIT_SIZE = 80000000;
 const checkException = (keys, dataItem, type) => {
   let passFlag = true;
   validateKey[type].forEach((validateItem) => {
@@ -76,6 +77,14 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
     returnData: _union(returnData, groupData),
   };
 };
+
+// export const makeUploadData = (size, sourceData) => {
+//   console.log('#### DEBUG SIZE : ', size); // fixme
+//   console.log('#### DEBUG SOURCE DATA : ', sourceData); // fixme
+//   if (size > LIMIT_SIZE) {
+//     console.log('#### DEBUG LARGE FILE: ');
+//   }
+// };
 
 export const validateData = (type, data, categories, attributes) => {
   const validateData = [];
