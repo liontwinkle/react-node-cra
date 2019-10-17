@@ -206,7 +206,15 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   removeHistory,
 }, dispatch);
 
+const mapStateToProps = store => ({
+  attributes: store.attributesData.attributes,
+  history: store.historyData.history,
+  isUpdating: store.attributesData.isUpdating,
+  isCreating: store.attributesData.isCreating,
+  isDeleting: store.attributesData.isDeleting,
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(NodeMenu);

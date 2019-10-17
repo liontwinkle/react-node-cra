@@ -34,7 +34,7 @@ const PreviewProducts = ({
             columns,
             colHeaders: headers,
             rowHeaders: true,
-            columnSorting: true,
+            multiColumnSorting: true,
           }}
         />
       </div>

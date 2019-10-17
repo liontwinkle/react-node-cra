@@ -70,15 +70,16 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_CREATE_SUCCESS:
       const { data } = action.payload;
-      attributes.push(data);
-
-      const createData = getAttribute(attributes);
-      const nodeData = _merge(createData.subTree, state.nodes);
+      let createdAttributes = JSON.parse(JSON.stringify(attributes));
+      createdAttributes = [...createdAttributes, data];
+      const createData = JSON.parse(JSON.stringify(getAttribute(createdAttributes)));
+      const tempNodes = JSON.parse(JSON.stringify(state.nodes));
+      const nodeData = _merge(createData.subTree, tempNodes);
       const nodeAssociation = _merge(createData.association, state.associations);
       return {
         ...state,
         isCreating: false,
-        attributes: attributes.slice(0),
+        attributes: JSON.parse(JSON.stringify(createdAttributes.slice(0))),
         nodes: nodeData,
         associations: nodeAssociation,
         attribute: action.payload.data,
@@ -97,14 +98,15 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_UPDATE_SUCCESS:
       const updateData = action.payload.data;
-      const attributesIdx = _findIndex(attributes, { id: updateData.id });
+      let updatedAttributes = JSON.parse(JSON.stringify(attributes));
+      const attributesIdx = _findIndex(updatedAttributes, { id: updateData.id });
       if (attributesIdx > -1) {
-        attributes.splice(attributesIdx, 1, updateData);
+        updatedAttributes[attributesIdx] = updateData;
       } else {
-        attributes.push(updateData);
+        updatedAttributes = [...updatedAttributes, updateData];
       }
       const newTrees = [];
-      const recvTrees = getAttribute(attributes);
+      const recvTrees = getAttribute(updatedAttributes);
       state.nodes.forEach((pItem, pKey) => {
         if (pItem.children.length > 0) {
           const cNewItem = [];
@@ -133,7 +135,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isUpdating: false,
-        attributes: attributes.slice(0),
+        attributes: JSON.parse(JSON.stringify(updatedAttributes)),
         nodes: newTrees,
         associations: recvTrees.association,
         attribute: action.payload.data,

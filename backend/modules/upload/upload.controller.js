@@ -70,7 +70,6 @@ exports.upload = (req, res) => {
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
-            console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
             uploadAppear(updateData, req.params.clientId);
           } else if (req.params.type === 'virtual') {
             setAppearForCategory(updateData, req.params.clientId);

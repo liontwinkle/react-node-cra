@@ -17,10 +17,8 @@ import './style.scss';
 
 function AttributeNode({
   nodeData,
-  history,
   setNodeData,
   isUpdating,
-  isDeleting,
   isCreating,
   attributes,
   attribute,
@@ -60,12 +58,13 @@ function AttributeNode({
   const handleBlur = (node, path) => () => {
     if (node.editable) {
       const attribute = _find(attributes, { id: node.item.id });
-
+      const group = _find(attributes, { attributeId: parseInt(node.item.groupId, 10) });
+      const groupId = (group) ? group.id : '';
       if (attribute && attribute.name !== node.title && !isUpdating && !isCreating) {
         if (checkNameDuplicate(attributes, node.title, node.item.groupId) === 0) {
           updateAttribute(node.item.id, { name: node.title })
             .then(() => {
-              addNewRuleHistory(createHistory, node.item, node.item.groupId,
+              addNewRuleHistory(createHistory, node.item, groupId,
                 `Name is changed as ${node.title}`,
                 `The Child ${attribute.name} Name is changed as ${node.title}`,
                 'attributes');
@@ -132,12 +131,8 @@ function AttributeNode({
             treeData={nodeData}
             node={node}
             path={path}
-            attributes={attributes}
             setTreeData={setNodeData}
             checkNameDuplicate={checkNameDuplicate}
-            history={history}
-            isCreating={isCreating}
-            isDeleting={isDeleting}
           />,
         ],
         title: (
@@ -159,9 +154,7 @@ function AttributeNode({
 
 AttributeNode.propTypes = {
   nodeData: PropTypes.array.isRequired,
-  history: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  isDeleting: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   attribute: PropTypes.object,
@@ -177,11 +170,9 @@ AttributeNode.defaultProps = {
 
 const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
-  history: store.historyData.history,
   attribute: store.attributesData.attribute,
   isUpdating: store.attributesData.isUpdating,
   isCreating: store.attributesData.isCreating,
-  isDeleting: store.attributesData.isDeleting,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

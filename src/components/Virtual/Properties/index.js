@@ -14,6 +14,7 @@ import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
+import CustomMonaco from '../../elements/CustomMonaco';
 
 class Properties extends Component {
   state = {
@@ -152,6 +153,7 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
+            <CustomMonaco label="monaco" value="text" />
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
