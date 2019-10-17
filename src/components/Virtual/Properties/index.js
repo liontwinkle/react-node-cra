@@ -14,7 +14,6 @@ import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
-import CustomMonaco from '../../elements/CustomMonaco';
 
 class Properties extends Component {
   state = {
@@ -101,6 +100,15 @@ class Properties extends Component {
     }));
   };
 
+  changeMonaco = field => (newValue) => {
+    this.setState(prevState => ({
+      properties: {
+        ...prevState.properties,
+        [field]: newValue,
+      },
+    }));
+  };
+
   toggleSwitch = field => () => {
     this.setState(prevState => ({
       properties: {
@@ -122,7 +130,7 @@ class Properties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch,
+      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
     );
   };
 
@@ -153,7 +161,6 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
-            <CustomMonaco label="monaco" value="text" />
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems

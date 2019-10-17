@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import React, { forwardRef } from 'react';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -69,7 +70,7 @@ export const propertyFieldTypes = [
   { key: 'toggle', label: 'Toggle' },
   { key: 'text', label: 'Text' },
   { key: 'array', label: 'Array' },
-
+  { key: 'monaco', label: 'Monaco Edit' },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);

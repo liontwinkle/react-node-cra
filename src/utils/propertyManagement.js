@@ -11,6 +11,7 @@ import {
   IconButton,
 } from 'components/elements';
 import { propertyTypes } from './constants';
+import CustomMonaco from '../components/elements/CustomMonaco';
 
 export const initProperties = (properties, matchProperties) => {
   const updateProperties = {};
@@ -40,7 +41,7 @@ export const updateProperties = (propertyFields, properties) => {
 export const sectionRender = (
   propertyFields, state, section,
   changeInput, changeSelect, changeArrayInput,
-  handleSelItemToggle, toggleSwitch,
+  handleSelItemToggle, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
   propertyFields.forEach((p) => {
@@ -148,6 +149,22 @@ export const sectionRender = (
             value={value}
             onChange={changeArrayInput(p.key)}
             key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'monaco') {
+        let value = '';
+        if (state.properties[p.key] === undefined) {
+          value = p.default || 'default';
+        } else {
+          value = state.properties[p.key];
+        }
+        res.push(
+          <CustomMonaco
+            label={p.label}
+            inline
+            value={value}
+            key={p.key}
+            onChange={changeMonaco(p.key)}
           />,
         );
       }

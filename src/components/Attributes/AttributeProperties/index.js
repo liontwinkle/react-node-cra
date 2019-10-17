@@ -100,6 +100,15 @@ class AttributeProperties extends Component {
     }));
   };
 
+  changeMonaco = field => (newValue) => {
+    this.setState(prevState => ({
+      properties: {
+        ...prevState.properties,
+        [field]: newValue,
+      },
+    }));
+  };
+
   toggleSwitch = field => () => {
     this.setState(prevState => ({
       properties: {
@@ -121,7 +130,7 @@ class AttributeProperties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch,
+      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
     );
   };
 
