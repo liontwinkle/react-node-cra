@@ -183,7 +183,6 @@ function handleAttributeFetch(req, res) {
       const attributeData = JSON.parse(JSON.stringify(entity));
       collectionAppear.find()
         .then((result) => {
-          console.log('###### DEBUG RESULT: ', result); // fxime
           entity.forEach((entityItem, index) => {
             if (result.length > 0) {
               attributeData[index].appear = result.filter((appearItem =>
