@@ -35,9 +35,9 @@ function ClientImport({
   categories,
   attributes,
   fileUpload,
-  fetchCategories,
-  fetchAttributes,
-  fetchProducts,
+  // fetchCategories,
+  // fetchAttributes,
+  // fetchProducts,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -45,6 +45,12 @@ function ClientImport({
   const [importData, setImportData] = useState(null);
   const [uploadFlag, setUploadFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
+
+  const uploading = data => new Promise(() => {
+    fileUpload(data)
+      .then(res => res)
+      .catch(err => err);
+  });
 
   const handleSubmit = () => {
     setUploadFlag(true);
@@ -58,29 +64,36 @@ function ClientImport({
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
     console.log('#### DEBUG FINAL UPLOAD DATA: ', uploadData); // fixme
-    if (readData.length > 0 && sendingData.length > 0 && !isUploading) {
-      fileUpload(uploadData)
-        .then(() => {
-          setImportData([]);
-          if (type.key === 'virtual' || type.key === 'native') {
-            fetchCategories(client.id, type.key).then(() => {
-              fetchAttributes(client.id, 'attributes')
-                .then(() => {
-                  setUploadFlag(false);
-                });
-            });
-          } else if (type.key === 'attributes') {
-            fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
-          } else {
-            fetchProducts().then(() => { setUploadFlag(false); });
-          }
-          confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
-        })
-        .catch(() => {
-          setImportData(null);
-          setUploadFlag(false);
-          confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
-        });
+    if (readData.length > 0 && sendingData.length > 0) {
+      uploadData.forEach(async (subData) => {
+        console.log('#### DEBUG SEND REQUEST: ', isUploading); // fixme
+        const data = await uploading(subData);
+        console.log(data); // fixme
+        // .then(() => {
+        //   if (index === uploadData.length - 1) {
+        //     console.log('#### DEBUG ALL REQUEST SENT ####'); // fixme
+        //     setImportData([]);
+        //     if (type.key === 'virtual' || type.key === 'native') {
+        //       fetchCategories(client.id, type.key).then(() => {
+        //         fetchAttributes(client.id, 'attributes')
+        //           .then(() => {
+        //             setUploadFlag(false);
+        //           });
+        //       });
+        //     } else if (type.key === 'attributes') {
+        //       fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+        //     } else {
+        //       fetchProducts().then(() => { setUploadFlag(false); });
+        //     }
+        //     confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
+        //   }
+        // })
+        // .catch(() => {
+        //   setImportData(null);
+        //   setUploadFlag(false);
+        //   confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
+        // });
+      });
     } else {
       if (importData) {
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
@@ -168,9 +181,9 @@ ClientImport.propTypes = {
   isUploading: PropTypes.bool.isRequired,
   isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
-  fetchAttributes: PropTypes.func.isRequired,
-  fetchCategories: PropTypes.func.isRequired,
-  fetchProducts: PropTypes.func.isRequired,
+  // fetchAttributes: PropTypes.func.isRequired,
+  // fetchCategories: PropTypes.func.isRequired,
+  // fetchProducts: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
