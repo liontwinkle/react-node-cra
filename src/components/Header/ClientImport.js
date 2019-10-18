@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -22,6 +22,7 @@ import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
 import './style.scss';
+import CustomMonaco from '../elements/CustomMonaco';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -45,6 +46,7 @@ function ClientImport({
   const { enqueueSnackbar } = useSnackbar();
 
   const [importData, setImportData] = useState(null);
+  const [editData, setEditData] = useState([]);
   const [uploadFlag, setUploadFlag] = useState(false);
   const [validateFlag, setValidateFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
@@ -115,6 +117,7 @@ function ClientImport({
             if (type === 'data') {
               try {
                 setImportData(JSON.parse(reader.result));
+                setEditData(JSON.parse(reader.result));
                 setValidateFlag(true);
               } catch (e) {
                 confirmMessage(enqueueSnackbar,
@@ -129,6 +132,15 @@ function ClientImport({
     }
   };
 
+  const onEditHandle = (value) => {
+    console.log('###### DEBUG EDIT VALUE: ', value); // fixme
+    try {
+      setEditData(JSON.parse(value));
+    } catch (e) {
+      confirmMessage(enqueueSnackbar,
+        'The Value type should be JSON.', 'error');
+    }
+  };
   return (
     <Dialog
       open={status.open}
@@ -142,10 +154,19 @@ function ClientImport({
       <DialogContent>
         {
           !uploadFlag && !isKeyUploading ? (
-            <UploadDlg
-              onChangeData={onChangeHandle('data')}
-              clientType={type.key}
-            />
+            <Fragment>
+              <UploadDlg
+                onChangeData={onChangeHandle('data')}
+                clientType={type.key}
+              />
+              <CustomMonaco
+                label="Edit"
+                // inline
+                value={JSON.stringify(editData, null, 2)}
+                key="upload"
+                onChange={data => onEditHandle(data)}
+              />
+            </Fragment>
           ) : (
             <div className="upload_loader">
               <Loader size="small" color="dark" />
