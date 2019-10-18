@@ -45,8 +45,7 @@ function ClientImport({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [importData, setImportData] = useState(null);
-  const [editData, setEditData] = useState([]);
+  const [importData, setImportData] = useState([]);
   const [uploadFlag, setUploadFlag] = useState(false);
   const [validateFlag, setValidateFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
@@ -55,7 +54,7 @@ function ClientImport({
     await asyncForEach(data, async (subData, index) => {
       await fileUpload(subData);
       if (index === data.length - 1) {
-        setImportData(null);
+        setImportData([]);
         setValidateFlag(false);
         if (type.key === 'virtual' || type.key === 'native') {
           fetchCategories(client.id, type.key)
@@ -98,7 +97,7 @@ function ClientImport({
         confirmMessage(enqueueSnackbar,
           'Data is invalid. The Fields of Data are wrong or not exist', 'error');
       }
-      setImportData(null);
+      setImportData([]);
       setUploadFlag(false);
       setValidateFlag(false);
     }
@@ -117,7 +116,6 @@ function ClientImport({
             if (type === 'data') {
               try {
                 setImportData(JSON.parse(reader.result));
-                setEditData(JSON.parse(reader.result));
                 setValidateFlag(true);
               } catch (e) {
                 confirmMessage(enqueueSnackbar,
@@ -133,9 +131,8 @@ function ClientImport({
   };
 
   const onEditHandle = (value) => {
-    console.log('###### DEBUG EDIT VALUE: ', value); // fixme
     try {
-      setEditData(JSON.parse(value));
+      setImportData(JSON.parse(value));
     } catch (e) {
       confirmMessage(enqueueSnackbar,
         'The Value type should be JSON.', 'error');
@@ -162,7 +159,7 @@ function ClientImport({
               <CustomMonaco
                 label="Edit"
                 // inline
-                value={JSON.stringify(editData, null, 2)}
+                value={JSON.stringify(importData, null, 2)}
                 key="upload"
                 onChange={data => onEditHandle(data)}
               />
