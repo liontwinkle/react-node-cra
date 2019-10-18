@@ -12,11 +12,11 @@ const PropertyFieldsCollection = require('../property-fields/property-fields.mod
 const checkType = {
   virtual: 'categoryId',
   native: 'categoryId',
-  products: 'id',
+  products: '_id',
   attributes: 'attributeId',
 };
 
-const removeList = ['createdAt', 'updatedAt', '__v', '$oid', '_id'];
+const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
 
 const removeUnnecessaryData = (data) => {
   const addData = {};
@@ -42,7 +42,7 @@ const removeUnnecessaryData = (data) => {
 
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
-  newData.forEach((newItem, index) => {
+  newData.forEach((newItem) => {
     if (type !== 'products') {
       const duplicateFilter = currentData.find(currentItem =>
         (currentItem[checkType[type]] === newItem[checkType[type]]));
@@ -54,14 +54,12 @@ const checkDuplicateData = (currentData, newData, type) => {
         }
       }
     } else {
-      console.log('#### DEBUG REMOVE UNNECESS: ', index); // fixme
       newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
   return newCreateData;
 };
 exports.upload = (req, res) => {
-  console.log('##### DEBUG UPDATE DATA ######'); // fixme
   let collection = null;
   if (req.params.type === 'virtual' || req.params.type === 'native') {
     collection = CategoryModel(`${req.params.clientId}_${req.params.type}`);
@@ -70,12 +68,9 @@ exports.upload = (req, res) => {
   } else {
     collection = AttributesModel(`${req.params.clientId}_${req.params.type}`);
   }
-  console.log('##### DEBUG UPDATE COLLECTION: ', collection); // fixme
   collection.find({}, (err, result) => {
     if (!err) {
-      console.log('##### START CEHCK DUPLICATE ######'); // fixme
       const updateData = checkDuplicateData(result, req.body, req.params.type);
-      console.log('##### DEBUG UPDATE DATA ####'); // fixme
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
@@ -86,14 +81,12 @@ exports.upload = (req, res) => {
           collection.insertMany(updateData);
           res.status(201).json(updateData[0]);
         } catch (e) {
-          console.log(e); // fixme
           handleError(res);
         }
       } else {
         res.status(201).json([]);
       }
     } else {
-      console.log('e'); // fixme
       handleError(res);
     }
   });

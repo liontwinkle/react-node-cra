@@ -37,9 +37,9 @@ function ClientImport({
   categories,
   attributes,
   fileUpload,
-  // fetchCategories,
-  // fetchAttributes,
-  // fetchProducts,
+  fetchCategories,
+  fetchAttributes,
+  fetchProducts,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -50,22 +50,27 @@ function ClientImport({
 
   const uploading = async (data) => {
     await asyncForEach(data, async (subData, index) => {
-      console.log('#### DEBUG SEND REQUEST: ', isUploading); // fixme
       await fileUpload(subData);
       if (index === data.length - 1) {
-        console.log('#### DEBUG ALL REQUEST SENT ####'); // fixme
         setImportData([]);
         if (type.key === 'virtual' || type.key === 'native') {
-          fetchCategories(client.id, type.key).then(() => {
-            fetchAttributes(client.id, 'attributes')
-              .then(() => {
-                setUploadFlag(false);
-              });
-          });
+          fetchCategories(client.id, type.key)
+            .then(() => {
+              fetchAttributes(client.id, 'attributes')
+                .then(() => {
+                  setUploadFlag(false);
+                });
+            });
         } else if (type.key === 'attributes') {
-          fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+          fetchAttributes(client.id, type.key)
+            .then(() => {
+              setUploadFlag(false);
+            });
         } else {
-          fetchProducts().then(() => { setUploadFlag(false); });
+          fetchProducts()
+            .then(() => {
+              setUploadFlag(false);
+            });
         }
         confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
       }
@@ -80,10 +85,8 @@ function ClientImport({
     } else {
       readData.push(importData);
     }
-    console.log('#### DEBUG UPLOAD DATA: ', importData); // fixme
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
-    console.log('#### DEBUG FINAL UPLOAD DATA: ', uploadData); // fixme
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);
     } else {
@@ -98,7 +101,6 @@ function ClientImport({
   const onChangeHandle = type => (fileItem) => {
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
-      console.log('##### DEBUG INPUT FILE: ', file); // fixme
       setFileSize(file.size);
       const { fileType } = fileItem[0];
       if (fileType === 'application/json') {
@@ -149,14 +151,14 @@ function ClientImport({
           disabled={isUploading}
           onClick={handleClose}
         >
-            Cancel
+          Cancel
         </button>
         <button
           className="mg-button primary"
           disabled={isUploading || disabled}
           onClick={handleSubmit}
         >
-            Save
+          Save
         </button>
       </DialogActions>
     </Dialog>
@@ -173,9 +175,9 @@ ClientImport.propTypes = {
   isUploading: PropTypes.bool.isRequired,
   isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
-  // fetchAttributes: PropTypes.func.isRequired,
-  // fetchCategories: PropTypes.func.isRequired,
-  // fetchProducts: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
+  fetchCategories: PropTypes.func.isRequired,
+  fetchProducts: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {

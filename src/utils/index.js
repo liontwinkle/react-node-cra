@@ -55,9 +55,9 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
   const groupItem = groupIds.filter(item => (item.attributeId === recvGroupId));
   let groupData = [];
-  if (recvGroupId !== '' && groupItem.length < 0) {
+  if (recvGroupId !== '' && groupItem.length === 0) {
     if (newData.findIndex(newItem => (
-      newItem.attributeId === recvGroupId || newItem._id === recvGroupId
+      newItem.attributeid === recvGroupId || newItem._id === recvGroupId
     ) === -1)) {
       passFlag = false;
     }
@@ -80,22 +80,16 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
 };
 
 export const makeUploadData = (size, sourceData) => {
-  console.log('#### DEBUG SIZE : ', size); // fixme
-  console.log('#### DEBUG SOURCE DATA : ', sourceData); // fixme
   const uploadData = [];
   if (size > LIMIT_SIZE) {
-    console.log('#### DEBUG LARGE FILE ###');
     const dataNum = Math.ceil(size / LIMIT_SIZE);
-    console.log('###### DEBUG DATA NUM: ', dataNum);
     const unitNum = sourceData.length / dataNum;
-    console.log('###### DEBUG UNIT NUM: ', unitNum);
     for (let i = 0; i < dataNum; i++) {
       uploadData.push(sourceData.slice(i * unitNum, (i + 1) * unitNum - 1));
     }
   } else {
     uploadData.push(sourceData);
   }
-  console.log('##### DEBUG UPLOAD RESULT: ', uploadData); // fixme
   return uploadData;
 };
 

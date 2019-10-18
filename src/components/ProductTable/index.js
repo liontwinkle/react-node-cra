@@ -124,7 +124,6 @@ class ProductTable extends Component {
         case 'not_contains':
           const matchText = $('.htUIInput input').val();
           updateData = FilterEngine[condition](this.props.originProducts, column, matchText);
-          console.log(updateData);
           break;
         case 'gt':
         case 'gte':
