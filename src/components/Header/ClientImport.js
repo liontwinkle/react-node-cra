@@ -93,7 +93,8 @@ function ClientImport({
       uploading(uploadData);
     } else {
       if (importData) {
-        confirmMessage(enqueueSnackbar, 'Data is invalid. The Fields of Data are wrong or ', 'error');
+        confirmMessage(enqueueSnackbar,
+          'Data is invalid. The Fields of Data are wrong or not exist', 'error');
       }
       setImportData(null);
       setUploadFlag(false);
