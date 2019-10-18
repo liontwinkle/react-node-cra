@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { OrderedMap } from 'immutable';
 import _difference from 'lodash/difference';
 import _union from 'lodash/union';
@@ -551,4 +552,10 @@ export const getProducts = (products) => {
     valueDetails: getRulesKey(headers),
     products: objects,
   };
+};
+
+export const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
 };

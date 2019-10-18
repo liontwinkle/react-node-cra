@@ -16,7 +16,7 @@ const checkType = {
   attributes: 'attributeId',
 };
 
-const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
+const removeList = ['createdAt', 'updatedAt', '__v', '$oid', '_id'];
 
 const removeUnnecessaryData = (data) => {
   const addData = {};
@@ -42,20 +42,26 @@ const removeUnnecessaryData = (data) => {
 
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
-  newData.forEach((newItem) => {
-    const duplicateFilter = currentData.find(currentItem =>
-      (currentItem[checkType[type]] === newItem[checkType[type]]));
-    if (!duplicateFilter) {
-      try {
-        newCreateData.push(removeUnnecessaryData(newItem));
-      } catch (e) {
-        console.error(e);
+  newData.forEach((newItem, index) => {
+    if (type !== 'products') {
+      const duplicateFilter = currentData.find(currentItem =>
+        (currentItem[checkType[type]] === newItem[checkType[type]]));
+      if (!duplicateFilter) {
+        try {
+          newCreateData.push(removeUnnecessaryData(newItem));
+        } catch (e) {
+          console.error(e);
+        }
       }
+    } else {
+      console.log('#### DEBUG REMOVE UNNECESS: ', index); // fixme
+      newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
   return newCreateData;
 };
 exports.upload = (req, res) => {
+  console.log('##### DEBUG UPDATE DATA ######'); // fixme
   let collection = null;
   if (req.params.type === 'virtual' || req.params.type === 'native') {
     collection = CategoryModel(`${req.params.clientId}_${req.params.type}`);
@@ -64,9 +70,12 @@ exports.upload = (req, res) => {
   } else {
     collection = AttributesModel(`${req.params.clientId}_${req.params.type}`);
   }
+  console.log('##### DEBUG UPDATE COLLECTION: ', collection); // fixme
   collection.find({}, (err, result) => {
     if (!err) {
+      console.log('##### START CEHCK DUPLICATE ######'); // fixme
       const updateData = checkDuplicateData(result, req.body, req.params.type);
+      console.log('##### DEBUG UPDATE DATA ####'); // fixme
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
@@ -77,12 +86,14 @@ exports.upload = (req, res) => {
           collection.insertMany(updateData);
           res.status(201).json(updateData[0]);
         } catch (e) {
+          console.log(e); // fixme
           handleError(res);
         }
       } else {
         res.status(201).json([]);
       }
     } else {
+      console.log('e'); // fixme
       handleError(res);
     }
   });

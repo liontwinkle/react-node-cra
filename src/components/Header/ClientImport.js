@@ -15,7 +15,9 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
-import { confirmMessage, validateData, makeUploadData } from 'utils';
+import {
+  confirmMessage, validateData, makeUploadData, asyncForEach,
+} from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
@@ -46,11 +48,29 @@ function ClientImport({
   const [uploadFlag, setUploadFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
 
-  const uploading = data => new Promise(() => {
-    fileUpload(data)
-      .then(res => res)
-      .catch(err => err);
-  });
+  const uploading = async (data) => {
+    await asyncForEach(data, async (subData, index) => {
+      console.log('#### DEBUG SEND REQUEST: ', isUploading); // fixme
+      await fileUpload(subData);
+      if (index === data.length - 1) {
+        console.log('#### DEBUG ALL REQUEST SENT ####'); // fixme
+        setImportData([]);
+        if (type.key === 'virtual' || type.key === 'native') {
+          fetchCategories(client.id, type.key).then(() => {
+            fetchAttributes(client.id, 'attributes')
+              .then(() => {
+                setUploadFlag(false);
+              });
+          });
+        } else if (type.key === 'attributes') {
+          fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+        } else {
+          fetchProducts().then(() => { setUploadFlag(false); });
+        }
+        confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
+      }
+    });
+  };
 
   const handleSubmit = () => {
     setUploadFlag(true);
@@ -65,35 +85,7 @@ function ClientImport({
     const uploadData = makeUploadData(fileSize, sendingData);
     console.log('#### DEBUG FINAL UPLOAD DATA: ', uploadData); // fixme
     if (readData.length > 0 && sendingData.length > 0) {
-      uploadData.forEach(async (subData) => {
-        console.log('#### DEBUG SEND REQUEST: ', isUploading); // fixme
-        const data = await uploading(subData);
-        console.log(data); // fixme
-        // .then(() => {
-        //   if (index === uploadData.length - 1) {
-        //     console.log('#### DEBUG ALL REQUEST SENT ####'); // fixme
-        //     setImportData([]);
-        //     if (type.key === 'virtual' || type.key === 'native') {
-        //       fetchCategories(client.id, type.key).then(() => {
-        //         fetchAttributes(client.id, 'attributes')
-        //           .then(() => {
-        //             setUploadFlag(false);
-        //           });
-        //       });
-        //     } else if (type.key === 'attributes') {
-        //       fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
-        //     } else {
-        //       fetchProducts().then(() => { setUploadFlag(false); });
-        //     }
-        //     confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
-        //   }
-        // })
-        // .catch(() => {
-        //   setImportData(null);
-        //   setUploadFlag(false);
-        //   confirmMessage(enqueueSnackbar, 'Uploading is not success.', 'error');
-        // });
-      });
+      uploading(uploadData);
     } else {
       if (importData) {
         confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
