@@ -93,6 +93,15 @@ function CustomSelect(props) {
         id={id}
         open={isOpened}
         anchorEl={anchorEl}
+        modifiers={{
+          flip: {
+            enabled: true,
+          },
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'scrollParent',
+          },
+        }}
       >
         <ul
           className={`mg-select-list${isOpened ? ' active' : ''}`}

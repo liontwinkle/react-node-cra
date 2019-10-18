@@ -11,6 +11,9 @@ import {
   basis, match, refer, scope,
 } from './constants';
 
+/** ** UTILS START*** */
+const LIMIT_SIZE = 100 * 1024 * 1024;
+
 const validateKey = {
   virtual: ['categoryid', 'name'],
   attributes: ['attributeid', 'name'],
@@ -18,7 +21,6 @@ const validateKey = {
   products: [],
 };
 
-const LIMIT_SIZE = 100 * 1024 * 1024;
 const checkException = (keys, dataItem, type) => {
   let passFlag = true;
   validateKey[type].forEach((validateItem) => {
@@ -79,92 +81,6 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   };
 };
 
-export const makeUploadData = (size, sourceData) => {
-  const uploadData = [];
-  if (size > LIMIT_SIZE) {
-    const dataNum = Math.ceil(size / LIMIT_SIZE);
-    const unitNum = sourceData.length / dataNum;
-    for (let i = 0; i < dataNum; i++) {
-      uploadData.push(sourceData.slice(i * unitNum, (i + 1) * unitNum - 1));
-    }
-  } else {
-    uploadData.push(sourceData);
-  }
-  return uploadData;
-};
-
-export const validateData = (type, data, categories, attributes) => {
-  const validateData = [];
-  let tempData = {};
-  if (validateKey[type]) {
-    data.forEach((dataItem) => {
-      const keys = Object.keys(dataItem);
-      if (keys.length > 0) {
-        const validateFlag = checkException(keys, dataItem, type);
-        if (validateFlag) {
-          let pushFlag = true;
-          if (type === 'virtual') {
-            pushFlag = handleExceptionVirtual(data, dataItem, categories);
-            if (pushFlag) {
-              tempData.rules = dataItem.rules || [];
-              tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
-                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
-              tempData.name = dataItem.name || [];
-              tempData.parentId = dataItem.parent_id || '';
-            }
-          } else if (type === 'attributes') {
-            const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
-            pushFlag = validateData.passFlag;
-            if (pushFlag) {
-              tempData.rules = dataItem.rules || [];
-              tempData.appear = validateData.returnData || [];
-              tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
-                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
-              tempData.name = dataItem.name || [];
-              tempData.groupId = dataItem.groupid || dataItem.group_id || '';
-            }
-          } else {
-            tempData = JSON.parse(JSON.stringify(dataItem));
-          }
-          if (pushFlag) validateData.push(tempData);
-        }
-      }
-    });
-  }
-  return validateData;
-};
-
-export const useStyles = makeStyles(theme => ({
-  dialogAction: {
-    margin: theme.spacing(2),
-  },
-  dialogContent: {
-    overflow: 'unset',
-  },
-}));
-
-export const getSubItems = ({ children }) => {
-  let childLength = 0;
-
-  if (children) {
-    childLength = children.length;
-    children.forEach((item) => {
-      childLength += getSubItems(item);
-    });
-  }
-  return childLength;
-};
-
-export const setHandler = (context, callback) => {
-  const keys = Object.keys(context);
-  keys.forEach((keyItem) => {
-    context[keyItem].addEventListener('contextmenu', callback);
-  });
-  return () => keys.forEach((keyItem) => {
-    context[keyItem].removeEventListener('contextmenu', callback);
-  });
-};
-
 const AnaylsisDetails = (valueStr, valueDetails) => {
   const partValue = valueStr.split(']');
   const detailValue = partValue[0].split(':');
@@ -179,40 +95,6 @@ const AnaylsisDetails = (valueStr, valueDetails) => {
     detailObj,
     matchObj,
     valueKey,
-  };
-};
-
-export const getRules = (srcRules, valueDetails) => {
-  const newRules = [];
-  const editRules = [];
-  srcRules.forEach((item) => {
-    const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
-    const referObj = refer.find(referItem => (referItem.key === item.refer));
-    const otherObj = AnaylsisDetails(item.value, valueDetails);
-    if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
-      newRules.push({
-        _id: item._id,
-        basis: basisObj,
-        refer: referObj,
-        detail: otherObj.detailObj,
-        match: otherObj.matchObj,
-        value: otherObj.valueKey,
-        scope: scope[0],
-      });
-      editRules.push({
-        _id: item._id,
-        basis: basisObj.key,
-        refer: referObj.key,
-        detail: otherObj.detailObj.key,
-        match: otherObj.matchObj.key,
-        value: otherObj.valueKey,
-        scope: scope[0].key,
-      });
-    }
-  });
-  return {
-    newRules,
-    editRules,
   };
 };
 
@@ -264,25 +146,6 @@ const getRuleProducts = (products, field, match, value, basis) => {
   return returnValue;
 };
 
-export const getPreFilterData = (rules, products) => {
-  formatDifference();
-  let filterResult = new Set();
-
-  rules.forEach((item) => {
-    const field = item.detail;
-    const { match, value, basis } = item;
-    if (field === '*') {
-      filterResult = getAllmatched(products, match, value, basis);
-    } else {
-      filterResult = getRuleProducts(products, field, match, value, basis);
-    }
-    AddSets(filterResult.includes, 'includes');
-    AddSets(filterResult.excludes, 'excludes');
-  });
-
-  return Array.from(DiffSets());
-};
-
 const getSubTree = (list, parentId, type, originNode) => {
   const subTree = [];
   const association = [];
@@ -311,6 +174,163 @@ const getSubTree = (list, parentId, type, originNode) => {
     subTree,
     association,
   };
+};
+
+const getRulesKey = (keys) => {
+  const ruleKeys = [
+    {
+      label: 'All',
+      key: '*',
+    },
+  ];
+  keys.forEach((keyItem, key) => {
+    ruleKeys[key + 1] = {
+      label: keyItem,
+      key: keyItem,
+    };
+  });
+  return ruleKeys;
+};
+
+/** ** UTILS END*** */
+
+/** ** EXPORTS START*** */
+export const useStyles = makeStyles(theme => ({
+  dialogAction: {
+    margin: theme.spacing(2),
+  },
+  dialogContent: {
+    overflow: 'unset',
+  },
+}));
+
+export const makeUploadData = (size, sourceData) => {
+  const uploadData = [];
+  if (size > LIMIT_SIZE) {
+    const dataNum = Math.ceil(size / LIMIT_SIZE);
+    const unitNum = sourceData.length / dataNum;
+    for (let i = 0; i < dataNum; i++) {
+      uploadData.push(sourceData.slice(i * unitNum, (i + 1) * unitNum - 1));
+    }
+  } else {
+    uploadData.push(sourceData);
+  }
+  return uploadData;
+};
+
+export const validateData = (type, data, categories, attributes) => {
+  const validateData = [];
+  let tempData = {};
+  if (validateKey[type]) {
+    data.forEach((dataItem) => {
+      const keys = Object.keys(dataItem);
+      if (keys.length > 0) {
+        if (checkException(keys, dataItem, type)) {
+          let pushFlag = true;
+          if (type === 'virtual') {
+            pushFlag = handleExceptionVirtual(data, dataItem, categories);
+            if (pushFlag) {
+              tempData.rules = dataItem.rules || [];
+              tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
+                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
+              tempData.name = dataItem.name || [];
+              tempData.parentId = dataItem.parent_id || '';
+            }
+          } else if (type === 'attributes') {
+            const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
+            pushFlag = validateData.passFlag;
+            if (pushFlag) {
+              tempData.rules = dataItem.rules || [];
+              tempData.appear = validateData.returnData || [];
+              tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
+                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
+              tempData.name = dataItem.name || [];
+              tempData.groupId = dataItem.groupid || dataItem.group_id || '';
+            }
+          } else {
+            tempData = JSON.parse(JSON.stringify(dataItem));
+          }
+          if (pushFlag) validateData.push(tempData);
+        }
+      }
+    });
+  }
+  return validateData;
+};
+
+export const getSubItems = ({ children }) => {
+  let childLength = 0;
+
+  if (children) {
+    childLength = children.length;
+    children.forEach((item) => {
+      childLength += getSubItems(item);
+    });
+  }
+  return childLength;
+};
+
+export const setHandler = (context, callback) => {
+  const keys = Object.keys(context);
+  keys.forEach((keyItem) => {
+    context[keyItem].addEventListener('contextmenu', callback);
+  });
+  return () => keys.forEach((keyItem) => {
+    context[keyItem].removeEventListener('contextmenu', callback);
+  });
+};
+
+export const getRules = (srcRules, valueDetails) => {
+  const newRules = [];
+  const editRules = [];
+  srcRules.forEach((item) => {
+    const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
+    const referObj = refer.find(referItem => (referItem.key === item.refer));
+    const otherObj = AnaylsisDetails(item.value, valueDetails);
+    if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
+      newRules.push({
+        _id: item._id,
+        basis: basisObj,
+        refer: referObj,
+        detail: otherObj.detailObj,
+        match: otherObj.matchObj,
+        value: otherObj.valueKey,
+        scope: scope[0],
+      });
+      editRules.push({
+        _id: item._id,
+        basis: basisObj.key,
+        refer: referObj.key,
+        detail: otherObj.detailObj.key,
+        match: otherObj.matchObj.key,
+        value: otherObj.valueKey,
+        scope: scope[0].key,
+      });
+    }
+  });
+  return {
+    newRules,
+    editRules,
+  };
+};
+
+export const getPreFilterData = (rules, products) => {
+  formatDifference();
+  let filterResult = new Set();
+
+  rules.forEach((item) => {
+    const field = item.detail;
+    const { match, value, basis } = item;
+    if (field === '*') {
+      filterResult = getAllmatched(products, match, value, basis);
+    } else {
+      filterResult = getRuleProducts(products, field, match, value, basis);
+    }
+    AddSets(filterResult.includes, 'includes');
+    AddSets(filterResult.excludes, 'excludes');
+  });
+
+  return Array.from(DiffSets());
 };
 
 export const confirmMessage = (func, msg, type) => {
@@ -464,21 +484,6 @@ export const getObjectFromArray = (array) => {
   return res;
 };
 
-const getRulesKey = (keys) => {
-  const ruleKeys = [
-    {
-      label: 'All',
-      key: '*',
-    },
-  ];
-  keys.forEach((keyItem, key) => {
-    ruleKeys[key + 1] = {
-      label: keyItem,
-      key: keyItem,
-    };
-  });
-  return ruleKeys;
-};
 
 export const getProducts = (products) => {
   const columns = [];
@@ -553,3 +558,4 @@ export const asyncForEach = async (array, callback) => {
     await callback(array[index], index, array);
   }
 };
+/** ** EXPORTS END*** */
