@@ -46,13 +46,15 @@ function ClientImport({
 
   const [importData, setImportData] = useState(null);
   const [uploadFlag, setUploadFlag] = useState(false);
+  const [validateFlag, setValidateFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
 
   const uploading = async (data) => {
     await asyncForEach(data, async (subData, index) => {
       await fileUpload(subData);
       if (index === data.length - 1) {
-        setImportData([]);
+        setImportData(null);
+        setValidateFlag(false);
         if (type.key === 'virtual' || type.key === 'native') {
           fetchCategories(client.id, type.key)
             .then(() => {
@@ -85,22 +87,22 @@ function ClientImport({
     } else {
       readData.push(importData);
     }
-    console.log('#### DEBUG DATA: ', readData); // fixme
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);
     } else {
       if (importData) {
-        confirmMessage(enqueueSnackbar, 'Data is invalidate.', 'error');
+        confirmMessage(enqueueSnackbar, 'Data is invalid. The Fields of Data are wrong or ', 'error');
       }
       setImportData(null);
       setUploadFlag(false);
+      setValidateFlag(false);
     }
   };
 
   const onChangeHandle = type => (fileItem) => {
-    if (fileItem.length > 0) {
+    if (fileItem.length > 0 && !validateFlag) {
       const { file } = fileItem[0];
       setFileSize(file.size);
       const { fileType } = fileItem[0];
@@ -110,7 +112,13 @@ function ClientImport({
           'load',
           () => {
             if (type === 'data') {
-              setImportData(JSON.parse(reader.result));
+              try {
+                setImportData(JSON.parse(reader.result));
+                setValidateFlag(true);
+              } catch (e) {
+                confirmMessage(enqueueSnackbar,
+                  'Data is invalid. The file is not JSON type or contain errors.', 'error');
+              }
             }
           },
           false,
@@ -120,7 +128,6 @@ function ClientImport({
     }
   };
 
-  const disabled = (importData === undefined);
   return (
     <Dialog
       open={status.open}
@@ -154,13 +161,18 @@ function ClientImport({
         >
           Cancel
         </button>
-        <button
-          className="mg-button primary"
-          disabled={isUploading || disabled}
-          onClick={handleSubmit}
-        >
-          Save
-        </button>
+        {
+          validateFlag
+          && (
+            <button
+              className="mg-button primary"
+              disabled={isUploading || !validateFlag}
+              onClick={handleSubmit}
+            >
+            Save
+            </button>
+          )
+        }
       </DialogActions>
     </Dialog>
   );
