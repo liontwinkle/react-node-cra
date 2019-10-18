@@ -85,6 +85,7 @@ function ClientImport({
     } else {
       readData.push(importData);
     }
+    console.log('#### DEBUG DATA: ', readData); // fixme
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
     if (readData.length > 0 && sendingData.length > 0) {

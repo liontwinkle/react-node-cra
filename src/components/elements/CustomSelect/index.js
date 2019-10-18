@@ -93,20 +93,12 @@ function CustomSelect(props) {
         id={id}
         open={isOpened}
         anchorEl={anchorEl}
-        modifiers={{
-          flip: {
-            enabled: true,
-          },
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: 'scrollParent',
-          },
-        }}
+        transition
       >
         <ul
           className={`mg-select-list${isOpened ? ' active' : ''}`}
           ref={getPopperRef}
-          style={{ width, height }}
+          style={{ width, height, bottom: '0' }}
         >
           <PerfectScrollbar
             options={{
