@@ -90,7 +90,12 @@ function ClientImport({
   };
 
   const handleSubmit = () => {
-    const data = checkJSONData(importData);
+    let data = null;
+    if (type.key === 'products') {
+      data = importData;
+    } else {
+      data = checkJSONData(importData);
+    }
     if (data !== 'err') {
       saveData(data);
     } else {
@@ -99,19 +104,22 @@ function ClientImport({
     }
   };
 
-  const onChangeHandle = type => (fileItem) => {
+  const onChangeHandle = dataType => (fileItem) => {
     if (fileItem.length > 0) {
-      const { file } = fileItem[0];
-      const { fileType } = fileItem[0];
+      const { file, fileType } = fileItem[0];
       setFileSize(file.size);
       if (fileType === 'application/json') {
         const reader = new FileReader();
         reader.addEventListener(
           'load',
           () => {
-            if (type === 'data') {
+            if (dataType === 'data') {
               try {
-                setImportData(reader.result);
+                if (type.key === 'products') {
+                  setImportData(JSON.parse(reader.result));
+                } else {
+                  setImportData(reader.result);
+                }
               } catch (e) {
                 confirmMessage(enqueueSnackbar,
                   'Data is invalid. The file is not correct.', 'error');
@@ -149,14 +157,17 @@ function ClientImport({
                 onChangeData={onChangeHandle('data')}
                 clientType={type.key}
               />
-              <CustomMonaco
-                label="Edit"
-                // inline
-                // value={JSON.stringify(importData, null, 2)}
-                value={importData}
-                key="upload"
-                onChange={data => onEditHandle(data)}
-              />
+              {
+                type.key !== 'products'
+                && (
+                  <CustomMonaco
+                    label="Edit"
+                    value={importData}
+                    key="upload"
+                    onChange={data => onEditHandle(data)}
+                  />
+                )
+              }
             </Fragment>
           ) : (
             <div className="upload_loader">
@@ -192,11 +203,11 @@ function ClientImport({
 }
 
 ClientImport.propTypes = {
-  categories: PropTypes.array.isRequired,
-  attributes: PropTypes.array.isRequired,
-  status: PropTypes.object.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
+  status: PropTypes.object.isRequired,
+  attributes: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
   isKeyUploading: PropTypes.bool.isRequired,
