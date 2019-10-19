@@ -16,7 +16,7 @@ import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
 import {
-  confirmMessage, validateData, makeUploadData, asyncForEach,
+  confirmMessage, validateData, makeUploadData, asyncForEach, checkJSONData,
 } from 'utils';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
@@ -45,17 +45,15 @@ function ClientImport({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [importData, setImportData] = useState([]);
+  const [importData, setImportData] = useState('');
   const [uploadFlag, setUploadFlag] = useState(false);
-  const [validateFlag, setValidateFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
 
   const uploading = async (data) => {
     await asyncForEach(data, async (subData, index) => {
       await fileUpload(subData);
       if (index === data.length - 1) {
-        setImportData([]);
-        setValidateFlag(false);
+        setImportData('');
         if (type.key === 'virtual' || type.key === 'native') {
           fetchCategories(client.id, type.key)
             .then(() => {
@@ -80,31 +78,38 @@ function ClientImport({
     });
   };
 
-  const handleSubmit = () => {
+  const saveData = (data) => {
     setUploadFlag(true);
     let readData = [];
-    if (Array.isArray(importData)) {
-      readData = importData;
+    if (Array.isArray(data)) {
+      readData = data;
     } else {
-      readData.push(importData);
+      readData.push(data);
     }
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);
     } else {
-      if (importData) {
+      if (importData !== '') {
         confirmMessage(enqueueSnackbar,
           'Data is invalid. The Fields of Data are wrong or not exist', 'error');
       }
-      setImportData([]);
       setUploadFlag(false);
-      setValidateFlag(false);
+    }
+  };
+  const handleSubmit = () => {
+    const data = checkJSONData(importData);
+    if (data !== 'err') {
+      saveData(data);
+    } else {
+      confirmMessage(enqueueSnackbar,
+        'Data is invalid. The file is not JSON type or contain errors.', 'error');
     }
   };
 
   const onChangeHandle = type => (fileItem) => {
-    if (fileItem.length > 0 && !validateFlag) {
+    if (fileItem.length > 0) {
       const { file } = fileItem[0];
       setFileSize(file.size);
       const { fileType } = fileItem[0];
@@ -115,11 +120,10 @@ function ClientImport({
           () => {
             if (type === 'data') {
               try {
-                setImportData(JSON.parse(reader.result));
-                setValidateFlag(true);
+                setImportData(reader.result);
               } catch (e) {
                 confirmMessage(enqueueSnackbar,
-                  'Data is invalid. The file is not JSON type or contain errors.', 'error');
+                  'Data is invalid. The file is not correct.', 'error');
               }
             }
           },
@@ -127,17 +131,15 @@ function ClientImport({
         );
         reader.readAsText(file);
       }
+    } else {
+      setImportData('');
     }
   };
 
   const onEditHandle = (value) => {
-    try {
-      setImportData(JSON.parse(value));
-    } catch (e) {
-      confirmMessage(enqueueSnackbar,
-        'The Value type should be JSON.', 'error');
-    }
+    setImportData(value.toString());
   };
+
   return (
     <Dialog
       open={status.open}
@@ -159,7 +161,8 @@ function ClientImport({
               <CustomMonaco
                 label="Edit"
                 // inline
-                value={JSON.stringify(importData, null, 2)}
+                // value={JSON.stringify(importData, null, 2)}
+                value={importData}
                 key="upload"
                 onChange={data => onEditHandle(data)}
               />
@@ -181,11 +184,11 @@ function ClientImport({
           Cancel
         </button>
         {
-          validateFlag
+          importData !== ''
           && (
             <button
               className="mg-button primary"
-              disabled={isUploading || !validateFlag}
+              disabled={isUploading}
               onClick={handleSubmit}
             >
             Save

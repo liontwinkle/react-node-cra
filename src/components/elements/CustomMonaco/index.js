@@ -13,6 +13,7 @@ const CustomMonaco = ({
   inlineWidth,
   inline,
   value,
+  language,
   onChange,
 }) => (
   <div className={`mg-monaco-control ${className}`}>
@@ -35,8 +36,9 @@ const CustomMonaco = ({
         id={id}
         className="mg-monaco-text"
         value={value}
-        language="javascript"
+        language={language}
         theme="vs-dark"
+        Oo
         onChange={onChange}
       />
     </div>
@@ -48,6 +50,7 @@ CustomMonaco.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  language: PropTypes.string,
   className: PropTypes.string,
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
@@ -64,6 +67,7 @@ CustomMonaco.defaultProps = {
   id: uuidv4(),
   className: '',
   label: '',
+  language: 'json',
   value: '',
   labelAlignment: '',
   inline: false,

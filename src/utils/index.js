@@ -204,6 +204,14 @@ export const useStyles = makeStyles(theme => ({
   },
 }));
 
+export const checkJSONData = (data) => {
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return 'err';
+  }
+};
+
 export const makeUploadData = (size, sourceData) => {
   const uploadData = [];
   if (size > LIMIT_SIZE) {

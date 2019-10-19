@@ -10,11 +10,11 @@
     .mg-select-section {
       @include justify-row-between;
       height: fit-content;
-      padding-bottom: 49px;
     }
 
     .scrollbar-container {
       height: 100%;
+      padding-bottom: 49px;
       > .mg-rule-group {
         padding: 0 !important;
         border-left: 0 !important;
