@@ -16,13 +16,15 @@ import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
 import {
-  confirmMessage, validateData, makeUploadData, asyncForEach, checkJSONData,
-} from 'utils';
+  validateData, makeUploadData, asyncForEach, checkJSONData, convertArray,
+} from 'utils/uploadManagement';
+
+import { confirmMessage } from 'utils';
+import CustomMonaco from '../elements/CustomMonaco';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
 import './style.scss';
-import CustomMonaco from '../elements/CustomMonaco';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -49,30 +51,23 @@ function ClientImport({
   const [uploadFlag, setUploadFlag] = useState(false);
   const [fileSize, setFileSize] = useState(0);
 
+  const fetchData = () => {
+    if (type.key === 'virtual' || type.key === 'native') {
+      fetchCategories(client.id, type.key)
+        .then(() => { fetchAttributes(client.id, 'attributes').then(() => { setUploadFlag(false); }); });
+    } else if (type.key === 'attributes') {
+      fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+    } else {
+      fetchProducts().then(() => { setUploadFlag(false); });
+    }
+  };
+
   const uploading = async (data) => {
     await asyncForEach(data, async (subData, index) => {
       await fileUpload(subData);
       if (index === data.length - 1) {
         setImportData('');
-        if (type.key === 'virtual' || type.key === 'native') {
-          fetchCategories(client.id, type.key)
-            .then(() => {
-              fetchAttributes(client.id, 'attributes')
-                .then(() => {
-                  setUploadFlag(false);
-                });
-            });
-        } else if (type.key === 'attributes') {
-          fetchAttributes(client.id, type.key)
-            .then(() => {
-              setUploadFlag(false);
-            });
-        } else {
-          fetchProducts()
-            .then(() => {
-              setUploadFlag(false);
-            });
-        }
+        fetchData();
         confirmMessage(enqueueSnackbar, 'Uploading is success.', 'success');
       }
     });
@@ -80,12 +75,7 @@ function ClientImport({
 
   const saveData = (data) => {
     setUploadFlag(true);
-    let readData = [];
-    if (Array.isArray(data)) {
-      readData = data;
-    } else {
-      readData.push(data);
-    }
+    const readData = convertArray(data);
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
     if (readData.length > 0 && sendingData.length > 0) {
@@ -98,6 +88,7 @@ function ClientImport({
       setUploadFlag(false);
     }
   };
+
   const handleSubmit = () => {
     const data = checkJSONData(importData);
     if (data !== 'err') {
@@ -111,8 +102,8 @@ function ClientImport({
   const onChangeHandle = type => (fileItem) => {
     if (fileItem.length > 0) {
       const { file } = fileItem[0];
-      setFileSize(file.size);
       const { fileType } = fileItem[0];
+      setFileSize(file.size);
       if (fileType === 'application/json') {
         const reader = new FileReader();
         reader.addEventListener(
