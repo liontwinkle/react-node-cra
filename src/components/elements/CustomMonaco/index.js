@@ -38,7 +38,6 @@ const CustomMonaco = ({
         value={value}
         language={language}
         theme="vs-dark"
-        Oo
         onChange={onChange}
       />
     </div>
