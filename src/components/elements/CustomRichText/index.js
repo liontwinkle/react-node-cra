@@ -12,8 +12,8 @@ const CustomRichText = ({
   labelAlignment,
   inlineWidth,
   inline,
-  // value,
-  // onChange,
+  value,
+  onChange,
 }) => (
   <div className={`mg-richtext-control ${className}`}>
     {label && !inline && (
@@ -33,11 +33,13 @@ const CustomRichText = ({
       )}
       <FroalaEditorComponent
         id={id}
-        className="mg-richtext"
         tag="textarea"
-        // value={value}
-        // height={200}
-        // onTextChange={onChange}
+        config={{
+          placeholderText: 'Edit Your Content Here!',
+          charCounterCount: false,
+        }}
+        onModelChange={onChange}
+        model={value}
       />
     </div>
   </div>
@@ -53,18 +55,18 @@ CustomRichText.propTypes = {
   labelAlignment: PropTypes.string,
   inline: PropTypes.bool,
   inlineWidth: PropTypes.number,
-  // value: PropTypes.oneOfType([
-  //   PropTypes.string,
-  //   PropTypes.number,
-  // ]),
-  // onChange: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  onChange: PropTypes.func.isRequired,
 };
 
 CustomRichText.defaultProps = {
   id: uuidv4(),
   className: '',
   label: '',
-  // value: '',
+  value: '',
   labelAlignment: '',
   inline: false,
   inlineWidth: 150,

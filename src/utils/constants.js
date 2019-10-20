@@ -57,13 +57,6 @@ export const ruleNumberItems = [
   { key: 'is_not_null', label: 'is not null' },
 ];
 
-export const ruleKeyTypes = [
-  { key: 'string', label: 'String' },
-  { key: 'number', label: 'Number' },
-];
-
-export const ruleTypes = getObjectFromArray(ruleKeyTypes);
-
 export const propertyFieldTypes = [
   { key: 'string', label: 'String' },
   { key: 'select', label: 'Select' },
@@ -71,6 +64,7 @@ export const propertyFieldTypes = [
   { key: 'text', label: 'Text' },
   { key: 'array', label: 'Array' },
   { key: 'monaco', label: 'Monaco Edit' },
+  { key: 'richtext', label: 'Rich Text Edit' },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);

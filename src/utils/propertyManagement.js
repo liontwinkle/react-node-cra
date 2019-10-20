@@ -4,7 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import React from 'react';
 import {
   CustomArray,
-  CustomInput,
+  CustomInput, CustomRichText,
   CustomSelectWithLabel,
   CustomText,
   CustomToggle,
@@ -165,6 +165,23 @@ export const sectionRender = (
             value={value}
             key={p.key}
             onChange={changeMonaco(p.key)}
+          />,
+        );
+      } else if (p.propertyType === 'richtext') {
+        let value = '';
+        if (state.properties[p.key] === undefined) {
+          value = p.default || 'default';
+        } else {
+          value = state.properties[p.key];
+        }
+        res.push(
+          <CustomRichText
+            id={p.key}
+            label={p.label}
+            inline
+            onChange={changeMonaco(p.key)}
+            value={value}
+            key={p.key}
           />,
         );
       }
