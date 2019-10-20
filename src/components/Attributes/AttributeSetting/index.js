@@ -76,7 +76,7 @@ class AttributeSetting extends Component {
       item.groupId === attribute.groupId
       && item.attributeId !== attribute.attributeId
       && !hasSubArray(item.appear, updateAppear)));
-    if (!unCheckedSibling) {
+    if (!unCheckedSibling && attribute.groupId !== '') {
       returnId = attributes.find(item => (item.attributeId === parseInt(attribute.groupId, 10))).id;
     } else {
       returnId = attribute.id;
@@ -99,7 +99,6 @@ class AttributeSetting extends Component {
         updateData = _difference(this.state.categoryList, updateAppear);
         this.setState({ categoryList: updateData, checked });
       }
-
       this.updateAttribute(updateData, targetNode.checked, updateAttributeId);
     }
   };
