@@ -26,6 +26,7 @@
     "react-checkbox-tree-enhanced": "^1.5.15",
     "react-dom": "^16.8.6",
     "react-filepond": "^7.0.1",
+    "react-froala-wysiwyg": "^3.0.6",
     "react-lazyload": "^2.6.2",
     "react-monaco-editor": "^0.31.0",
     "react-paginate": "^6.3.0",

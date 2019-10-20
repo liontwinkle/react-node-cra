@@ -8,7 +8,7 @@ import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils';
 import { initProperties, updateProperties, sectionRender } from 'utils/propertyManagement';
-import { CustomSection } from 'components/elements';
+import { CustomSection, CustomRichText } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
@@ -161,6 +161,7 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
+            <CustomRichText onChange={null} />
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
