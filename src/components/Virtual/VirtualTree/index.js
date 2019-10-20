@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
@@ -148,42 +147,38 @@ function VirtualSortableTree(props) {
   const editable = (clientType.key === 'virtual');
 
   return (
-    <div className="treeview">
-      <PerfectScrollbar>
-        <SortableTree
-          treeData={treeData}
-          onChange={setTreeData}
-          onMoveNode={handleMoveTree}
-          canDrag
-          generateNodeProps={({ node, path }) => ({
-            className: isSelected(node) ? 'selected' : '',
-            buttons: editable
-              ? [
-                <TreeNodeMenu
-                  treeData={treeData}
-                  node={node}
-                  path={path}
-                  setTreeData={setTreeData}
-                  editable={editable}
-                  history={history}
-                />,
-              ] : [],
-            title: (
-              <input
-                className={`tree-node-input${node.editable ? ' editable' : ''}`}
-                readOnly={!node.editable}
-                onDoubleClick={editable ? handleDoubleClick(node, path) : null}
-                value={node.title}
-                onBlur={handleBlur(node, path)}
-                onKeyDown={handleKeyDown(node, path)}
-                onChange={handleChange(node, path)}
-              />
-            ),
-            onClick: handleClick(node),
-          })}
-        />
-      </PerfectScrollbar>
-    </div>
+    <SortableTree
+      treeData={treeData}
+      onChange={setTreeData}
+      onMoveNode={handleMoveTree}
+      canDrag
+      generateNodeProps={({ node, path }) => ({
+        className: isSelected(node) ? 'selected' : '',
+        buttons: editable
+          ? [
+            <TreeNodeMenu
+              treeData={treeData}
+              node={node}
+              path={path}
+              setTreeData={setTreeData}
+              editable={editable}
+              history={history}
+            />,
+          ] : [],
+        title: (
+          <input
+            className={`tree-node-input${node.editable ? ' editable' : ''}`}
+            readOnly={!node.editable}
+            onDoubleClick={editable ? handleDoubleClick(node, path) : null}
+            value={node.title}
+            onBlur={handleBlur(node, path)}
+            onKeyDown={handleKeyDown(node, path)}
+            onChange={handleChange(node, path)}
+          />
+        ),
+        onClick: handleClick(node),
+      })}
+    />
   );
 }
 
