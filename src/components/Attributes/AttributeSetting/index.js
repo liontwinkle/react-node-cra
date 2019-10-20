@@ -69,6 +69,21 @@ class AttributeSetting extends Component {
       });
   };
 
+  checkedAction = (updateAppear) => {
+    let returnId = null;
+    const { attributes, attribute } = this.props;
+    const unCheckedSibling = attributes.find(item => (
+      item.groupId === attribute.groupId
+      && item.attributeId !== attribute.attributeId
+      && !hasSubArray(item.appear, updateAppear)));
+    if (!unCheckedSibling) {
+      returnId = attributes.find(item => (item.attributeId === parseInt(attribute.groupId, 10))).id;
+    } else {
+      returnId = attribute.id;
+    }
+    return returnId;
+  };
+
   handleCheck = (checked, targetNode) => {
     let updateData = [];
     let updateAttributeId = null;
@@ -76,38 +91,14 @@ class AttributeSetting extends Component {
     if (!this.props.isUpdating) {
       const updateAppear = this.updateList(targetNode);
       if (targetNode.checked) {
-        /** ** DEBUG VERSION - CHECK THE SIBLING * */
-        const unCheckedSibling = this.props.attributes.find((item) => {
-          if (item.groupId === this.props.attribute.groupId && item.attributeId !== this.props.attribute.attributeId) {
-            if (!hasSubArray(item.appear, updateAppear)) {
-              return true;
-            }
-            return false;
-          }
-          return false;
-        });
-        if (!unCheckedSibling) {
-          updateAttributeId = this.props.attributes.find(
-            item => (item.attributeId === parseInt(this.props.attribute.groupId, 10)),
-          ).id;
-        } else {
-          updateAttributeId = this.props.attribute.id;
-        }
-
+        updateAttributeId = this.checkedAction(updateAppear);
         updateData = _union(updateAppear, this.state.categoryList);
-        this.setState({
-          categoryList: updateData,
-          checked,
-        });
+        this.setState({ categoryList: updateData, checked });
       } else {
         updateAttributeId = this.props.attribute.id;
         updateData = _difference(this.state.categoryList, updateAppear);
-        this.setState({
-          categoryList: updateData,
-          checked,
-        });
+        this.setState({ categoryList: updateData, checked });
       }
-      console.log('##### DEBUG UPDATE ID: ', updateAttributeId); // fixme
 
       this.updateAttribute(updateData, targetNode.checked, updateAttributeId);
     }

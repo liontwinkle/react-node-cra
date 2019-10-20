@@ -1,4 +1,3 @@
-/* eslint-disable no-return-assign,no-param-reassign */
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 import { makeStyles } from '@material-ui/core';
@@ -133,7 +132,7 @@ export const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const hasSubArray = (master, sub) => sub.every((i => v => i = master.indexOf(v, i) + 1)(0));
+export const hasSubArray = (master, sub) => sub.every((i => master.indexOf(i) > -1));
 
 export const confirmMessage = (func, msg, type) => {
   const duration = (type === 'success' || type === 'info') ? 2000 : 4000;
