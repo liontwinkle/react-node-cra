@@ -10,7 +10,7 @@ import _difference from 'lodash/difference';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { confirmMessage } from 'utils';
+import { confirmMessage, hasSubArray } from 'utils';
 import { getAllChildData, getNewAppearData } from 'utils/attributeManagement';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 
@@ -53,15 +53,13 @@ class AttributeSetting extends Component {
     return _union(willCheckedCategory, allChildData);
   };
 
-  updateAttribute = (updateData, checked) => {
+  updateAttribute = (updateData, checked, id) => {
     const {
-      attribute,
       enqueueSnackbar,
       updateAttribute,
       fetchAttributes,
     } = this.props;
-
-    updateAttribute(attribute._id, { appear: updateData, checked })
+    updateAttribute(id, { appear: updateData, checked })
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Attribute has been updated successfully.', 'success');
         fetchAttributes(this.props.client.id, 'attributes');
@@ -73,22 +71,45 @@ class AttributeSetting extends Component {
 
   handleCheck = (checked, targetNode) => {
     let updateData = [];
+    let updateAttributeId = null;
+
     if (!this.props.isUpdating) {
       const updateAppear = this.updateList(targetNode);
       if (targetNode.checked) {
+        /** ** DEBUG VERSION - CHECK THE SIBLING * */
+        const unCheckedSibling = this.props.attributes.find((item) => {
+          if (item.groupId === this.props.attribute.groupId && item.attributeId !== this.props.attribute.attributeId) {
+            if (!hasSubArray(item.appear, updateAppear)) {
+              return true;
+            }
+            return false;
+          }
+          return false;
+        });
+        if (!unCheckedSibling) {
+          updateAttributeId = this.props.attributes.find(
+            item => (item.attributeId === parseInt(this.props.attribute.groupId, 10)),
+          ).id;
+        } else {
+          updateAttributeId = this.props.attribute.id;
+        }
+
         updateData = _union(updateAppear, this.state.categoryList);
         this.setState({
           categoryList: updateData,
           checked,
         });
       } else {
+        updateAttributeId = this.props.attribute.id;
         updateData = _difference(this.state.categoryList, updateAppear);
         this.setState({
           categoryList: updateData,
           checked,
         });
       }
-      this.updateAttribute(updateData, targetNode.checked);
+      console.log('##### DEBUG UPDATE ID: ', updateAttributeId); // fixme
+
+      this.updateAttribute(updateData, targetNode.checked, updateAttributeId);
     }
   };
 
@@ -128,6 +149,7 @@ class AttributeSetting extends Component {
 AttributeSetting.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   attribute: PropTypes.object.isRequired,
   assoicationCategories: PropTypes.array.isRequired,
@@ -138,6 +160,7 @@ AttributeSetting.propTypes = {
 
 const mapStateToProps = store => ({
   attribute: store.attributesData.attribute,
+  attributes: store.attributesData.attributes,
   isUpdating: store.attributesData.isUpdating,
   assoicationCategories: store.categoriesData.associations,
   categories: store.categoriesData.categories,
