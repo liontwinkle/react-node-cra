@@ -28,18 +28,20 @@ function Tree(props) {
   const setTreeData = (data) => { updateTreeData(data); };
 
   const addRootCategory = () => {
-    createCategory({ name: 'New Category' })
-      .then((category) => {
-        createHistory({
-          label: 'Create Node',
-          itemId: category.id,
-          type: 'virtual',
+    if (!props.isCreating) {
+      createCategory({ name: 'New Category' })
+        .then((category) => {
+          createHistory({
+            label: 'Create Node',
+            itemId: category.id,
+            type: 'virtual',
+          });
+          confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
         });
-        confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
-      });
+    }
   };
 
   return (
@@ -81,11 +83,13 @@ Tree.propTypes = {
   createCategory: PropTypes.func.isRequired,
   updateTreeData: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
+  isCreating: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = store => ({
   categories: store.categoriesData.categories,
   treeData: store.categoriesData.trees,
+  isCreating: store.categoriesData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
