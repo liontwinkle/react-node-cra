@@ -34,6 +34,7 @@ const CustomRichText = ({
       <FroalaEditorComponent
         id={id}
         className="mg-richtext"
+        tag="textarea"
         // value={value}
         // height={200}
         // onTextChange={onChange}

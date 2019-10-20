@@ -9,6 +9,8 @@ import 'react-tippy/dist/tippy.css';
 import 'filepond/dist/filepond.css';
 import 'handsontable/dist/handsontable.full.css';
 import 'react-checkbox-tree-enhanced/lib/react-checkbox-tree.css';
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
 import './style.scss';
 
 import store, { history } from './redux/store';
