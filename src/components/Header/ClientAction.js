@@ -12,11 +12,21 @@ import ClientForm from './ClientForm';
 import ClientImport from './ClientImport';
 
 function ClientAction(props) {
-  const { client, type } = props;
+  const {
+    client,
+    type,
+    isFetchingProducts,
+    isFetchingAttributes,
+    isFetchingCategories,
+  } = props;
+
+  const disabled = (isFetchingAttributes || isFetchingCategories || isFetchingProducts);
 
   const [formState, setFormState] = useState({ open: false, type: '' });
   const handleOpen = type => () => {
-    setFormState({ open: true, type });
+    if (!disabled) {
+      setFormState({ open: true, type });
+    }
   };
   const handleClose = () => {
     setFormState({
@@ -47,7 +57,7 @@ function ClientAction(props) {
               <EditIcon style={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
-          <ClientRemove />
+          <ClientRemove disabled={disabled} />
         </Fragment>
       )}
       {type && (
@@ -73,6 +83,9 @@ function ClientAction(props) {
 ClientAction.propTypes = {
   client: PropTypes.object,
   type: PropTypes.object,
+  isFetchingProducts: PropTypes.bool.isRequired,
+  isFetchingCategories: PropTypes.bool.isRequired,
+  isFetchingAttributes: PropTypes.bool.isRequired,
 };
 
 ClientAction.defaultProps = {
@@ -83,6 +96,9 @@ ClientAction.defaultProps = {
 const mapStateToProps = store => ({
   client: store.clientsData.client,
   type: store.clientsData.type,
+  isFetchingProducts: store.productsData.isFetchingList,
+  isFetchingCategories: store.categoriesData.isFetchingList,
+  isFetchingAttributes: store.attributesData.isFetchingList,
 });
 
 export default connect(mapStateToProps)(ClientAction);

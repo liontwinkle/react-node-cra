@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
 function ClientRemove({
   isDeleting,
   client,
+  disabled,
   removeClient,
   removePropertyField,
   removeProductsField,
@@ -38,7 +39,11 @@ function ClientRemove({
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => { setOpen(!open); };
+  const handleOpen = () => {
+    if (!disabled) {
+      setOpen(!open);
+    }
+  };
 
   const handleRemove = () => {
     if (!isDeleting) {
@@ -114,6 +119,7 @@ function ClientRemove({
 
 ClientRemove.propTypes = {
   isDeleting: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   client: PropTypes.object,
   removeClient: PropTypes.func.isRequired,
   removePropertyField: PropTypes.func.isRequired,
@@ -122,6 +128,7 @@ ClientRemove.propTypes = {
 
 ClientRemove.defaultProps = {
   client: null,
+  disabled: false,
 };
 
 const mapStateToProps = store => ({

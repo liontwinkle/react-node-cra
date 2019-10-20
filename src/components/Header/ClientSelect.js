@@ -25,6 +25,9 @@ function ClientSelect({
   clients,
   client,
   type,
+  isFetchingProducts,
+  isFetchingAttributes,
+  isFetchingCategories,
   productViewType,
   fetchClients,
   setClient,
@@ -84,7 +87,7 @@ function ClientSelect({
   };
 
   const current = client ? { key: client.id, label: client.name } : null;
-
+  const disabled = (isFetchingAttributes || isFetchingCategories || isFetchingProducts);
   return (
     <Fragment>
       {clients && clients.length > 0 && (
@@ -94,6 +97,7 @@ function ClientSelect({
           value={current}
           items={items}
           onChange={handleChangeClient}
+          disabled={disabled}
         />
       )}
 
@@ -105,6 +109,7 @@ function ClientSelect({
             value={type}
             items={clientType}
             onChange={handleChangeType}
+            disabled={disabled}
           />
           {
             type.key === 'products'
@@ -115,6 +120,7 @@ function ClientSelect({
                 value={productViewType}
                 items={productViewTypes}
                 onChange={handleChangeProductViewType}
+                disabled={disabled}
               />
             )
           }
@@ -126,6 +132,9 @@ function ClientSelect({
 
 ClientSelect.propTypes = {
   clients: PropTypes.array.isRequired,
+  isFetchingProducts: PropTypes.bool.isRequired,
+  isFetchingCategories: PropTypes.bool.isRequired,
+  isFetchingAttributes: PropTypes.bool.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
   productViewType: PropTypes.object,
@@ -155,6 +164,9 @@ const mapStateToProps = store => ({
   client: store.clientsData.client,
   type: store.clientsData.type,
   productViewType: store.clientsData.productViewType,
+  isFetchingProducts: store.productsData.isFetchingList,
+  isFetchingCategories: store.categoriesData.isFetchingList,
+  isFetchingAttributes: store.attributesData.isFetchingList,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
