@@ -126,6 +126,13 @@ function AddPropertyFields({
           value={propertyFieldData.default}
           onChange={handleChange('default')}
         />
+        <CustomInput
+          className="mb-3"
+          label="Template"
+          inline
+          value={propertyFieldData.default}
+          onChange={handleChange('default')}
+        />
         <CustomSelectWithLabel
           className="mb-3"
           label="Type"
