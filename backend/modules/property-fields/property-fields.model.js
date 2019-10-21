@@ -16,6 +16,7 @@ const PropertyFieldsSchema = new Schema({
     default: String,
     propertyType: String,
     section: String,
+    template: Boolean,
     items: [{
       key: String,
       label: String
