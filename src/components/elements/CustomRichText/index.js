@@ -1,6 +1,8 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import FroalaEditorComponent from 'react-froala-wysiwyg';
+import CodeMirror from 'codemirror/lib/codemirror.js';
 import uuidv4 from 'uuid/v4';
 
 import './style.scss';
@@ -37,6 +39,13 @@ const CustomRichText = ({
         config={{
           placeholderText: 'Edit Your Content Here!',
           charCounterCount: false,
+          indentWithTabs: true,
+          lineNumbers: true,
+          codeMirror: CodeMirror,
+          codeBeautifierOptions: {
+            end_with_newline: true,
+            indent_inner_html: true,
+          },
         }}
         onModelChange={onChange}
         model={value}
