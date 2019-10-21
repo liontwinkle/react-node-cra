@@ -1,7 +1,8 @@
+import React from 'react';
 import { Tooltip } from 'react-tippy';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import React from 'react';
+
 import {
   CustomArray,
   CustomInput, CustomRichText,

@@ -54,7 +54,6 @@ function ClientRemove({
               removeClient(client.id)
                 .then(() => {
                   confirmMessage(enqueueSnackbar, 'The client has been deleted successfully.', 'success');
-                  handleOpen();
                 })
                 .catch(() => {
                   confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');

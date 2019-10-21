@@ -9,8 +9,8 @@ import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
-import { confirmMessage, getRules, getPreFilterData } from 'utils/index';
-import { setUnionRules } from 'utils/ruleManagement';
+import { confirmMessage, getPreFilterData } from 'utils';
+import { setUnionRules, getRules } from 'utils/ruleManagement';
 import Loader from 'components/Loader/index';
 import RulesTable from './RulesTable/index';
 import RulesAction from './RulesAction/index';

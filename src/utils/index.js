@@ -4,28 +4,9 @@ import { makeStyles } from '@material-ui/core';
 import {
   AddSets, DiffSets, formatDifference, RuleEngine,
 } from './RuleEngine';
-import {
-  basis, match, refer, scope,
-} from './constants';
 
 /** ** UTILS DEFINE **** */
 
-const AnaylsisDetails = (valueStr, valueDetails) => {
-  const partValue = valueStr.split(']');
-  const detailValue = partValue[0].split(':');
-  const detailKey = detailValue[0].replace('[', '');
-  const matchKey = `:${detailValue[1]}`;
-  const valueKey = partValue[1];
-  const detailObj = valueDetails.find(
-    valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
-  );
-  const matchObj = match.find(matchItem => (matchItem.key === matchKey));
-  return {
-    detailObj,
-    matchObj,
-    valueKey,
-  };
-};
 
 const getAllmatched = (products, match, value, basis) => {
   const returnValue = {
@@ -164,39 +145,6 @@ export const setHandler = (context, callback) => {
   });
 };
 
-export const getRules = (srcRules, valueDetails) => {
-  const newRules = [];
-  const editRules = [];
-  srcRules.forEach((item) => {
-    const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
-    const referObj = refer.find(referItem => (referItem.key === item.refer));
-    const otherObj = AnaylsisDetails(item.value, valueDetails);
-    if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
-      newRules.push({
-        _id: item._id,
-        basis: basisObj,
-        refer: referObj,
-        detail: otherObj.detailObj,
-        match: otherObj.matchObj,
-        value: otherObj.valueKey,
-        scope: scope[0],
-      });
-      editRules.push({
-        _id: item._id,
-        basis: basisObj.key,
-        refer: referObj.key,
-        detail: otherObj.detailObj.key,
-        match: otherObj.matchObj.key,
-        value: otherObj.valueKey,
-        scope: scope[0].key,
-      });
-    }
-  });
-  return {
-    newRules,
-    editRules,
-  };
-};
 
 export const getPreFilterData = (rules, products) => {
   formatDifference();
