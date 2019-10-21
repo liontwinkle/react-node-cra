@@ -13,7 +13,7 @@ import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { CustomInput, CustomSelectWithLabel, CustomToggle } from 'components/elements';
 
 function AddPropertyFields({
   open,
@@ -39,6 +39,14 @@ function AddPropertyFields({
     const newClient = {
       ...propertyFieldData,
       [field]: e.target.value,
+    };
+    setPropertyFieldData(newClient);
+  };
+
+  const handleChangeTemplate = field => () => {
+    const newClient = {
+      ...propertyFieldData,
+      [field]: !propertyFieldData[field],
     };
     setPropertyFieldData(newClient);
   };
@@ -126,12 +134,12 @@ function AddPropertyFields({
           value={propertyFieldData.default}
           onChange={handleChange('default')}
         />
-        <CustomInput
+        <CustomToggle
           className="mb-3"
           label="Template"
           inline
-          value={propertyFieldData.default}
-          onChange={handleChange('default')}
+          value={propertyFieldData.template}
+          onToggle={handleChangeTemplate('template')}
         />
         <CustomSelectWithLabel
           className="mb-3"
