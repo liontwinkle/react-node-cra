@@ -71,7 +71,6 @@ function AddPropertyFields({
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
-    console.log(propertyFieldData); // fixme
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
       if (isExist(propertyFields, propertyFieldData.key) === 0) {

@@ -14,6 +14,7 @@ import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
+import CustomSearchFilter from '../../elements/CustomSearchFilter';
 
 class Properties extends Component {
   state = {
@@ -161,6 +162,7 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
+            <CustomSearchFilter />
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
