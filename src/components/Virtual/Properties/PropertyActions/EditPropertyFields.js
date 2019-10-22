@@ -41,6 +41,7 @@ function EditPropertyFields({
           key: newData.key,
           label: newData.label,
           default: newData.default,
+          template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
         });
@@ -75,6 +76,7 @@ function EditPropertyFields({
           key: newData.key,
           label: newData.label,
           default: newData.default,
+          template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
           _id: newData._id,

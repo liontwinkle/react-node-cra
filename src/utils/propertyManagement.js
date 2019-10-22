@@ -14,6 +14,51 @@ import {
 import { propertyTypes } from './constants';
 import CustomMonaco from '../components/elements/CustomMonaco';
 
+/** utils * */
+const getSpecItemFromArray = (srcArr, key) => {
+  const result = [];
+  srcArr.forEach((item, index) => {
+    if (item[0] === key) {
+      result.push(index);
+    }
+  });
+  return result;
+};
+
+const createValuefromtemplate = (template, state, propertyFields) => {
+  let returnValue = '';
+  const subTempStr = template.split(' ');
+  const indexs = getSpecItemFromArray(subTempStr, '$');
+  subTempStr.forEach((item, index) => {
+    if (indexs.indexOf((index)) >= 0) {
+      const property = propertyFields.find(propertyItem => (propertyItem.key === item.substr(1)));
+
+      let expectedValue = '';
+      if (state.properties[item.substr(1)]) {
+        expectedValue = state.properties[item.substr(1)];
+      } else {
+        expectedValue = property.default || 'default';
+      }
+      returnValue = `${returnValue} ${expectedValue}`;
+    } else {
+      returnValue = `${returnValue} ${item}`;
+    }
+  });
+  return returnValue;
+};
+
+const getStrigTypeValue = (property, state, propertyFields) => {
+  let value = '';
+  if (property.template && property.template !== '') {
+    value = createValuefromtemplate(property.template, state, propertyFields);
+  } else if (state.properties[property.key] === undefined) {
+    value = property.default || 'default';
+  } else {
+    value = state.properties[property.key];
+  }
+  return value;
+};
+/** exports * */
 export const initProperties = (properties, matchProperties) => {
   const updateProperties = {};
   const keys = Object.keys(properties);
@@ -48,13 +93,8 @@ export const sectionRender = (
   propertyFields.forEach((p) => {
     if ((section && (p.section === section.key))
       || ((section === null) && (p.section === null))) {
-      let value = '';
       if (p.propertyType === 'string') {
-        if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
-        } else {
-          value = state.properties[p.key];
-        }
+        const value = getStrigTypeValue(p, state, propertyFields);
         res.push(
           <CustomInput
             label={p.label}
@@ -119,12 +159,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'text') {
-        let value = '';
-        if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
-        } else {
-          value = state.properties[p.key];
-        }
+        const value = getStrigTypeValue(p, state, propertyFields);
         res.push(
           <CustomText
             label={p.label}
@@ -153,12 +188,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'monaco') {
-        let value = '';
-        if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
-        } else {
-          value = state.properties[p.key];
-        }
+        const value = getStrigTypeValue(p, state, propertyFields);
         res.push(
           <CustomMonaco
             label={p.label}
@@ -169,12 +199,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'richtext') {
-        let value = '';
-        if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
-        } else {
-          value = state.properties[p.key];
-        }
+        const value = getStrigTypeValue(p, state, propertyFields);
         res.push(
           <CustomRichText
             id={p.key}
@@ -201,6 +226,7 @@ export const getTableData = (sections, propertyFields) => ({
       field: 'propertyType',
       lookup: propertyTypes,
     },
+    { title: 'Template', field: 'template' },
     {
       title: 'Section',
       field: 'section',
