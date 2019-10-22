@@ -34,10 +34,12 @@ const createValuefromtemplate = (template, state, propertyFields) => {
       const property = propertyFields.find(propertyItem => (propertyItem.key === item.substr(1)));
 
       let expectedValue = '';
-      if (state.properties[item.substr(1)]) {
-        expectedValue = state.properties[item.substr(1)];
-      } else {
-        expectedValue = property.default || 'default';
+      if (property) {
+        if (state.properties[item.substr(1)]) {
+          expectedValue = state.properties[item.substr(1)];
+        } else {
+          expectedValue = property.default || 'default';
+        }
       }
       returnValue = `${returnValue} ${expectedValue}`;
     } else {
