@@ -9,6 +9,9 @@ import { CustomInput } from '../index';
 function CustomSearchFilter(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searched, setSearched] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [chunkIndex, setChunkIndex] = useState(0);
+  const [currentValue, setCurrentValue] = useState(0);
   const {
     className,
     placeholder,
@@ -27,17 +30,38 @@ function CustomSearchFilter(props) {
     setPopperRef(ref);
   };
 
-
   const handleChange = (event = null) => {
-    console.log(searchItems); // fixme
-    // setAnchorEl(anchorEl ? null : (event && event.currentTarget));
-    console.log('##### DEBUG EVENT: ', event.target.value); // fixme
+    const currentValue = event.target.value;
+    setCurrentValue(currentValue);
+    const lastLetter = currentValue[currentValue.length - 1];
+    if (lastLetter === '$') {
+      setSearching(true);
+      setSearched(searchItems);
+      setChunkIndex(currentValue.length);
+    }
+    if (lastLetter === ' ') {
+      setSearching(false);
+      setSearched([]);
+    } else if (searching) {
+      const filtered = [];
+      searchItems.forEach((item) => {
+        if (item.indexOf(currentValue.substr(chunkIndex)) > -1) {
+          filtered.push(item);
+        }
+      });
+      setSearched(filtered);
+    }
+    if (searched.length > 0) {
+      setAnchorEl((event && event.currentTarget));
+    } else {
+      setAnchorEl(null);
+    }
   };
 
   const changeValue = value => () => {
     if (!props.disabled) {
       console.log('##### DEBUG VALUE: ', value); // fixme
-      props.onChange(value);
+      // props.onChange(value);
     }
   };
 
@@ -62,6 +86,7 @@ function CustomSearchFilter(props) {
         aria-describedby={id}
         inline
         value={value}
+        placeholder={placeholder}
         onChange={handleChange}
         type="text"
       />
@@ -85,11 +110,11 @@ function CustomSearchFilter(props) {
           >
             {searched.map(item => (
               <li
-                key={item.key}
+                key={item}
                 className="mg-search-filter-item"
-                onClick={changeValue(item.key)}
+                onClick={changeValue(item)}
               >
-                {item.key}
+                {item}
               </li>
             ))}
           </PerfectScrollbar>
@@ -105,14 +130,14 @@ CustomSearchFilter.propTypes = {
   value: PropTypes.string,
   label: PropTypes.string,
   searchItems: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
+  // onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
 
 CustomSearchFilter.defaultProps = {
   className: '',
   placeholder: '',
-  value: null,
+  value: '',
   label: '',
   disabled: false,
 };
