@@ -233,3 +233,13 @@ export const setDefault = (properties, fields) => {
   });
   return tempProperties;
 };
+
+export const getFilterItem = (srcArray, searchkey) => {
+  const filtered = [];
+  srcArray.forEach((item) => {
+    if (item.indexOf(searchkey) > -1) {
+      filtered.push(item);
+    }
+  });
+  return filtered;
+};

@@ -14,7 +14,6 @@ import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
-import CustomSearchFilter from '../../elements/CustomSearchFilter';
 
 class Properties extends Component {
   state = {
@@ -146,7 +145,6 @@ class Properties extends Component {
     } = this.state;
 
     const { propertyFields } = this.props.propertyField;
-    console.log('#### DEBUG PROPERTIES: ', propertyFields); // fixme
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
@@ -163,11 +161,6 @@ class Properties extends Component {
                   </CustomSection>
                 )
             }
-            <CustomSearchFilter
-              searchItems={propertyFields.map(item => (item.key))}
-              placeholder="Input search filter"
-              label="label"
-            />
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems

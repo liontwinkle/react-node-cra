@@ -1,23 +1,25 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Popper from '@material-ui/core/Popper';
+
+import { getFilterItem } from 'utils/propertyManagement';
+import CustomInput from '../CustomInput';
+
 import './style.scss';
-import { CustomInput } from '../index';
 
 function CustomSearchFilter(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searched, setSearched] = useState([]);
   const [searching, setSearching] = useState(false);
   const [chunkIndex, setChunkIndex] = useState(0);
-  const [currentValue, setCurrentValue] = useState(0);
   const {
     className,
     placeholder,
     value,
     label,
     searchItems,
+    onChange,
   } = props;
 
   const [wrapperRef, setWrapperRef] = useState(null);
@@ -25,32 +27,29 @@ function CustomSearchFilter(props) {
     setWrapperRef(ref);
   };
 
-  const [popperRef, setPopperRef] = useState(null);
-  const getPopperRef = (ref) => {
-    setPopperRef(ref);
+  const clearSearchResult = () => {
+    setSearching(false);
+    setSearched([]);
   };
 
   const handleChange = (event = null) => {
     const currentValue = event.target.value;
-    setCurrentValue(currentValue);
+    onChange(currentValue);
     const lastLetter = currentValue[currentValue.length - 1];
+
     if (lastLetter === '$') {
       setSearching(true);
       setSearched(searchItems);
       setChunkIndex(currentValue.length);
     }
+
     if (lastLetter === ' ') {
-      setSearching(false);
-      setSearched([]);
+      clearSearchResult();
     } else if (searching) {
-      const filtered = [];
-      searchItems.forEach((item) => {
-        if (item.indexOf(currentValue.substr(chunkIndex)) > -1) {
-          filtered.push(item);
-        }
-      });
+      const filtered = getFilterItem(searchItems, currentValue.substr(chunkIndex));
       setSearched(filtered);
     }
+
     if (searched.length > 0) {
       setAnchorEl((event && event.currentTarget));
     } else {
@@ -58,10 +57,11 @@ function CustomSearchFilter(props) {
     }
   };
 
-  const changeValue = value => () => {
+  const changeValue = propertyKey => () => {
     if (!props.disabled) {
-      console.log('##### DEBUG VALUE: ', value); // fixme
-      // props.onChange(value);
+      const updateValue = `${value.substr(0, chunkIndex)}${propertyKey}`;
+      clearSearchResult();
+      onChange(updateValue);
     }
   };
 
@@ -79,7 +79,6 @@ function CustomSearchFilter(props) {
   return (
     <div
       className={`mg-search-filter ${className}`}
-      ref={getWrapperRef}
     >
       <CustomInput
         label={label}
@@ -89,6 +88,7 @@ function CustomSearchFilter(props) {
         placeholder={placeholder}
         onChange={handleChange}
         type="text"
+        getWrapper={getWrapperRef}
       />
 
       <Popper
@@ -99,7 +99,6 @@ function CustomSearchFilter(props) {
       >
         <ul
           className={`mg-search-filter-list${isOpened ? ' active' : ''}`}
-          ref={getPopperRef}
           style={{ width, height, bottom: '0' }}
         >
           <PerfectScrollbar
@@ -130,7 +129,7 @@ CustomSearchFilter.propTypes = {
   value: PropTypes.string,
   label: PropTypes.string,
   searchItems: PropTypes.array.isRequired,
-  // onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
 

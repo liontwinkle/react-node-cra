@@ -13,7 +13,7 @@ import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { CustomInput, CustomSelectWithLabel, CustomToggle } from 'components/elements';
+import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
 function AddPropertyFields({
   open,
@@ -31,7 +31,7 @@ function AddPropertyFields({
     key: '',
     label: '',
     default: '',
-    template: false,
+    template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
   });
@@ -44,10 +44,10 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
-  const handleChangeTemplate = field => () => {
+  const handleChangeTemplate = field => (value) => {
     const newClient = {
       ...propertyFieldData,
-      [field]: !propertyFieldData[field],
+      [field]: value,
     };
     setPropertyFieldData(newClient);
   };
@@ -135,13 +135,6 @@ function AddPropertyFields({
           value={propertyFieldData.default}
           onChange={handleChange('default')}
         />
-        <CustomToggle
-          className="mb-3"
-          label="Template"
-          inline
-          value={propertyFieldData.template}
-          onToggle={handleChangeTemplate('template')}
-        />
         <CustomSelectWithLabel
           className="mb-3"
           label="Type"
@@ -150,6 +143,22 @@ function AddPropertyFields({
           items={propertyFieldTypes}
           onChange={handleChangeType}
         />
+        {
+          (propertyFieldData.propertyType.key === 'string'
+          || propertyFieldData.propertyType.key === 'text'
+          || propertyFieldData.propertyType.key === 'richtext'
+          || propertyFieldData.propertyType.key === 'monaco')
+          && (
+            <CustomSearchFilter
+              className="mb-3"
+              searchItems={propertyField.propertyFields.map(item => (item.key))}
+              placeholder="Input search filter"
+              label="Template"
+              value={propertyFieldData.template}
+              onChange={handleChangeTemplate('template')}
+            />
+          )
+        }
         <CustomSelectWithLabel
           label="Section"
           inline

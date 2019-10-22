@@ -8,5 +8,5 @@ export { default as CustomTab } from './CustomTab';
 export { default as CustomToggle } from './CustomToggle';
 export { default as CustomText } from './CustomText';
 export { default as CustomRichText } from './CustomRichText';
+export { default as CustomSearchFilter } from './CustomSearchFilter';
 export { default as IconButton } from './IconButton';
-export { default as RuleBuilder } from './RuleBuilder';

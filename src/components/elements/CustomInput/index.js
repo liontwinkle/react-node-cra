@@ -17,6 +17,7 @@ const CustomInput = ({
   hint,
   value,
   onChange,
+  getWrapper,
 }) => (
   <div className={`mg-input-control ${className}`}>
     {label && !inline && (
@@ -37,6 +38,7 @@ const CustomInput = ({
       )}
 
       <input
+        ref={getWrapper}
         id={id}
         type={type}
         className="mg-input"
@@ -72,6 +74,7 @@ CustomInput.propTypes = {
     PropTypes.number,
   ]),
   onChange: PropTypes.func.isRequired,
+  getWrapper: PropTypes.func,
 };
 
 CustomInput.defaultProps = {
@@ -86,6 +89,7 @@ CustomInput.defaultProps = {
   inlineWidth: 150,
   hint: '',
   value: '',
+  getWrapper: null,
 };
 
 export default CustomInput;
