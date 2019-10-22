@@ -8,21 +8,21 @@ import CustomInput from '../CustomInput';
 
 import './style.scss';
 
-function CustomSearchFilter(props) {
+function CustomSearchFilter({
+  className,
+  placeholder,
+  value,
+  label,
+  disabled,
+  searchItems,
+  onChange,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [wrapperRef, setWrapperRef] = useState(null);
   const [searched, setSearched] = useState([]);
   const [searching, setSearching] = useState(false);
   const [chunkIndex, setChunkIndex] = useState(0);
-  const {
-    className,
-    placeholder,
-    value,
-    label,
-    searchItems,
-    onChange,
-  } = props;
 
-  const [wrapperRef, setWrapperRef] = useState(null);
   const getWrapperRef = (ref) => {
     setWrapperRef(ref);
   };
@@ -58,7 +58,7 @@ function CustomSearchFilter(props) {
   };
 
   const changeValue = propertyKey => () => {
-    if (!props.disabled) {
+    if (!disabled) {
       const updateValue = `${value.substr(0, chunkIndex)}${propertyKey}`;
       clearSearchResult();
       onChange(updateValue);

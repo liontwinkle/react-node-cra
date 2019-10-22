@@ -29,19 +29,22 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   let returnValue = '';
   const subTempStr = template.split(' ');
   const indexs = getSpecItemFromArray(subTempStr, '$');
+
   subTempStr.forEach((item, index) => {
     if (indexs.indexOf((index)) >= 0) {
-      const property = propertyFields.find(propertyItem => (propertyItem.key === item.substr(1)));
+      const dotFlag = (item.indexOf('.') >= 0);
+      const keyValue = item.substr(1).replace('.', '').replace(',', '');
+      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
 
       let expectedValue = '';
       if (property) {
-        if (state.properties[item.substr(1)]) {
-          expectedValue = state.properties[item.substr(1)];
+        if (state.properties[keyValue]) {
+          expectedValue = state.properties[keyValue];
         } else {
           expectedValue = property.default || 'default';
         }
       }
-      returnValue = `${returnValue} ${expectedValue}`;
+      returnValue = `${returnValue} ${expectedValue}${dotFlag ? '.' : ''}`;
     } else {
       returnValue = `${returnValue} ${item}`;
     }
@@ -60,6 +63,7 @@ const getStrigTypeValue = (property, state, propertyFields) => {
   }
   return value;
 };
+
 /** exports * */
 export const initProperties = (properties, matchProperties) => {
   const updateProperties = {};
