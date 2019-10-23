@@ -15,8 +15,9 @@ import {
 import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { checkTemplate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { CustomInput, CustomSelectWithLabel } from 'components/elements';
+import { CustomInput, CustomSearchFilter, CustomSelectWithLabel } from 'components/elements';
 
 function AddPropertyFields({
   open,
@@ -54,6 +55,14 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
+  const handleChangeTemplate = field => (value) => {
+    const newClient = {
+      ...propertyFieldData,
+      [field]: value,
+    };
+    setPropertyFieldData(newClient);
+  };
+
   const handleChangeSection = (section) => {
     const newClient = {
       ...propertyFieldData,
@@ -67,7 +76,8 @@ function AddPropertyFields({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
-      if (isExist(propertyFields, propertyFieldData.key) === 0) {
+      const errList = checkTemplate(propertyFields, propertyFieldData);
+      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '') {
         propertyFields.push({
           ...propertyFieldData,
           propertyType: propertyFieldData.propertyType.key,
@@ -90,7 +100,9 @@ function AddPropertyFields({
           confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
         }
       } else {
-        const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
+        const errMsg = (errList !== '')
+          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
+          : `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
@@ -137,6 +149,22 @@ function AddPropertyFields({
           items={propertyFieldTypes}
           onChange={handleChangeType}
         />
+        {
+          (propertyFieldData.propertyType.key === 'string'
+            || propertyFieldData.propertyType.key === 'text'
+            || propertyFieldData.propertyType.key === 'richtext'
+            || propertyFieldData.propertyType.key === 'monaco')
+          && (
+            <CustomSearchFilter
+              className="mb-3"
+              searchItems={propertyField.propertyFields.map(item => (item.key))}
+              placeholder="Input search filter"
+              label="Template"
+              value={propertyFieldData.template}
+              onChange={handleChangeTemplate('template')}
+            />
+          )
+        }
         <CustomSelectWithLabel
           label="Section"
           inline

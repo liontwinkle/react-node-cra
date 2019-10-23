@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
-import { getTableData } from 'utils/propertyManagement';
+import { checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
@@ -36,8 +36,8 @@ function EditPropertyFields({
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-
-      if (isExist(propertyFields, newData.key) === 0) {
+      const errList = checkTemplate(propertyFields, newData);
+      if (isExist(propertyFields, newData.key) === 0 && errList === '') {
         propertyFields.push({
           key: newData.key,
           label: newData.label,
@@ -59,7 +59,9 @@ function EditPropertyFields({
             });
         }
       } else {
-        const errMsg = `Error: Another property is using the key (${newData.key}) you specified.
+        const errMsg = (errList !== '')
+          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
+          : `Error: Another property is using the key (${newData.key}) you specified.
          Please update property key name.`;
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
@@ -83,7 +85,8 @@ function EditPropertyFields({
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          if (!isUpdating) {
+          const errList = checkTemplate(propertyFields, newData);
+          if (!isUpdating && errList === '') {
             updatePropertyField({ propertyFields })
               .then(() => {
                 addNewRuleHistory(createHistory, attribute, attribute.groupId,
@@ -95,6 +98,9 @@ function EditPropertyFields({
               .catch(() => {
                 confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
               });
+          } else {
+            const errMsg = `Tempalating Error: You are try to use unexpected keys. ${errList}`;
+            confirmMessage(enqueueSnackbar, errMsg, 'error');
           }
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');

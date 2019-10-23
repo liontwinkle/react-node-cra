@@ -43,7 +43,7 @@ function CustomSearchFilter({
       setChunkIndex(currentValue.length);
     }
 
-    if (lastLetter === ' ' || lastLetter === undefined) {
+    if (lastLetter === ' ' || !lastLetter) {
       clearSearchResult();
     } else if (searching) {
       const filtered = getFilterItem(searchItems, currentValue.substr(chunkIndex));

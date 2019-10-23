@@ -12,6 +12,7 @@ import {
 import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { checkTemplate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
@@ -73,7 +74,8 @@ function AddPropertyFields({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
-      if (isExist(propertyFields, propertyFieldData.key) === 0) {
+      const errList = checkTemplate(propertyFields, propertyFieldData);
+      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '') {
         propertyFields.push({
           ...propertyFieldData,
           propertyType: propertyFieldData.propertyType.key,
@@ -96,7 +98,9 @@ function AddPropertyFields({
           confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
         }
       } else {
-        const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
+        const errMsg = (errList !== '')
+          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
+          : `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
