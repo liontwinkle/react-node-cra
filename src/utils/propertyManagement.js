@@ -57,7 +57,7 @@ const getStrigTypeValue = (property, state, propertyFields) => {
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
   } else if (state.properties[property.key] === undefined) {
-    value = property.default || 'default';
+    value = property.default || '';
   } else {
     value = state.properties[property.key];
   }
@@ -178,7 +178,7 @@ export const sectionRender = (
       } else if (p.propertyType === 'array') {
         let value = '';
         if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
+          value = p.default || '';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
         } else {

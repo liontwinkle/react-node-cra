@@ -138,7 +138,7 @@ function EditPropertyFields({
         Edit Property Fields
       </DialogTitle>
 
-      <DialogContent className="mg-edit-properties-content">
+      <DialogContent className="mg-edit-properties-content field">
         <MaterialTable
           title=""
           icons={tableIcons}
@@ -150,6 +150,8 @@ function EditPropertyFields({
             onRowDelete: handleDelete,
           }}
           options={{
+            pageSize: 20,
+            pageSizeOptions: [10, 20],
             actionsColumnIndex: -1,
             showTitle: false,
             searchFieldAlignment: 'left',
