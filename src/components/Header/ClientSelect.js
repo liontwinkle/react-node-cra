@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import _find from 'lodash/find';
 import { useSnackbar } from 'notistack';
 
@@ -9,56 +9,85 @@ import {
   fetchClients,
   setClient,
   setClientType,
+  setProductViewType,
 } from 'redux/actions/clients';
-import { fetchCategories } from 'redux/actions/categories';
+import { fetchCategories, updateTreeData } from 'redux/actions/categories';
+import { fetchPropertyField } from 'redux/actions/propertyFields';
+import { fetchProductsField } from 'redux/actions/productsFields';
+import { fetchAttributes, updateNodeData } from 'redux/actions/attribute';
+import { fetchHistories } from 'redux/actions/history';
+import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
+import { productViewTypes, clientType } from 'utils/constants';
+import { confirmMessage } from 'utils';
 
-const types = [
-  { key: 'virtual', label: 'Virtual' },
-  { key: 'native', label: 'Native' },
-  { key: 'products', label: 'Products' },
-  { key: 'attribute', label: 'Attribute' },
-];
-
-function ClientSelect(props) {
+function ClientSelect({
+  clients,
+  client,
+  type,
+  isFetchingProducts,
+  isFetchingAttributes,
+  isFetchingCategories,
+  productViewType,
+  fetchClients,
+  setClient,
+  setClientType,
+  setProductViewType,
+  fetchCategories,
+  fetchPropertyField,
+  fetchProductsField,
+  fetchAttributes,
+  setProducts,
+  updateTreeData,
+  updateNodeData,
+  fetchHistories,
+}) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    clients,
-    client,
-    type,
-    fetchClients,
-    setClient,
-    setClientType,
-    fetchCategories,
-  } = props;
+  const defaultType = { key: 'virtual', label: 'Virtual' };
 
   useEffect(() => {
     fetchClients()
-      .catch(() => {
-        enqueueSnackbar('Error in fetching clients.', { variant: 'error', autoHideDuration: 1000 });
-      });
+      .catch(() => { confirmMessage(enqueueSnackbar, 'Error in fetching clients.', 'error'); });
   }, [fetchClients, enqueueSnackbar]);
 
-  const items = clients.map(c => ({
-    key: c.id,
-    label: c.name,
-  }));
+  const items = clients.map(c => ({ key: c.id, label: c.name }));
 
+  const actionChangeType = (type, client) => {
+    setClientType(type);
+    if (type.key !== 'products') {
+      fetchPropertyField(client.id, type.key);
+      const fetchType = (type.key === 'native') ? 'virtual' : type.key;
+      fetchHistories(client.id, fetchType);
+      if (type.key === 'attributes') {
+        fetchCategories(client.id, 'virtual');
+        fetchAttributes(client.id, type.key);
+      } else {
+        fetchCategories(client.id, type.key);
+        fetchAttributes(client.id, 'attributes');
+      }
+    }
+    fetchProductsField();
+  };
+
+  const handleChangeType = (type) => { actionChangeType(type, client); };
+
+  const handleChangeProductViewType = (productViewType) => {
+    setProductViewType(productViewType);
+  };
   const handleChangeClient = (item) => {
     const newClient = _find(clients, { id: item.key });
     if (newClient) {
       setClient(newClient);
+      setProducts([]);
+      updateNodeData([]);
+      updateTreeData([]);
+      actionChangeType(defaultType, newClient);
     }
   };
 
-  const handleChangeType = (type) => {
-    setClientType(type);
-    fetchCategories(client.id, type.key);
-  };
-
   const current = client ? { key: client.id, label: client.name } : null;
-
+  const disabled = (isFetchingAttributes || isFetchingCategories || isFetchingProducts);
   return (
     <Fragment>
       {clients && clients.length > 0 && (
@@ -68,17 +97,34 @@ function ClientSelect(props) {
           value={current}
           items={items}
           onChange={handleChangeClient}
+          disabled={disabled}
         />
       )}
 
       {client && (
-        <CustomSelect
-          className="mr-3"
-          placeholder="Select Type"
-          value={type}
-          items={types}
-          onChange={handleChangeType}
-        />
+        <Fragment>
+          <CustomSelect
+            className="mr-3"
+            placeholder="Select Type"
+            value={type}
+            items={clientType}
+            onChange={handleChangeType}
+            disabled={disabled}
+          />
+          {
+            type.key === 'products'
+            && (
+              <CustomSelect
+                className="mr-3"
+                placeholder="Select View Method"
+                value={productViewType}
+                items={productViewTypes}
+                onChange={handleChangeProductViewType}
+                disabled={disabled}
+              />
+            )
+          }
+        </Fragment>
       )}
     </Fragment>
   );
@@ -86,30 +132,56 @@ function ClientSelect(props) {
 
 ClientSelect.propTypes = {
   clients: PropTypes.array.isRequired,
+  isFetchingProducts: PropTypes.bool.isRequired,
+  isFetchingCategories: PropTypes.bool.isRequired,
+  isFetchingAttributes: PropTypes.bool.isRequired,
   client: PropTypes.object,
   type: PropTypes.object,
+  productViewType: PropTypes.object,
   fetchClients: PropTypes.func.isRequired,
   setClient: PropTypes.func.isRequired,
   setClientType: PropTypes.func.isRequired,
+  setProductViewType: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
+  fetchPropertyField: PropTypes.func.isRequired,
+  fetchProductsField: PropTypes.func.isRequired,
+  fetchAttributes: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
+  updateTreeData: PropTypes.func.isRequired,
+  updateNodeData: PropTypes.func.isRequired,
+  fetchHistories: PropTypes.func.isRequired,
 };
 
 ClientSelect.defaultProps = {
   client: null,
   type: null,
+  productViewType: null,
 };
 
 const mapStateToProps = store => ({
   clients: store.clientsData.clients,
+  categories: store.categoriesData.categories,
   client: store.clientsData.client,
   type: store.clientsData.type,
+  productViewType: store.clientsData.productViewType,
+  isFetchingProducts: store.productsData.isFetchingList,
+  isFetchingCategories: store.categoriesData.isFetchingList,
+  isFetchingAttributes: store.attributesData.isFetchingList,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchClients,
   setClient,
   setClientType,
+  setProductViewType,
   fetchCategories,
+  fetchPropertyField,
+  fetchProductsField,
+  fetchAttributes,
+  fetchHistories,
+  setProducts,
+  updateTreeData,
+  updateNodeData,
 }, dispatch);
 
 export default connect(

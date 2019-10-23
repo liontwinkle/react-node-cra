@@ -1,0 +1,23 @@
+@import "scss/mixin.scss";
+
+.mg-attr-setting-container {
+  @include full_width_height;
+  margin: 0;
+  white-space: nowrap;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 5%;
+
+  .scrollbar-container {
+    width: 95%;
+  }
+
+  .react-checkbox-tree li {
+    margin-top: 10px;
+    .rct-collapse-btn {
+      .MuiSvgIcon-root {
+        width: 14px;
+      }
+    }
+  }
+}

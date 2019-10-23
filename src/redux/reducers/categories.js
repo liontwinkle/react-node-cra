@@ -1,5 +1,6 @@
-import _ from 'lodash';
+import _findIndex from 'lodash/findIndex';
 
+import { getCategoryTree } from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -9,6 +10,9 @@ const INITIAL_STATE = {
   isDeleting: false,
 
   categories: [],
+  preProducts: null,
+  trees: [],
+  associations: [],
   category: null,
   errors: '',
 };
@@ -23,10 +27,28 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.CATEGORIES_GET_SUCCESS:
+      const tempDatas = action.payload.categories;
+      if (Array.isArray(tempDatas)) {
+        tempDatas.forEach((item, itemKey) => {
+          const { properties } = item;
+          if (properties) {
+            const keys = Object.keys(properties);
+            keys.forEach((key) => {
+              if (Array.isArray(properties[key])) {
+                tempDatas[itemKey].properties[key] = JSON.stringify(tempDatas[itemKey].properties[key]);
+              }
+            });
+          }
+        });
+      }
+      const fetchSaveData = getCategoryTree(action.payload.categories, []);
       return {
         ...state,
         isFetchingList: false,
-        categories: action.payload.categories,
+        categories: tempDatas,
+        category: tempDatas[0] || null,
+        trees: fetchSaveData.subTree,
+        associations: fetchSaveData.association,
       };
     case types.CATEGORIES_GET_FAIL:
       return {
@@ -41,11 +63,31 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.CATEGORY_CREATE_SUCCESS:
-      categories.push(action.payload.data);
+      const { data } = action.payload;
+      if (data.properties) {
+        const keys = Object.keys(data.properties);
+        keys.forEach((key) => {
+          if (Array.isArray(data.properties[key])) {
+            data.properties[key] = JSON.stringify(data.properties[key]);
+          }
+        });
+      }
+      categories.push(data);
+      const updateSaveData = getCategoryTree(categories, state.trees);
+      // const updatedAssociation = categories.map(item => ({
+      //   label: item.name,
+      //   value: item._id,
+      //   appear: [],
+      //   children: [],
+      // }));
+
       return {
         ...state,
         isCreating: false,
         categories: categories.slice(0),
+        trees: updateSaveData.subTree,
+        // associations: updatedAssociation,
+        associations: updateSaveData.association,
         category: action.payload.data,
       };
     case types.CATEGORY_CREATE_FAIL:
@@ -61,16 +103,36 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CATEGORY_UPDATE_SUCCESS:
-      const categoryIdx = _.findIndex(categories, { id: action.payload.data.id });
-      if (categoryIdx > -1) {
-        categories.splice(categoryIdx, 1, action.payload.data);
-      } else {
-        categories.push(action.payload.data);
+      const updateData = action.payload.data;
+      const { properties } = updateData;
+      if (properties) {
+        const keys = Object.keys(properties);
+        keys.forEach((key) => {
+          if (Array.isArray(properties[key])) {
+            updateData.properties[key] = JSON.stringify(updateData.properties[key]);
+          }
+        });
       }
+
+      const categoryIdx = _findIndex(categories, { id: updateData.id });
+      if (categoryIdx > -1) {
+        categories.splice(categoryIdx, 1, updateData);
+      } else {
+        categories.push(updateData);
+      }
+      const newSaveData = getCategoryTree(categories, state.trees);
+      // const newAssociations = categories.map(item => ({
+      //   label: item.name,
+      //   value: item._id,
+      //   appear: [],
+      //   children: [],
+      // }));
       return {
         ...state,
         isUpdating: false,
         categories: categories.slice(0),
+        trees: newSaveData.subTree,
+        associations: newSaveData.association,
         category: action.payload.data,
       };
     case types.CATEGORY_UPDATE_FAIL:
@@ -86,7 +148,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CATEGORY_DELETE_SUCCESS:
-      const index = _.findIndex(categories, { id: action.payload.id });
+      const index = _findIndex(categories, { id: action.payload.id });
       if (index > -1) {
         categories.splice(index, 1);
       }
@@ -109,6 +171,17 @@ export default (state = INITIAL_STATE, action) => {
         category: action.payload.category,
       };
 
+    case types.TREE_SET:
+      return {
+        ...state,
+        trees: action.payload,
+      };
+
+    case types.MATCHED_PRODUCT:
+      return {
+        ...state,
+        preProducts: action.payload,
+      };
     default:
       return state;
   }

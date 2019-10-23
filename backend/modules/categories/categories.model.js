@@ -1,34 +1,23 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   name: String,
+  categoryId: {
+    type: Number,
+    default: 0,
+  },
   parentId: {
     type: String,
     default: '',
   },
   properties: Object,
-  sections: [{
-    key: String,
-    label: String,
-    order: Number,
-  }],
-  propertyFields: [{
-    key: String,
-    label: String,
-    propertyType: String,
-    section: String,
-    items:[{
-      key:String,
-      label:String
-    }],
-    order: Number,
-  }],
-  rules: Object,
-  ruleKeys: [{
-    key: String,
-    label: String,
-    ruleType: String,
+  rules: [{
+    basis: String,
+    refer: String,
+    value: String,
+    scope: Number
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 

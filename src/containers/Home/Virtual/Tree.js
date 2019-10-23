@@ -1,50 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import React from 'react';
+import { Tooltip } from 'react-tippy';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
+import { bindActionCreators } from 'redux';
+import { createCategory, updateTreeData } from 'redux/actions/categories';
+import { createHistory } from 'redux/actions/history';
+
 import AddIcon from '@material-ui/icons/Add';
 import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { Tooltip } from 'react-tippy';
-import { useSnackbar } from 'notistack';
 
-import { getCategoryTree } from 'utils';
-import { createCategory } from 'redux/actions/categories';
-import VirtualSortableTree from 'components/VirtualTree';
+import { VirtualSortableTree } from 'components/Virtual';
 import { IconButton } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 function Tree(props) {
   const { enqueueSnackbar } = useSnackbar();
-
   const {
-    isFetchingList,
     categories,
     createCategory,
+    updateTreeData,
+    createHistory,
+    treeData,
   } = props;
 
-  const [treeData, setTreeData] = useState([]);
-
-  useEffect(() => {
-    if (!isFetchingList) {
-      setTreeData(getCategoryTree(categories));
-    }
-  }, [categories, isFetchingList]);
+  const setTreeData = (data) => { updateTreeData(data); };
 
   const addRootCategory = () => {
-    createCategory({ name: 'New Category' })
-      .then((category) => {
-        enqueueSnackbar('New category has been created successfully.', { variant: 'success', autoHideDuration: 1000 });
-        setTreeData(
-          treeData.concat({
-            title: category.name,
-            editable: false,
-            item: category,
-          }),
-        );
-      })
-      .catch(() => {
-        enqueueSnackbar('Error in adding category.', { variant: 'error', autoHideDuration: 1000 });
-      });
+    if (!props.isCreating) {
+      createCategory({ name: 'New Category' })
+        .then((category) => {
+          createHistory({
+            label: 'Create Node',
+            itemId: category.id,
+            type: 'virtual',
+          });
+          confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
+        });
+    }
   };
 
   return (
@@ -81,18 +78,24 @@ function Tree(props) {
 }
 
 Tree.propTypes = {
-  isFetchingList: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
+  treeData: PropTypes.array.isRequired,
   createCategory: PropTypes.func.isRequired,
+  updateTreeData: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
+  isCreating: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = store => ({
-  isFetchingList: store.categoriesData.isFetchingList,
   categories: store.categoriesData.categories,
+  treeData: store.categoriesData.trees,
+  isCreating: store.categoriesData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory,
+  createHistory,
+  updateTreeData,
 }, dispatch);
 
 export default connect(

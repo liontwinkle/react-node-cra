@@ -1,0 +1,40 @@
+.treeview {
+  height:80vh;
+  overflow: hidden;
+}
+.rst__row {
+  &.selected {
+    .rst__rowContents {
+      background-color: #F4F5F9;
+    }
+  }
+
+  .rst__rowLabel {
+    padding-right: 5px;
+  }
+
+  .tree-node-menu {
+    .icon-button {
+      border: 0;
+    }
+  }
+
+  .tree-node-input {
+    padding: 7px 4px;
+    background-color: transparent;
+    border: 0;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+
+    &.editable {
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      cursor: text;
+
+      &:focus {
+        border-color: #1CA1C1;
+      }
+    }
+  }
+}

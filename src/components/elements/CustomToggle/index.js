@@ -12,8 +12,9 @@ const CustomToggle = ({
   side,
   value,
   onToggle,
+  className,
 }) => (
-  <div className="mg-switch-control">
+  <div className={`mg-switch-control ${className}`}>
     {label && (side === 'left') && (
       <label
         htmlFor={id}
@@ -50,6 +51,7 @@ CustomToggle.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  className: PropTypes.string,
   label: PropTypes.string,
   labelOn: PropTypes.string,
   labelOff: PropTypes.string,
@@ -60,6 +62,7 @@ CustomToggle.propTypes = {
 
 CustomToggle.defaultProps = {
   id: uuidv4(),
+  className: '',
   label: '',
   labelOn: '',
   labelOff: '',

@@ -1,19 +1,24 @@
 import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { Tooltip } from 'react-tippy';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  makeStyles,
+} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { removeClient } from 'redux/actions/clients';
+import { removePropertyField } from 'redux/actions/propertyFields';
+import { removeProductsField } from 'redux/actions/productsFields';
 import { IconButton } from 'components/elements';
+import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles(theme => ({
   dialogAction: {
@@ -22,30 +27,44 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ClientRemove(props) {
+function ClientRemove({
+  isDeleting,
+  client,
+  disabled,
+  removeClient,
+  removePropertyField,
+  removeProductsField,
+}) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    isDeleting,
-    client,
-    removeClient,
-  } = props;
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
-    setOpen(!open);
+    if (!disabled) {
+      setOpen(!open);
+    }
   };
 
   const handleRemove = () => {
     if (!isDeleting) {
-      removeClient(client.id)
+      removePropertyField()
         .then(() => {
-          enqueueSnackbar('The client has been deleted successfully.', { variant: 'success', autoHideDuration: 1000 });
-          handleOpen();
+          removeProductsField()
+            .then(() => {
+              removeClient(client.id)
+                .then(() => {
+                  confirmMessage(enqueueSnackbar, 'The client has been deleted successfully.', 'success');
+                })
+                .catch(() => {
+                  confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
+                });
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
+            });
         })
         .catch(() => {
-          enqueueSnackbar('Error in deleting client.', { variant: 'error', autoHideDuration: 1000 });
+          confirmMessage(enqueueSnackbar, 'Error in deleting client.', 'error');
         });
     }
   };
@@ -57,10 +76,7 @@ function ClientRemove(props) {
         position="bottom"
         arrow
       >
-        <IconButton
-          className="danger"
-          onClick={handleOpen}
-        >
+        <IconButton className="danger" onClick={handleOpen}>
           <DeleteIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -102,12 +118,16 @@ function ClientRemove(props) {
 
 ClientRemove.propTypes = {
   isDeleting: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   client: PropTypes.object,
   removeClient: PropTypes.func.isRequired,
+  removePropertyField: PropTypes.func.isRequired,
+  removeProductsField: PropTypes.func.isRequired,
 };
 
 ClientRemove.defaultProps = {
   client: null,
+  disabled: false,
 };
 
 const mapStateToProps = store => ({
@@ -117,6 +137,8 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   removeClient,
+  removePropertyField,
+  removeProductsField,
 }, dispatch);
 
 export default connect(

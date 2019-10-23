@@ -17,6 +17,7 @@ const CustomInput = ({
   hint,
   value,
   onChange,
+  getWrapper,
 }) => (
   <div className={`mg-input-control ${className}`}>
     {label && !inline && (
@@ -30,13 +31,14 @@ const CustomInput = ({
         <label
           htmlFor={id}
           className={`mg-input-label inline ${labelAlignment}`}
-          style={{ width: inlineWidth }}
+          style={{ minWidth: inlineWidth }}
         >
           {label}
         </label>
       )}
 
       <input
+        ref={getWrapper}
         id={id}
         type={type}
         className="mg-input"
@@ -72,6 +74,7 @@ CustomInput.propTypes = {
     PropTypes.number,
   ]),
   onChange: PropTypes.func.isRequired,
+  getWrapper: PropTypes.func,
 };
 
 CustomInput.defaultProps = {
@@ -83,9 +86,10 @@ CustomInput.defaultProps = {
   placeholder: '',
   min: undefined,
   inline: false,
-  inlineWidth: 88,
+  inlineWidth: 150,
   hint: '',
   value: '',
+  getWrapper: null,
 };
 
 export default CustomInput;

@@ -1,29 +1,35 @@
 const Clients = require('./clients.model');
 const CategoryModel = require('../categories/categories.model');
+const ProductsModel = require('../products/products.model');
+const AttributesModel = require('../attributes/attributes.model');
+const HistoryModel = require('../history/history.model');
 
-const {
-  handleEntityNotFound,
-  handleError
-} = require('../../utils');
+const { handleEntityNotFound, handleError } = require('../../utils');
 
-exports.loadClient = (req, res, next, id) => {
-  return Clients
-    .findById(id)
-    .exec()
-    .then((client) => {
-      if (client) {
-        req.client = client;
-        return next();
-      }
+exports.loadClient = (req, res, next, id) => Clients
+  .findById(id)
+  .exec()
+  .then((client) => {
+    if (client) {
+      req.client = client;
+      return next();
+    }
 
-      return handleEntityNotFound(res, req);
-    })
-    .catch(handleError(res));
-};
+    return handleEntityNotFound(res);
+  })
+  .catch(handleError(res));
 
 exports.loadCategory = (req, res, next, type) => {
   if (req.client) {
-    req.category = CategoryModel(req.client.code + '_' + type);
+    if (type === 'products') {
+      req.products = ProductsModel(`${req.client.code}_${type}`);
+    } else if (type === 'attributes') {
+      req.attributes = AttributesModel(`${req.client.code}_${type}`);
+    } else if (type === 'history') {
+      req.history = HistoryModel(`${req.client.code}_${type}`);
+    } else {
+      req.category = CategoryModel(`${req.client.code}_${type}`);
+    }
     return next();
   }
 
@@ -32,11 +38,11 @@ exports.loadCategory = (req, res, next, type) => {
     .exec()
     .then((client) => {
       if (client) {
-        req.category = CategoryModel(client.code + '_' + type);
+        req.category = CategoryModel(`${client.code}_${type}`);
         return next();
       }
 
-      return handleEntityNotFound(res, req);
+      return handleEntityNotFound(res);
     })
     .catch(handleError(res));
 };

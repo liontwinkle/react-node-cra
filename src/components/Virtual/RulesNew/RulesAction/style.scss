@@ -1,0 +1,81 @@
+@import "scss/mixin.scss";
+
+.mg-rules-actions {
+  width: fit-content;
+  padding: 0.5rem;
+  border-left: 1px solid #ddd;
+
+  span {
+    cursor: pointer;
+  }
+  > * {
+    &:not(:first-child) {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+  }
+}
+
+.mg-edit-rule-content {
+  width: 100% !important;
+}
+
+.MuiDialog-root {
+  width: 100%;
+  max-width: unset !important;
+
+  #hot-display-license-info {
+    display: none;
+  }
+
+  .handsontable {
+    .ht_master thead,
+    .ht_master tr th,
+    .ht_clone_left thead {
+      visibility: unset;
+    }
+  }
+
+  #hot-app {
+    width: fit-content;
+    height: 100%;
+    min-width: 100%;
+    .wtHolder {
+      position: relative;
+      width: 100% !important;
+      height: fit-content !important;
+      overflow: unset !important;
+    }
+  }
+
+  .MuiDialog-paperWidthSm {
+    max-width: unset !important;
+  }
+
+  .MuiPaper-root {
+    box-shadow: none;
+    overflow: hidden !important;
+
+    .MuiToolbar-root {
+      padding: 0;
+    }
+
+    .MuiTableFooter-root {
+      .MuiTableCell-root {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.preview-image {
+  width: 1330px;
+  height: fit-content;
+  overflow: unset;
+  overflow-y: unset !important;
+}

@@ -1,0 +1,21 @@
+.attribute-container {
+  height: 100%;
+
+  .attribute-content {
+    height: calc(100% - 49px);
+  }
+}
+
+.app-tree-container {
+  height: 100%;
+
+  .tree-header {
+    height: 49px;
+    padding: 4px 16px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tree-content {
+    flex: 1;
+  }
+}

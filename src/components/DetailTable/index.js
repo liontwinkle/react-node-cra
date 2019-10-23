@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MaterialTable from 'material-table';
@@ -9,42 +9,43 @@ import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
-function DetailTable(props) {
-  const { categories, category } = props;
+function DetailTable({
+  category, attribute, history, type, historyStr,
+}) {
+  const [data, setData] = useState([]);
 
-  const parentId = category ? category.id : '';
-  const childrenCategories = categories.filter(c => c.parentId === parentId);
+  useEffect(() => {
+    if (historyStr !== '') {
+      const item = (type === 'virtual') ? category : attribute;
+      const parentId = item ? item.id : '';
+      const displayHistory = history.filter(historyItem => (historyItem.itemId === parentId));
+      setData(displayHistory.map(c => ({
+        action: c.label,
+        createdAt: convertDateFormat(item.createdAt),
+        updatedAt: convertDateFormat(c.updatedAt),
+      })));
+    }
+  }, [attribute, category, history, type, historyStr]);
 
-  const tableData = {
-    columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Created Date', field: 'createdAt' },
-      { title: 'Updated Date', field: 'updatedAt' },
-    ],
-    data: childrenCategories.map(c => ({
-      name: c.name,
-      createdAt: convertDateFormat(c.createdAt),
-      updatedAt: convertDateFormat(c.updatedAt),
-    })),
-  };
+
+  const columns = [
+    { title: 'Action', field: 'action' },
+    { title: 'Created Date', field: 'createdAt' },
+    { title: 'Updated Date', field: 'updatedAt' },
+  ];
 
   return (
     <div className="mg-detail-table">
       <PerfectScrollbar
-        options={{
-          minScrollbarLength: 50,
-          suppressScrollX: true,
-        }}
+        options={{ minScrollbarLength: 50, suppressScrollX: true }}
       >
         <MaterialTable
           icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
+          columns={columns}
+          data={data}
           options={{
             actionsColumnIndex: -1,
             paging: false,
-            // search: false,
-            // showTitle: false,
             toolbar: false,
           }}
         />
@@ -54,17 +55,23 @@ function DetailTable(props) {
 }
 
 DetailTable.propTypes = {
-  categories: PropTypes.array.isRequired,
+  history: PropTypes.array.isRequired,
+  historyStr: PropTypes.string.isRequired,
   category: PropTypes.object,
+  attribute: PropTypes.object,
+  type: PropTypes.string.isRequired,
 };
 
 DetailTable.defaultProps = {
   category: null,
+  attribute: null,
 };
 
 const mapStateToProps = store => ({
-  categories: store.categoriesData.categories,
+  history: store.historyData.history,
+  historyStr: store.historyData.historyStr,
   category: store.categoriesData.category,
+  attribute: store.attributesData.attribute,
 });
 
 export default connect(mapStateToProps)(DetailTable);

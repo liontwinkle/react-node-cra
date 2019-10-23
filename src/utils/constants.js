@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import React, { forwardRef } from 'react';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -16,6 +17,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import { getObjectFromArray } from 'utils';
+
+export const clientType = [
+  { key: 'virtual', label: 'Virtual' },
+  { key: 'native', label: 'Native' },
+  { key: 'products', label: 'Products' },
+  { key: 'attributes', label: 'Attributes' },
+];
 
 export const ruleStringItems = [
   { key: 'less', label: 'less' },
@@ -49,17 +57,14 @@ export const ruleNumberItems = [
   { key: 'is_not_null', label: 'is not null' },
 ];
 
-export const ruleKeyTypes = [
-  { key: 'string', label: 'String' },
-  { key: 'number', label: 'Number' },
-];
-
-export const ruleTypes = getObjectFromArray(ruleKeyTypes);
-
 export const propertyFieldTypes = [
-  { key: 'input', label: 'Input' },
+  { key: 'string', label: 'String' },
   { key: 'select', label: 'Select' },
   { key: 'toggle', label: 'Toggle' },
+  { key: 'text', label: 'Text' },
+  { key: 'array', label: 'Array' },
+  { key: 'monaco', label: 'Monaco Edit' },
+  { key: 'richtext', label: 'Rich Text Edit' },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
@@ -83,3 +88,48 @@ export const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <RemoveIcon {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumnIcon {...props} ref={ref} />),
 };
+
+export const basis = [
+  {
+    label: 'Includes categories or products',
+    key: 'include',
+  },
+  {
+    label: 'Excludes categories or products',
+    key: 'exclude',
+  },
+];
+
+export const refer = [
+  {
+    label: 'Refer to product details',
+    key: 'product_detail',
+  },
+];
+
+export const match = [
+  {
+    label: 'Exact(text)',
+    key: ':=',
+  },
+  {
+    label: 'Contains(text)',
+    key: ':',
+  },
+  {
+    label: 'Literal(text)',
+    key: '::',
+  },
+];
+
+export const scope = [
+  {
+    label: 'All Categories',
+    key: '0',
+  },
+];
+
+export const productViewTypes = [
+  { key: 'data', label: 'Product Table' },
+  { key: 'grid', label: 'Product Image' },
+];

@@ -20,3 +20,6 @@ In the project directory, you can run project by running `npm run marketgui` com
 ### `npm run build`
 
 Builds the front end for production to the `build` folder.
+
+### Requirements For Products Feature
+In order to get real data, Please save Json data into `publuc/data` directory.

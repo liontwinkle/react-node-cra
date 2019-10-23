@@ -10,7 +10,6 @@ const CustomSection = ({ title, children }) => (
         {title}
       </div>
     </div>
-
     {children}
   </div>
 );

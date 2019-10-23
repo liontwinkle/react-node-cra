@@ -1,5 +1,6 @@
-import _ from 'lodash';
+import _findIndex from 'lodash/findIndex';
 
+import { productViewTypes } from 'utils/constants';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -11,6 +12,7 @@ const INITIAL_STATE = {
   clients: [],
   client: null,
   type: null,
+  productViewType: productViewTypes[0],
   errors: '',
 };
 
@@ -61,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CLIENT_UPDATE_SUCCESS:
-      const clientIdx = _.findIndex(clients, { id: action.payload.data.id });
+      const clientIdx = _findIndex(clients, { id: action.payload.data.id });
       if (clientIdx > -1) {
         clients.splice(clientIdx, 1, action.payload.data);
       } else {
@@ -86,7 +88,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CLIENT_DELETE_SUCCESS:
-      const index = _.findIndex(clients, { id: action.payload.id });
+      const index = _findIndex(clients, { id: action.payload.id });
       if (index > -1) {
         clients.splice(index, 1);
       }
@@ -116,6 +118,11 @@ export default (state = INITIAL_STATE, action) => {
         type: action.payload.type,
       };
 
+    case types.CLIENT_SET_PRODUCT_VIEW_TYPE:
+      return {
+        ...state,
+        productViewType: action.payload.productViewType,
+      };
     default:
       return state;
   }

@@ -43,8 +43,10 @@ function CustomSelect(props) {
   });
 
   const changeValue = value => () => {
-    props.onChange(value);
-    handleClick();
+    if (!props.disabled) {
+      props.onChange(value);
+      handleClick();
+    }
   };
 
   const {
@@ -93,11 +95,12 @@ function CustomSelect(props) {
         id={id}
         open={isOpened}
         anchorEl={anchorEl}
+        transition
       >
         <ul
           className={`mg-select-list${isOpened ? ' active' : ''}`}
           ref={getPopperRef}
-          style={{ width, height }}
+          style={{ width, height, bottom: '0' }}
         >
           <PerfectScrollbar
             options={{
@@ -130,12 +133,14 @@ CustomSelect.propTypes = {
   ]),
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
 
 CustomSelect.defaultProps = {
   className: '',
   placeholder: '',
   value: null,
+  disabled: false,
 };
 
 export default CustomSelect;

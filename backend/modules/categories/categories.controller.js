@@ -3,7 +3,8 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
-  removeEntity,
+  handleCreate,
+  removeCategoryEntity,
   removeChildren
 } = require('../../utils');
 
@@ -20,7 +21,8 @@ exports.index = (req, res) => {
 // Creates a new Category in the DB
 exports.create = (req, res) => {
   req.category
-    .createAsync(req.body)
+    .find()
+    .then(handleCreate(req))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -31,7 +33,7 @@ exports.show = (req, res) => {
     .findById(req.params.categoryId)
     .select('-__v')
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -44,7 +46,7 @@ exports.update = (req, res) => {
 
   req.category
     .findByIdAsync(req.params.categoryId)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -54,8 +56,8 @@ exports.update = (req, res) => {
 exports.remove = (req, res) => {
   req.category
     .findByIdAsync(req.params.categoryId)
-    .then(handleEntityNotFound(res, req))
-    .then(removeEntity(res))
-    .then(removeChildren(req,req.params.categoryId ))
+    .then(handleEntityNotFound(res))
+    .then(removeCategoryEntity(req, res))
+    .then(removeChildren(req, req.params.categoryId))
     .catch(handleError(res));
 };

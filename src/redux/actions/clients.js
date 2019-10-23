@@ -55,7 +55,7 @@ export const createClient = client => (dispatch, getState) => {
     });
 };
 
-export const updateClient = (id, updatedData) => (dispatch, getState) => {
+export const updateClient = updatedData => (dispatch, getState) => {
   if (getState().clientsData.isUpdating) {
     return;
   }
@@ -64,6 +64,7 @@ export const updateClient = (id, updatedData) => (dispatch, getState) => {
     type: types.CLIENT_UPDATE_REQUEST,
   });
 
+  const { id } = getState().clientsData.client;
   return clientService.update(id, updatedData)
     .then((data) => {
       dispatch({
@@ -83,7 +84,7 @@ export const updateClient = (id, updatedData) => (dispatch, getState) => {
     });
 };
 
-export const removeClient = id => (dispatch, getState) => {
+export const removeClient = () => (dispatch, getState) => {
   if (getState().clientsData.isDeleting) {
     return;
   }
@@ -91,6 +92,8 @@ export const removeClient = id => (dispatch, getState) => {
   dispatch({
     type: types.CLIENT_DELETE_REQUEST,
   });
+
+  const { id } = getState().clientsData.client;
 
   return clientService.remove(id)
     .then(() => {
@@ -122,5 +125,11 @@ export const setClientType = type => (dispatch) => {
   dispatch({
     type: types.CLIENT_SET_TYPE,
     payload: { type },
+  });
+};
+export const setProductViewType = productViewType => (dispatch) => {
+  dispatch({
+    type: types.CLIENT_SET_PRODUCT_VIEW_TYPE,
+    payload: { productViewType },
   });
 };

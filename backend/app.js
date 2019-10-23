@@ -28,13 +28,15 @@ dotenv.config({ path: '.env' });
  * Controllers (route handlers).
  */
 const clientsRoute = require('./modules/clients/clients.route');
-
+const propertyFieldsRoute = require('./modules/property-fields/property-fields.route');
+const ProductsFieldsRoute = require('./modules/products-fields/products-fields.route');
+const uploadRoute = require('./modules/upload/upload.route');
 /**
  * Create Express server.
  */
 const app = express();
 
-/**
+/** 10100000
  * Connect to MongoDB.
  */
 mongoose.set('useFindAndModify', false);
@@ -59,8 +61,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
   app.use(cors());
 }
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -83,6 +85,9 @@ app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 3155760000
  * Notes routes.
  */
 app.use('/api/clients', clientsRoute);
+app.use('/api/upload', uploadRoute);
+app.use('/api/property-fields', propertyFieldsRoute);
+app.use('/api/products-fields', ProductsFieldsRoute);
 
 /**
  * Error Handler.

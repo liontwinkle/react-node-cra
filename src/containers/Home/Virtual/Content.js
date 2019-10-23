@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 
 import DetailTable from 'components/DetailTable';
-import Rules from 'components/Rules';
-import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';
+import { Association, NewRules, Properties } from 'components/Virtual/';
 
 const tabs = [
-  { value: 'detail', label: 'Detail View' },
   { value: 'properties', label: 'Properties' },
+  { value: 'attributes', label: 'Attributes' },
   { value: 'rules', label: 'Rules' },
+  { value: 'history', label: 'History' },
 ];
 
 function Content() {
-  const [tab, setTab] = useState('detail');
+  const [tab, setTab] = useState('properties');
 
-  const handleClick = value => () => {
-    setTab(value);
-  };
+  const handleClick = value => () => { setTab(value); };
 
   return (
     <div className="virtual-container">
@@ -27,9 +25,10 @@ function Content() {
       />
 
       <div className="virtual-content">
-        {tab === 'detail' && <DetailTable />}
+        {tab === 'history' && <DetailTable type="virtual" />}
         {tab === 'properties' && <Properties />}
-        {tab === 'rules' && <Rules />}
+        {tab === 'attributes' && <Association />}
+        {tab === 'rules' && <NewRules />}
       </div>
     </div>
   );

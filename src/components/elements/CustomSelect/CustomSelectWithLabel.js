@@ -28,7 +28,7 @@ const CustomSelectWithLabel = ({
       {label && inline && (
         <label
           className={`mg-select-label inline ${labelAlignment}`}
-          style={{ width: inlineWidth }}
+          style={{ minWidth: inlineWidth }}
         >
           {label}
         </label>
@@ -68,7 +68,7 @@ CustomSelectWithLabel.defaultProps = {
   labelAlignment: '',
   placeholder: '',
   inline: false,
-  inlineWidth: 88,
+  inlineWidth: 150,
   hint: '',
   value: null,
 };

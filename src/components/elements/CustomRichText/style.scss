@@ -1,0 +1,56 @@
+.mg-richtext-control {
+  border-width: 0;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  outline: none;
+
+  .mg-richtext-label {
+    padding: 3px 2px 0;
+    display: block;
+    font-size: 14px;
+    line-height: 19px;
+    outline: none;
+
+    &.inline {
+      padding: 0 8px 0 0;
+      line-height: 32px;
+
+      &.right {
+        text-align: right;
+      }
+    }
+  }
+
+  .mg-richtext-wrapper-text {
+    height: fit-content;
+    display: flex;
+    overflow: auto;
+    box-sizing: border-box;
+    outline: none;
+
+    .fr-box.fr-basic {
+      width: 100%;
+      flex: 1;
+      background: #ffffff;
+      font-size: 14px;
+      -webkit-appearance: none;
+      color: #475466;
+      outline: none;
+      box-sizing: border-box;
+      &:focus {
+        border-color: #1CA1C1;
+      }
+      .second-toolbar a{
+        visibility: hidden;
+      }
+    }
+  }
+
+  .mg-richtext-hint {
+    margin-left: 3px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #516075;
+    outline: none;
+  }
+}

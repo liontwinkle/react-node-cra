@@ -5,7 +5,8 @@ const {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
-  removeEntity
+  removeEntity,
+  createCollection
 } = require('../../utils');
 
 // Gets a list of Clients
@@ -23,6 +24,7 @@ exports.index = (req, res) => {
 exports.create = (req, res) => {
   Clients
     .createAsync(req.body)
+    .then(createCollection(req.body))
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -33,7 +35,7 @@ exports.show = (req, res) => {
     .findById(req.params.id)
     .select('id name code url createdAt')
     .execAsync()
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -46,7 +48,7 @@ exports.update = (req, res) => {
 
   Clients
     .findByIdAsync(req.params.id)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -56,7 +58,7 @@ exports.update = (req, res) => {
 exports.remove = (req, res) => {
   Clients
     .findByIdAsync(req.params.id)
-    .then(handleEntityNotFound(res, req))
+    .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
 };

@@ -1,28 +1,181 @@
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
+import { makeStyles } from '@material-ui/core';
+import {
+  AddSets, DiffSets, formatDifference, RuleEngine,
+} from './RuleEngine';
 
-const getSubTree = (list, parentId) => {
+/** ** UTILS DEFINE **** */
+
+
+const getAllmatched = (products, match, value, basis) => {
+  const returnValue = {
+    includes: [],
+    excludes: [],
+  };
+  let includeIndex = 0;
+  let excludeIndex = 0;
+  const rule = RuleEngine[match](value);
+
+
+  products.forEach((proItem) => {
+    const values = Object.values(proItem);
+    if (values.filter(item => (rule.test(item))).length > 0) {
+      if (basis === 'include') {
+        returnValue.includes[includeIndex] = proItem;
+        includeIndex++;
+      } else {
+        returnValue.excludes[excludeIndex] = proItem;
+        excludeIndex++;
+      }
+    }
+  });
+  return returnValue;
+};
+
+const getRuleProducts = (products, field, match, value, basis) => {
+  const rule = RuleEngine[match](value);
+  const returnValue = {
+    includes: [],
+    excludes: [],
+  };
+  let includeIndex = 0;
+  let excludeIndex = 0;
+
+  products.forEach((productItem) => {
+    if (rule.test(productItem[field])) {
+      if (basis === 'include') {
+        returnValue.includes[includeIndex] = productItem;
+        includeIndex++;
+      } else {
+        returnValue.excludes[excludeIndex] = productItem;
+        excludeIndex++;
+      }
+    }
+  });
+  return returnValue;
+};
+
+const getSubTree = (list, parentId, type, originNode) => {
   const subTree = [];
-  const sublist = list.filter(item => item.parentId === parentId);
+  const association = [];
+  const sublist = list.filter(item => item[type] === parentId.toString());
+  const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
   if (sublist.length > 0) {
-    sublist.forEach((item) => {
+    sublist.forEach((item, key) => {
+      const subNode = (originNode && originNode.length > 0 && originNode[key]) ? originNode[key] : null;
+      association.push({
+        label: item.name,
+        value: item[identifier],
+        appear: item.appear || [],
+        children: getSubTree(list, item[identifier], type).association,
+      });
       subTree.push({
         title: item.name,
         editable: false,
+        expanded: (subNode) ? subNode.expanded : false,
         item,
-        children: getSubTree(list, item._id),
+        children: getSubTree(list, item[identifier], type, (subNode) ? subNode.children : null).subTree,
       });
     });
   }
 
-  return subTree;
+  return {
+    subTree,
+    association,
+  };
 };
 
-export const getCategoryTree = (categories) => {
+const getRulesKey = (keys) => {
+  const ruleKeys = [
+    {
+      label: 'All',
+      key: '*',
+    },
+  ];
+  keys.forEach((keyItem, key) => {
+    ruleKeys[key + 1] = {
+      label: keyItem,
+      key: keyItem,
+    };
+  });
+  return ruleKeys;
+};
+
+/** ** EXPORTS DEFINE **** */
+
+export const useStyles = makeStyles(theme => ({
+  dialogAction: {
+    margin: theme.spacing(2),
+  },
+  dialogContent: {
+    overflow: 'unset',
+  },
+}));
+
+export const hasSubArray = (master, sub) => sub.every((i => master.indexOf(i) > -1));
+
+export const confirmMessage = (func, msg, type) => {
+  const duration = (type === 'success' || type === 'info') ? 2000 : 4000;
+  func(msg, {
+    variant: type,
+    autoHideDuration: duration,
+  });
+};
+
+export const getSubItems = ({ children }) => {
+  let childLength = 0;
+
+  if (children) {
+    childLength = children.length;
+    children.forEach((item) => {
+      childLength += getSubItems(item);
+    });
+  }
+  return childLength;
+};
+
+export const setHandler = (context, callback) => {
+  const keys = Object.keys(context);
+  keys.forEach((keyItem) => {
+    context[keyItem].addEventListener('contextmenu', callback);
+  });
+  return () => keys.forEach((keyItem) => {
+    context[keyItem].removeEventListener('contextmenu', callback);
+  });
+};
+
+
+export const getPreFilterData = (rules, products) => {
+  formatDifference();
+  let filterResult = new Set();
+
+  rules.forEach((item) => {
+    const field = item.detail;
+    const { match, value, basis } = item;
+    if (field === '*') {
+      filterResult = getAllmatched(products, match, value, basis);
+    } else {
+      filterResult = getRuleProducts(products, field, match, value, basis);
+    }
+    AddSets(filterResult.includes, 'includes');
+    AddSets(filterResult.excludes, 'excludes');
+  });
+
+  return Array.from(DiffSets());
+};
+
+export const getCategoryTree = (categories, originNode) => {
   const parentId = '';
   const list = categories || [];
 
-  return getSubTree(list, parentId);
+  return getSubTree(list, parentId, 'parentId', originNode);
+};
+
+export const getAttribute = (attributes) => {
+  const groupId = '';
+  const list = attributes || [];
+  return getSubTree(list, groupId, 'groupId');
 };
 
 export const isExist = (obj, key) => {
@@ -39,10 +192,7 @@ export const getMapFromJson = (data, pKey) => {
 
   if (glue) {
     const parentKey = uuidv4();
-    map = map.set(parentKey, {
-      glue,
-      parentKey: pKey,
-    });
+    map = map.set(parentKey, { glue, parentKey: pKey });
 
     if (rules) {
       for (let i = 0; i < rules.length; i++) {
@@ -156,4 +306,73 @@ export const getObjectFromArray = (array) => {
   });
 
   return res;
+};
+
+
+export const getProducts = (products) => {
+  const columns = [];
+  const objects = [];
+  let headers = [];
+
+  if (products.length > 0) {
+    headers = Object.keys(products[0])
+      .sort();
+
+    Object.values(products[0])
+      .forEach((value, key) => {
+        switch (typeof value) {
+          case 'number':
+            columns[key] = {
+              data: headers[key],
+              type: 'numeric',
+            };
+            break;
+          case 'date':
+            columns[key] = {
+              data: headers[key],
+              type: 'date',
+              dateFormat: 'MM/DD/YYYY',
+            };
+            break;
+          case 'object':
+          case 'array':
+            columns[key] = {
+              data: headers[key],
+              type: 'dropdown',
+            };
+            break;
+          case 'string':
+            columns[key] = {
+              data: headers[key],
+              type: 'text',
+            };
+            break;
+          default:
+            columns[key] = {
+              data: headers[key],
+            };
+            break;
+        }
+      });
+
+    products.forEach((dataObj, objKey) => {
+      const subObject = {};
+      const subKeys = Object.keys(dataObj);
+      Object.values(dataObj)
+        .forEach((dataItems, key) => {
+          if (typeof dataItems === 'object') {
+            subObject[subKeys[key]] = JSON.stringify(dataItems);
+          } else {
+            subObject[subKeys[key]] = dataItems;
+          }
+        });
+      objects[objKey] = subObject;
+    });
+  }
+  return {
+    columns,
+    headers,
+    valueDetails: getRulesKey(headers),
+    products: objects,
+  };
 };

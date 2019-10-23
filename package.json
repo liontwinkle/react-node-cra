@@ -3,21 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@handsontable/react": "^3.0.0",
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "axios": "^0.19.0",
+    "codemirror": "^5.49.2",
     "concurrently": "^4.1.1",
     "connected-react-router": "^6.4.0",
     "date-fns": "^2.0.0-beta.3",
+    "filepond": "^4.7.2",
+    "froala-editor": "^3.0.6",
+    "handsontable": "^7.1.1",
     "history": "^4.9.0",
     "immutable": "^4.0.0-rc.12",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "material-table": "^1.40.1",
+    "monaco-editor": "^0.18.1",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "node-sass": "^4.12.0",
     "notistack": "^0.8.8",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-checkbox-tree-enhanced": "^1.5.15",
     "react-dom": "^16.8.6",
+    "react-filepond": "^7.0.1",
+    "react-froala-wysiwyg": "^3.0.6",
+    "react-lazyload": "^2.6.2",
+    "react-monaco-editor": "^0.31.0",
+    "react-paginate": "^6.3.0",
     "react-perfect-scrollbar": "^1.5.3",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
@@ -26,12 +40,14 @@
     "react-simple-resizer": "^1.3.1",
     "react-sortable-tree": "^2.6.2",
     "react-tippy": "^1.2.3",
+    "react-virtualized": "^9.21.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
@@ -39,6 +55,10 @@
     "lint-staged": "^8.2.1"
   },
   "lint-staged": {
+    "backend/**/*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix",
+      "git add"
+    ],
     "src/**/*.{js,jsx,ts,tsx,json}": [
       "eslint --fix",
       "git add"

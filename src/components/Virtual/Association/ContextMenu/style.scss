@@ -1,0 +1,24 @@
+.context-menu-container{
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background: #f4f5f9;
+    border: 1px solid #8e8e8e;
+    box-shadow: 3px 3px 3px 0 #5e5e5e;
+    ul{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: fit-content;
+        li {
+            font-size: 12px;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            &:hover{
+               background: #297fb8;
+               color: white;
+             }
+        }
+    }
+}
