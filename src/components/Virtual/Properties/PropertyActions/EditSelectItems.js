@@ -62,7 +62,7 @@ function EditPropertyFields({
       }
 
       if (updateFlag && !isUpdating) {
-        updatePropertyField({ propertyFields })
+        updatePropertyField(propertyField.id, { propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();

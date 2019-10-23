@@ -35,6 +35,7 @@ function AddPropertyFields({
     key: '',
     label: '',
     default: '',
+    template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
   });

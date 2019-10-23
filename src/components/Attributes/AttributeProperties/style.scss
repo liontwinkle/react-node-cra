@@ -10,6 +10,7 @@
 
     .mg-select-section {
       @include justify-row-between;
+      height: fit-content;
     }
 
     .scrollbar-container {
@@ -21,6 +22,9 @@
         border-left: 0 !important;
       }
 
+      .icon-button {
+        margin-left: 10px;
+      }
       .mg-section-control {
         > div:not(:first-child) {
           margin-top: 0.5rem;

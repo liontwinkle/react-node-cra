@@ -42,6 +42,7 @@ function EditPropertyFields({
           key: newData.key,
           label: newData.label,
           default: newData.default,
+          template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
         });
@@ -79,6 +80,7 @@ function EditPropertyFields({
           key: newData.key,
           label: newData.label,
           default: newData.default,
+          template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
           _id: newData._id,
@@ -86,7 +88,7 @@ function EditPropertyFields({
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const errList = checkTemplate(propertyFields, newData);
-          if (!isUpdating && errList === '') {
+          if (!isUpdating && isExist(propertyFields, newData.key) === 1 && errList === '') {
             updatePropertyField({ propertyFields })
               .then(() => {
                 addNewRuleHistory(createHistory, attribute, attribute.groupId,

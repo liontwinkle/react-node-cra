@@ -24,6 +24,7 @@ function PropertyActions({
   properties,
   isUpdating,
   category,
+  isCreating,
   updateCategory,
   createHistory,
   fields,
@@ -48,7 +49,7 @@ function PropertyActions({
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
     if (saveData.chkFlag) {
-      if (!isUpdating) {
+      if (!isUpdating && !isCreating) {
         if (!isEqual(category.properties, saveData)) {
           updateCategory(category.id, { properties: saveData })
             .then(() => {
@@ -157,6 +158,7 @@ PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
   fields: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
   updateCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
@@ -164,6 +166,7 @@ PropertyActions.propTypes = {
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
+  isCreating: store.historyData.isCreating,
   category: store.categoriesData.category,
 });
 

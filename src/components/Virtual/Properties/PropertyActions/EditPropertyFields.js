@@ -46,18 +46,19 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
         });
-
-        updatePropertyField({ propertyFields })
-          .then(() => {
-            addNewRuleHistory(createHistory, category, category.groupId,
-              `Create Property(${newData.propertyType})`,
-              `Create Property(${newData.propertyType}) by ${category.name}`,
-              'virtual');
-            confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ propertyFields })
+            .then(() => {
+              addNewRuleHistory(createHistory, category, category.groupId,
+                `Create Property(${newData.propertyType})`,
+                `Create Property(${newData.propertyType}) by ${category.name}`,
+                'virtual');
+              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+            });
+        }
       } else {
         const errMsg = (errList !== '')
           ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
@@ -87,7 +88,7 @@ function EditPropertyFields({
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const errList = checkTemplate(propertyFields, newData);
-          if (!isUpdating && errList === '') {
+          if (!isUpdating && isExist(propertyFields, newData.key) === 1 && errList === '') {
             updatePropertyField({ propertyFields })
               .then(() => {
                 addNewRuleHistory(createHistory, category, category.groupId,
@@ -117,18 +118,19 @@ function EditPropertyFields({
       const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         propertyFields.splice(ruleKeyIndex, 1);
-
-        updatePropertyField({ propertyFields })
-          .then(() => {
-            addNewRuleHistory(createHistory, category, category.groupId,
-              `Delete the property field (${oldData.label})`,
-              `Delete the property field (${oldData.label}) by ${category.name}`,
-              'virtual');
-            confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ propertyFields })
+            .then(() => {
+              addNewRuleHistory(createHistory, category, category.groupId,
+                `Delete the property field (${oldData.label})`,
+                `Delete the property field (${oldData.label}) by ${category.name}`,
+                'virtual');
+              confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
+            });
+        }
       }
     }, 600);
   });

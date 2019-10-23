@@ -130,7 +130,7 @@ class AttributeProperties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
+      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco, this.changeRichText,
     );
   };
 

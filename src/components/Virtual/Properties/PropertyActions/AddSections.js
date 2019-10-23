@@ -47,14 +47,16 @@ function AddSections({
       if (isExist(sections, sectionsData.key) === 0) {
         sections.push(sectionsData);
 
-        updatePropertyField({ sections })
-          .then(() => {
-            confirmMessage(enqueueSnackbar, 'Section has been added successfully.', 'success');
-            handleClose();
-          })
-          .catch(() => {
-            confirmMessage(enqueueSnackbar, 'Error in adding section.', 'error');
-          });
+        if (!isUpdating) {
+          updatePropertyField({ sections })
+            .then(() => {
+              confirmMessage(enqueueSnackbar, 'Section has been added successfully.', 'success');
+              handleClose();
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in adding section.', 'error');
+            });
+        }
       } else {
         const errMsg = `Error: Another section is using the key (${sectionsData.key}) you specified.
          Please update section key name.`;
