@@ -33,7 +33,7 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   subTempStr.forEach((item, index) => {
     if (indexs.indexOf((index)) >= 0) {
       const dotFlag = (item.indexOf('.') >= 0);
-      const keyValue = item.substr(1).replace('.', '').replace(',', '');
+      const keyValue = (dotFlag) ? item.substr(1, item.length - 3) : item.substr(1, item.length - 2);
       const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
 
       let expectedValue = '';
