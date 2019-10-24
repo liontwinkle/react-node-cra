@@ -21,7 +21,7 @@ function EditPropertyFields({
   updatePropertyField,
   handleClose,
   createHistory,
-  attribute,
+  objectItem,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,10 +49,10 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              addNewRuleHistory(createHistory, attribute, attribute.groupId,
+              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
                 `Create Property(${newData.propertyType})`,
-                `Create Property(${newData.propertyType}) by ${attribute.name}`,
-                'attributes');
+                `Create Property(${newData.propertyType}) by ${objectItem.name}`,
+                'virtual');
               confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
             })
             .catch(() => {
@@ -91,10 +91,10 @@ function EditPropertyFields({
           if (!isUpdating && isExist(propertyFields, newData.key) === 1 && errList === '') {
             updatePropertyField({ propertyFields })
               .then(() => {
-                addNewRuleHistory(createHistory, attribute, attribute.groupId,
+                addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
                   `Update the Property field(${newData.label} ${newData.propertyType})`,
-                  `Update the Property field(${newData.label} ${newData.propertyType}) by ${attribute.name}`,
-                  'attributes');
+                  `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
+                  'virtual');
                 confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
               })
               .catch(() => {
@@ -121,11 +121,10 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              createHistory({
-                label: `Delete the property field (${oldData.label})`,
-                itemId: attribute.id,
-                type: 'attributes',
-              });
+              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                `Delete the property field (${oldData.label})`,
+                `Delete the property field (${oldData.label}) by ${objectItem.name}`,
+                'virtual');
               confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
             })
             .catch(() => {
@@ -174,7 +173,7 @@ EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  attribute: PropTypes.object.isRequired,
+  objectItem: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,

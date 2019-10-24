@@ -101,7 +101,7 @@ function EditPropertyFields({
                 confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
               });
           } else {
-            const errMsg = `Tempalating Error: You are try to use unexpected keys. ${errList}`;
+            const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
             confirmMessage(enqueueSnackbar, errMsg, 'error');
           }
         } else {
