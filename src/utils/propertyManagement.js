@@ -54,14 +54,19 @@ const createValuefromtemplate = (template, state, propertyFields) => {
 
 const getStringTypeValue = (property, state, propertyFields) => {
   let value = '';
+  let templateFlag = false;
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
-  } else if (state.properties[property.key] === undefined) {
-    value = property.default || '';
+    templateFlag = true;
+  } else if (property.default && state.properties[property.key] === undefined) {
+    value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
     value = state.properties[property.key];
   }
-  return value;
+  return {
+    value,
+    templateFlag,
+  };
 };
 
 /** exports * */
@@ -104,13 +109,13 @@ export const sectionRender = (
     if ((section && (p.section === section.key))
       || ((section === null) && (p.section === null))) {
       if (p.propertyType === 'string') {
-        const value = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomInput
             label={p.label}
             inline
             value={value}
-            onChange={changeInput(p.key)}
+            onChange={templateFlag ? () => {} : changeInput(p.key)}
             type="text"
             key={p.key}
           />,
@@ -169,13 +174,13 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'text') {
-        const value = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomText
             label={p.label}
             inline
             value={value}
-            onChange={changeInput(p.key)}
+            onChange={templateFlag ? () => {} : changeInput(p.key)}
             key={p.key}
           />,
         );
@@ -198,24 +203,24 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'monaco') {
-        const value = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomMonaco
             label={p.label}
             inline
             value={value}
             key={p.key}
-            onChange={changeMonaco(p.key)}
+            onChange={templateFlag ? () => {} : changeMonaco(p.key)}
           />,
         );
       } else if (p.propertyType === 'richtext') {
-        const value = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomRichText
             id={p.key}
             label={p.label}
             inline
-            onChange={changeMonaco(p.key)}
+            onChange={templateFlag ? () => {} : changeMonaco(p.key)}
             value={value}
             key={p.key}
           />,

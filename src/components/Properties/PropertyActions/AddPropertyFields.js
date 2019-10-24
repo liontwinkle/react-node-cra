@@ -132,12 +132,13 @@ function AddPropertyFields({
           value={propertyFieldData.label}
           onChange={handleChange('label')}
         />
-        <CustomInput
+        <CustomSearchFilter
           className="mb-3"
+          searchItems={propertyField.propertyFields.map(item => (item.key))}
+          placeholder="Input search filter"
           label="Default"
-          inline
           value={propertyFieldData.default}
-          onChange={handleChange('default')}
+          onChange={handleChangeTemplate('default')}
         />
         <CustomSelectWithLabel
           className="mb-3"

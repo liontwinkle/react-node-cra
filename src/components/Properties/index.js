@@ -130,7 +130,7 @@ class Properties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco, this.changeRichText,
+      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
     );
   };
 
