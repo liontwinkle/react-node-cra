@@ -12,6 +12,8 @@ import { confirmMessage } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { setDefault } from 'utils/propertyManagement';
 import { IconButton } from 'components/elements';
+import { bindActionCreators } from 'redux';
+import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -165,6 +167,11 @@ const mapStateToProps = store => ({
   isHistoryCreating: store.historyData.isCreating,
 });
 
+const mapDispatchToProps = dispatch => bindActionCreators({
+  createHistory,
+}, dispatch);
+
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(PropertyActions);

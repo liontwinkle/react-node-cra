@@ -41,7 +41,7 @@ const createValuefromtemplate = (template, state, propertyFields) => {
         if (state.properties[keyValue]) {
           expectedValue = state.properties[keyValue];
         } else {
-          expectedValue = property.default || 'default';
+          expectedValue = property.default || '';
         }
       }
       returnValue = `${returnValue} ${expectedValue}${dotFlag ? '.' : ''}`;
@@ -81,10 +81,14 @@ export const initProperties = (properties, matchProperties) => {
 export const updateProperties = (propertyFields, properties) => {
   const nextProperties = {};
   propertyFields.forEach((item, key) => {
-    if (properties[item.key] === item.default) {
-      nextProperties[item.key] = propertyFields[key].default;
-    } else if (properties[item.key] === (item.default === 'true')) {
-      nextProperties[item.key] = (propertyFields[key].default === true);
+    if (properties[item.key]) {
+      if (properties[item.key] === item.default) {
+        nextProperties[item.key] = propertyFields[key].default;
+      } else if (properties[item.key] === (item.default === 'true')) {
+        nextProperties[item.key] = (propertyFields[key].default === true);
+      } else {
+        nextProperties[item.key] = properties[item.key];
+      }
     }
   });
   return nextProperties;
@@ -278,7 +282,7 @@ export const getFilterItem = (srcArray, searchkey) => {
 
 export const checkTemplate = (propertyFields, propertyFieldData) => {
   let invalidData = '';
-  if (propertyFieldData.template !== '') {
+  if (propertyFieldData.template && propertyFieldData.template !== '') {
     const subTempStr = propertyFieldData.template.split(' ');
     const indexs = getSpecItemFromArray(subTempStr, '$');
     subTempStr.forEach((item, index) => {

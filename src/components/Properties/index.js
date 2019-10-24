@@ -174,10 +174,18 @@ class Properties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemEditModal}
               handleClose={this.handleSelItemToggle('isOpenSelItemEditModal')}
+              objectItem={this.props.objectItem}
+              updateObject={this.props.objectItem}
             />
           )}
         </div>
-        <PropertyActions properties={properties} fields={propertyFields} />
+        <PropertyActions
+          properties={properties}
+          fields={propertyFields}
+          isObjectUpdating={this.props.isObjectUpdating}
+          updateObject={this.props.updateObject}
+          objectItem={this.props.objectItem}
+        />
       </div>
     );
   }
@@ -185,6 +193,8 @@ class Properties extends Component {
 
 Properties.propTypes = {
   objectItem: PropTypes.object.isRequired,
+  isObjectUpdating: PropTypes.bool.isRequired,
+  updateObject: PropTypes.func.isRequired,
   propertyField: PropTypes.object.isRequired,
 };
 
