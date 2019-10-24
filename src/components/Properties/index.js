@@ -175,7 +175,7 @@ class Properties extends Component {
               open={isOpenSelItemEditModal}
               handleClose={this.handleSelItemToggle('isOpenSelItemEditModal')}
               objectItem={this.props.objectItem}
-              updateObject={this.props.objectItem}
+              updateObject={this.props.updateObject}
             />
           )}
         </div>

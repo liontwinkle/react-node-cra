@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { updateAttribute } from 'redux/actions/attribute';
 
-import { AttributeSetting, AttributeRules, AttributeProperties } from 'components/Attributes';
+
+import { AttributeSetting, AttributeRules } from 'components/Attributes';
+import Properties from 'components/Properties';
 import { CustomTab } from 'components/elements';
 import DetailTable from 'components/DetailTable';
 
@@ -15,6 +19,9 @@ const tabs = [
 
 function AttributeContent({
   attribute,
+  isUpdating,
+  updateAttribute,
+
 }) {
   const [tab, setTab] = useState('properties');
 
@@ -30,7 +37,14 @@ function AttributeContent({
 
       <div className="attribute-content">
         {tab === 'categories' && attribute && <AttributeSetting />}
-        {tab === 'properties' && attribute && <AttributeProperties />}
+        {tab === 'properties' && attribute
+        && (
+          <Properties
+            objectItem={attribute}
+            updateObject={updateAttribute}
+            isObjectUpdating={isUpdating}
+          />
+        )}
         {tab === 'rules' && <AttributeRules />}
         {tab === 'history' && <DetailTable type="attributes" />}
       </div>
@@ -39,7 +53,9 @@ function AttributeContent({
 }
 
 AttributeContent.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
   attribute: PropTypes.object,
+  updateAttribute: PropTypes.func.isRequired,
 };
 
 AttributeContent.defaultProps = {
@@ -47,7 +63,15 @@ AttributeContent.defaultProps = {
 };
 
 const mapStateToProps = store => ({
+  isUpdating: store.attributesData.isUpdating,
   attribute: store.attributesData.attribute,
 });
 
-export default connect(mapStateToProps)(AttributeContent);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateAttribute,
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AttributeContent);
