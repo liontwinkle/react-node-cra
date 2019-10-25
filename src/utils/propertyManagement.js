@@ -27,6 +27,31 @@ const getSpecItemFromArray = (srcArr, key) => {
 
 const createValuefromtemplate = (template, state, propertyFields) => {
   let returnValue = '';
+  const string = template;
+  const regex = /\$\w+/g;
+  const result = regex[Symbol.matchAll](string);
+  const matchedArray = Array.from(result, x => x[0]);
+  matchedArray.forEach((resultItem) => {
+    const keyValue = resultItem.substr(1, resultItem.length - 1);
+    const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+    let expectedValue = '';
+    if (property) {
+      if (property.template && property.template !== '') {
+        expectedValue = createValuefromtemplate(property.template, state, propertyFields);
+      } else if (state.properties[keyValue]) {
+        expectedValue = state.properties[keyValue];
+      } else {
+        expectedValue = property.default || '';
+      }
+    }
+    // const re = new RegExp("\$" + keyValue, 'g');
+    console.log('#### DEBUG FROM: ', resultItem); // fixme
+    console.log('#### DEBUG TO: ', expectedValue); // fixme
+    // console.log('#### DEBUG RESULT #########: ', string.replace(re, expectedValue)); // fixme
+    string.replace('name', 'a');
+  });
+  console.log('##### UPDATED TEMPLATE:', string); // fixme
+
   const subTempStr = template.split(' ');
   const indexs = getSpecItemFromArray(subTempStr, '$');
 
