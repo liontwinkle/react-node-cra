@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
@@ -9,12 +8,12 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { updateCategory } from 'redux/actions/categories';
-import { createHistory } from 'redux/actions/history';
 import { confirmMessage } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { setDefault } from 'utils/propertyManagement';
 import { IconButton } from 'components/elements';
+import { bindActionCreators } from 'redux';
+import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddPropertyFields from './AddPropertyFields';
@@ -22,9 +21,10 @@ import EditPropertyFields from './EditPropertyFields';
 
 function PropertyActions({
   properties,
-  isUpdating,
-  category,
-  updateCategory,
+  isObjectUpdating,
+  objectItem,
+  isHistoryCreating,
+  updateObject,
   createHistory,
   fields,
 }) {
@@ -48,13 +48,13 @@ function PropertyActions({
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
     if (saveData.chkFlag) {
-      if (!isUpdating) {
-        if (!isEqual(category.properties, saveData)) {
-          updateCategory(category.id, { properties: saveData })
+      if (!isObjectUpdating && !isHistoryCreating) {
+        if (!isEqual(objectItem.properties, saveData)) {
+          updateObject(objectItem.id, { properties: saveData })
             .then(() => {
-              addNewRuleHistory(createHistory, category, category.parentId,
+              addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
                 'Update Properties',
-                `The properties of the Child ${category.name} is updated.`,
+                `The properties of the Child ${objectItem.name} is updated.`,
                 'virtual');
               confirmMessage(enqueueSnackbar, 'Properties has been updated successfully.', 'success');
             })
@@ -75,7 +75,7 @@ function PropertyActions({
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating} onClick={handleToggle('add_section')}>
+        <IconButton disabled={isObjectUpdating} onClick={handleToggle('add_section')}>
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -85,7 +85,7 @@ function PropertyActions({
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating} onClick={handleToggle('edit_section')}>
+        <IconButton disabled={isObjectUpdating} onClick={handleToggle('edit_section')}>
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -97,7 +97,7 @@ function PropertyActions({
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating} onClick={handleToggle('add')}>
+        <IconButton disabled={isObjectUpdating} onClick={handleToggle('add')}>
           <AddIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -107,7 +107,7 @@ function PropertyActions({
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating} onClick={handleToggle('edit')}>
+        <IconButton disabled={isObjectUpdating} onClick={handleToggle('edit')}>
           <EditIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -119,7 +119,7 @@ function PropertyActions({
         position="left"
         arrow
       >
-        <IconButton disabled={isUpdating} onClick={saveProperties}>
+        <IconButton disabled={isObjectUpdating} onClick={saveProperties}>
           <SaveIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Tooltip>
@@ -137,7 +137,7 @@ function PropertyActions({
           open={open.add}
           handleClose={handleToggle('add')}
           createHistory={createHistory}
-          category={category}
+          objectItem={objectItem}
         />
       )}
 
@@ -146,7 +146,7 @@ function PropertyActions({
           open={open.edit}
           handleClose={handleToggle('edit')}
           createHistory={createHistory}
-          category={category}
+          objectItem={objectItem}
         />
       )}
     </div>
@@ -156,19 +156,18 @@ function PropertyActions({
 PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
   fields: PropTypes.array.isRequired,
-  isUpdating: PropTypes.bool.isRequired,
-  category: PropTypes.object.isRequired,
-  updateCategory: PropTypes.func.isRequired,
+  isObjectUpdating: PropTypes.bool.isRequired,
+  isHistoryCreating: PropTypes.bool.isRequired,
+  objectItem: PropTypes.object.isRequired,
+  updateObject: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
-  isUpdating: store.categoriesData.isUpdating,
-  category: store.categoriesData.category,
+  isHistoryCreating: store.historyData.isCreating,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateCategory,
   createHistory,
 }, dispatch);
 

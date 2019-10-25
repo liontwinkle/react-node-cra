@@ -15,53 +15,45 @@ import { propertyTypes } from './constants';
 import CustomMonaco from '../components/elements/CustomMonaco';
 
 /** utils * */
-const getSpecItemFromArray = (srcArr, key) => {
-  const result = [];
-  srcArr.forEach((item, index) => {
-    if (item[0] === key) {
-      result.push(index);
-    }
-  });
-  return result;
-};
-
 const createValuefromtemplate = (template, state, propertyFields) => {
-  let returnValue = '';
-  const subTempStr = template.split(' ');
-  const indexs = getSpecItemFromArray(subTempStr, '$');
-
-  subTempStr.forEach((item, index) => {
-    if (indexs.indexOf((index)) >= 0) {
-      const dotFlag = (item.indexOf('.') >= 0);
-      const keyValue = (dotFlag) ? item.substr(1, item.length - 3) : item.substr(1, item.length - 2);
-      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
-
-      let expectedValue = '';
-      if (property) {
-        if (state.properties[keyValue]) {
-          expectedValue = state.properties[keyValue];
-        } else {
-          expectedValue = property.default || 'default';
-        }
+  let string = template;
+  const regex = /\$\w+/g;
+  const result = regex[Symbol.matchAll](string);
+  const matchedArray = Array.from(result, x => x[0]);
+  matchedArray.forEach((resultItem) => {
+    const keyValue = resultItem.substr(1, resultItem.length - 1);
+    const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+    let expectedValue = '';
+    if (property) {
+      if (property.template && property.template !== '') {
+        expectedValue = createValuefromtemplate(property.template, state, propertyFields);
+      } else if (state.properties[keyValue]) {
+        expectedValue = state.properties[keyValue];
+      } else {
+        expectedValue = property.default || '';
       }
-      returnValue = `${returnValue} ${expectedValue}${dotFlag ? '.' : ''}`;
-    } else {
-      returnValue = `${returnValue} ${item}`;
     }
+    const re = new RegExp(`\\${resultItem}\\b`, 'g');
+    string = string.replace(re, expectedValue);
   });
-  return returnValue;
+  return string;
 };
 
-const getStrigTypeValue = (property, state, propertyFields) => {
+const getStringTypeValue = (property, state, propertyFields) => {
   let value = '';
+  let templateFlag = false;
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
-  } else if (state.properties[property.key] === undefined) {
-    value = property.default || 'default';
+    templateFlag = true;
+  } else if (property.default && state.properties[property.key] === undefined) {
+    value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
     value = state.properties[property.key];
   }
-  return value;
+  return {
+    value,
+    templateFlag,
+  };
 };
 
 /** exports * */
@@ -81,10 +73,14 @@ export const initProperties = (properties, matchProperties) => {
 export const updateProperties = (propertyFields, properties) => {
   const nextProperties = {};
   propertyFields.forEach((item, key) => {
-    if (properties[item.key] === item.default) {
-      nextProperties[item.key] = propertyFields[key].default;
-    } else if (properties[item.key] === (item.default === 'true')) {
-      nextProperties[item.key] = (propertyFields[key].default === true);
+    if (properties[item.key]) {
+      if (properties[item.key] === item.default) {
+        nextProperties[item.key] = propertyFields[key].default;
+      } else if (properties[item.key] === (item.default === 'true')) {
+        nextProperties[item.key] = (propertyFields[key].default === true);
+      } else {
+        nextProperties[item.key] = properties[item.key];
+      }
     }
   });
   return nextProperties;
@@ -100,13 +96,13 @@ export const sectionRender = (
     if ((section && (p.section === section.key))
       || ((section === null) && (p.section === null))) {
       if (p.propertyType === 'string') {
-        const value = getStrigTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomInput
             label={p.label}
             inline
             value={value}
-            onChange={changeInput(p.key)}
+            onChange={templateFlag ? () => {} : changeInput(p.key)}
             type="text"
             key={p.key}
           />,
@@ -165,20 +161,20 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'text') {
-        const value = getStrigTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomText
             label={p.label}
             inline
             value={value}
-            onChange={changeInput(p.key)}
+            onChange={templateFlag ? () => {} : changeInput(p.key)}
             key={p.key}
           />,
         );
       } else if (p.propertyType === 'array') {
         let value = '';
         if (state.properties[p.key] === undefined) {
-          value = p.default || 'default';
+          value = p.default || '';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
         } else {
@@ -194,24 +190,24 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'monaco') {
-        const value = getStrigTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomMonaco
             label={p.label}
             inline
             value={value}
             key={p.key}
-            onChange={changeMonaco(p.key)}
+            onChange={templateFlag ? () => {} : changeMonaco(p.key)}
           />,
         );
       } else if (p.propertyType === 'richtext') {
-        const value = getStrigTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <CustomRichText
             id={p.key}
             label={p.label}
             inline
-            onChange={changeMonaco(p.key)}
+            onChange={templateFlag ? () => {} : changeMonaco(p.key)}
             value={value}
             key={p.key}
           />,
@@ -274,4 +270,36 @@ export const getFilterItem = (srcArray, searchkey) => {
     }
   });
   return filtered;
+};
+
+export const checkTemplate = (propertyFields, propertyFieldData) => {
+  let invalidData = '';
+  if (propertyFieldData.template && propertyFieldData.template !== '') {
+    const string = propertyFieldData.template;
+    const regex = /\$\w+/g;
+    const result = regex[Symbol.matchAll](string);
+    const matchedArray = Array.from(result, x => x[0]);
+    matchedArray.forEach((item) => {
+      const keyValue = item.substr(1, item.length - 1);
+      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      if (!property) {
+        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
+      }
+    });
+  }
+
+  if (propertyFieldData.default && propertyFieldData.default !== '') {
+    const string = propertyFieldData.default;
+    const regex = /\$\w+/g;
+    const result = regex[Symbol.matchAll](string);
+    const matchedArray = Array.from(result, x => x[0]);
+    matchedArray.forEach((item) => {
+      const keyValue = item.substr(1, item.length - 1);
+      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      if (!property) {
+        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
+      }
+    });
+  }
+  return invalidData;
 };

@@ -11,15 +11,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { confirmMessage, isExist } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { updateAttribute } from 'redux/actions/attribute';
 
 function EditPropertyFields({
   open,
   propertyField,
   isUpdating,
   updatePropertyField,
-  updateAttribute,
-  attribute,
+  updateObject,
+  objectItem,
   handleClose,
   selectKey,
 }) {
@@ -31,7 +30,7 @@ function EditPropertyFields({
   });
 
   const { propertyFields } = propertyField;
-  const { properties } = attribute;
+  const { properties } = objectItem;
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -50,10 +49,7 @@ function EditPropertyFields({
       let updateFlag = true;
       if (selectItems.items) {
         if (isExist(selectItems.items, newData.key) === 0) {
-          selectItems.items.push({
-            key: newData.key,
-            label: newData.label,
-          });
+          selectItems.items.push({ key: newData.key, label: newData.label });
         } else {
           updateFlag = false;
           const errMsg = `Error: Another item is using the key (${newData.key})
@@ -61,10 +57,7 @@ function EditPropertyFields({
           confirmMessage(enqueueSnackbar, errMsg, 'error');
         }
       } else {
-        selectItems.items = {
-          key: newData.key,
-          label: newData.label,
-        };
+        selectItems.items = { key: newData.key, label: newData.label };
       }
 
       if (updateFlag && !isUpdating) {
@@ -92,6 +85,7 @@ function EditPropertyFields({
           label: newData.label,
           _id: newData._id,
         });
+
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
@@ -118,10 +112,11 @@ function EditPropertyFields({
 
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1);
+
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              updateAttribute(attribute.id, { properties })
+              updateObject(objectItem.id, { properties })
                 .then(() => {
                   confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
                 })
@@ -173,9 +168,9 @@ EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  attribute: PropTypes.object.isRequired,
+  objectItem: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
-  updateAttribute: PropTypes.func.isRequired,
+  updateObject: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   selectKey: PropTypes.string.isRequired,
 };
@@ -183,12 +178,10 @@ EditPropertyFields.propTypes = {
 const mapStateToProps = store => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
-  attribute: store.attributesData.attribute,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
-  updateAttribute,
 }, dispatch);
 
 export default connect(

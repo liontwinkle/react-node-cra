@@ -125,6 +125,8 @@ function EditSections({
             onRowDelete: handleDelete,
           }}
           options={{
+            pageSize: 10,
+            pageSizeOptions: [10, 20],
             actionsColumnIndex: -1,
             showTitle: false,
             searchFieldAlignment: 'left',

@@ -15,7 +15,7 @@ import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
 
-class AttributeProperties extends Component {
+class Properties extends Component {
   state = {
     properties: {},
     sections: [],
@@ -27,27 +27,27 @@ class AttributeProperties extends Component {
   };
 
   componentDidMount() {
-    const { propertyField, attribute } = this.props;
+    const { propertyField, objectItem } = this.props;
     const nonSection = (propertyField.propertyFields)
       ? propertyField.propertyFields.filter(item => item.section === null) : [];
     this.setState({
       noSectionPropertyFields: nonSection || [],
-      properties: attribute.properties || {},
+      properties: objectItem.properties || {},
       sections: propertyField.sections || [],
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { attribute, propertyField } = this.props;
+    const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
-    if (!isEqual(attribute.properties, prevProps.attribute.properties)) {
-      if (attribute.id === prevProps.attribute.id) {
+    if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+      if (objectItem.id === prevProps.objectItem.id) {
         this.updateState({
-          updateProperties: initProperties(properties, attribute.properties),
+          updateProperties: initProperties(properties, objectItem.properties),
         });
       } else {
         this.updateState({
-          properties: attribute.properties || {},
+          properties: objectItem.properties || {},
         });
       }
     }
@@ -145,7 +145,6 @@ class AttributeProperties extends Component {
     } = this.state;
 
     const { propertyFields } = this.props.propertyField;
-
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
@@ -175,26 +174,35 @@ class AttributeProperties extends Component {
               selectKey={selectKey}
               open={isOpenSelItemEditModal}
               handleClose={this.handleSelItemToggle('isOpenSelItemEditModal')}
+              objectItem={this.props.objectItem}
+              updateObject={this.props.updateObject}
             />
           )}
         </div>
-        <PropertyActions properties={properties} fields={propertyFields} />
+        <PropertyActions
+          properties={properties}
+          fields={propertyFields}
+          isObjectUpdating={this.props.isObjectUpdating}
+          updateObject={this.props.updateObject}
+          objectItem={this.props.objectItem}
+        />
       </div>
     );
   }
 }
 
-AttributeProperties.propTypes = {
-  attribute: PropTypes.object.isRequired,
+Properties.propTypes = {
+  objectItem: PropTypes.object.isRequired,
+  isObjectUpdating: PropTypes.bool.isRequired,
+  updateObject: PropTypes.func.isRequired,
   propertyField: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({
-  attribute: store.attributesData.attribute,
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
 });
 
 export default connect(
   mapStateToProps,
-)(withSnackbar(AttributeProperties));
+)(withSnackbar(Properties));

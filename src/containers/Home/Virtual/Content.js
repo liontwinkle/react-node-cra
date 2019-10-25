@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
+import { updateCategory } from 'redux/actions/categories';
 
 import DetailTable from 'components/DetailTable';
 import { CustomTab } from 'components/elements';
-import { Association, NewRules, Properties } from 'components/Virtual/';
+import { Association, NewRules } from 'components/Virtual/';
+import Properties from 'components/Properties';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
@@ -11,7 +17,11 @@ const tabs = [
   { value: 'history', label: 'History' },
 ];
 
-function Content() {
+function Content({
+  category,
+  isUpdating,
+  updateCategory,
+}) {
   const [tab, setTab] = useState('properties');
 
   const handleClick = value => () => { setTab(value); };
@@ -26,7 +36,13 @@ function Content() {
 
       <div className="virtual-content">
         {tab === 'history' && <DetailTable type="virtual" />}
-        {tab === 'properties' && <Properties />}
+        {tab === 'properties' && (
+          <Properties
+            objectItem={category}
+            updateObject={updateCategory}
+            isObjectUpdating={isUpdating}
+          />
+        )}
         {tab === 'attributes' && <Association />}
         {tab === 'rules' && <NewRules />}
       </div>
@@ -34,4 +50,21 @@ function Content() {
   );
 }
 
-export default Content;
+Content.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
+  category: PropTypes.object.isRequired,
+  updateCategory: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = store => ({
+  isUpdating: store.categoriesData.isUpdating,
+  category: store.categoriesData.category,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateCategory,
+}, dispatch);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content);

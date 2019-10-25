@@ -7,20 +7,22 @@
 
   .mg-properties-content {
     flex: 1;
-
     .mg-select-section {
       @include justify-row-between;
+      height: fit-content;
     }
 
     .scrollbar-container {
       height: 100%;
       padding-bottom: 49px;
-
       > .mg-rule-group {
         padding: 0 !important;
         border-left: 0 !important;
       }
 
+      .icon-button {
+        margin-left: 10px;
+      }
       .mg-section-control {
         > div:not(:first-child) {
           margin-top: 0.5rem;
@@ -88,4 +90,8 @@
       }
     }
   }
+}
+
+.mg-edit-properties-content.field {
+  width: 90vw!important;
 }

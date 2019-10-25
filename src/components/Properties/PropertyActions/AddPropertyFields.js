@@ -12,6 +12,7 @@ import {
 import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { checkTemplate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
@@ -22,7 +23,7 @@ function AddPropertyFields({
   propertyField,
   updatePropertyField,
   createHistory,
-  category,
+  objectItem,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -73,7 +74,8 @@ function AddPropertyFields({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
-      if (isExist(propertyFields, propertyFieldData.key) === 0) {
+      const errList = checkTemplate(propertyFields, propertyFieldData);
+      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '') {
         propertyFields.push({
           ...propertyFieldData,
           propertyType: propertyFieldData.propertyType.key,
@@ -82,9 +84,9 @@ function AddPropertyFields({
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              addNewRuleHistory(createHistory, category, category.parentId,
+              addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
                 `Create Property(${propertyFieldData.propertyType.key})`,
-                `Create Property(${propertyFieldData.propertyType.key}) by ${category.name}`,
+                `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
                 'virtual');
               confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
               handleClose();
@@ -96,7 +98,9 @@ function AddPropertyFields({
           confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
         }
       } else {
-        const errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
+        const errMsg = (errList !== '')
+          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
+          : `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
@@ -128,12 +132,13 @@ function AddPropertyFields({
           value={propertyFieldData.label}
           onChange={handleChange('label')}
         />
-        <CustomInput
+        <CustomSearchFilter
           className="mb-3"
+          searchItems={propertyField.propertyFields.map(item => (item.key))}
+          placeholder="Input search filter"
           label="Default"
-          inline
           value={propertyFieldData.default}
-          onChange={handleChange('default')}
+          onChange={handleChangeTemplate('default')}
         />
         <CustomSelectWithLabel
           className="mb-3"
@@ -192,7 +197,7 @@ AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   propertyField: PropTypes.object.isRequired,
-  category: PropTypes.object.isRequired,
+  objectItem: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,

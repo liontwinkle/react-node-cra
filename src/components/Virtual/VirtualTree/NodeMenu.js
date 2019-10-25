@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
+import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
@@ -51,26 +51,13 @@ function NodeMenu({
 
   const handleAdd = () => {
     if (!isCreating && !isFetchAttributes) {
-      createCategory({ name: 'New Category', parentId: node.item.categoryId })
+      createCategory({ name: '', parentId: node.item.categoryId })
         .then((category) => {
           fetchAttributes(client.id, 'attributes')
             .then(() => {
               addNewRuleHistory(createHistory, category, category.parentId,
                 'Create Node', 'Add Child Node - New Category', 'virtual');
               confirmMessage(enqueueSnackbar, 'New category has been created successfully.', 'success');
-              setTreeData(
-                addNodeUnderParent({
-                  treeData,
-                  parentKey: path[path.length - 1],
-                  expandParent: true,
-                  getNodeKey,
-                  newNode: {
-                    title: category.name,
-                    editable: false,
-                    item: category,
-                  },
-                }).treeData,
-              );
             });
         })
         .catch(() => {

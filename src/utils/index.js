@@ -5,9 +5,21 @@ import {
   AddSets, DiffSets, formatDifference, RuleEngine,
 } from './RuleEngine';
 
+/** ** PREDEFINED ***** */
+export const sortByOrder = (a, b) => a.order - b.order;
+
+export const sortByField = field => (a, b) => {
+  const fieldItemA = a[field].toUpperCase();
+  const fieldItemB = b[field].toUpperCase();
+  let comparison = 0;
+  if (fieldItemA > fieldItemB) {
+    comparison = 1;
+  } else if (fieldItemA < fieldItemB) {
+    comparison = -1;
+  }
+  return comparison;
+};
 /** ** UTILS DEFINE **** */
-
-
 const getAllmatched = (products, match, value, basis) => {
   const returnValue = {
     includes: [],
@@ -57,6 +69,7 @@ const getRuleProducts = (products, field, match, value, basis) => {
 };
 
 const getSubTree = (list, parentId, type, originNode) => {
+  list.sort(sortByField('name'));
   const subTree = [];
   const association = [];
   const sublist = list.filter(item => item[type] === parentId.toString());
@@ -296,8 +309,6 @@ export const convertDateFormat = (date) => {
     second: '2-digit',
   }).format(convertDateFormat);
 };
-
-export const sortByOrder = (a, b) => a.order - b.order;
 
 export const getObjectFromArray = (array) => {
   const res = {};

@@ -169,7 +169,7 @@ class ProductTable extends Component {
     const visibleRows = this.props.tableRef.current.hotInstance.countVisibleRows();
     const lastRow = rowOffset + visibleRows;
     const lastVisibleRow = rowOffset + visibleRows + (visibleRows / 2);
-    const threshold = 15;
+    const threshold = 10;
 
     if (lastVisibleRow > (rowCount - threshold)) {
       this.loadMoreData(rowCount, lastRow);
