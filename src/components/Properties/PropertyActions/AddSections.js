@@ -17,6 +17,7 @@ import { CustomInput } from 'components/elements';
 function AddSections({
   open,
   isUpdating,
+  defaultOrder,
   propertyField,
   handleClose,
   updatePropertyField,
@@ -27,7 +28,7 @@ function AddSections({
   const [sectionsData, setSectionsData] = useState({
     key: '',
     label: '',
-    order: 0,
+    order: defaultOrder,
   });
 
   const handleChange = field => (e) => {
@@ -127,6 +128,7 @@ AddSections.propTypes = {
   propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
+  defaultOrder: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = store => ({

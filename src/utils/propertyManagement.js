@@ -11,8 +11,10 @@ import {
   CustomToggle,
   IconButton,
 } from 'components/elements';
+import CustomMonaco from 'components/elements/CustomMonaco';
+
 import { propertyTypes } from './constants';
-import CustomMonaco from '../components/elements/CustomMonaco';
+import { sortByOrder } from './index';
 
 /** utils * */
 const createValuefromtemplate = (template, state, propertyFields) => {
@@ -92,11 +94,13 @@ export const sectionRender = (
   handleSelItemToggle, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
-  propertyFields.forEach((p) => {
+  let fields = propertyFields;
+  fields = propertyFields.sort(sortByOrder);
+  fields.forEach((p) => {
     if ((section && (p.section === section.key))
       || ((section === null) && (p.section === null))) {
       if (p.propertyType === 'string') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, fields);
         res.push(
           <CustomInput
             label={p.label}
@@ -229,6 +233,7 @@ export const getTableData = (sections, propertyFields) => ({
       lookup: propertyTypes,
     },
     { title: 'Template', field: 'template' },
+    { title: 'Order', field: 'order' },
     {
       title: 'Section',
       field: 'section',

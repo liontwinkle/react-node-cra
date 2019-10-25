@@ -6,7 +6,11 @@ import {
 } from './RuleEngine';
 
 /** ** PREDEFINED ***** */
-export const sortByOrder = (a, b) => a.order - b.order;
+export const sortByOrder = (a, b) => {
+  const fieldItemA = a.order || 0;
+  const fieldItemB = b.order || 0;
+  return fieldItemA - fieldItemB;
+};
 
 export const sortByField = field => (a, b) => {
   const fieldItemA = a[field].toUpperCase();
@@ -386,4 +390,15 @@ export const getProducts = (products) => {
     valueDetails: getRulesKey(headers),
     products: objects,
   };
+};
+
+export const getMaxValueFromArray = (field = null, source) => {
+  let max = 0;
+  source.forEach((item) => {
+    const compareValue = (field) ? (item[field] || 0) : item;
+    if (compareValue > max) {
+      max = compareValue;
+    }
+  });
+  return max;
 };
