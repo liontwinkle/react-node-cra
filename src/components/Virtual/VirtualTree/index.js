@@ -67,7 +67,6 @@ function VirtualSortableTree(props) {
               `The Child ${category.name} Name is changed as ${node.title}`,
               'virtual');
             confirmMessage(enqueueSnackbar, 'Category name has been updated successfully.', 'success');
-            handleConfirm(node, path);
           })
           .catch(() => {
             confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');

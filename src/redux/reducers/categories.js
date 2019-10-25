@@ -112,13 +112,8 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         categories.push(updateData);
       }
+
       const newSaveData = getCategoryTree(categories, state.trees);
-      // const newAssociations = categories.map(item => ({
-      //   label: item.name,
-      //   value: item._id,
-      //   appear: [],
-      //   children: [],
-      // }));
       return {
         ...state,
         isUpdating: false,
