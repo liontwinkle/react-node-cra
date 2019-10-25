@@ -45,6 +45,7 @@ function EditPropertyFields({
           template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
+          order: newData.order,
         });
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
@@ -83,6 +84,7 @@ function EditPropertyFields({
           template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
+          order: newData.order,
           _id: newData._id,
         });
         delete data.tableData;

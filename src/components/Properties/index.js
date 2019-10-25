@@ -182,6 +182,7 @@ class Properties extends Component {
         <PropertyActions
           properties={properties}
           fields={propertyFields}
+          sections={sections}
           isObjectUpdating={this.props.isObjectUpdating}
           updateObject={this.props.updateObject}
           objectItem={this.props.objectItem}

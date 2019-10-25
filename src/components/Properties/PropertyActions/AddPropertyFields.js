@@ -19,11 +19,12 @@ import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'componen
 function AddPropertyFields({
   open,
   isUpdating,
+  objectItem,
+  defaultOrder,
   handleClose,
   propertyField,
   updatePropertyField,
   createHistory,
-  objectItem,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -35,6 +36,7 @@ function AddPropertyFields({
     template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
+    order: defaultOrder,
   });
 
   const handleChange = field => (e) => {
@@ -164,6 +166,15 @@ function AddPropertyFields({
             />
           )
         }
+        <CustomInput
+          className="mb-3"
+          label="Order"
+          type="number"
+          min={1}
+          inline
+          value={propertyFieldData.order}
+          onChange={handleChange('order')}
+        />
         <CustomSelectWithLabel
           label="Section"
           inline
@@ -196,6 +207,7 @@ function AddPropertyFields({
 AddPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  defaultOrder: PropTypes.number.isRequired,
   propertyField: PropTypes.object.isRequired,
   objectItem: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,

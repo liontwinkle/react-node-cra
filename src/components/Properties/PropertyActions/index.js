@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { confirmMessage } from 'utils';
+import { confirmMessage, getMaxValueFromArray } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { setDefault } from 'utils/propertyManagement';
 import { IconButton } from 'components/elements';
@@ -27,6 +27,7 @@ function PropertyActions({
   updateObject,
   createHistory,
   fields,
+  sections,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -125,7 +126,11 @@ function PropertyActions({
       </Tooltip>
 
       {open.add_section && (
-        <AddSections open={open.add_section} handleClose={handleToggle('add_section')} />
+        <AddSections
+          open={open.add_section}
+          handleClose={handleToggle('add_section')}
+          defaultOrder={getMaxValueFromArray('order', sections) + 1}
+        />
       )}
 
       {open.edit_section && (
@@ -138,6 +143,7 @@ function PropertyActions({
           handleClose={handleToggle('add')}
           createHistory={createHistory}
           objectItem={objectItem}
+          defaultOrder={getMaxValueFromArray('order', fields) + 1}
         />
       )}
 
@@ -156,6 +162,7 @@ function PropertyActions({
 PropertyActions.propTypes = {
   properties: PropTypes.object.isRequired,
   fields: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
   isHistoryCreating: PropTypes.bool.isRequired,
   objectItem: PropTypes.object.isRequired,
