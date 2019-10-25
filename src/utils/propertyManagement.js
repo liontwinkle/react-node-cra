@@ -15,19 +15,8 @@ import { propertyTypes } from './constants';
 import CustomMonaco from '../components/elements/CustomMonaco';
 
 /** utils * */
-const getSpecItemFromArray = (srcArr, key) => {
-  const result = [];
-  srcArr.forEach((item, index) => {
-    if (item[0] === key) {
-      result.push(index);
-    }
-  });
-  return result;
-};
-
 const createValuefromtemplate = (template, state, propertyFields) => {
-  let returnValue = '';
-  const string = template;
+  let string = template;
   const regex = /\$\w+/g;
   const result = regex[Symbol.matchAll](string);
   const matchedArray = Array.from(result, x => x[0]);
@@ -44,39 +33,10 @@ const createValuefromtemplate = (template, state, propertyFields) => {
         expectedValue = property.default || '';
       }
     }
-    // const re = new RegExp("\$" + keyValue, 'g');
-    console.log('#### DEBUG FROM: ', resultItem); // fixme
-    console.log('#### DEBUG TO: ', expectedValue); // fixme
-    // console.log('#### DEBUG RESULT #########: ', string.replace(re, expectedValue)); // fixme
-    string.replace('name', 'a');
+    const re = new RegExp(`\\${resultItem}\\b`, 'g');
+    string = string.replace(re, expectedValue);
   });
-  console.log('##### UPDATED TEMPLATE:', string); // fixme
-
-  const subTempStr = template.split(' ');
-  const indexs = getSpecItemFromArray(subTempStr, '$');
-
-  subTempStr.forEach((item, index) => {
-    if (indexs.indexOf((index)) >= 0) {
-      const dotFlag = (item.indexOf('.') >= 0);
-      const keyValue = (dotFlag) ? item.substr(1, item.length - 2) : item.substr(1, item.length - 1);
-      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
-
-      let expectedValue = '';
-      if (property) {
-        if (property.template && property.template !== '') {
-          expectedValue = createValuefromtemplate(property.template, state, propertyFields);
-        } else if (state.properties[keyValue]) {
-          expectedValue = state.properties[keyValue];
-        } else {
-          expectedValue = property.default || '';
-        }
-      }
-      returnValue = `${returnValue} ${expectedValue}${dotFlag ? '.' : ''}`;
-    } else {
-      returnValue = `${returnValue} ${item}`;
-    }
-  });
-  return returnValue;
+  return string;
 };
 
 const getStringTypeValue = (property, state, propertyFields) => {
@@ -315,16 +275,29 @@ export const getFilterItem = (srcArray, searchkey) => {
 export const checkTemplate = (propertyFields, propertyFieldData) => {
   let invalidData = '';
   if (propertyFieldData.template && propertyFieldData.template !== '') {
-    const subTempStr = propertyFieldData.template.split(' ');
-    const indexs = getSpecItemFromArray(subTempStr, '$');
-    subTempStr.forEach((item, index) => {
-      if (indexs.indexOf((index)) >= 0) {
-        const dotFlag = (item.indexOf('.') >= 0);
-        const keyValue = (dotFlag) ? item.substr(1, item.length - 2) : item.substr(1, item.length - 1);
-        const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
-        if (!property) {
-          invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
-        }
+    const string = propertyFieldData.template;
+    const regex = /\$\w+/g;
+    const result = regex[Symbol.matchAll](string);
+    const matchedArray = Array.from(result, x => x[0]);
+    matchedArray.forEach((item) => {
+      const keyValue = item.substr(1, item.length - 1);
+      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      if (!property) {
+        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
+      }
+    });
+  }
+
+  if (propertyFieldData.default && propertyFieldData.default !== '') {
+    const string = propertyFieldData.default;
+    const regex = /\$\w+/g;
+    const result = regex[Symbol.matchAll](string);
+    const matchedArray = Array.from(result, x => x[0]);
+    matchedArray.forEach((item) => {
+      const keyValue = item.substr(1, item.length - 1);
+      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      if (!property) {
+        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
       }
     });
   }
