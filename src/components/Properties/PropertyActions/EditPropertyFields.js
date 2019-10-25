@@ -26,7 +26,7 @@ function EditPropertyFields({
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [changeType, setChangeType] = useState(false);
-  const [updatedroperties, setUpdatedroperties] = useState(null);
+  const [updatedProperties, setUpdatedProperties] = useState(null);
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
 
@@ -50,7 +50,6 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
-          items: newData.items,
         });
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
@@ -79,12 +78,13 @@ function EditPropertyFields({
     setChangeType(false);
   };
 
-  const updateAction = () => {
-    updatePropertyField({ propertyFields })
+  const updateAction = (data, newData) => {
+    updatePropertyField({ propertyFields: data })
       .then(() => {
+        console.log(updatedNewData);
         addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-          `Update the Property field(${updatedNewData.label} ${updatedNewData.propertyType})`,
-          `Update the Property field(${updatedNewData.label} ${updatedNewData.propertyType}) by ${objectItem.name}`,
+          `Update the Property field(${newData.label} ${newData.propertyType})`,
+          `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
           'virtual');
         confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
       })
@@ -94,21 +94,42 @@ function EditPropertyFields({
   };
 
   const handleUpdateType = () => {
-    console.log('#### DEBUG PROPERTIES: ', updatedroperties);
+    console.log('#### DEBUG PROPERTIES: ', updatedProperties);
     console.log('#### DEBUG NEW DATA: ', updatedNewData);
     console.log('#### DEBUG OLD DATA: ', updatedOldData);
-    updateAction();
+    updateAction(updatedProperties, updatedNewData);
     setChangeType(false);
+  };
+
+  const checkUsageOldKey = (newData, oldData) => {
+    let result = false;
+    if (newData.propertyType !== oldData.propertyType) {
+      if (
+        newData.propertyType !== 'string'
+        && newData.propertyType !== 'text'
+        && newData.propertyType !== 'monaco'
+        && newData.propertyType !== 'richtext'
+      ) {
+        console.log('#### DEBUG CURRENT PROPERTIES: ', propertyFields); // fixme
+        propertyFields.forEach((item) => {
+          const reg = new RegExp(`\\$${oldData.key}`);
+          if (reg.test(item.default) || reg.test(item.template)) {
+            result = true;
+          }
+        });
+      }
+    }
+    return result;
   };
 
   const handleUpdate = (newData, oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-
       const data = JSON.parse(JSON.stringify(oldData));
-      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
+      const sendData = JSON.parse(JSON.stringify(propertyFields));
+      const ruleKeyIndex = sendData.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        propertyFields.splice(ruleKeyIndex, 1, {
+        sendData.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
           default: newData.default,
@@ -116,21 +137,20 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
-          items: newData.items,
           _id: newData._id,
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          const errList = checkTemplate(propertyFields, newData);
-          if (!isUpdating && isExist(propertyFields, newData.key) === 1 && errList === '') {
-            setUpdatedroperties(propertyFields);
+          const errList = checkTemplate(sendData, newData);
+          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
+            setUpdatedProperties(sendData);
             setUpdatedNewData(newData);
             setUpdatedOldData(oldData);
-            if (newData.propertyType !== oldData.propertyType) {
+            if (checkUsageOldKey(newData, oldData)) {
               setChangeType(true);
             } else {
               setChangeType(false);
-              updateAction();
+              updateAction(sendData, newData);
             }
           } else {
             const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
