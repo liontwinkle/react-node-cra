@@ -29,7 +29,7 @@ function Tree(props) {
 
   const addRootCategory = () => {
     if (!props.isCreating) {
-      createCategory({ name: 'New Category' })
+      createCategory({ name: '' })
         .then((category) => {
           createHistory({
             label: 'Create Node',

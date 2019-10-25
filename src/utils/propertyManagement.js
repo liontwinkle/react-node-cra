@@ -38,7 +38,9 @@ const createValuefromtemplate = (template, state, propertyFields) => {
 
       let expectedValue = '';
       if (property) {
-        if (state.properties[keyValue]) {
+        if (property.template && property.template !== '') {
+          expectedValue = createValuefromtemplate(property.template, state, propertyFields);
+        } else if (state.properties[keyValue]) {
           expectedValue = state.properties[keyValue];
         } else {
           expectedValue = property.default || '';

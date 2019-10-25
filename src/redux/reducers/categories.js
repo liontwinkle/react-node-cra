@@ -72,21 +72,13 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      categories.push(data);
-      const updateSaveData = getCategoryTree(categories, state.trees);
-      // const updatedAssociation = categories.map(item => ({
-      //   label: item.name,
-      //   value: item._id,
-      //   appear: [],
-      //   children: [],
-      // }));
-
+      const createdCategories = [data, ...categories];
+      const updateSaveData = getCategoryTree(createdCategories, state.trees);
       return {
         ...state,
         isCreating: false,
-        categories: categories.slice(0),
+        categories: createdCategories.slice(0),
         trees: updateSaveData.subTree,
-        // associations: updatedAssociation,
         associations: updateSaveData.association,
         category: action.payload.data,
       };
