@@ -30,7 +30,7 @@ function EditPropertyFields({
   });
 
   const { propertyFields } = propertyField;
-  const { properties } = objectItem;
+  const properties = objectItem.properties || {};
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -61,7 +61,7 @@ function EditPropertyFields({
       }
 
       if (updateFlag && !isUpdating) {
-        updatePropertyField(propertyField.id, { propertyFields })
+        updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
             handleClose();
@@ -105,8 +105,7 @@ function EditPropertyFields({
 
       const selectItems = propertyFields.filter(item => (item.key === selectKey))[0].items;
       const ruleKeyIndex = selectItems.findIndex(rk => rk._id === oldData._id);
-
-      if (properties[selectKey] === oldData.key) {
+      if (properties[selectKey] && properties[selectKey] === oldData.key) {
         properties[selectKey] = '';
       }
 

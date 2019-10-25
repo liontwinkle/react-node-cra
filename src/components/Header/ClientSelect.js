@@ -14,7 +14,7 @@ import {
 import { fetchCategories, updateTreeData } from 'redux/actions/categories';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProductsField } from 'redux/actions/productsFields';
-import { fetchAttributes, updateNodeData } from 'redux/actions/attribute';
+import { fetchAttributes, updateNodeData, setAttribute } from 'redux/actions/attribute';
 import { fetchHistories } from 'redux/actions/history';
 import { setProducts } from 'redux/actions/products';
 import { CustomSelect } from 'components/elements';
@@ -38,6 +38,7 @@ function ClientSelect({
   fetchProductsField,
   fetchAttributes,
   setProducts,
+  setAttribute,
   updateTreeData,
   updateNodeData,
   fetchHistories,
@@ -61,6 +62,7 @@ function ClientSelect({
       fetchHistories(client.id, fetchType);
       if (type.key === 'attributes') {
         fetchCategories(client.id, 'virtual');
+        setAttribute(null);
         fetchAttributes(client.id, type.key);
       } else {
         fetchCategories(client.id, type.key);
@@ -147,6 +149,7 @@ ClientSelect.propTypes = {
   fetchProductsField: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
+  setAttribute: PropTypes.func.isRequired,
   updateTreeData: PropTypes.func.isRequired,
   updateNodeData: PropTypes.func.isRequired,
   fetchHistories: PropTypes.func.isRequired,
@@ -180,6 +183,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchAttributes,
   fetchHistories,
   setProducts,
+  setAttribute,
   updateTreeData,
   updateNodeData,
 }, dispatch);

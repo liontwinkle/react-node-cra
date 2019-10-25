@@ -46,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
-        category: tempDatas[0] || null,
+        category: tempDatas.filter(item => (item.parentId === ''))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };
