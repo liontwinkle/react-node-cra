@@ -50,6 +50,7 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
+          items: newData.items,
         });
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
@@ -81,7 +82,6 @@ function EditPropertyFields({
   const updateAction = (data, newData) => {
     updatePropertyField({ propertyFields: data })
       .then(() => {
-        console.log(updatedNewData);
         addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
           `Update the Property field(${newData.label} ${newData.propertyType})`,
           `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
@@ -94,10 +94,18 @@ function EditPropertyFields({
   };
 
   const handleUpdateType = () => {
-    console.log('#### DEBUG PROPERTIES: ', updatedProperties);
-    console.log('#### DEBUG NEW DATA: ', updatedNewData);
-    console.log('#### DEBUG OLD DATA: ', updatedOldData);
-    updateAction(updatedProperties, updatedNewData);
+    const changedProperties = JSON.parse(JSON.stringify(updatedProperties));
+    const oldKey = updatedOldData.key;
+    updatedProperties.forEach((item, index) => {
+      const reg = new RegExp(`\\$${oldKey}`);
+      if (item.default) {
+        changedProperties[index].default = item.default.replace(reg, '');
+      }
+      if (item.template) {
+        changedProperties[index].template = item.template.replace(reg, '');
+      }
+    });
+    updateAction(changedProperties, updatedNewData);
     setChangeType(false);
   };
 
@@ -110,7 +118,6 @@ function EditPropertyFields({
         && newData.propertyType !== 'monaco'
         && newData.propertyType !== 'richtext'
       ) {
-        console.log('#### DEBUG CURRENT PROPERTIES: ', propertyFields); // fixme
         propertyFields.forEach((item) => {
           const reg = new RegExp(`\\$${oldData.key}`);
           if (reg.test(item.default) || reg.test(item.template)) {
@@ -122,6 +129,23 @@ function EditPropertyFields({
     return result;
   };
 
+  const changeKey = (newData, oldData, fields) => {
+    const oldKey = oldData.key;
+    const newKey = newData.key;
+    const changedFields = JSON.parse(JSON.stringify(fields));
+    if (oldKey !== newKey) {
+      fields.forEach((item, index) => {
+        const reg = new RegExp(`\\$${oldKey}`);
+        if (item.default) {
+          changedFields[index].default = item.default.replace(reg, `$${newKey}`);
+        }
+        if (item.template) {
+          changedFields[index].template = item.template.replace(reg, `$${newKey}`);
+        }
+      });
+    }
+    return changedFields;
+  };
   const handleUpdate = (newData, oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
@@ -137,6 +161,7 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
+          items: newData.items,
           _id: newData._id,
         });
         delete data.tableData;
@@ -150,7 +175,7 @@ function EditPropertyFields({
               setChangeType(true);
             } else {
               setChangeType(false);
-              updateAction(sendData, newData);
+              updateAction(changeKey(newData, oldData, sendData), newData);
             }
           } else {
             const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
