@@ -42,6 +42,9 @@ const createValuefromtemplate = (template, state, propertyFields) => {
 };
 
 const getStringTypeValue = (property, state, propertyFields) => {
+  console.log('##### DEBUG PROPERTY: ', property); // fixme
+  console.log('##### DEBUG STATE: ', state); // fixme
+  console.log('##### DEBUG PROPERTY FIELD: ', propertyFields); // fixme
   let value = '';
   let templateFlag = false;
   if (property.template && property.template !== '') {
@@ -51,6 +54,10 @@ const getStringTypeValue = (property, state, propertyFields) => {
     value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
     value = state.properties[property.key];
+  }
+  if (property.propertyType === 'urlpath') {
+    value = value.replace('_', '-');
+    value = value.replace(' ', '-');
   }
   return {
     value,
