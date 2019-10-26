@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
-import { checkTemplate, getTableData } from 'utils/propertyManagement';
+import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomConfirmDlg } from '../../elements';
@@ -41,7 +41,8 @@ function EditPropertyFields({
     setTimeout(() => {
       resolve();
       const errList = checkTemplate(propertyFields, newData);
-      if (isExist(propertyFields, newData.key) === 0 && errList === '') {
+      const validatePath = checkPathValidate(propertyFields, newData);
+      if (isExist(propertyFields, newData.key) === 0 && errList === '' && validatePath) {
         propertyFields.push({
           key: newData.key,
           label: newData.label,
@@ -66,10 +67,15 @@ function EditPropertyFields({
             });
         }
       } else {
-        const errMsg = (errList !== '')
-          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
-          : `Error: Another property is using the key (${newData.key}) you specified.
+        let errMsg = '';
+        if (errList !== '') {
+          errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
+        } else if (validatePath) {
+          errMsg = 'URL Path is not valid.';
+        } else {
+          errMsg = `Error: Another property is using the key (${newData.key}) you specified.
          Please update property key name.`;
+        }
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }, 600);
@@ -80,17 +86,22 @@ function EditPropertyFields({
   };
 
   const updateAction = (data, newData) => {
-    updatePropertyField({ propertyFields: data })
-      .then(() => {
-        addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-          `Update the Property field(${newData.label} ${newData.propertyType})`,
-          `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
-          'virtual');
-        confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-      });
+    const validatePath = checkPathValidate(propertyFields, newData);
+    if (validatePath) {
+      updatePropertyField({ propertyFields: data })
+        .then(() => {
+          addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+            `Update the Property field(${newData.label} ${newData.propertyType})`,
+            `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
+            'virtual');
+          confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, 'URL Path is not correct.', 'error');
+    }
   };
 
   const handleUpdateType = () => {
@@ -117,6 +128,7 @@ function EditPropertyFields({
         && newData.propertyType !== 'text'
         && newData.propertyType !== 'monaco'
         && newData.propertyType !== 'richtext'
+        && newData.propertyType !== 'urlpath'
       ) {
         propertyFields.forEach((item) => {
           const reg = new RegExp(`\\$${oldData.key}`);

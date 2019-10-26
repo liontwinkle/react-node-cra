@@ -12,7 +12,7 @@ import {
 import { confirmMessage, isExist, useStyles } from 'utils';
 import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
-import { checkTemplate } from 'utils/propertyManagement';
+import { checkTemplate, checkPathValidate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
@@ -77,7 +77,8 @@ function AddPropertyFields({
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
       const errList = checkTemplate(propertyFields, propertyFieldData);
-      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '') {
+      const validatePath = checkPathValidate(propertyFields, propertyFieldData);
+      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '' && validatePath) {
         propertyFields.push({
           ...propertyFieldData,
           propertyType: propertyFieldData.propertyType.key,
@@ -100,10 +101,15 @@ function AddPropertyFields({
           confirmMessage(enqueueSnackbar, 'The property is duplicated', 'info');
         }
       } else {
-        const errMsg = (errList !== '')
-          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
-          : `Error: Another property is using the key (${propertyFieldData.key}) you specified.
+        let errMsg = '';
+        if (errList !== '') {
+          errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
+        } else if (validatePath) {
+          errMsg = 'URL Path is not valid.';
+        } else {
+          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
          Please update property key name.`;
+        }
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }
@@ -153,6 +159,7 @@ function AddPropertyFields({
         {
           (propertyFieldData.propertyType.key === 'string'
           || propertyFieldData.propertyType.key === 'text'
+          || propertyFieldData.propertyType.key === 'urlpath'
           || propertyFieldData.propertyType.key === 'richtext'
           || propertyFieldData.propertyType.key === 'monaco')
           && (

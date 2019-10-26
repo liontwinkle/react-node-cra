@@ -99,7 +99,7 @@ export const sectionRender = (
   fields.forEach((p) => {
     if ((section && (p.section === section.key))
       || ((section === null) && (p.section === null))) {
-      if (p.propertyType === 'string') {
+      if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
         const { value, templateFlag } = getStringTypeValue(p, state, fields);
         res.push(
           <CustomInput
@@ -307,4 +307,23 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     });
   }
   return invalidData;
+};
+
+export const checkPathValidate = (propertyFields, propertyFieldData) => {
+  let result = true;
+  const key = propertyFieldData.propertyType.key || propertyFieldData.propertyType;
+  if (key === 'urlpath') {
+    const regex = /(\/[a-z0-9\-_].*)/g;
+    if (propertyFieldData.default && propertyFieldData.default !== '') {
+      if (!regex.test(propertyFieldData.default)) {
+        result = false;
+      }
+    }
+    if (propertyFieldData.template && propertyFieldData.template !== '') {
+      if (!regex.test(propertyFieldData.template)) {
+        result = false;
+      }
+    }
+  }
+  return result;
 };
