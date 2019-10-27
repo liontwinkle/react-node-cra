@@ -255,7 +255,6 @@ export const getTableData = (sections, propertyFields) => ({
 export const setDefault = (properties, fields) => {
   const tempProperties = JSON.parse(JSON.stringify(properties));
   tempProperties.chkFlag = true;
-  console.log('### DEBUGS FIELDS: ', fields); // fixme
   fields.forEach((item) => {
     if (tempProperties[item.key] === undefined) {
       if (item.template) {

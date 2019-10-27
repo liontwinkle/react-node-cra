@@ -101,7 +101,6 @@ class Properties extends Component {
   };
 
   changeMonaco = field => (newValue) => {
-    console.log('MONACO EDIT: '); // fixme
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
