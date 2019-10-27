@@ -50,7 +50,7 @@ const getStringTypeValue = (property, state, propertyFields) => {
   } else if (property.default && state.properties[property.key] === undefined) {
     value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
-    value = state.properties[property.key];
+    value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
   }
   if (property.propertyType === 'urlpath') {
     value = value.replace('_', '-');
@@ -248,16 +248,18 @@ export const getTableData = (sections, propertyFields) => ({
 });
 
 export const setDefault = (properties, fields) => {
-  const tempProperties = properties;
+  const tempProperties = JSON.parse(JSON.stringify(properties));
   tempProperties.chkFlag = true;
+  console.log('### DEBUGS FIELDS: ', fields); // fixme
   fields.forEach((item) => {
-    if (
-      tempProperties[item.key] === item.default
-      || tempProperties[item.key] === (item.default === 'true')
-      || tempProperties[item.key] === ''
-      || tempProperties[item.key] === undefined
-    ) {
-      delete tempProperties[item.key];
+    if (tempProperties[item.key] === undefined) {
+      if (item.template) {
+        tempProperties[item.key] = item.template;
+      } else if (item.default) {
+        tempProperties[item.key] = item.default;
+      } else {
+        tempProperties[item.key] = null;
+      }
     } else if (item.propertyType === 'array') {
       let chkFlag = true;
       try {
