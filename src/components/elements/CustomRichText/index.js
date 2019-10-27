@@ -36,7 +36,7 @@ const CustomRichText = ({
       <FroalaEditorComponent
         id={id}
         tag="textarea"
-        disabled
+
         config={{
           placeholderText: 'Edit Your Content Here!',
           charCounterCount: false,
