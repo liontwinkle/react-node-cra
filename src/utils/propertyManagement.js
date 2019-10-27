@@ -47,7 +47,11 @@ const getStringTypeValue = (property, state, propertyFields) => {
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
     templateFlag = true;
-  } else if (property.default && state.properties[property.key] === undefined) {
+  } else if (
+    property.default
+    && (
+      state.properties[property.key] === undefined
+    || state.properties[property.key] === '')) {
     value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
     value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
@@ -102,7 +106,8 @@ export const sectionRender = (
   fields = propertyFields.sort(sortByOrder);
   fields.forEach((p) => {
     if ((section && (p.section === section.key))
-      || ((section === null) && (p.section === null))) {
+      || ((section === null) && (p.section === null))
+      || ((section === '') && (p.section === ''))) {
       if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
         const { value, templateFlag } = getStringTypeValue(p, state, fields);
         res.push(
