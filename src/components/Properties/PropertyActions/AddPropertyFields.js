@@ -14,6 +14,7 @@ import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { checkTemplate, checkPathValidate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
+import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
 function AddPropertyFields({
@@ -24,6 +25,7 @@ function AddPropertyFields({
   handleClose,
   propertyField,
   updatePropertyField,
+  updateDefaultOnCategory,
   createHistory,
 }) {
   const classes = useStyles();
@@ -87,6 +89,9 @@ function AddPropertyFields({
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField({ propertyFields })
             .then(() => {
+              if (objectItem.parentId) {
+                updateDefaultOnCategory(propertyFields);
+              }
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
                 `Create Property(${propertyFieldData.propertyType.key})`,
                 `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
@@ -218,6 +223,7 @@ AddPropertyFields.propTypes = {
   objectItem: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
+  updateDefaultOnCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
 };
 
@@ -228,6 +234,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
+  updateDefaultOnCategory,
 }, dispatch);
 
 export default connect(

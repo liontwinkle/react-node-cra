@@ -52,6 +52,17 @@ exports.update = (req, res) => {
     .catch(handleError(res));
 };
 
+// Update a Category all default
+exports.updateDefault = (req, res) => {
+  req.category.updateMany({}, { $set: { defaultProperties: req.body } }, (err, result) => {
+    if (!err) {
+      res.status(200)
+        .json(result);
+    } else {
+      handleError(res);
+    }
+  });
+};
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   req.category

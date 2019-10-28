@@ -137,3 +137,34 @@ export const setPrefilterData = matchedProduct => (dispatch) => {
     payload: matchedProduct,
   });
 };
+
+export const updateDefaultOnCategory = updateData => (dispatch, getState) => {
+  if (getState().categoriesData.isUpdating) {
+    return;
+  }
+
+  const { client, type } = getState().clientsData;
+
+  console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
+  dispatch({
+    type: types.CATEGORY_UPDATE_DEFAULT_REQUEST,
+  });
+
+  return categoryService.updateDefaultData(client.id, type.key, updateData)
+    .then((data) => {
+      dispatch({
+        type: types.CATEGORY_UPDATE_DEFAULT_SUCCESS,
+        payload: { data },
+      });
+
+      return data;
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.CATEGORY_UPDATE_DEFAULT_FAIL,
+        payload: { error },
+      });
+
+      throw error;
+    });
+};

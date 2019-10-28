@@ -13,6 +13,7 @@ import { tableIcons } from 'utils/constants';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
+import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { CustomConfirmDlg } from 'components/elements';
 
 function EditPropertyFields({
@@ -23,6 +24,7 @@ function EditPropertyFields({
   propertyField,
   isUpdating,
   updatePropertyField,
+  updateDefaultOnCategory,
   handleClose,
   createHistory,
   onChangeOrder,
@@ -59,6 +61,9 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
+              if (objectItem.parentId) {
+                updateDefaultOnCategory(propertyFields);
+              }
               addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
                 `Create Property(${newData.propertyType})`,
                 `Create Property(${newData.propertyType}) by ${objectItem.name}`,
@@ -93,6 +98,9 @@ function EditPropertyFields({
     if (validatePath) {
       updatePropertyField({ propertyFields: data })
         .then(() => {
+          if (objectItem.parentId) {
+            updateDefaultOnCategory(data);
+          }
           addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
             `Update the Property field(${newData.label} ${newData.propertyType})`,
             `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
@@ -213,6 +221,9 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
+              if (objectItem.parentId) {
+                updateDefaultOnCategory(propertyFields);
+              }
               addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
                 `Delete the property field (${oldData.label})`,
                 `Delete the property field (${oldData.label}) by ${objectItem.name}`,
@@ -283,6 +294,7 @@ EditPropertyFields.propTypes = {
   order: PropTypes.object.isRequired,
   pageNum: PropTypes.number.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
+  updateDefaultOnCategory: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   onChangeOrder: PropTypes.func.isRequired,
@@ -296,6 +308,7 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
+  updateDefaultOnCategory,
 }, dispatch);
 
 export default connect(
