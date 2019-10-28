@@ -17,26 +17,29 @@ import { CustomConfirmDlg } from 'components/elements';
 
 function EditPropertyFields({
   open,
+  order,
+  pageNum,
+  objectItem,
   propertyField,
   isUpdating,
   updatePropertyField,
   handleClose,
   createHistory,
-  objectItem,
+  onChangeOrder,
+  onChangePageNum,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [changeType, setChangeType] = useState(false);
   const [updatedProperties, setUpdatedProperties] = useState(null);
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
-
   const sections = {};
   propertyField.sections.forEach((section) => {
     sections[section.key] = section.label;
   });
 
   const { propertyFields } = propertyField;
-  const tableData = getTableData(sections, propertyFields);
+  const tableData = getTableData(sections, propertyFields, order);
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
@@ -245,8 +248,10 @@ function EditPropertyFields({
             onRowUpdate: handleUpdate,
             onRowDelete: handleDelete,
           }}
+          onOrderChange={onChangeOrder}
+          onChangeRowsPerPage={onChangePageNum}
           options={{
-            pageSize: 20,
+            pageSize: pageNum,
             pageSizeOptions: [10, 20],
             actionsColumnIndex: -1,
             showTitle: false,
@@ -275,9 +280,13 @@ EditPropertyFields.propTypes = {
   propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   objectItem: PropTypes.object.isRequired,
+  order: PropTypes.object.isRequired,
+  pageNum: PropTypes.number.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
+  onChangeOrder: PropTypes.func.isRequired,
+  onChangePageNum: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({

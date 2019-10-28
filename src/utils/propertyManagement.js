@@ -239,26 +239,32 @@ export const sectionRender = (
   return res;
 };
 
-export const getTableData = (sections, propertyFields) => ({
-  columns: [
-    { title: 'Key', field: 'key' },
-    { title: 'Label', field: 'label' },
-    { title: 'Default', field: 'default' },
-    {
-      title: 'Type',
-      field: 'propertyType',
-      lookup: propertyTypes,
-    },
-    { title: 'Template', field: 'template' },
-    { title: 'Order', field: 'order' },
-    {
-      title: 'Section',
-      field: 'section',
-      lookup: sections,
-    },
-  ],
-  data: propertyFields,
-});
+export const getTableData = (sections, propertyFields, order) => {
+  const columnData = {
+    columns: [
+      { title: 'Key', field: 'key' },
+      { title: 'Label', field: 'label' },
+      { title: 'Default', field: 'default' },
+      {
+        title: 'Type',
+        field: 'propertyType',
+        lookup: propertyTypes,
+      },
+      { title: 'Template', field: 'template' },
+      { title: 'Order', field: 'order' },
+      {
+        title: 'Section',
+        field: 'section',
+        lookup: sections,
+      },
+    ],
+    data: propertyFields,
+  };
+  if (order.index >= 0) {
+    columnData.columns[order.index].defaultSort = order.direction;
+  }
+  return columnData;
+};
 
 export const checkPathValidate = (propertyFields, propertyFieldData) => {
   let result = true;

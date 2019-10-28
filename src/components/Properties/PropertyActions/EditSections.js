@@ -14,10 +14,14 @@ import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditSections({
   open,
+  order,
+  pageNum,
   propertyField,
   isUpdating,
   updatePropertyField,
   handleClose,
+  onChangeOrder,
+  onChangePageNum,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -30,7 +34,9 @@ function EditSections({
     ],
     data: sections,
   };
-
+  if (order.index >= 0) {
+    tableData.columns[order.index].defaultSort = order.direction;
+  }
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
@@ -132,8 +138,10 @@ function EditSections({
             onRowUpdate: handleUpdate,
             onRowDelete: handleDelete,
           }}
+          onOrderChange={onChangeOrder}
+          onChangeRowsPerPage={onChangePageNum}
           options={{
-            pageSize: 10,
+            pageSize: pageNum,
             pageSizeOptions: [10, 20],
             actionsColumnIndex: -1,
             showTitle: false,
@@ -147,10 +155,14 @@ function EditSections({
 
 EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
+  order: PropTypes.object.isRequired,
+  pageNum: PropTypes.number.isRequired,
   propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  onChangeOrder: PropTypes.func.isRequired,
+  onChangePageNum: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
