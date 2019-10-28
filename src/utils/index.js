@@ -189,10 +189,10 @@ export const getCategoryTree = (categories, originNode) => {
   return getSubTree(list, parentId, 'parentId', originNode);
 };
 
-export const getAttribute = (attributes) => {
+export const getAttribute = (attributes, originNode) => {
   const groupId = '';
   const list = attributes || [];
-  return getSubTree(list, groupId, 'groupId');
+  return getSubTree(list, groupId, 'groupId', originNode);
 };
 
 export const isExist = (obj, key) => {

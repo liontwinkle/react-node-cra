@@ -69,7 +69,6 @@ function AttributeNode({
                 `The Child ${attribute.name} Name is changed as ${node.title}`,
                 'attributes');
               confirmMessage(enqueueSnackbar, 'Attribute name has been updated successfully.', 'success');
-              handleConfirm(node, path);
             })
             .catch(() => {
               confirmMessage(enqueueSnackbar, 'Error in adding category.', 'error');
