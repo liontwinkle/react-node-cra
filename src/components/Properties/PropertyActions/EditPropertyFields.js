@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -10,9 +10,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
-import { checkTemplate, getTableData } from 'utils/propertyManagement';
+import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
+import { CustomConfirmDlg } from '../../elements';
 
 function EditPropertyFields({
   open,
@@ -24,6 +25,10 @@ function EditPropertyFields({
   objectItem,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [changeType, setChangeType] = useState(false);
+  const [updatedProperties, setUpdatedProperties] = useState(null);
+  const [updatedNewData, setUpdatedNewData] = useState(null);
+  const [updatedOldData, setUpdatedOldData] = useState(null);
 
   const sections = {};
   propertyField.sections.forEach((section) => {
@@ -32,12 +37,12 @@ function EditPropertyFields({
 
   const { propertyFields } = propertyField;
   const tableData = getTableData(sections, propertyFields);
-
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
       const errList = checkTemplate(propertyFields, newData);
-      if (isExist(propertyFields, newData.key) === 0 && errList === '') {
+      const validatePath = checkPathValidate(propertyFields, newData);
+      if (isExist(propertyFields, newData.key) === 0 && errList === '' && validatePath) {
         propertyFields.push({
           key: newData.key,
           label: newData.label,
@@ -46,6 +51,7 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
+          items: newData.items,
         });
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
@@ -61,23 +67,105 @@ function EditPropertyFields({
             });
         }
       } else {
-        const errMsg = (errList !== '')
-          ? `Tempalating Error: You are try to use unexpected keys. ${errList}`
-          : `Error: Another property is using the key (${newData.key}) you specified.
+        let errMsg = '';
+        if (errList !== '') {
+          errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
+        } else if (validatePath) {
+          errMsg = 'URL Path is not valid.';
+        } else {
+          errMsg = `Error: Another property is using the key (${newData.key}) you specified.
          Please update property key name.`;
+        }
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }, 600);
   });
 
+  const confirmDlgClose = () => {
+    setChangeType(false);
+  };
+
+  const updateAction = (data, newData) => {
+    const validatePath = checkPathValidate(propertyFields, newData);
+    if (validatePath) {
+      updatePropertyField({ propertyFields: data })
+        .then(() => {
+          addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+            `Update the Property field(${newData.label} ${newData.propertyType})`,
+            `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
+            'virtual');
+          confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, 'URL Path is not correct.', 'error');
+    }
+  };
+
+  const handleUpdateType = () => {
+    const changedProperties = JSON.parse(JSON.stringify(updatedProperties));
+    const oldKey = updatedOldData.key;
+    updatedProperties.forEach((item, index) => {
+      const reg = new RegExp(`\\$${oldKey}`);
+      if (item.default) {
+        changedProperties[index].default = item.default.replace(reg, '');
+      }
+      if (item.template) {
+        changedProperties[index].template = item.template.replace(reg, '');
+      }
+    });
+    updateAction(changedProperties, updatedNewData);
+    setChangeType(false);
+  };
+
+  const checkUsageOldKey = (newData, oldData) => {
+    let result = false;
+    if (newData.propertyType !== oldData.propertyType) {
+      if (
+        newData.propertyType !== 'string'
+        && newData.propertyType !== 'text'
+        && newData.propertyType !== 'monaco'
+        && newData.propertyType !== 'richtext'
+        && newData.propertyType !== 'urlpath'
+      ) {
+        propertyFields.forEach((item) => {
+          const reg = new RegExp(`\\$${oldData.key}`);
+          if (reg.test(item.default) || reg.test(item.template)) {
+            result = true;
+          }
+        });
+      }
+    }
+    return result;
+  };
+
+  const changeKey = (newData, oldData, fields) => {
+    const oldKey = oldData.key;
+    const newKey = newData.key;
+    const changedFields = JSON.parse(JSON.stringify(fields));
+    if (oldKey !== newKey) {
+      fields.forEach((item, index) => {
+        const reg = new RegExp(`\\$${oldKey}`);
+        if (item.default) {
+          changedFields[index].default = item.default.replace(reg, `$${newKey}`);
+        }
+        if (item.template) {
+          changedFields[index].template = item.template.replace(reg, `$${newKey}`);
+        }
+      });
+    }
+    return changedFields;
+  };
   const handleUpdate = (newData, oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-
       const data = JSON.parse(JSON.stringify(oldData));
-      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
+      const sendData = JSON.parse(JSON.stringify(propertyFields));
+      const ruleKeyIndex = sendData.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
-        propertyFields.splice(ruleKeyIndex, 1, {
+        sendData.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
           default: newData.default,
@@ -85,23 +173,22 @@ function EditPropertyFields({
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
+          items: newData.items,
           _id: newData._id,
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          const errList = checkTemplate(propertyFields, newData);
-          if (!isUpdating && isExist(propertyFields, newData.key) === 1 && errList === '') {
-            updatePropertyField({ propertyFields })
-              .then(() => {
-                addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-                  `Update the Property field(${newData.label} ${newData.propertyType})`,
-                  `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
-                  'virtual');
-                confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
-              })
-              .catch(() => {
-                confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-              });
+          const errList = checkTemplate(sendData, newData);
+          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
+            setUpdatedProperties(sendData);
+            setUpdatedNewData(newData);
+            setUpdatedOldData(oldData);
+            if (checkUsageOldKey(newData, oldData)) {
+              setChangeType(true);
+            } else {
+              setChangeType(false);
+              updateAction(changeKey(newData, oldData, sendData), newData);
+            }
           } else {
             const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
             confirmMessage(enqueueSnackbar, errMsg, 'error');
@@ -167,6 +254,18 @@ function EditPropertyFields({
           }}
         />
       </DialogContent>
+      {
+        changeType
+        && (
+          <CustomConfirmDlg
+            open={changeType}
+            msg="Do you change the type of the property?"
+            confirmLabel="Update"
+            handleDelete={handleUpdateType}
+            handleClose={confirmDlgClose}
+          />
+        )
+      }
     </Dialog>
   );
 }

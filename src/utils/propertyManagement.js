@@ -47,10 +47,18 @@ const getStringTypeValue = (property, state, propertyFields) => {
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
     templateFlag = true;
-  } else if (property.default && state.properties[property.key] === undefined) {
+  } else if (
+    property.default
+    && (
+      state.properties[property.key] === undefined
+    || state.properties[property.key] === '')) {
     value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
-    value = state.properties[property.key];
+    value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
+  }
+  if (property.propertyType === 'urlpath') {
+    value = value.replace('_', '-');
+    value = value.replace(' ', '-');
   }
   return {
     value,
@@ -98,8 +106,9 @@ export const sectionRender = (
   fields = propertyFields.sort(sortByOrder);
   fields.forEach((p) => {
     if ((section && (p.section === section.key))
-      || ((section === null) && (p.section === null))) {
-      if (p.propertyType === 'string') {
+      || ((section === null) && (p.section === null))
+      || ((section === '') && (p.section === ''))) {
+      if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
         const { value, templateFlag } = getStringTypeValue(p, state, fields);
         res.push(
           <CustomInput
@@ -244,16 +253,18 @@ export const getTableData = (sections, propertyFields) => ({
 });
 
 export const setDefault = (properties, fields) => {
-  const tempProperties = properties;
+  const tempProperties = JSON.parse(JSON.stringify(properties));
   tempProperties.chkFlag = true;
+  console.log('### DEBUGS FIELDS: ', fields); // fixme
   fields.forEach((item) => {
-    if (
-      tempProperties[item.key] === item.default
-      || tempProperties[item.key] === (item.default === 'true')
-      || tempProperties[item.key] === ''
-      || tempProperties[item.key] === undefined
-    ) {
-      delete tempProperties[item.key];
+    if (tempProperties[item.key] === undefined) {
+      if (item.template) {
+        tempProperties[item.key] = item.template;
+      } else if (item.default) {
+        tempProperties[item.key] = item.default;
+      } else {
+        tempProperties[item.key] = null;
+      }
     } else if (item.propertyType === 'array') {
       let chkFlag = true;
       try {
@@ -307,4 +318,23 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     });
   }
   return invalidData;
+};
+
+export const checkPathValidate = (propertyFields, propertyFieldData) => {
+  let result = true;
+  const key = propertyFieldData.propertyType.key || propertyFieldData.propertyType;
+  if (key === 'urlpath') {
+    const regex = /(\/[a-z0-9\-_].*)/g;
+    if (propertyFieldData.default && propertyFieldData.default !== '') {
+      if (!regex.test(propertyFieldData.default)) {
+        result = false;
+      }
+    }
+    if (propertyFieldData.template && propertyFieldData.template !== '') {
+      if (!regex.test(propertyFieldData.template)) {
+        result = false;
+      }
+    }
+  }
+  return result;
 };

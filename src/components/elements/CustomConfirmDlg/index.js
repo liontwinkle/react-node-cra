@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
 function CustomConfirmDlg({
   open,
   msg,
+  confirmLabel,
   subCategoryNumber,
   handleDelete,
   handleClose,
@@ -53,7 +54,7 @@ function CustomConfirmDlg({
           className="mg-button primary"
           onClick={handleDelete}
         >
-          Delete
+          {confirmLabel}
         </button>
       </DialogActions>
     </Dialog>
@@ -63,6 +64,7 @@ function CustomConfirmDlg({
 CustomConfirmDlg.propTypes = {
   open: PropTypes.bool.isRequired,
   msg: PropTypes.string.isRequired,
+  confirmLabel: PropTypes.string,
   subCategoryNumber: PropTypes.number,
   handleDelete: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
@@ -70,6 +72,7 @@ CustomConfirmDlg.propTypes = {
 
 CustomConfirmDlg.defaultProps = {
   subCategoryNumber: 0,
+  confirmLabel: 'delete',
 };
 
 export default CustomConfirmDlg;

@@ -88,10 +88,24 @@ function EditSections({
       resolve();
 
       const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
+      console.log('##### DEBUG PROPERTIES: ', propertyField); // fixme
+      console.log('##### DEBUG RULE INDEX: ', ruleKeyIndex); // fixme
+      const deletedSection = sections[ruleKeyIndex];
+      const { propertyFields } = propertyField;
+      console.log('##### DEBUG DELETED SECTION: ', deletedSection); // fixme
+      console.log('##### DEBUG PROPERTY FIELDS: ', propertyFields); // fixme
+      const updatedProperties = JSON.parse(JSON.stringify(propertyFields));
+      propertyFields.forEach((item, index) => {
+        if (item.section === deletedSection.key) {
+          updatedProperties[index].section = null;
+        }
+      });
+      console.log('##### DEBUG UPDATED PROPERTY FIELDS: ', updatedProperties); // fixme
+
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1);
         if (!isUpdating) {
-          updatePropertyField({ sections })
+          updatePropertyField({ sections, propertyFields: updatedProperties })
             .then(() => {
               confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
             })

@@ -12,6 +12,7 @@ import 'handsontable/dist/handsontable.full.css';
 import 'react-checkbox-tree-enhanced/lib/react-checkbox-tree.css';
 
 import 'froala-editor/js/plugins/code_view.min.js';
+import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/css/plugins/code_view.min.css';
 import 'froala-editor/js/plugins/code_beautifier.min.js';
 import 'froala-editor/css/plugins/code_view.css';
