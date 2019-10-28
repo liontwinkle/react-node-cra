@@ -12,8 +12,8 @@ const create = (clientId, type, category) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
-const updateDefaultData = (clientId, type, updateData) => httpService
-  .post(`${getCategoryRoute(clientId, type)}/updatedefault`, updateData)
+const updateDefaultData = (clientId, type, updateData, deletedKey) => httpService
+  .post(`${getCategoryRoute(clientId, type)}/updatedefault`, { updateData, deletedKey })
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 

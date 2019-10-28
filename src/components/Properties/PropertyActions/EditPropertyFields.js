@@ -227,11 +227,12 @@ function EditPropertyFields({
 
       const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
+        const deletedKey = propertyFields[ruleKeyIndex].key;
         propertyFields.splice(ruleKeyIndex, 1);
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              updateDefaultFunc(propertyFields)
+              updateDefaultFunc(propertyFields, deletedKey)
                 .then(() => {
                   addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
                     `Delete the property field (${oldData.label})`,

@@ -130,7 +130,7 @@ export const updateNodeData = nodeData => (dispatch) => {
   });
 };
 
-export const updateDefaultOnAttriute = updateData => (dispatch, getState) => {
+export const updateDefaultOnAttriute = (updateData, deletedKey = null) => (dispatch, getState) => {
   if (getState().attributesData.isUpdating) {
     return;
   }
@@ -141,7 +141,7 @@ export const updateDefaultOnAttriute = updateData => (dispatch, getState) => {
     type: types.ATTRIBUTE_UPDATE_DEFAULT_REQUEST,
   });
 
-  return attributesService.updateDefaultData(client.id, type.key, updateData)
+  return attributesService.updateDefaultData(client.id, type.key, updateData, deletedKey)
     .then((data) => {
       dispatch({
         type: types.ATTRIBUTE_UPDATE_DEFAULT_SUCCESS,

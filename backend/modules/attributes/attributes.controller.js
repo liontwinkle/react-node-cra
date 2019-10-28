@@ -54,14 +54,38 @@ exports.update = (req, res) => {
 
 // Update a Category all default
 exports.updateDefault = (req, res) => {
-  req.attributes.updateMany({}, { $set: { defaultProperties: req.body } }, (err, result) => {
-    if (!err) {
-      res.status(200)
-        .json(result);
-    } else {
-      handleError(res);
-    }
-  });
+  req.attributes.updateMany({}, { $set: { defaultProperties: req.body.updatedData } },
+    (err, result) => {
+      if (!err) {
+        if (req.body.deletedKey) {
+          const deleteKey = req.body.deletedKey;
+          req.attributes.find({}, (err, result) => {
+            if (!err) {
+              result.forEach((resultItem) => {
+                if (resultItem.properties) {
+                  if (resultItem.properties[deleteKey]) {
+                    delete resultItem.properties[deleteKey];
+
+                    req.attributes.updateMany({ attributeId: resultItem.attributeId }, {
+                      $set: {
+                        properties: resultItem.properties
+                      }
+                    }, (err) => {
+                      if (err) {
+                        console.log(err);
+                      }
+                    });
+                  }
+                }
+              });
+            }
+          });
+        }
+        res.status(200).json(result);
+      } else {
+        handleError(res);
+      }
+    });
 };
 
 // Deletes a Category from the DB
