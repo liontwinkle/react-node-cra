@@ -64,7 +64,7 @@ function EditPropertyFields({
         updatePropertyField({ propertyFields })
           .then(() => {
             confirmMessage(enqueueSnackbar, 'Item has been added successfully.', 'success');
-            handleClose();
+            // handleClose();
           })
           .catch(() => {
             confirmMessage(enqueueSnackbar, 'Error in adding Item.', 'error');
