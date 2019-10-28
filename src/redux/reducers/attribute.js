@@ -130,6 +130,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         nodes: action.payload,
       };
+
+    case types.ATTRIBUTE_UPDATE_DEFAULT_REQUEST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.ATTRIBUTE_UPDATE_DEFAULT_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+      };
+    case types.ATTRIBUTE_UPDATE_DEFAULT_FAIL:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
+      };
     default:
       return state;
   }

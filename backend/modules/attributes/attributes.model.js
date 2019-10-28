@@ -13,6 +13,11 @@ const AttributeSchema = new Schema({
     default: '',
   },
   properties: Object,
+  defaultProperties: [{
+    key: String,
+    default: String,
+    template: String,
+  }],
   rules: [{
     basis: String,
     refer: String,

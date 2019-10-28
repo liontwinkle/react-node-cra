@@ -13,6 +13,9 @@ router.post('/', controller.create);
 // Request to remove all apear Id from Attribute
 router.post('/appear', controller.removeAppearId);
 
+// Request to update all default
+router.post('/updatedefault', controller.updateDefault);
+
 // Request to get a Attribute
 router.get('/:attributeId', controller.show);
 

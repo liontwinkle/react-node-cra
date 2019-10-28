@@ -14,6 +14,7 @@ import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyMa
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
+import { updateDefaultOnAttriute } from 'redux/actions/attribute';
 import { CustomConfirmDlg } from 'components/elements';
 
 function EditPropertyFields({
@@ -25,6 +26,7 @@ function EditPropertyFields({
   isUpdating,
   updatePropertyField,
   updateDefaultOnCategory,
+  updateDefaultOnAttriute,
   handleClose,
   createHistory,
   onChangeOrder,
@@ -36,6 +38,8 @@ function EditPropertyFields({
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
   const sections = {};
+  const updateDefaultFunc = (objectItem.parentId !== undefined)
+    ? updateDefaultOnCategory : updateDefaultOnAttriute;
   propertyField.sections.forEach((section) => {
     sections[section.key] = section.label;
   });
@@ -61,14 +65,17 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              if (objectItem.parentId) {
-                updateDefaultOnCategory(propertyFields);
-              }
-              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-                `Create Property(${newData.propertyType})`,
-                `Create Property(${newData.propertyType}) by ${objectItem.name}`,
-                'virtual');
-              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+              updateDefaultFunc(propertyFields)
+                .then(() => {
+                  addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                    `Create Property(${newData.propertyType})`,
+                    `Create Property(${newData.propertyType}) by ${objectItem.name}`,
+                    'virtual');
+                  confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+                })
+                .catch(() => {
+                  confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value .', 'error');
+                });
             })
             .catch(() => {
               confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
@@ -98,14 +105,17 @@ function EditPropertyFields({
     if (validatePath) {
       updatePropertyField({ propertyFields: data })
         .then(() => {
-          if (objectItem.parentId) {
-            updateDefaultOnCategory(data);
-          }
-          addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-            `Update the Property field(${newData.label} ${newData.propertyType})`,
-            `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
-            'virtual');
-          confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+          updateDefaultFunc(data)
+            .then(() => {
+              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                `Update the Property field(${newData.label} ${newData.propertyType})`,
+                `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
+                'virtual');
+              confirmMessage(enqueueSnackbar, 'Property field has been updated successfully.', 'success');
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value .', 'error');
+            });
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
@@ -221,14 +231,17 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              if (objectItem.parentId) {
-                updateDefaultOnCategory(propertyFields);
-              }
-              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-                `Delete the property field (${oldData.label})`,
-                `Delete the property field (${oldData.label}) by ${objectItem.name}`,
-                'virtual');
-              confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
+              updateDefaultFunc(propertyFields)
+                .then(() => {
+                  addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                    `Delete the property field (${oldData.label})`,
+                    `Delete the property field (${oldData.label}) by ${objectItem.name}`,
+                    'virtual');
+                  confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
+                })
+                .catch(() => {
+                  confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+                });
             })
             .catch(() => {
               confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
@@ -268,6 +281,13 @@ function EditPropertyFields({
             showTitle: false,
             searchFieldAlignment: 'left',
           }}
+          localization={{
+            body: {
+              editRow: {
+                deleteText: 'Are you sure you want to delete this property?',
+              },
+            },
+          }}
         />
       </DialogContent>
       {
@@ -295,6 +315,7 @@ EditPropertyFields.propTypes = {
   pageNum: PropTypes.number.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   updateDefaultOnCategory: PropTypes.func.isRequired,
+  updateDefaultOnAttriute: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   onChangeOrder: PropTypes.func.isRequired,
@@ -309,6 +330,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
   updateDefaultOnCategory,
+  updateDefaultOnAttriute,
 }, dispatch);
 
 export default connect(
