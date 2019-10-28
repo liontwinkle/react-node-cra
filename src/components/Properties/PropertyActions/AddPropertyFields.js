@@ -107,8 +107,7 @@ function AddPropertyFields({
         } else if (validatePath) {
           errMsg = 'URL Path is not valid.';
         } else {
-          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
-         Please update property key name.`;
+          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.`;
         }
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }

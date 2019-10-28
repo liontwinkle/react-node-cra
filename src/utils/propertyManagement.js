@@ -48,10 +48,7 @@ const getStringTypeValue = (property, state, propertyFields) => {
     value = createValuefromtemplate(property.template, state, propertyFields);
     templateFlag = true;
   } else if (
-    property.default
-    && (
-      state.properties[property.key] === undefined
-    || state.properties[property.key] === '')) {
+    property.default && state.properties[property.key] === undefined) {
     value = createValuefromtemplate(property.default, state, propertyFields);
   } else {
     value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
@@ -216,14 +213,25 @@ export const sectionRender = (
       } else if (p.propertyType === 'richtext') {
         const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
         res.push(
-          <CustomRichText
-            id={p.key}
-            label={p.label}
-            inline
-            onChange={templateFlag ? () => {} : changeMonaco(p.key)}
-            value={value}
-            key={p.key}
-          />,
+          templateFlag
+            ? (
+              <CustomText
+                label={p.label}
+                inline
+                value={value}
+                onChange={() => {}}
+                key={p.key}
+              />
+            ) : (
+              <CustomRichText
+                id={p.key}
+                label={p.label}
+                inline
+                onChange={changeMonaco(p.key)}
+                value={value}
+                key={p.key}
+              />
+            ),
         );
       }
     }
@@ -252,9 +260,28 @@ export const getTableData = (sections, propertyFields) => ({
   data: propertyFields,
 });
 
+export const checkPathValidate = (propertyFields, propertyFieldData) => {
+  let result = true;
+  const key = propertyFieldData.propertyType.key || propertyFieldData.propertyType;
+  if (key === 'urlpath') {
+    const regex = /(\/[a-z0-9\-_].*)/g;
+    if (propertyFieldData.default && propertyFieldData.default !== '') {
+      if (!regex.test(propertyFieldData.default)) {
+        result = false;
+      }
+    }
+    if (propertyFieldData.template && propertyFieldData.template !== '') {
+      if (!regex.test(propertyFieldData.template)) {
+        result = false;
+      }
+    }
+  }
+  return result;
+};
+
 export const setDefault = (properties, fields) => {
   const tempProperties = JSON.parse(JSON.stringify(properties));
-  tempProperties.chkFlag = true;
+  let errMsg = '';
   fields.forEach((item) => {
     if (tempProperties[item.key] === undefined) {
       if (item.template) {
@@ -265,16 +292,22 @@ export const setDefault = (properties, fields) => {
         tempProperties[item.key] = null;
       }
     } else if (item.propertyType === 'array') {
-      let chkFlag = true;
       try {
         tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
       } catch (e) {
-        chkFlag = false;
+        errMsg = `Array input is wrong at the ${item.key} field.`;
       }
-      tempProperties.chkFlag = chkFlag;
+    } else if (item.propertyType === 'urlpath') {
+      const regex = /(\/[a-z0-9\-_].*)/g;
+      if (!regex.test(tempProperties[item.key])) {
+        errMsg = `URL Path's format is wrong at the ${item.key} field.`;
+      }
     }
   });
-  return tempProperties;
+  return {
+    tempProperties,
+    errMsg,
+  };
 };
 
 export const getFilterItem = (srcArray, searchkey) => {
@@ -317,23 +350,4 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     });
   }
   return invalidData;
-};
-
-export const checkPathValidate = (propertyFields, propertyFieldData) => {
-  let result = true;
-  const key = propertyFieldData.propertyType.key || propertyFieldData.propertyType;
-  if (key === 'urlpath') {
-    const regex = /(\/[a-z0-9\-_].*)/g;
-    if (propertyFieldData.default && propertyFieldData.default !== '') {
-      if (!regex.test(propertyFieldData.default)) {
-        result = false;
-      }
-    }
-    if (propertyFieldData.template && propertyFieldData.template !== '') {
-      if (!regex.test(propertyFieldData.template)) {
-        result = false;
-      }
-    }
-  }
-  return result;
 };

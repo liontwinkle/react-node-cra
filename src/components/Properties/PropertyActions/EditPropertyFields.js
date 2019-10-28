@@ -13,7 +13,7 @@ import { tableIcons } from 'utils/constants';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
-import { CustomConfirmDlg } from '../../elements';
+import { CustomConfirmDlg } from 'components/elements';
 
 function EditPropertyFields({
   open,

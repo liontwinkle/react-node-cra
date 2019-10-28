@@ -48,10 +48,10 @@ function PropertyActions({
 
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
-    if (saveData.chkFlag) {
+    if (saveData.errMsg === '') {
       if (!isObjectUpdating && !isHistoryCreating) {
-        if (!isEqual(objectItem.properties, saveData)) {
-          updateObject(objectItem.id, { properties: saveData })
+        if (!isEqual(objectItem.properties, saveData.tempProperties)) {
+          updateObject(objectItem.id, { properties: saveData.tempProperties })
             .then(() => {
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
                 'Update Properties',
@@ -65,7 +65,7 @@ function PropertyActions({
         }
       }
     } else {
-      confirmMessage(enqueueSnackbar, 'Input format is wrong.', 'error');
+      confirmMessage(enqueueSnackbar, saveData.errMsg, 'error');
     }
   };
 
