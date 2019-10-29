@@ -10,7 +10,7 @@ const AttributeSchema = new Schema({
   },
   groupId: {
     type: String,
-    default: '',
+    default: 'null',
   },
   properties: Object,
   defaultProperties: [{

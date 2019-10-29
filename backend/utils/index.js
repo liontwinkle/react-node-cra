@@ -105,7 +105,7 @@ function handleCreate(req) {
       });
       newId++;
     }
-    if (createData.parentId !== '') {
+    if (createData.parentId !== 'null') {
       collectionAppear.find({ categoryId: parseInt(createData.parentId, 10) })
         .then((result) => {
           if (result.length > 0) {
@@ -126,7 +126,7 @@ function handleCreate(req) {
 function setAppearForCategory(data, client) {
   const collectionAppear = AppearCollection(`${client}_appears`);
   data.forEach((item) => {
-    if (item.parentId !== '') {
+    if (item.parentId !== 'null') {
       collectionAppear.find({ categoryId: parseInt(item.parentId, 10) })
         .then((result) => {
           if (result.length > 0) {
@@ -292,7 +292,7 @@ function saveAttributeUpdates(req, res) {
       collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
         .then((result) => {
           const old = getAppear(result);
-          if (!req.body.checked && entity.groupId !== '') {
+          if (!req.body.checked && entity.groupId !== 'null') {
             checkOffForAttribute(old, req, collectionAppear, entity);
           }
           updateChildAttributesAppear(req, entity, collectionAppear, old);

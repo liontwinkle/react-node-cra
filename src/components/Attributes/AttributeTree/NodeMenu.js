@@ -63,7 +63,7 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (!isCreating && checkNameDuplicate(attributes, 'New Attribute', node.item.attributeId.toString()) === 0) {
+    if (!isCreating && checkNameDuplicate(attributes, '', node.item.attributeId.toString()) === 0) {
       createAttribute({ name: '', groupId: node.item.attributeId, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
@@ -91,7 +91,7 @@ function NodeMenu({
           if (deleteHistory.length > 0) {
             removeHistory(removeId)
               .then(() => {
-                if (node.item.groupId !== '') {
+                if (node.item.groupId !== 'null') {
                   createHistory({
                     label: `Delete Child Node ${node.item.name}`,
                     itemId: node.item.groupId,

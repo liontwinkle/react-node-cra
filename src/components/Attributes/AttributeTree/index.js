@@ -59,7 +59,7 @@ function AttributeNode({
     if (node.editable) {
       const attribute = _find(attributes, { id: node.item.id });
       const group = _find(attributes, { attributeId: parseInt(node.item.groupId, 10) });
-      const groupId = (group) ? group.id : '';
+      const groupId = (group) ? group.id : 'null';
       if (attribute && attribute.name !== node.title && !isUpdating && !isCreating) {
         if (checkNameDuplicate(attributes, node.title, node.item.groupId) === 0) {
           updateAttribute(node.item.id, { name: node.title })

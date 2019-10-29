@@ -10,7 +10,7 @@ const CategorySchema = new Schema({
   },
   parentId: {
     type: String,
-    default: '',
+    default: 'null',
   },
   properties: Object,
   defaultProperties: [{

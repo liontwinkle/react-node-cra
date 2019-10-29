@@ -58,7 +58,7 @@ function VirtualSortableTree(props) {
     if (node.editable) {
       const category = _find(categories, { id: node.item.id });
       const parent = _find(categories, { categoryId: parseInt(node.item.parentId, 10) });
-      const parentId = (parent) ? parent.id : '';
+      const parentId = (parent) ? parent.id : 'null';
       if (!isUpdating && !isCreating && category && category.name !== node.title) {
         updateCategory(node.item.id, { name: node.title })
           .then(() => {

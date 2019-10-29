@@ -36,7 +36,7 @@ const checkException = (keys, dataItem, type) => {
 
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
-  const parentId = dataItem.parent_id || dataItem.parentid || '';
+  const parentId = dataItem.parent_id || dataItem.parentid || 'null';
   if (parentId !== '' && categories.findIndex(item => (item.categoryId === parentId)) === -1) {
     if (newData.findIndex(newItem => (
       newItem.categoryid === parentId || newItem._id === parentId
@@ -50,11 +50,11 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
   const deletedData = [];
-  const recvGroupId = dataItem.groupid || dataItem.group_id || '';
-  const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === '')));
+  const recvGroupId = dataItem.groupid || dataItem.group_id || 'null';
+  const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === 'null')));
   const groupItem = groupIds.filter(item => (item.attributeId === recvGroupId));
   let groupData = [];
-  if (recvGroupId !== '' && groupItem.length === 0) {
+  if (recvGroupId !== 'null' && groupItem.length === 0) {
     if (newData.findIndex(newItem => (
       newItem.attributeid === recvGroupId || newItem._id === recvGroupId
     ) === -1)) {
@@ -62,7 +62,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
     }
   } else {
     const appearData = (groupItem.length > 0) ? groupItem[0].appear : [];
-    groupData = (recvGroupId === '') ? [] : appearData;
+    groupData = (recvGroupId === 'null') ? [] : appearData;
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {
@@ -97,7 +97,7 @@ export const validateData = (type, data, categories, attributes) => {
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
                 ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
               tempData.name = dataItem.name || [];
-              tempData.parentId = dataItem.parent_id || '';
+              tempData.parentId = dataItem.parent_id || 'null';
             }
           } else if (type === 'attributes') {
             const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
@@ -108,7 +108,7 @@ export const validateData = (type, data, categories, attributes) => {
               tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
                 ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
               tempData.name = dataItem.name || [];
-              tempData.groupId = dataItem.groupid || dataItem.group_id || '';
+              tempData.groupId = dataItem.groupid || dataItem.group_id || 'null';
             }
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));
