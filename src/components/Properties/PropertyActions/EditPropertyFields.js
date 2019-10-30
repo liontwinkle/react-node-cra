@@ -1,9 +1,8 @@
-import React, { forwardRef, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import $ from 'jquery';
 import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,7 +16,6 @@ import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { updateDefaultOnAttriute } from 'redux/actions/attribute';
 import { CustomConfirmDlg } from 'components/elements';
-import AddBoxIcon from '@material-ui/icons/AddBox';
 
 function EditPropertyFields({
   open,
@@ -48,13 +46,6 @@ function EditPropertyFields({
 
   const { propertyFields } = propertyField;
   const tableData = getTableData(sections, propertyFields, order);
-
-  const autoFocusFirst = () => {
-    console.log('Here????');
-    // $('.MuiInput-formControl:first-child').addClass('Mui-focus');
-    const tables = $('.MuiTableRow-root[level]').toArray();
-    console.log('#### DEBUG INDEX: ', tables); // fixme
-  };
 
   const handleAdd = newData => new Promise((resolve) => {
     setTimeout(() => {
@@ -262,7 +253,6 @@ function EditPropertyFields({
     }, 600);
   });
 
-  tableIcons.Add = forwardRef((props, ref) => <AddBoxIcon {...props} ref={ref} onClick={autoFocusFirst} />);
   return (
     <Dialog
       open={open}

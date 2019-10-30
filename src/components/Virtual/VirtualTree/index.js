@@ -121,7 +121,7 @@ function VirtualSortableTree(props) {
   const handleMoveTree = (data) => {
     const { node, path } = data;
     const currentParentItemName = (data.nextParentNode) ? data.nextParentNode.item.name : 'root';
-    const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item.categoryId.toString() : '';
+    const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item.categoryId.toString() : 'null';
 
     if (!isUpdating && !isCreating) {
       updateCategory(node.item.id, { parentId: currentParentItemId })

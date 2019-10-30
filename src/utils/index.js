@@ -5,6 +5,16 @@ import {
   AddSets, DiffSets, formatDifference, RuleEngine,
 } from './RuleEngine';
 
+
+const makeArrayObject = (array, idName) => {
+  const list = JSON.parse(JSON.stringify(array)) || [];
+  list.forEach((item, index) => {
+    if (item[idName] === '') {
+      list[index][idName] = 'null';
+    }
+  });
+  return list;
+};
 /** ** PREDEFINED ***** */
 export const sortByOrder = (a, b) => {
   const fieldItemA = a.order || 0;
@@ -184,14 +194,15 @@ export const getPreFilterData = (rules, products) => {
 
 export const getCategoryTree = (categories, originNode) => {
   const parentId = 'null';
-  const list = categories || [];
+  const list = makeArrayObject(categories, 'parentId');
 
   return getSubTree(list, parentId, 'parentId', originNode);
 };
 
 export const getAttribute = (attributes, originNode) => {
   const groupId = 'null';
-  const list = attributes || [];
+  const list = makeArrayObject(attributes, 'groupId');
+
   return getSubTree(list, groupId, 'groupId', originNode);
 };
 
