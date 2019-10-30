@@ -1,4 +1,3 @@
-import _merge from 'lodash/merge';
 import _findIndex from 'lodash/findIndex';
 import { getAttribute } from 'utils';
 import types from '../actionTypes';
@@ -26,35 +25,15 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.ATTRIBUTE_FETCH_SUCCESS:
-      const fetchedTrees = getAttribute(action.payload.attributes.sort());
-      let convertedTrees = [];
-      if (state.nodes.length > 0) {
-        state.nodes.forEach((pItem, pKey) => {
-          if (pItem.children.length > 0) {
-            const cNewItem = [];
-            pItem.children.forEach((cItem, cKey) => {
-              cNewItem.push(cItem);
-              cNewItem[cKey].item = fetchedTrees.subTree[pKey].children[cKey].item;
-            });
-            convertedTrees.push(pItem);
-            convertedTrees[pKey].children = cNewItem;
-            convertedTrees[pKey].item = fetchedTrees.subTree[pKey].item;
-          } else {
-            convertedTrees.push(pItem);
-            convertedTrees[pKey].item = fetchedTrees.subTree[pKey].item;
-          }
-        });
-        convertedTrees = _merge(fetchedTrees.subTree, convertedTrees);
-      } else {
-        convertedTrees = fetchedTrees.subTree;
-      }
+      const fetchedTrees = getAttribute(action.payload.attributes.sort(), state.nodes);
+
       return {
         ...state,
         isFetchingList: false,
         attributes: action.payload.attributes,
-        attribute: state.attribute || action.payload.attributes[0] || null,
+        attribute: state.attribute || action.payload.attributes.filter(item => (item.groupId === 'null'))[0] || null,
         associations: fetchedTrees.association,
-        nodes: convertedTrees,
+        nodes: fetchedTrees.subTree,
       };
     case types.ATTRIBUTE_FETCH_FAIL:
       return {
@@ -70,18 +49,14 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_CREATE_SUCCESS:
       const { data } = action.payload;
-      let createdAttributes = JSON.parse(JSON.stringify(attributes));
-      createdAttributes = [...createdAttributes, data];
-      const createData = JSON.parse(JSON.stringify(getAttribute(createdAttributes)));
-      const tempNodes = JSON.parse(JSON.stringify(state.nodes));
-      const nodeData = _merge(createData.subTree, tempNodes);
-      const nodeAssociation = _merge(createData.association, state.associations);
+      const createdAttributes = [data, ...attributes];
+      const updateSaveData = getAttribute(createdAttributes, state.nodes);
       return {
         ...state,
         isCreating: false,
         attributes: JSON.parse(JSON.stringify(createdAttributes.slice(0))),
-        nodes: nodeData,
-        associations: nodeAssociation,
+        nodes: updateSaveData.subTree,
+        associations: updateSaveData.association,
         attribute: action.payload.data,
       };
     case types.ATTRIBUTE_CREATE_FAIL:
@@ -98,46 +73,20 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_UPDATE_SUCCESS:
       const updateData = action.payload.data;
-      let updatedAttributes = JSON.parse(JSON.stringify(attributes));
-      const attributesIdx = _findIndex(updatedAttributes, { id: updateData.id });
+      const attributesIdx = _findIndex(attributes, { id: updateData.id });
       if (attributesIdx > -1) {
-        updatedAttributes[attributesIdx] = updateData;
+        attributes.splice(attributesIdx, 1, updateData);
       } else {
-        updatedAttributes = [...updatedAttributes, updateData];
+        attributes.push(updateData);
       }
-      const newTrees = [];
-      const recvTrees = getAttribute(updatedAttributes);
-      state.nodes.forEach((pItem, pKey) => {
-        if (pItem.children.length > 0) {
-          const cNewItem = [];
-          pItem.children.forEach((cItem, cKey) => {
-            cNewItem.push({
-              ...cItem,
-              item: recvTrees.subTree[pKey].children[cKey].item,
-              title: recvTrees.subTree[pKey].children[cKey].title,
-            });
-          });
-          newTrees.push({
-            ...pItem,
-            children: cNewItem,
-            item: recvTrees.subTree[pKey].item,
-            title: recvTrees.subTree[pKey].title,
-          });
-        } else {
-          newTrees.push({
-            ...pItem,
-            item: recvTrees.subTree[pKey].item,
-            title: recvTrees.subTree[pKey].title,
-          });
-        }
-      });
+      const recvTrees = getAttribute(attributes, state.nodes);
 
       return {
         ...state,
         isUpdating: false,
-        attributes: JSON.parse(JSON.stringify(updatedAttributes)),
-        nodes: newTrees,
-        associations: recvTrees.association,
+        attributes: JSON.parse(JSON.stringify(attributes.slice(0))),
+        nodes: JSON.parse(JSON.stringify(recvTrees.subTree)),
+        associations: JSON.parse(JSON.stringify(recvTrees.association)),
         attribute: action.payload.data,
       };
     case types.ATTRIBUTE_UPDATE_FAIL:
@@ -180,6 +129,23 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         nodes: action.payload,
+      };
+
+    case types.ATTRIBUTE_UPDATE_DEFAULT_REQUEST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.ATTRIBUTE_UPDATE_DEFAULT_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+      };
+    case types.ATTRIBUTE_UPDATE_DEFAULT_FAIL:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
       };
     default:
       return state;

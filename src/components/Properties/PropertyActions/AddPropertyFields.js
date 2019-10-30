@@ -14,6 +14,8 @@ import { propertyFieldTypes } from 'utils/constants';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { checkTemplate, checkPathValidate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
+import { updateDefaultOnCategory } from 'redux/actions/categories';
+import { updateDefaultOnAttriute } from 'redux/actions/attribute';
 import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
 
 function AddPropertyFields({
@@ -24,6 +26,8 @@ function AddPropertyFields({
   handleClose,
   propertyField,
   updatePropertyField,
+  updateDefaultOnCategory,
+  updateDefaultOnAttriute,
   createHistory,
 }) {
   const classes = useStyles();
@@ -84,15 +88,23 @@ function AddPropertyFields({
           propertyType: propertyFieldData.propertyType.key,
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
+        const updateDefaultFunc = (objectItem.parentId !== undefined)
+          ? updateDefaultOnCategory : updateDefaultOnAttriute;
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
-                `Create Property(${propertyFieldData.propertyType.key})`,
-                `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
-                'virtual');
-              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-              handleClose();
+              updateDefaultFunc(propertyFields)
+                .then(() => {
+                  addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
+                    `Create Property(${propertyFieldData.propertyType.key})`,
+                    `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
+                    'virtual');
+                  confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+                  handleClose();
+                })
+                .catch(() => {
+                  confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value .', 'error');
+                });
             })
             .catch(() => {
               confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
@@ -105,10 +117,9 @@ function AddPropertyFields({
         if (errList !== '') {
           errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
         } else if (validatePath) {
-          errMsg = 'URL Path is not valid.';
+          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.`;
         } else {
-          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.
-         Please update property key name.`;
+          errMsg = 'URL Path is not valid.';
         }
         confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
@@ -219,6 +230,8 @@ AddPropertyFields.propTypes = {
   objectItem: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
+  updateDefaultOnCategory: PropTypes.func.isRequired,
+  updateDefaultOnAttriute: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
 };
 
@@ -229,6 +242,8 @@ const mapStateToProps = store => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updatePropertyField,
+  updateDefaultOnCategory,
+  updateDefaultOnAttriute,
 }, dispatch);
 
 export default connect(

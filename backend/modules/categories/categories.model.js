@@ -10,9 +10,14 @@ const CategorySchema = new Schema({
   },
   parentId: {
     type: String,
-    default: '',
+    default: 'null',
   },
   properties: Object,
+  defaultProperties: [{
+    key: String,
+    default: String,
+    template: String,
+  }],
   rules: [{
     basis: String,
     refer: String,

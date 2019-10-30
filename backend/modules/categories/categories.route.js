@@ -10,6 +10,9 @@ router.get('/', controller.index);
 // Request to create a Category
 router.post('/', controller.create);
 
+// Request to create a Category
+router.post('/updatedefault', controller.updateDefault);
+
 // Request to get a Category
 router.get('/:categoryId', controller.show);
 

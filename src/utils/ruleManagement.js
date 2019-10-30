@@ -80,7 +80,7 @@ export const addNewRuleHistory = (createHistory, Item, groupId, msgCurrent, msgP
     type,
   })
     .then(() => {
-      if (groupId !== '') {
+      if (groupId !== 'null') {
         createHistory({
           label: msgParent,
           itemId: groupId,

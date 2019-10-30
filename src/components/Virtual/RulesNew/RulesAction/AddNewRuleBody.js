@@ -8,7 +8,7 @@ import {
 } from 'utils/constants';
 
 const AddNewRuleBody = ({
-  valueDetails, ruleData,
+  valueDetails, ruleData, previewNumber,
   handleSelectChange, handleChange,
 }) => (
   <Fragment>
@@ -59,12 +59,20 @@ const AddNewRuleBody = ({
       items={scope}
       onChange={handleSelectChange('scope')}
     />
+    <CustomInput
+      className="mb-3"
+      label="Preview Number"
+      inline
+      value={previewNumber}
+      onChange={() => {}}
+    />
   </Fragment>
 );
 
 AddNewRuleBody.propTypes = {
   valueDetails: PropTypes.array.isRequired,
   ruleData: PropTypes.object.isRequired,
+  previewNumber: PropTypes.number.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
 };

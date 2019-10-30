@@ -43,7 +43,7 @@ class Properties extends Component {
     if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
       if (objectItem.id === prevProps.objectItem.id) {
         this.updateState({
-          updateProperties: initProperties(properties, objectItem.properties),
+          properties: initProperties(properties, objectItem.properties),
         });
       } else {
         this.updateState({
@@ -101,7 +101,6 @@ class Properties extends Component {
   };
 
   changeMonaco = field => (newValue) => {
-    console.log('MONACO EDIT: '); // fixme
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,

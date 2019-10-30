@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { addNodeUnderParent, changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
+import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
@@ -63,8 +63,8 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (!isCreating && checkNameDuplicate(attributes, 'New Attribute', node.item.attributeId.toString()) === 0) {
-      createAttribute({ name: 'New Attribute', groupId: node.item.attributeId, appear: node.item.appear })
+    if (!isCreating && checkNameDuplicate(attributes, '', node.item.attributeId.toString()) === 0) {
+      createAttribute({ name: '', groupId: node.item.attributeId, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,
@@ -72,19 +72,6 @@ function NodeMenu({
             'Create Node', 'Add Child Node- New Attribute', 'attributes',
           );
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
-          setTreeData(
-            addNodeUnderParent({
-              treeData,
-              parentKey: path[path.length - 1],
-              expandParent: true,
-              getNodeKey,
-              newNode: {
-                title: attribute.name,
-                editable: false,
-                item: attribute,
-              },
-            }).treeData,
-          );
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, 'Error in adding attribute.', 'error');
@@ -104,7 +91,7 @@ function NodeMenu({
           if (deleteHistory.length > 0) {
             removeHistory(removeId)
               .then(() => {
-                if (node.item.groupId !== '') {
+                if (node.item.groupId !== 'null') {
                   createHistory({
                     label: `Delete Child Node ${node.item.name}`,
                     itemId: node.item.groupId,

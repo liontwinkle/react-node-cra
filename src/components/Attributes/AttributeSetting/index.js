@@ -76,7 +76,7 @@ class AttributeSetting extends Component {
       item.groupId === attribute.groupId
       && item.attributeId !== attribute.attributeId
       && !hasSubArray(item.appear, updateAppear)));
-    if (!unCheckedSibling && attribute.groupId !== '') {
+    if (!unCheckedSibling && attribute.groupId !== 'null') {
       returnId = attributes.find(item => (item.attributeId === parseInt(attribute.groupId, 10))).id;
     } else {
       returnId = attribute.id;

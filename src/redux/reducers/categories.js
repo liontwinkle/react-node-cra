@@ -46,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
-        category: tempDatas.filter(item => (item.parentId === ''))[0] || null,
+        category: tempDatas.filter(item => (item.parentId === 'null'))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };
@@ -168,6 +168,22 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         preProducts: action.payload,
+      };
+    case types.CATEGORY_UPDATE_DEFAULT_REQUEST:
+      return {
+        ...state,
+        isUpdating: true,
+      };
+    case types.CATEGORY_UPDATE_DEFAULT_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+      };
+    case types.CATEGORY_UPDATE_DEFAULT_FAIL:
+      return {
+        ...state,
+        isUpdating: false,
+        errors: action.payload.error,
       };
     default:
       return state;

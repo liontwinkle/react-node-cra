@@ -8,9 +8,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
+import { setProductViewType } from 'redux/actions/clients';
 import { setPrefilterData } from 'redux/actions/categories';
 import {
-  basis, refer, match, scope,
+  basis, refer, match, scope, productViewTypes,
 } from 'utils/constants';
 import { confirmMessage } from 'utils';
 import Loader from 'components/Loader';
@@ -18,6 +19,7 @@ import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 
 import './style.scss';
+import { CustomToggle } from '../../elements';
 
 class AttributeRules extends Component {
   state = {
@@ -119,6 +121,17 @@ class AttributeRules extends Component {
     });
   };
 
+  onHandleSwtichView = () => {
+    this.setState(prevState => ({
+      productsFlag: !prevState.productsFlag,
+    }));
+    if (this.state.productsFlag) {
+      this.props.setProductViewType(productViewTypes[0]);
+    } else {
+      this.props.setProductViewType(productViewTypes[1]);
+    }
+  };
+
   render() {
     const {
       newRules,
@@ -133,6 +146,11 @@ class AttributeRules extends Component {
             ? (
               <Fragment>
                 <div className="mg-rule-content">
+                  <CustomToggle
+                    label="Products Switch"
+                    value={this.state.productsFlag}
+                    onToggle={this.onHandleSwtichView}
+                  />
                   <PerfectScrollbar>
                     <RulesTable rules={newRules} />
                   </PerfectScrollbar>
@@ -164,6 +182,7 @@ AttributeRules.propTypes = {
   products: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
+  setProductViewType: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -177,6 +196,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
   setPrefilterData,
+  setProductViewType,
 }, dispatch);
 
 export default connect(

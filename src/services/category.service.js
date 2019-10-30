@@ -12,6 +12,11 @@ const create = (clientId, type, category) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
+const updateDefaultData = (clientId, type, updateData, deletedKey) => httpService
+  .post(`${getCategoryRoute(clientId, type)}/updatedefault`, { updateData, deletedKey })
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
+
 const update = (clientId, type, id, updatedData) => httpService
   .put(`${getCategoryRoute(clientId, type)}/${id}`, updatedData)
   .then(({ data }) => data)
@@ -25,6 +30,7 @@ const remove = (clientId, type, id) => httpService
 export default {
   fetch,
   create,
+  updateDefaultData,
   update,
   remove,
 };

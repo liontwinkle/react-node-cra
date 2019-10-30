@@ -26,10 +26,10 @@ function AttributeTree({
   const { enqueueSnackbar } = useSnackbar();
 
   const addRootCategory = () => {
-    const filterGroup = attributes.filter(attrItem => (attrItem.groupId === '' && attrItem.name === 'New Group'));
+    const filterGroup = attributes.filter(attrItem => (attrItem.groupId === 'null' && attrItem.name === ''));
     const flag = (filterGroup.length === 0);
     if (flag && !isCreating) {
-      createAttribute({ name: 'New Group' })
+      createAttribute({ name: '' })
         .then((attribute) => {
           createHistory({
             label: 'Create Node',

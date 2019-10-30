@@ -11,7 +11,7 @@ export const checkNameDuplicate = (attributes, name, groupId) => {
 
 export const getNewAppearData = (categories, currentLsit, currentCategoryItem) => {
   let result = [];
-  if (currentCategoryItem.parentId !== '') {
+  if (currentCategoryItem.parentId !== 'null') {
     const siblings = categories.filter(item => (item.parentId === currentCategoryItem.parentId));
     let checkContainAttr = true;
     if (currentLsit.length === 0) {

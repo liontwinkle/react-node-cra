@@ -183,16 +183,16 @@ export const getPreFilterData = (rules, products) => {
 };
 
 export const getCategoryTree = (categories, originNode) => {
-  const parentId = '';
+  const parentId = 'null';
   const list = categories || [];
 
   return getSubTree(list, parentId, 'parentId', originNode);
 };
 
-export const getAttribute = (attributes) => {
-  const groupId = '';
+export const getAttribute = (attributes, originNode) => {
+  const groupId = 'null';
   const list = attributes || [];
-  return getSubTree(list, groupId, 'groupId');
+  return getSubTree(list, groupId, 'groupId', originNode);
 };
 
 export const isExist = (obj, key) => {

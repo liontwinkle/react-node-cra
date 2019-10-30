@@ -52,6 +52,44 @@ exports.update = (req, res) => {
     .catch(handleError(res));
 };
 
+// Update a Category all default
+exports.updateDefault = (req, res) => {
+  req.category.updateMany({}, {
+    $set: {
+      defaultProperties: req.body.updateData
+    }
+  }, (err, result) => {
+    if (!err) {
+      if (req.body.deletedKey) {
+        const deleteKey = req.body.deletedKey;
+        req.category.find({}, (err, result) => {
+          if (!err) {
+            result.forEach((resultItem) => {
+              if (resultItem.properties) {
+                if (resultItem.properties[deleteKey]) {
+                  delete resultItem.properties[deleteKey];
+
+                  req.category.updateMany({ categoryId: resultItem.categoryId }, {
+                    $set: {
+                      properties: resultItem.properties
+                    }
+                  }, (err) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
+      res.status(200).json(result);
+    } else {
+      handleError(res);
+    }
+  });
+};
 // Deletes a Category from the DB
 exports.remove = (req, res) => {
   req.category

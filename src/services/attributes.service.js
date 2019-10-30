@@ -17,6 +17,11 @@ const update = (clientId, type, id, updatedData) => httpService
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 
+const updateDefaultData = (clientId, type, updateData, deletedKey) => httpService
+  .post(`${getAttributesRoute(clientId, type)}/updatedefault`, { updateData, deletedKey })
+  .then(({ data }) => data)
+  .catch(err => Promise.reject(err.response));
+
 const remove = (clientId, type, id) => httpService
   .remove(`${getAttributesRoute(clientId, type)}/${id}`)
   .then(({ data }) => data)
@@ -36,6 +41,7 @@ export default {
   create,
   update,
   remove,
+  updateDefaultData,
   removeAppear,
   updateAppear,
 };

@@ -39,6 +39,38 @@ function PropertyActions({
     default: false,
   });
 
+  const [sortHistory, setSortHistory] = useState({
+    property: {
+      index: 0,
+      direction: 'asc',
+    },
+    section: {
+      index: 0,
+      direction: 'asc',
+    },
+  });
+
+  const [pageNum, setPageNum] = useState({
+    section: 10,
+    property: 20,
+  });
+
+  const onChangePageNum = field => (page) => {
+    setPageNum({
+      ...pageNum,
+      [field]: page,
+    });
+  };
+
+  const onChangeOrder = field => (index, direction) => {
+    setSortHistory({
+      ...sortHistory,
+      [field]: {
+        index,
+        direction,
+      },
+    });
+  };
   const handleToggle = field => () => {
     setOpen({
       ...open,
@@ -48,13 +80,10 @@ function PropertyActions({
 
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
-    if (saveData.chkFlag) {
-      console.log('#### DEBUG PREPARE DATA: ', saveData); // fixme
-      console.log('#### DEBUG ORIGINAL DATA: ', objectItem.properties); // fixme
+    if (saveData.errMsg === '') {
       if (!isObjectUpdating && !isHistoryCreating) {
-        if (!isEqual(objectItem.properties, saveData)) {
-          console.log('#### DEBUG SAVE DATA: ', saveData); // fixme
-          updateObject(objectItem.id, { properties: saveData })
+        if (!isEqual(objectItem.properties, saveData.tempProperties)) {
+          updateObject(objectItem.id, { properties: saveData.tempProperties })
             .then(() => {
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
                 'Update Properties',
@@ -68,7 +97,7 @@ function PropertyActions({
         }
       }
     } else {
-      confirmMessage(enqueueSnackbar, 'Input format is wrong.', 'error');
+      confirmMessage(enqueueSnackbar, saveData.errMsg, 'error');
     }
   };
 
@@ -137,7 +166,14 @@ function PropertyActions({
       )}
 
       {open.edit_section && (
-        <EditSections open={open.edit_section} handleClose={handleToggle('edit_section')} />
+        <EditSections
+          open={open.edit_section}
+          order={sortHistory.section}
+          pageNum={pageNum.section}
+          handleClose={handleToggle('edit_section')}
+          onChangeOrder={onChangeOrder('section')}
+          onChangePageNum={onChangePageNum('section')}
+        />
       )}
 
       {open.add && (
@@ -156,6 +192,10 @@ function PropertyActions({
           handleClose={handleToggle('edit')}
           createHistory={createHistory}
           objectItem={objectItem}
+          order={sortHistory.property}
+          pageNum={pageNum.property}
+          onChangeOrder={onChangeOrder('property')}
+          onChangePageNum={onChangePageNum('property')}
         />
       )}
     </div>

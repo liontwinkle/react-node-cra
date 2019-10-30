@@ -9,19 +9,23 @@ import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
+import { setProductViewType } from 'redux/actions/clients';
 import { confirmMessage, getPreFilterData } from 'utils';
 import { setUnionRules, getRules } from 'utils/ruleManagement';
+import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
 import RulesTable from './RulesTable/index';
 import RulesAction from './RulesAction/index';
 
 import './style.scss';
+import { CustomToggle } from '../../elements';
 
 class NewRules extends Component {
   state = {
     newRules: [],
     editRules: [],
     fetchingFlag: true,
+    productsFlag: true,
   };
 
   componentDidMount() {
@@ -101,6 +105,17 @@ class NewRules extends Component {
     });
   };
 
+  onHandleSwtichView = () => {
+    this.setState(prevState => ({
+      productsFlag: !prevState.productsFlag,
+    }));
+    if (this.state.productsFlag) {
+      this.props.setProductViewType(productViewTypes[0]);
+    } else {
+      this.props.setProductViewType(productViewTypes[1]);
+    }
+  };
+
   render() {
     const { newRules, editRules } = this.state;
     return (
@@ -110,6 +125,11 @@ class NewRules extends Component {
             ? (
               <Fragment>
                 <div className="mg-rule-content">
+                  <CustomToggle
+                    label="Products Switch"
+                    value={this.state.productsFlag}
+                    onToggle={this.onHandleSwtichView}
+                  />
                   <PerfectScrollbar>
                     <RulesTable rules={newRules} />
                   </PerfectScrollbar>
@@ -137,6 +157,7 @@ NewRules.propTypes = {
   fetchProducts: PropTypes.func.isRequired,
   setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
+  setProductViewType: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -150,6 +171,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchProducts,
   setPrefilterData,
+  setProductViewType,
 }, dispatch);
 
 export default connect(

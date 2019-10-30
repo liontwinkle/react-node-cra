@@ -11,7 +11,7 @@ import {
   basis, refer, match, scope,
 } from 'utils/constants';
 
-import { confirmMessage, useStyles } from 'utils';
+import { confirmMessage, getPreFilterData, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
@@ -26,6 +26,7 @@ function AddNewRule({
   valueDetails,
   category,
   rules,
+  products,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -39,11 +40,28 @@ function AddNewRule({
     value: '',
   });
 
+  const [previewValue, setPreviewValue] = useState(0);
+
+  const getPreviewProducts = (newRules) => {
+    const filterProducts = () => getPreFilterData(newRules, products);
+    setPreviewValue(filterProducts().length);
+  };
+
   const handleSelectChange = field => (item) => {
     const newClient = {
       ...ruleData,
       [field]: item,
     };
+    const newRules = [{
+      basis: ruleData.basis.key,
+      refer: ruleData.refer.key,
+      match: ruleData.match.key,
+      scope: ruleData.scope.key,
+      detail: ruleData.detail.key,
+      value: ruleData.value,
+    }];
+    newRules[0][field] = item.key;
+    getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
@@ -52,6 +70,15 @@ function AddNewRule({
       ...ruleData,
       value: e.target.value,
     };
+    const newRules = [{
+      basis: ruleData.basis.key,
+      refer: ruleData.refer.key,
+      match: ruleData.match.key,
+      scope: ruleData.scope.key,
+      detail: ruleData.detail.key,
+      value: e.target.value,
+    }];
+    getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
@@ -124,6 +151,7 @@ function AddNewRule({
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
+          previewNumber={previewValue}
           handleChange={handleChange}
           valueDetails={valueDetails}
         />
@@ -158,11 +186,13 @@ AddNewRule.propTypes = {
   createHistory: PropTypes.func.isRequired,
   valueDetails: PropTypes.array.isRequired,
   rules: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = store => ({
   isUpdating: store.categoriesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
+  products: store.categoriesData.preProducts,
   category: store.categoriesData.category,
 });
 

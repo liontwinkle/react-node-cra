@@ -5,7 +5,6 @@
   height: 100%;
   display: flex;
   justify-content: center;
-
   .loader {
     position: absolute;
     top: 50%;
@@ -29,6 +28,10 @@
     width: 100%;
     padding: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+  }
+  .mg-switch-control {
+    justify-content: flex-end;
   }
 }
