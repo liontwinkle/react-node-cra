@@ -138,7 +138,7 @@ function EditPropertyFields({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Edit Property Fields
+        Edit Select Items
       </DialogTitle>
 
       <DialogContent className="mg-edit-properties-content">
