@@ -17,6 +17,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import { getObjectFromArray } from 'utils';
+import $ from 'jquery';
+
+const autoFocusFirst = () => {
+  setTimeout(() => {
+    $($('.MuiTableRow-root input').first()[0].parentNode).addClass('Mui-focused');
+  });
+};
 
 export const clientType = [
   { key: 'virtual', label: 'Virtual' },
@@ -71,7 +78,7 @@ export const propertyFieldTypes = [
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
 
 export const tableIcons = {
-  Add: forwardRef((props, ref) => <AddBoxIcon {...props} ref={ref} />),
+  Add: forwardRef((props, ref) => <AddBoxIcon {...props} onClick={autoFocusFirst} ref={ref} />),
   Check: forwardRef((props, ref) => <CheckIcon {...props} ref={ref} />),
   Clear: forwardRef((props, ref) => <ClearIcon {...props} ref={ref} />),
   Delete: forwardRef((props, ref) => <DeleteOutlineIcon {...props} ref={ref} />),
