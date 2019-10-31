@@ -1,6 +1,6 @@
 import _findIndex from 'lodash/findIndex';
 
-import { getCategoryTree } from 'utils';
+import { getCategoryTree, changePropertiesData, convertPropertyData } from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -27,8 +27,8 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.CATEGORIES_GET_SUCCESS:
-      const tempDatas = action.payload.categories;
-      console.log('#### DEBUG GET PROPERTIES: ', tempDatas); // fixme
+      const tempDatas = changePropertiesData(action.payload.categories);
+      console.log('##### DEBUG TEMP DATAS: ', tempDatas); // fixme
       if (Array.isArray(tempDatas)) {
         tempDatas.forEach((item, itemKey) => {
           const { properties } = item;
@@ -64,7 +64,7 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.CATEGORY_CREATE_SUCCESS:
-      const { data } = action.payload;
+      const data = convertPropertyData(action.payload.data);
       if (data.properties) {
         const keys = Object.keys(data.properties);
         keys.forEach((key) => {
@@ -96,7 +96,8 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CATEGORY_UPDATE_SUCCESS:
-      const updateData = action.payload.data;
+      const updateData = convertPropertyData(action.payload.data);
+      console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
       const { properties } = updateData;
       if (properties) {
         const keys = Object.keys(properties);

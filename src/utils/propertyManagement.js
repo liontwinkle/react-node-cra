@@ -98,6 +98,7 @@ export const sectionRender = (
   changeInput, changeSelect, changeArrayInput,
   handleSelItemToggle, toggleSwitch, changeMonaco,
 ) => {
+  console.log('#### STATE: ', state); // fixme
   const res = [];
   let fields = propertyFields;
   fields = propertyFields.sort(sortByOrder);
@@ -160,7 +161,8 @@ export const sectionRender = (
         if (state.properties[p.key] === undefined) {
           value = (p.default === 'true');
         } else {
-          value = state.properties[p.key];
+          value = (typeof state.properties[p.key] === 'string')
+            ? (state.properties[p.key] === 'true') : state.properties[p.key];
         }
         res.push(
           <CustomToggle
@@ -183,7 +185,7 @@ export const sectionRender = (
         );
       } else if (p.propertyType === 'array') {
         let value = '';
-        if (state.properties[p.key] === undefined) {
+        if (state.properties[p.key] === null) {
           value = p.default || '';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
@@ -287,6 +289,7 @@ export const checkPathValidate = (propertyFields, propertyFieldData) => {
 
 export const setDefault = (properties, fields) => {
   const tempProperties = JSON.parse(JSON.stringify(properties));
+  console.log('#### DEBUG ARRAY: ', tempProperties); // fixme
   let errMsg = '';
   fields.forEach((item) => {
     if (tempProperties[item.key] === undefined) {
@@ -294,8 +297,12 @@ export const setDefault = (properties, fields) => {
         tempProperties[item.key] = item.template;
       } else if (item.default) {
         tempProperties[item.key] = item.default;
-      } else {
+      } else if (item.propertyType === 'toggle') {
+        tempProperties[item.key] = false;
+      } else if (item.propertyType === 'array') {
         tempProperties[item.key] = null;
+      } else {
+        tempProperties[item.key] = '';
       }
     } else if (item.propertyType === 'array') {
       try {

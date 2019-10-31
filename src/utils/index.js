@@ -206,6 +206,24 @@ export const getAttribute = (attributes, originNode) => {
   return getSubTree(list, groupId, 'groupId', originNode);
 };
 
+export const convertPropertyData = (data) => {
+  const source = JSON.parse(JSON.stringify(data));
+  let result = {};
+  const properties = source.properties || {};
+  const keys = Object.keys(properties);
+  keys.forEach((keyItem) => {
+    result = { ...result, ...properties[keyItem] };
+  });
+  source.properties = result;
+  return source;
+};
+export const changePropertiesData = (data) => {
+  const recvData = JSON.parse(JSON.stringify(data));
+  recvData.forEach((recvItem, index) => {
+    recvData[index] = convertPropertyData(recvItem);
+  });
+  return recvData;
+};
 export const isExist = (obj, key) => {
   const filterArr = obj.filter(item => (item.key === key));
   return filterArr.length;
