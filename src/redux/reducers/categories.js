@@ -41,7 +41,7 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      const fetchSaveData = getCategoryTree(action.payload.categories, []);
+      const fetchSaveData = getCategoryTree(action.payload.categories, state.trees || []);
       return {
         ...state,
         isFetchingList: false,

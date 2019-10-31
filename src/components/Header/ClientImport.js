@@ -76,8 +76,11 @@ function ClientImport({
   const saveData = (data) => {
     setUploadFlag(true);
     const readData = convertArray(data);
+    console.log('##### DEBUG READ DATA: ', readData);
     const sendingData = validateData(type.key, readData, categories, attributes);
+    console.log('##### DEBUG SENDING DATA: ', sendingData);
     const uploadData = makeUploadData(fileSize, sendingData);
+    console.log('##### DEBUG UPLOAD DATA: ', uploadData);
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);
     } else {

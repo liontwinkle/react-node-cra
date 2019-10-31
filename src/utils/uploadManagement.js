@@ -94,6 +94,8 @@ export const validateData = (type, data, categories, attributes) => {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
+              // fixme I guess the opts as the properties.
+              tempData.properties = dataItem.opts || dataItem.options || [];
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
                 ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
               tempData.name = dataItem.name || [];
