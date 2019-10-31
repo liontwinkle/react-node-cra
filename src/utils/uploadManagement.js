@@ -79,8 +79,6 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
 };
 
 const checkPropertiesException = (value) => {
-  console.log('#### DEBUG VALUES: ', value);
-  console.log('#### DEBUG VALUES TYPE: ', typeof value);
   if (Array.isArray(value) || typeof value !== 'object' || value === null) {
     return value;
   }
@@ -91,7 +89,6 @@ const checkPropertiesException = (value) => {
       delete result[keyItem];
     }
   });
-  console.log('#### DEBUG RESULT: ', result); // fixme
   return result;
 };
 const getProperties = (source) => {
@@ -124,7 +121,6 @@ export const validateData = (type, data, categories, attributes) => {
           let pushFlag = true;
           if (type === 'virtual') {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
-            console.log('##### DEBUG PUSH FLAG: ', pushFlag); // fixme
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
