@@ -83,7 +83,7 @@ function PropertyActions({
     if (saveData.errMsg === '') {
       if (!isObjectUpdating && !isHistoryCreating) {
         if (!isEqual(objectItem.properties, saveData.tempProperties)) {
-          const updatedData = makeUpdatedData(saveData.tempProperties, fields);
+          const updatedData = makeUpdatedData(saveData.tempProperties, fields, sections);
           updateObject(objectItem.id, { properties: updatedData })
             .then(() => {
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,

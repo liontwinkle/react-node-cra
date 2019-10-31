@@ -28,7 +28,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CATEGORIES_GET_SUCCESS:
       const tempDatas = changePropertiesData(action.payload.categories);
-      console.log('##### DEBUG TEMP DATAS: ', tempDatas); // fixme
       if (Array.isArray(tempDatas)) {
         tempDatas.forEach((item, itemKey) => {
           const { properties } = item;
@@ -81,7 +80,7 @@ export default (state = INITIAL_STATE, action) => {
         categories: createdCategories.slice(0),
         trees: updateSaveData.subTree,
         associations: updateSaveData.association,
-        category: action.payload.data,
+        category: data,
       };
     case types.CATEGORY_CREATE_FAIL:
       return {
@@ -97,7 +96,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CATEGORY_UPDATE_SUCCESS:
       const updateData = convertPropertyData(action.payload.data);
-      console.log('#### DEBUG UPDATE DATA: ', updateData); // fixme
       const { properties } = updateData;
       if (properties) {
         const keys = Object.keys(properties);
@@ -122,7 +120,7 @@ export default (state = INITIAL_STATE, action) => {
         categories: categories.slice(0),
         trees: newSaveData.subTree,
         associations: newSaveData.association,
-        category: action.payload.data,
+        category: updateData,
       };
     case types.CATEGORY_UPDATE_FAIL:
       return {

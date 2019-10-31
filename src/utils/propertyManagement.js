@@ -98,7 +98,6 @@ export const sectionRender = (
   changeInput, changeSelect, changeArrayInput,
   handleSelItemToggle, toggleSwitch, changeMonaco,
 ) => {
-  console.log('#### STATE: ', state); // fixme
   const res = [];
   let fields = propertyFields;
   fields = propertyFields.sort(sortByOrder);
@@ -289,7 +288,6 @@ export const checkPathValidate = (propertyFields, propertyFieldData) => {
 
 export const setDefault = (properties, fields) => {
   const tempProperties = JSON.parse(JSON.stringify(properties));
-  console.log('#### DEBUG ARRAY: ', tempProperties); // fixme
   let errMsg = '';
   fields.forEach((item) => {
     if (tempProperties[item.key] === undefined) {
@@ -323,9 +321,11 @@ export const setDefault = (properties, fields) => {
   };
 };
 
-export const makeUpdatedData = (properties, fields) => {
+export const makeUpdatedData = (properties, fields, sections) => {
+  let currentSection = JSON.parse(JSON.stringify(sections));
   const result = {};
   fields.forEach((item) => {
+    currentSection = currentSection.filter(sectionItem => (sectionItem.key !== item.section));
     if (!result[item.section]) {
       result[item.section] = {};
       result[item.section][item.key] = properties[item.key];
@@ -333,6 +333,10 @@ export const makeUpdatedData = (properties, fields) => {
       result[item.section][item.key] = properties[item.key];
     }
   });
+  currentSection.forEach(((leftSectionItem) => {
+    result[leftSectionItem.key] = {};
+  }));
+
   return result;
 };
 export const getFilterItem = (srcArray, searchkey) => {

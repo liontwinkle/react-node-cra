@@ -1,5 +1,5 @@
 import _findIndex from 'lodash/findIndex';
-import { getAttribute } from 'utils';
+import { changePropertiesData, convertPropertyData, getAttribute } from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -25,12 +25,13 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.ATTRIBUTE_FETCH_SUCCESS:
-      const fetchedTrees = getAttribute(action.payload.attributes.sort(), state.nodes);
+      const recvAttributes = changePropertiesData(action.payload.attributes);
+      const fetchedTrees = getAttribute(recvAttributes.sort(), state.nodes);
 
       return {
         ...state,
         isFetchingList: false,
-        attributes: action.payload.attributes,
+        attributes: recvAttributes,
         attribute: state.attribute || action.payload.attributes.filter(item => (item.groupId === 'null'))[0] || null,
         associations: fetchedTrees.association,
         nodes: fetchedTrees.subTree,
@@ -48,7 +49,7 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.ATTRIBUTE_CREATE_SUCCESS:
-      const { data } = action.payload;
+      const data = convertPropertyData(action.payload.data);
       const createdAttributes = [data, ...attributes];
       const updateSaveData = getAttribute(createdAttributes, state.nodes);
       return {
@@ -57,7 +58,7 @@ export default (state = INITIAL_STATE, action) => {
         attributes: JSON.parse(JSON.stringify(createdAttributes.slice(0))),
         nodes: updateSaveData.subTree,
         associations: updateSaveData.association,
-        attribute: action.payload.data,
+        attribute: data,
       };
     case types.ATTRIBUTE_CREATE_FAIL:
       return {
@@ -72,7 +73,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.ATTRIBUTE_UPDATE_SUCCESS:
-      const updateData = action.payload.data;
+      const updateData = convertPropertyData(action.payload.data);
       const attributesIdx = _findIndex(attributes, { id: updateData.id });
       if (attributesIdx > -1) {
         attributes.splice(attributesIdx, 1, updateData);
@@ -87,7 +88,7 @@ export default (state = INITIAL_STATE, action) => {
         attributes: JSON.parse(JSON.stringify(attributes.slice(0))),
         nodes: JSON.parse(JSON.stringify(recvTrees.subTree)),
         associations: JSON.parse(JSON.stringify(recvTrees.association)),
-        attribute: action.payload.data,
+        attribute: updateData,
       };
     case types.ATTRIBUTE_UPDATE_FAIL:
       return {
