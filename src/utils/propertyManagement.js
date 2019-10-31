@@ -316,6 +316,18 @@ export const setDefault = (properties, fields) => {
   };
 };
 
+export const makeUpdatedData = (properties, fields) => {
+  const result = {};
+  fields.forEach((item) => {
+    if (!result[item.section]) {
+      result[item.section] = {};
+      result[item.section][item.key] = properties[item.key];
+    } else {
+      result[item.section][item.key] = properties[item.key];
+    }
+  });
+  return result;
+};
 export const getFilterItem = (srcArray, searchkey) => {
   const filtered = [];
   srcArray.forEach((item) => {

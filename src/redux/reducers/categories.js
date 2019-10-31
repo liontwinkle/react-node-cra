@@ -28,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CATEGORIES_GET_SUCCESS:
       const tempDatas = action.payload.categories;
+      console.log('#### DEBUG GET PROPERTIES: ', tempDatas); // fixme
       if (Array.isArray(tempDatas)) {
         tempDatas.forEach((item, itemKey) => {
           const { properties } = item;
