@@ -37,7 +37,7 @@ const checkException = (keys, dataItem, type) => {
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
   const parentId = dataItem.parent_id || dataItem.parentid || 'null';
-  if (parentId !== '' && categories.findIndex(item => (item.categoryId === parentId)) === -1) {
+  if (parentId !== 'null' && categories.findIndex(item => (item.categoryId === parentId)) === -1) {
     if (newData.findIndex(newItem => (
       newItem.categoryid === parentId || newItem._id === parentId
     ) === -1)) {
@@ -78,7 +78,39 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   };
 };
 
+const checkPropertiesException = (value) => {
+  console.log('#### DEBUG VALUES: ', value);
+  console.log('#### DEBUG VALUES TYPE: ', typeof value);
+  if (Array.isArray(value) || typeof value !== 'object' || value === null) {
+    return value;
+  }
+  const result = JSON.parse(JSON.stringify(value));
+  const keys = Object.keys(value);
+  keys.forEach((keyItem) => {
+    if (!Array.isArray(value) && typeof result[keyItem] === 'object' && result[keyItem] !== null) {
+      delete result[keyItem];
+    }
+  });
+  console.log('#### DEBUG RESULT: ', result); // fixme
+  return result;
+};
+const getProperties = (source) => {
+  const data = JSON.parse(JSON.stringify(source));
+  const keys = Object.keys(source);
+  keys.forEach((keyItem) => {
+    const regex = /\w*id|Id|updated/g;
 
+    if (keyItem === 'name'
+      || keyItem === 'appear'
+      || keyItem === 'rules'
+      || regex.test(keyItem)) {
+      delete data[keyItem];
+    } else {
+      data[keyItem] = checkPropertiesException(data[keyItem]);
+    }
+  });
+  return data;
+};
 /** ** EXPORTS DEFINE **** */
 
 export const validateData = (type, data, categories, attributes) => {
@@ -92,14 +124,14 @@ export const validateData = (type, data, categories, attributes) => {
           let pushFlag = true;
           if (type === 'virtual') {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
+            console.log('##### DEBUG PUSH FLAG: ', pushFlag); // fixme
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
-              // fixme I guess the opts as the properties.
-              tempData.properties = dataItem.opts || dataItem.options || [];
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
                 ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
               tempData.name = dataItem.name || [];
               tempData.parentId = dataItem.parent_id || 'null';
+              tempData.properties = getProperties(dataItem, 'virtual');
             }
           } else if (type === 'attributes') {
             const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
@@ -111,6 +143,7 @@ export const validateData = (type, data, categories, attributes) => {
                 ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
               tempData.name = dataItem.name || [];
               tempData.groupId = dataItem.groupid || dataItem.group_id || 'null';
+              tempData.properties = getProperties(dataItem, 'attributes');
             }
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));
