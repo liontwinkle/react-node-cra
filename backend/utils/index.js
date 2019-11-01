@@ -98,6 +98,7 @@ function handleCreate(req) {
   return (entity) => {
     let newId = 1;
     if (entity.length > 0) {
+      createData.defaultProperties = entity[0].defaultProperties || [];
       entity.forEach((item) => {
         if (item.categoryId > newId) {
           newId = item.categoryId;

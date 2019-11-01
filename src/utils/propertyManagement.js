@@ -160,7 +160,8 @@ export const sectionRender = (
         if (state.properties[p.key] === undefined) {
           value = (p.default === 'true');
         } else {
-          value = state.properties[p.key];
+          value = (typeof state.properties[p.key] === 'string')
+            ? (state.properties[p.key] === 'true') : state.properties[p.key];
         }
         res.push(
           <CustomToggle
@@ -183,7 +184,7 @@ export const sectionRender = (
         );
       } else if (p.propertyType === 'array') {
         let value = '';
-        if (state.properties[p.key] === undefined) {
+        if (state.properties[p.key] === null) {
           value = p.default || '';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
@@ -294,8 +295,12 @@ export const setDefault = (properties, fields) => {
         tempProperties[item.key] = item.template;
       } else if (item.default) {
         tempProperties[item.key] = item.default;
-      } else {
+      } else if (item.propertyType === 'toggle') {
+        tempProperties[item.key] = false;
+      } else if (item.propertyType === 'array') {
         tempProperties[item.key] = null;
+      } else {
+        tempProperties[item.key] = '';
       }
     } else if (item.propertyType === 'array') {
       try {
@@ -316,6 +321,24 @@ export const setDefault = (properties, fields) => {
   };
 };
 
+export const makeUpdatedData = (properties, fields, sections) => {
+  let currentSection = JSON.parse(JSON.stringify(sections));
+  const result = {};
+  fields.forEach((item) => {
+    currentSection = currentSection.filter(sectionItem => (sectionItem.key !== item.section));
+    if (!result[item.section]) {
+      result[item.section] = {};
+      result[item.section][item.key] = properties[item.key];
+    } else {
+      result[item.section][item.key] = properties[item.key];
+    }
+  });
+  currentSection.forEach(((leftSectionItem) => {
+    result[leftSectionItem.key] = {};
+  }));
+
+  return result;
+};
 export const getFilterItem = (srcArray, searchkey) => {
   const filtered = [];
   srcArray.forEach((item) => {

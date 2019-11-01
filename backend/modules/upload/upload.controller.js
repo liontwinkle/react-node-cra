@@ -23,7 +23,8 @@ const removeUnnecessaryData = (data) => {
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
     if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
-      if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object') {
+      if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object' && keyItem !== 'properties') {
+        console.log('#### DEBUG DETAIL: ', data[keyItem]);
         const key = Object.keys(data[keyItem]);
         if (key.length > 0) {
           if (key[0].indexOf('$') > 0) {
@@ -57,6 +58,7 @@ const checkDuplicateData = (currentData, newData, type) => {
       newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
+
   return newCreateData;
 };
 exports.upload = (req, res) => {

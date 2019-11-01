@@ -1,6 +1,6 @@
 import _findIndex from 'lodash/findIndex';
 
-import { getCategoryTree } from 'utils';
+import { getCategoryTree, changePropertiesData, convertPropertyData } from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -27,7 +27,7 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.CATEGORIES_GET_SUCCESS:
-      const tempDatas = action.payload.categories;
+      const tempDatas = changePropertiesData(action.payload.categories);
       if (Array.isArray(tempDatas)) {
         tempDatas.forEach((item, itemKey) => {
           const { properties } = item;
@@ -41,7 +41,7 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      const fetchSaveData = getCategoryTree(action.payload.categories, []);
+      const fetchSaveData = getCategoryTree(action.payload.categories, state.trees || []);
       return {
         ...state,
         isFetchingList: false,
@@ -63,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
         isCreating: true,
       };
     case types.CATEGORY_CREATE_SUCCESS:
-      const { data } = action.payload;
+      const data = convertPropertyData(action.payload.data);
       if (data.properties) {
         const keys = Object.keys(data.properties);
         keys.forEach((key) => {
@@ -80,7 +80,7 @@ export default (state = INITIAL_STATE, action) => {
         categories: createdCategories.slice(0),
         trees: updateSaveData.subTree,
         associations: updateSaveData.association,
-        category: action.payload.data,
+        category: data,
       };
     case types.CATEGORY_CREATE_FAIL:
       return {
@@ -95,7 +95,7 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CATEGORY_UPDATE_SUCCESS:
-      const updateData = action.payload.data;
+      const updateData = convertPropertyData(action.payload.data);
       const { properties } = updateData;
       if (properties) {
         const keys = Object.keys(properties);
@@ -120,7 +120,7 @@ export default (state = INITIAL_STATE, action) => {
         categories: categories.slice(0),
         trees: newSaveData.subTree,
         associations: newSaveData.association,
-        category: action.payload.data,
+        category: updateData,
       };
     case types.CATEGORY_UPDATE_FAIL:
       return {

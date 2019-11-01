@@ -124,7 +124,7 @@ function EditSections({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        Edit Property Fields
+        Edit Sections
       </DialogTitle>
 
       <DialogContent className="mg-edit-properties-content">
