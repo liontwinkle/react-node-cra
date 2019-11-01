@@ -108,7 +108,6 @@ export const sectionRender = (
       || ((section === '') && (p.section === ''))) {
       if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
         const { value, templateFlag } = getStringTypeValue(p, state, fields);
-        console.log('### DEBUG TYPE: ', value, p.propertyType); // fixme
         res.push(
           <CustomInput
             label={p.label}
