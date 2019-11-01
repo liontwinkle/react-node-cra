@@ -28,6 +28,7 @@ function PropertyActions({
   createHistory,
   fields,
   sections,
+  uploadImage,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -183,6 +184,7 @@ function PropertyActions({
           handleClose={handleToggle('add')}
           createHistory={createHistory}
           objectItem={objectItem}
+          uploadImage={uploadImage}
           defaultOrder={getMaxValueFromArray('order', fields) + 1}
         />
       )}
@@ -212,8 +214,12 @@ PropertyActions.propTypes = {
   objectItem: PropTypes.object.isRequired,
   updateObject: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
+  uploadImage: PropTypes.any,
 };
 
+PropertyActions.defaultProps = {
+  uploadImage: null,
+};
 const mapStateToProps = store => ({
   isHistoryCreating: store.historyData.isCreating,
 });

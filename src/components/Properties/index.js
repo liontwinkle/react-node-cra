@@ -24,6 +24,7 @@ class Properties extends Component {
     selectKey: '',
     isOpenSelItemModal: false,
     isOpenSelItemEditModal: false,
+    uploadImage: null,
   };
 
   componentDidMount() {
@@ -125,6 +126,29 @@ class Properties extends Component {
     }));
   };
 
+  handleChangeImage = type => (data) => {
+    if (data.length > 0) {
+      const { file, fileType } = data[0];
+      if (fileType && fileType.indexOf('image/') === 0) {
+        if (file) {
+          const reader = new FileReader();
+          reader.addEventListener(
+            'load',
+            () => {
+              this.setState(prevState => ({
+                ...prevState.properties,
+                [type]: file,
+                uploadImage: reader.result,
+              }));
+            },
+            false,
+          );
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+  };
+
   renderSectionFields = (section) => {
     const { propertyFields } = this.props.propertyField;
     return sectionRender(
@@ -182,6 +206,7 @@ class Properties extends Component {
         <PropertyActions
           properties={properties}
           fields={propertyFields}
+          uploadImage={this.state.uploadImage}
           sections={sections}
           isObjectUpdating={this.props.isObjectUpdating}
           updateObject={this.props.updateObject}

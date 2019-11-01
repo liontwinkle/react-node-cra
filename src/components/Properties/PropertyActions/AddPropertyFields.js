@@ -16,7 +16,9 @@ import { checkTemplate, checkPathValidate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { updateDefaultOnAttriute } from 'redux/actions/attribute';
-import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
+import {
+  CustomInput, CustomSelectWithLabel, CustomSearchFilter, CustomImageUpload,
+} from 'components/elements';
 
 function AddPropertyFields({
   open,
@@ -40,9 +42,11 @@ function AddPropertyFields({
     template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
+    image: null,
     order: defaultOrder,
   });
 
+  const [imageData, setImageData] = useState(null);
   const handleChange = field => (e) => {
     const newClient = {
       ...propertyFieldData,
@@ -75,10 +79,35 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
+  const handleChangeImage = (data) => {
+    if (data.length > 0) {
+      const newFile = {
+        ...propertyFieldData,
+        image: data[0].file,
+      };
+      setPropertyFieldData(newFile);
+
+      if (data[0].fileType && data[0].fileType.indexOf('image/') === 0) {
+        if (data[0].file) {
+          const reader = new FileReader();
+          reader.addEventListener(
+            'load',
+            () => {
+              setImageData(reader.result);
+            },
+            false,
+          );
+          reader.readAsDataURL(data[0].file);
+        }
+      }
+    }
+  };
+
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
+      console.log('#### DEBUG UPLOAD IMAGE: ', imageData); // fixme
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
       const errList = checkTemplate(propertyFields, propertyFieldData);
       const validatePath = checkPathValidate(propertyFields, propertyFieldData);
@@ -183,6 +212,17 @@ function AddPropertyFields({
               onChange={handleChangeTemplate('template')}
             />
           )
+        }
+        {
+          propertyFieldData.propertyType.key === 'image'
+            && (
+              <CustomImageUpload
+                className="mb-3"
+                label="Image Upload"
+                value={propertyFieldData.image}
+                onChange={handleChangeImage}
+              />
+            )
         }
         <CustomInput
           className="mb-3"

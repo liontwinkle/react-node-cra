@@ -73,6 +73,7 @@ export const propertyFieldTypes = [
   { key: 'monaco', label: 'Monaco Edit' },
   { key: 'richtext', label: 'Rich Text Edit' },
   { key: 'urlpath', label: 'URL Path' },
+  { key: 'image', label: 'Upload Image' },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
