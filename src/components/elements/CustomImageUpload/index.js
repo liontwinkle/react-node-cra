@@ -9,7 +9,7 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css';
 import uuidv4 from 'uuid/v4';
 
-import './style.scss';
+// import './style.scss';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageEdit);
 
