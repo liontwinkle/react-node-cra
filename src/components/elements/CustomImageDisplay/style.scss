@@ -1,10 +1,10 @@
-.mg-upload-control {
+.mg-display-control {
   border-width: 0;
   font-weight: 500;
   letter-spacing: 0.2px;
   outline: none;
 
-  .mg-upload-label {
+  .mg-display-label {
     padding: 3px 2px 0;
     display: block;
     font-size: 14px;
@@ -21,14 +21,24 @@
     }
   }
 
-  .mg-upload-wrapper {
-    height: 32px;
+  .mg-display-wrapper {
+    height: 200px;
     display: flex;
     overflow: hidden;
     box-sizing: border-box;
     outline: none;
+    .mg-display-image {
+      width: fit-content;
+      background-color: black;
+      img{
+        width: 200px;
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+    }
 
-    .mg-input {
+    .mg-display {
       width: unset;
       height: 100%;
       padding: 0 12px;
@@ -48,7 +58,7 @@
     }
   }
 
-  .mg-upload-hint {
+  .mg-display-hint {
     margin-left: 3px;
     font-size: 12px;
     font-weight: 400;

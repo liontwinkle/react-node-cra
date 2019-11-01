@@ -15,6 +15,7 @@ import CustomMonaco from 'components/elements/CustomMonaco';
 
 import { propertyTypes } from './constants';
 import { sortByOrder } from './index';
+import CustomImageDisplay from '../components/elements/CustomImageDisplay';
 
 /** utils * */
 const createValuefromtemplate = (template, state, propertyFields) => {
@@ -234,6 +235,16 @@ export const sectionRender = (
                 key={p.key}
               />
             ),
+        );
+      } else if (p.propertyType === 'image') {
+        res.push(
+          <CustomImageDisplay
+            id={p.key}
+            label={p.label}
+            inline
+            key={p.key}
+            value={p.image ? p.image.imageData : null}
+          />,
         );
       }
     }

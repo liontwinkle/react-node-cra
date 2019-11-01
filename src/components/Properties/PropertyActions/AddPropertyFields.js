@@ -42,11 +42,13 @@ function AddPropertyFields({
     template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
-    image: null,
+    image: {
+      name: '',
+      imageData: null,
+    },
     order: defaultOrder,
   });
 
-  const [imageData, setImageData] = useState(null);
   const handleChange = field => (e) => {
     const newClient = {
       ...propertyFieldData,
@@ -81,23 +83,25 @@ function AddPropertyFields({
 
   const handleChangeImage = (data) => {
     if (data.length > 0) {
-      const newFile = {
-        ...propertyFieldData,
-        image: data[0].file,
-      };
-      setPropertyFieldData(newFile);
-
-      if (data[0].fileType && data[0].fileType.indexOf('image/') === 0) {
-        if (data[0].file) {
+      const { file, fileType } = data[0];
+      if (fileType && fileType.indexOf('image/') === 0) {
+        if (file) {
           const reader = new FileReader();
           reader.addEventListener(
             'load',
             () => {
-              setImageData(reader.result);
+              const newFile = {
+                ...propertyFieldData,
+                image: {
+                  name: file.name,
+                  imageData: reader.result,
+                },
+              };
+              setPropertyFieldData(newFile);
             },
             false,
           );
-          reader.readAsDataURL(data[0].file);
+          reader.readAsDataURL(file);
         }
       }
     }
@@ -107,7 +111,6 @@ function AddPropertyFields({
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      console.log('#### DEBUG UPLOAD IMAGE: ', imageData); // fixme
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
       const errList = checkTemplate(propertyFields, propertyFieldData);
       const validatePath = checkPathValidate(propertyFields, propertyFieldData);
@@ -219,7 +222,6 @@ function AddPropertyFields({
               <CustomImageUpload
                 className="mb-3"
                 label="Image Upload"
-                value={propertyFieldData.image}
                 onChange={handleChangeImage}
               />
             )
