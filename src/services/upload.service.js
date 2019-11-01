@@ -1,18 +1,11 @@
 import httpService from './http.service';
 
-const getUploadRoute = (clientId, type) => `/upload/${clientId}/types/${type}`;
-const getKeyUploadRoute = (clientId, type) => `/upload/key/${clientId}/types/${type}`;
+const getUploadRoute = (clientCode, clientId, type) => `/upload/${clientCode}/types/${type}/id/${clientId}`;
 
-const upload = (clientId, type, data) => httpService
-  .post(getUploadRoute(clientId, type), data)
-  .then(({ data }) => data)
-  .catch(err => Promise.reject(err.response));
-
-const keyUpload = (clientId, type, data) => httpService
-  .post(getKeyUploadRoute(clientId, type), data)
+const upload = (clientCode, clientId, type, data) => httpService
+  .post(getUploadRoute(clientCode, clientId, type), data)
   .then(({ data }) => data)
   .catch(err => Promise.reject(err.response));
 export default {
   upload,
-  keyUpload,
 };

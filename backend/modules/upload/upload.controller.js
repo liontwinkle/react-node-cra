@@ -9,6 +9,105 @@ const ProductsModel = require('../products/products.model');
 const AttributesModel = require('../attributes/attributes.model');
 const PropertyFieldsCollection = require('../property-fields/property-fields.model');
 
+/**
+ * Section to save the sections and fields
+ * By Igor
+ */
+
+const checkDuplicateSection = (currentSection, newSection) => {
+  const compareUpdateSection = [];
+  let maxOrder = 0;
+  currentSection.forEach((currentItem) => {
+    if (maxOrder < currentItem.order) {
+      maxOrder = currentItem.order;
+    }
+    compareUpdateSection.push({
+      label: currentItem.label,
+      key: currentItem.key,
+      order: currentItem.order,
+    });
+  });
+  maxOrder++;
+  newSection.forEach((newItem, index) => {
+    if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
+      compareUpdateSection.push({
+        label: newItem.label,
+        key: newItem.key,
+        order: (maxOrder + index),
+      });
+    }
+  });
+  return compareUpdateSection;
+};
+
+// const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
+//   const updatePropertyFields = [];
+//   currentPropertyFields.forEach((currentItem) => {
+//     updatePropertyFields.push({
+//       items: currentItem.items,
+//       key: currentItem.key,
+//       label: currentItem.label,
+//       default: currentItem.default,
+//       propertyType: currentItem.propertyType,
+//       section: currentItem.section,
+//     });
+//   });
+//
+//   newPropertyFields.forEach((newItem) => {
+//     if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
+//       updatePropertyFields.push({
+//         items: newItem.items,
+//         key: newItem.key,
+//         label: newItem.label,
+//         default: newItem.default,
+//         propertyType: newItem.propertyType,
+//         section: newItem.section,
+//       });
+//     }
+//   });
+//   return updatePropertyFields;
+// };
+const keyUpload = (clientId, type, data) => {
+  let UpdateSections = [];
+  // let UpdatePropertyFields = [];
+  PropertyFieldsCollection.find({
+    clientId,
+    type
+  }, (err, result) => {
+    if (!err) {
+      if (result) {
+        const { sections } = result[0];
+        UpdateSections = checkDuplicateSection(sections, data.sections);
+        console.log('##### DEBUG UPDATED SECTION: ', UpdateSections); // fixme
+        // const { propertyFields } = result[0];
+        // const newPropertyFields = data.propertyFields;
+        // UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
+        // PropertyFieldsCollection.deleteMany({
+        //   clientId: req.params.clientId,
+        //   type: req.params.type
+        // }, (err) => {
+        //   if (!err) {
+        //     PropertyFieldsCollection.insertMany({
+        //       clientId: req.params.clientId,
+        //       type: req.params.type,
+        //       sections: UpdateSections,
+        //       propertyFields: UpdatePropertyFields,
+        //     }, (err) => {
+        //       if (!err) {
+        //         res.status(201).json([]);
+        //       }
+        //     });
+        //   }
+        // });
+      }
+    }
+  });
+};
+
+/** Section to save the properties
+ *  By Igor
+ *  ** */
+
 const checkType = {
   virtual: 'categoryId',
   native: 'categoryId',
@@ -61,6 +160,73 @@ const checkDuplicateData = (currentData, newData, type) => {
 
   return newCreateData;
 };
+
+const getKeysfromNewData = (data) => {
+  const keys = Object.keys(data);
+  const sections = [];
+  keys.forEach((keyItem) => {
+    if (!Array.isArray(data[keyItem]) && data[keyItem] !== null && typeof data[keyItem] === 'object') {
+      sections.push({
+        key: keyItem,
+        label: keyItem.toUpperCase(),
+      });
+    }
+  });
+  return sections;
+};
+
+const converCommonProeprties = (key, value) => {
+  if (value === null || Array.isArray(value)) {
+    return {
+      key,
+      label: key.toUpperCase(),
+      propertyType: 'array'
+    };
+  } if (typeof value !== 'object') {
+    const regex = /(\/[a-z0-9\-_].*)/g;
+    if (regex.test(value)) {
+      return {
+        key,
+        label: key.toUpperCase(),
+        propertyType: 'urlpath'
+      };
+    }
+    return {
+      key,
+      label: key.toUpperCase(),
+      propertyType: 'string'
+    };
+  }
+};
+const getPropertiesfromNewData = (data) => {
+  const keys = Object.keys(data);
+  const properties = [];
+  keys.forEach((keyItem) => {
+    if (data[keyItem] !== null && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object') {
+      const subKeys = Object.keys(data[keyItem]);
+      subKeys.forEach((subKeyItem) => {
+        properties.push(converCommonProeprties(subKeyItem, data[keyItem][subKeyItem]));
+      });
+    } else {
+      properties.push(converCommonProeprties(keyItem, data[keyItem]));
+    }
+  });
+  return properties;
+};
+
+const getNewFieldData = (updateData) => {
+  let recvProperties = {};
+  updateData.forEach((dataItem) => {
+    const newProperties = dataItem.properties || {};
+    recvProperties = Object.assign({}, recvProperties, newProperties);
+  });
+  const sections = getKeysfromNewData(recvProperties);
+  const properties = getPropertiesfromNewData(recvProperties);
+  return {
+    sections,
+    propertyFields: properties,
+  };
+};
 exports.upload = (req, res) => {
   let collection = null;
   if (req.params.type === 'virtual' || req.params.type === 'native') {
@@ -80,7 +246,9 @@ exports.upload = (req, res) => {
           } else if (req.params.type === 'virtual') {
             setAppearForCategory(updateData, req.params.clientId);
           }
-          collection.insertMany(updateData);
+          const fieldData = getNewFieldData(updateData);
+          keyUpload(req.params.id, req.params.type, fieldData);
+          // collection.insertMany(updateData);
           res.status(201).json(updateData[0]);
         } catch (e) {
           handleError(res);
@@ -90,91 +258,6 @@ exports.upload = (req, res) => {
       }
     } else {
       handleError(res);
-    }
-  });
-};
-
-const checkDuplicateSection = (currentSection, newSection) => {
-  const compareUpdateSection = [];
-  currentSection.forEach((currentItem) => {
-    compareUpdateSection.push({
-      label: currentItem.label,
-      key: currentItem.key,
-      order: currentItem.order,
-    });
-  });
-  newSection.forEach((newItem) => {
-    if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
-      compareUpdateSection.push({
-        label: newItem.label,
-        key: newItem.key,
-        order: parseInt(newItem.order.$numberInt, 10) || newItem.order,
-      });
-    }
-  });
-  return compareUpdateSection;
-};
-
-const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
-  const updatePropertyFields = [];
-  currentPropertyFields.forEach((currentItem) => {
-    updatePropertyFields.push({
-      items: currentItem.items,
-      key: currentItem.key,
-      label: currentItem.label,
-      default: currentItem.default,
-      propertyType: currentItem.propertyType,
-      section: currentItem.section,
-    });
-  });
-
-  newPropertyFields.forEach((newItem) => {
-    if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
-      updatePropertyFields.push({
-        items: newItem.items,
-        key: newItem.key,
-        label: newItem.label,
-        default: newItem.default,
-        propertyType: newItem.propertyType,
-        section: newItem.section,
-      });
-    }
-  });
-  return updatePropertyFields;
-};
-
-exports.keyUpload = (req, res) => {
-  let UpdateSections = [];
-  let UpdatePropertyFields = [];
-  PropertyFieldsCollection.find({
-    clientId: req.params.clientId,
-    type: req.params.type
-  }, (err, result) => {
-    if (!err) {
-      if (result) {
-        const { sections } = result[0];
-        UpdateSections = checkDuplicateSection(sections, req.body[0].sections);
-        const { propertyFields } = result[0];
-        const newPropertyFields = req.body[0].propertyFields;
-        UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
-        PropertyFieldsCollection.deleteMany({
-          clientId: req.params.clientId,
-          type: req.params.type
-        }, (err) => {
-          if (!err) {
-            PropertyFieldsCollection.insertMany({
-              clientId: req.params.clientId,
-              type: req.params.type,
-              sections: UpdateSections,
-              propertyFields: UpdatePropertyFields,
-            }, (err) => {
-              if (!err) {
-                res.status(201).json([]);
-              }
-            });
-          }
-        });
-      }
     }
   });
 };

@@ -10,7 +10,7 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-import { fileUpload, keyUpload } from 'redux/actions/upload';
+import { fileUpload } from 'redux/actions/upload';
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
 function ClientImport({
   status,
   isUploading,
-  isKeyUploading,
   client,
   type,
   handleClose,
@@ -151,7 +150,7 @@ function ClientImport({
 
       <DialogContent>
         {
-          !uploadFlag && !isKeyUploading ? (
+          !uploadFlag ? (
             <Fragment>
               <UploadDlg
                 onChangeData={onChangeHandle('data')}
@@ -210,7 +209,6 @@ ClientImport.propTypes = {
   categories: PropTypes.array.isRequired,
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
-  isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
@@ -226,12 +224,10 @@ const mapStateToProps = store => ({
   categories: store.categoriesData.categories,
   attributes: store.attributesData.attributes,
   isUploading: store.uploadData.isUploading,
-  isKeyUploading: store.uploadData.isKeyUploading,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fileUpload,
-  keyUpload,
   fetchPropertyField,
   fetchCategories,
   fetchAttributes,
