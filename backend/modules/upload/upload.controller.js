@@ -40,36 +40,42 @@ const checkDuplicateSection = (currentSection, newSection) => {
   return compareUpdateSection;
 };
 
-// const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
-//   const updatePropertyFields = [];
-//   currentPropertyFields.forEach((currentItem) => {
-//     updatePropertyFields.push({
-//       items: currentItem.items,
-//       key: currentItem.key,
-//       label: currentItem.label,
-//       default: currentItem.default,
-//       propertyType: currentItem.propertyType,
-//       section: currentItem.section,
-//     });
-//   });
-//
-//   newPropertyFields.forEach((newItem) => {
-//     if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
-//       updatePropertyFields.push({
-//         items: newItem.items,
-//         key: newItem.key,
-//         label: newItem.label,
-//         default: newItem.default,
-//         propertyType: newItem.propertyType,
-//         section: newItem.section,
-//       });
-//     }
-//   });
-//   return updatePropertyFields;
-// };
+const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
+  const updatePropertyFields = [];
+  let maxOrder = 0;
+  currentPropertyFields.forEach((currentItem) => {
+    if (maxOrder < currentItem.order) {
+      maxOrder = currentItem.order;
+    }
+    updatePropertyFields.push({
+      items: currentItem.items,
+      key: currentItem.key,
+      label: currentItem.label,
+      default: currentItem.default,
+      template: currentItem.template,
+      propertyType: currentItem.propertyType,
+      section: currentItem.section,
+      order: currentItem.order,
+    });
+  });
+  maxOrder++;
+  newPropertyFields.forEach((newItem, index) => {
+    if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
+      updatePropertyFields.push({
+        items: newItem.items,
+        key: newItem.key,
+        label: newItem.label,
+        propertyType: newItem.propertyType,
+        section: newItem.section,
+        order: (maxOrder + index)
+      });
+    }
+  });
+  return updatePropertyFields;
+};
 const keyUpload = (clientId, type, data) => {
-  let UpdateSections = [];
-  // let UpdatePropertyFields = [];
+  let updateSections = [];
+  let updatePropertyFields = [];
   PropertyFieldsCollection.find({
     clientId,
     type
@@ -77,28 +83,20 @@ const keyUpload = (clientId, type, data) => {
     if (!err) {
       if (result) {
         const { sections } = result[0];
-        UpdateSections = checkDuplicateSection(sections, data.sections);
-        console.log('##### DEBUG UPDATED SECTION: ', UpdateSections); // fixme
-        // const { propertyFields } = result[0];
-        // const newPropertyFields = data.propertyFields;
-        // UpdatePropertyFields = checkDuplicateProperties(propertyFields, newPropertyFields);
-        // PropertyFieldsCollection.deleteMany({
-        //   clientId: req.params.clientId,
-        //   type: req.params.type
-        // }, (err) => {
-        //   if (!err) {
-        //     PropertyFieldsCollection.insertMany({
-        //       clientId: req.params.clientId,
-        //       type: req.params.type,
-        //       sections: UpdateSections,
-        //       propertyFields: UpdatePropertyFields,
-        //     }, (err) => {
-        //       if (!err) {
-        //         res.status(201).json([]);
-        //       }
-        //     });
-        //   }
-        // });
+        updateSections = checkDuplicateSection(sections, data.sections);
+        const { propertyFields } = result[0];
+        updatePropertyFields = checkDuplicateProperties(propertyFields, data.propertyFields);
+        PropertyFieldsCollection.updateMany({ clientId, type },
+          {
+            $set: {
+              propertyFields: updatePropertyFields,
+              sections: updateSections
+            }
+          }, (err) => {
+            if (err) {
+              console.log('### DEBUG ERROR: ', err);
+            }
+          });
       }
     }
   });
@@ -123,7 +121,6 @@ const removeUnnecessaryData = (data) => {
   keys.forEach((keyItem) => {
     if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
       if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object' && keyItem !== 'properties') {
-        console.log('#### DEBUG DETAIL: ', data[keyItem]);
         const key = Object.keys(data[keyItem]);
         if (key.length > 0) {
           if (key[0].indexOf('$') > 0) {
@@ -175,28 +172,24 @@ const getKeysfromNewData = (data) => {
   return sections;
 };
 
-const converCommonProeprties = (key, value) => {
+const convertCommonProeprties = (section, key, value) => {
+  let propertyType = 'string';
   if (value === null || Array.isArray(value)) {
-    return {
-      key,
-      label: key.toUpperCase(),
-      propertyType: 'array'
-    };
-  } if (typeof value !== 'object') {
+    propertyType = 'array';
+  } else if (typeof value !== 'object') {
     const regex = /(\/[a-z0-9\-_].*)/g;
-    if (regex.test(value)) {
-      return {
-        key,
-        label: key.toUpperCase(),
-        propertyType: 'urlpath'
-      };
+    if (typeof value === 'boolean') {
+      propertyType = 'toggle';
+    } else if (regex.test(value)) {
+      propertyType = 'urlpath';
     }
-    return {
-      key,
-      label: key.toUpperCase(),
-      propertyType: 'string'
-    };
   }
+  return {
+    key,
+    section,
+    label: key.toUpperCase(),
+    propertyType,
+  };
 };
 const getPropertiesfromNewData = (data) => {
   const keys = Object.keys(data);
@@ -205,10 +198,10 @@ const getPropertiesfromNewData = (data) => {
     if (data[keyItem] !== null && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object') {
       const subKeys = Object.keys(data[keyItem]);
       subKeys.forEach((subKeyItem) => {
-        properties.push(converCommonProeprties(subKeyItem, data[keyItem][subKeyItem]));
+        properties.push(convertCommonProeprties(keyItem, subKeyItem, data[keyItem][subKeyItem]));
       });
     } else {
-      properties.push(converCommonProeprties(keyItem, data[keyItem]));
+      properties.push(convertCommonProeprties(null, keyItem, data[keyItem]));
     }
   });
   return properties;
@@ -248,8 +241,9 @@ exports.upload = (req, res) => {
           }
           const fieldData = getNewFieldData(updateData);
           keyUpload(req.params.id, req.params.type, fieldData);
-          // collection.insertMany(updateData);
-          res.status(201).json(updateData[0]);
+          collection.insertMany(updateData).then(() => {
+            res.status(201).json(updateData[0]);
+          });
         } catch (e) {
           handleError(res);
         }

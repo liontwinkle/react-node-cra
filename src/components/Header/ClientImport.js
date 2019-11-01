@@ -42,6 +42,7 @@ function ClientImport({
   fetchCategories,
   fetchAttributes,
   fetchProducts,
+  fetchPropertyField,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -52,10 +53,24 @@ function ClientImport({
 
   const fetchData = () => {
     if (type.key === 'virtual' || type.key === 'native') {
-      fetchCategories(client.id, type.key)
-        .then(() => { fetchAttributes(client.id, 'attributes').then(() => { setUploadFlag(false); }); });
+      fetchPropertyField(client.id, type.key)
+        .then(() => {
+          fetchCategories(client.id, type.key)
+            .then(() => {
+              fetchAttributes(client.id, 'attributes')
+                .then(() => {
+                  setUploadFlag(false);
+                });
+            });
+        });
     } else if (type.key === 'attributes') {
-      fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+      fetchPropertyField(client.id, type.key)
+        .then(() => {
+          fetchAttributes(client.id, type.key)
+            .then(() => {
+              setUploadFlag(false);
+            });
+        });
     } else {
       fetchProducts().then(() => { setUploadFlag(false); });
     }
@@ -213,6 +228,7 @@ ClientImport.propTypes = {
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
