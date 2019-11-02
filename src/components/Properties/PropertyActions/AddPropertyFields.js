@@ -49,6 +49,7 @@ function AddPropertyFields({
     order: defaultOrder,
   });
 
+  const [imageFile, setImageFile] = useState(null);
   const handleChange = field => (e) => {
     const newClient = {
       ...propertyFieldData,
@@ -84,6 +85,7 @@ function AddPropertyFields({
   const handleChangeImage = (data) => {
     if (data.length > 0) {
       const { file, fileType } = data[0];
+      setImageFile(data);
       if (fileType && fileType.indexOf('image/') === 0) {
         if (file) {
           const reader = new FileReader();
@@ -222,6 +224,7 @@ function AddPropertyFields({
               <CustomImageUpload
                 className="mb-3"
                 label="Image Upload"
+                value={imageFile}
                 onChange={handleChangeImage}
               />
             )

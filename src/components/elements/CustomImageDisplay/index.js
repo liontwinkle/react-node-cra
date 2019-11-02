@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
+import EditIcon from '@material-ui/icons/Edit';
+import { IconButton } from 'components/elements';
 
 import './style.scss';
 
 
-const CustomImageDisplay = ({
+function CustomImageDisplay({
   id,
   className,
   label,
@@ -14,35 +16,45 @@ const CustomImageDisplay = ({
   inlineWidth,
   hint,
   value,
-}) => (
-  <div className={`mg-display-control ${className}`}>
-    {label && !inline && (
-      <label htmlFor={id} className="mg-display-label">
-        {label}
-      </label>
-    )}
+}) {
+  const [editState, setEditState] = useState(false);
+  const handleEditImage = () => {
+    setEditState(!editState);
+  };
 
-    <div className="mg-display-wrapper">
-      {label && inline && (
-        <label
-          htmlFor={id}
-          className={`mg-display-label inline ${labelAlignment}`}
-          style={{ minWidth: inlineWidth }}
-        >
+  return (
+    <div className={`mg-display-control ${className}`}>
+      {label && !inline && (
+        <label htmlFor={id} className="mg-display-label">
           {label}
         </label>
       )}
 
-      <div className="mg-display-image">
-        <img src={value} alt="User" />
-      </div>
-    </div>
+      <div className="mg-display-wrapper">
+        {label && inline && (
+          <label
+            htmlFor={id}
+            className={`mg-display-label inline ${labelAlignment}`}
+            style={{ minWidth: inlineWidth }}
+          >
+            {label}
+          </label>
+        )}
 
-    {hint && (
-      <div className="mg-input-hint">{hint}</div>
-    )}
-  </div>
-);
+        <div className="mg-display-image">
+          <img src={value} alt="User" />
+          <IconButton className="mg-display-image-edit">
+            <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
+          </IconButton>
+        </div>
+      </div>
+
+      {hint && (
+        <div className="mg-input-hint">{hint}</div>
+      )}
+    </div>
+  );
+}
 
 CustomImageDisplay.propTypes = {
   id: PropTypes.oneOfType([

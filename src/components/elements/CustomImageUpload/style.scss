@@ -3,8 +3,10 @@
   font-weight: 500;
   letter-spacing: 0.2px;
   outline: none;
+  display: flex;
+  justify-content: space-between;
 
-  .mg-upload-label {
+.mg-upload-label {
     padding: 3px 2px 0;
     display: block;
     font-size: 14px;
@@ -22,15 +24,21 @@
   }
 
   .mg-upload-wrapper {
-    height: 32px;
-    width: 100%;
     display: flex;
-    overflow: hidden;
+    width: 60%;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+
     box-sizing: border-box;
     outline: none;
 
+    .mg-input-control {
+      width: 100%;
+    }
     .mg-input {
-      width: unset;
+      margin-bottom: 10px;
+      width: 60%;
       height: 100%;
       padding: 0 12px;
       flex: 1;
@@ -46,6 +54,10 @@
       &:focus {
         border-color: #1CA1C1;
       }
+    }
+    .filepond--wrapper {
+      width: 100%;
+      margin-top: 10px;
     }
   }
 
