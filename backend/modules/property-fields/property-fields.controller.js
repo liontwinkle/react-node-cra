@@ -4,7 +4,7 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
+  savePropertiesUpdates,
   respondWith,
 } = require('../../utils');
 
@@ -49,7 +49,7 @@ exports.update = (req, res) => {
   PropertyFields
     .findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(savePropertiesUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

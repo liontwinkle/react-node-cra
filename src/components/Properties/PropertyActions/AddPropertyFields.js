@@ -44,12 +44,14 @@ function AddPropertyFields({
     section: null,
     image: {
       name: '',
+      path: '',
       imageData: null,
     },
     order: defaultOrder,
   });
 
   const [imageFile, setImageFile] = useState(null);
+  const [imageName, setImageName] = useState('');
   const handleChange = field => (e) => {
     const newClient = {
       ...propertyFieldData,
@@ -82,6 +84,19 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
+  const handleChangeFileName = (e) => {
+    setImageName(e.target.value);
+    const newFile = {
+      ...propertyFieldData,
+      image: {
+        path: propertyFieldData.image.name,
+        imageData: propertyFieldData.image.imageData,
+        name: e.target.value,
+      },
+    };
+    setPropertyFieldData(newFile);
+  };
+
   const handleChangeImage = (data) => {
     if (data.length > 0) {
       const { file, fileType } = data[0];
@@ -95,7 +110,8 @@ function AddPropertyFields({
               const newFile = {
                 ...propertyFieldData,
                 image: {
-                  name: file.name,
+                  name: propertyFieldData.image.name,
+                  path: file.name,
                   imageData: reader.result,
                 },
               };
@@ -122,6 +138,7 @@ function AddPropertyFields({
           propertyType: propertyFieldData.propertyType.key,
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
+        console.log('##### DEBUG FIELD DATA: ', propertyFields); // fixme
         const updateDefaultFunc = (objectItem.parentId !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
@@ -225,6 +242,8 @@ function AddPropertyFields({
                 className="mb-3"
                 label="Image Upload"
                 value={imageFile}
+                name={imageName}
+                onFileNameChange={handleChangeFileName}
                 onChange={handleChangeImage}
               />
             )

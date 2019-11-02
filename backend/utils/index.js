@@ -2,6 +2,8 @@
 const db = require('mongoose').connection;
 const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
+const fs = require('fs');
+
 const AppearCollection = require('../modules/appear/appear.model');
 
 function insertAppear(collection, attributeId, appear) {
@@ -202,10 +204,43 @@ function handleAttributeFetch(req, res) {
   };
 }
 
+function uploadImageProperties(data, clientId, type) {
+  console.log('##### DATA: ', data); // fixme
+  const fields = [];
+  data.forEach((item) => {
+    if (!item.image.imageData) {
+      fields.push((item));
+    } else {
+      const dir = `./images/${clientId}/${type}`;
+      const fileName = item.image.path;
+      const fileData = item.image.imageData;
+
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+      fs.writeFile(`${dir}/${fileName}`, fileData, (err) => {
+        if (err) {
+          return console.log(err);
+        }
+      });
+    }
+  });
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
       _.assign(entity, updates);
+    }
+    return entity.saveAsync();
+  };
+}
+
+function savePropertiesUpdates(updates) {
+  return (entity) => {
+    if (updates) {
+      const data = uploadImageProperties(updates, entity.clientId, entity.type);
+      _.assign(entity, data);
     }
     return entity.saveAsync();
   };
@@ -412,6 +447,7 @@ module.exports = {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  savePropertiesUpdates,
   handleCreate,
   handleAttributeCreate,
   handleAttributeFetch,

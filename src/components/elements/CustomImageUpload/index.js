@@ -23,7 +23,9 @@ const CustomImageUpload = ({
   inlineWidth,
   hint,
   value,
+  name,
   onChange,
+  onFileNameChange,
   getWrapper,
 }) => (
   <div className={`mg-upload-control ${className}`}>
@@ -43,7 +45,7 @@ const CustomImageUpload = ({
           {label}
         </label>
       )}
-      <CustomInput onChange={() => {}} />
+      <CustomInput onChange={onFileNameChange} value={name} />
       <FilePond
         ref={getWrapper}
         files={value}
@@ -69,13 +71,16 @@ CustomImageUpload.propTypes = {
   inlineWidth: PropTypes.number,
   hint: PropTypes.string,
   value: PropTypes.any,
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  onFileNameChange: PropTypes.func.isRequired,
   getWrapper: PropTypes.func,
 };
 
 CustomImageUpload.defaultProps = {
   id: uuidv4(),
   className: '',
+  name: 'image',
   label: '',
   labelAlignment: '',
   inline: false,
