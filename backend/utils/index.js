@@ -2,6 +2,7 @@
 const db = require('mongoose').connection;
 const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
+// const base64ToImage = require('base64-to-image');
 const fs = require('fs');
 
 const AppearCollection = require('../modules/appear/appear.model');
@@ -205,38 +206,33 @@ function handleAttributeFetch(req, res) {
 }
 
 function uploadImageProperties(data, clientId, type) {
-  console.log('##### DATA: ', data); // fixme
   if (data.propertyFields) {
     data.propertyFields.forEach((item, index) => {
       if (item.image && item.image.imageData) {
-        const dir = `images/${clientId}/${type}`;
+        const dir = `/images/${clientId}/${type}`;
         const fileName = item.image.path;
-        const fileData = item.image.imageData;
+        // const fileType = item.image.type.split('/')[1];
+        // const optionalObj = { fileName, type: fileType };
 
-        if (!fs.existsSync('./images')) {
-          fs.mkdirSync('./images');
+        if (!fs.existsSync('../public/images')) {
+          fs.mkdirSync('../public/images');
         }
-        if (!fs.existsSync(`./images/${clientId}`)) {
-          fs.mkdirSync(`./images/${clientId}`);
+        if (!fs.existsSync(`../public/images/${clientId}`)) {
+          fs.mkdirSync(`../public/images/${clientId}`);
         }
-        if (!fs.existsSync(`./images/${clientId}/${type}`)) {
-          fs.mkdirSync(`./images/${clientId}/${type}`);
+        if (!fs.existsSync(`../public/images/${clientId}/${type}`)) {
+          fs.mkdirSync(`../public/images/${clientId}/${type}`);
         }
-        fs.writeFile(`./${dir}/${fileName}`, fileData, (err) => {
-          if (err) {
-            return console.log(err);
-          }
-        });
+        // base64ToImage(item.image.imageData, `../public/${dir}/`, optionalObj);
         const updatedData = item;
         const image = item.image;
         delete image.imageData;
-        image.path = `${process.env.BASE_URL}/${dir}/${fileName}`;
+        image.path = `${dir}/${fileName}`;
         updatedData.image = image;
         data.propertyFields[index] = updatedData;
       }
     });
   }
-  console.log('##### RESULT DATA: ', data); // fixme
   return data;
 }
 
