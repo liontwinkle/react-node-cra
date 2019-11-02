@@ -45,6 +45,7 @@ function AddPropertyFields({
     image: {
       name: '',
       path: '',
+      type: '',
       imageData: null,
     },
     order: defaultOrder,
@@ -91,6 +92,7 @@ function AddPropertyFields({
       image: {
         path: propertyFieldData.image.name,
         imageData: propertyFieldData.image.imageData,
+        type: propertyFieldData.image.type,
         name: e.target.value,
       },
     };
@@ -112,6 +114,7 @@ function AddPropertyFields({
                 image: {
                   name: propertyFieldData.image.name,
                   path: file.name,
+                  type: fileType,
                   imageData: reader.result,
                 },
               };

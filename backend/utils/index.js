@@ -206,25 +206,38 @@ function handleAttributeFetch(req, res) {
 
 function uploadImageProperties(data, clientId, type) {
   console.log('##### DATA: ', data); // fixme
-  const fields = [];
-  data.forEach((item) => {
-    if (!item.image.imageData) {
-      fields.push((item));
-    } else {
-      const dir = `./images/${clientId}/${type}`;
-      const fileName = item.image.path;
-      const fileData = item.image.imageData;
+  if (data.propertyFields) {
+    data.propertyFields.forEach((item, index) => {
+      if (item.image && item.image.imageData) {
+        const dir = `images/${clientId}/${type}`;
+        const fileName = item.image.path;
+        const fileData = item.image.imageData;
 
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
-      fs.writeFile(`${dir}/${fileName}`, fileData, (err) => {
-        if (err) {
-          return console.log(err);
+        if (!fs.existsSync('./images')) {
+          fs.mkdirSync('./images');
         }
-      });
-    }
-  });
+        if (!fs.existsSync(`./images/${clientId}`)) {
+          fs.mkdirSync(`./images/${clientId}`);
+        }
+        if (!fs.existsSync(`./images/${clientId}/${type}`)) {
+          fs.mkdirSync(`./images/${clientId}/${type}`);
+        }
+        fs.writeFile(`./${dir}/${fileName}`, fileData, (err) => {
+          if (err) {
+            return console.log(err);
+          }
+        });
+        const updatedData = item;
+        const image = item.image;
+        delete image.imageData;
+        image.path = `${process.env.BASE_URL}/${dir}/${fileName}`;
+        updatedData.image = image;
+        data.propertyFields[index] = updatedData;
+      }
+    });
+  }
+  console.log('##### RESULT DATA: ', data); // fixme
+  return data;
 }
 
 function saveUpdates(updates) {

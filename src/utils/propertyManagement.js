@@ -243,7 +243,7 @@ export const sectionRender = (
             label={p.label}
             inline
             key={p.key}
-            value={p.image ? p.image.imageData : null}
+            value={p.image ? p.image.path : null}
           />,
         );
       }

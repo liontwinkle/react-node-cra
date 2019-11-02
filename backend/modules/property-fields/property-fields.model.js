@@ -24,7 +24,6 @@ const PropertyFieldsSchema = new Schema({
     image: {
       name: String,
       path: String,
-      imageData: String,
     },
     order: Number,
   }],
