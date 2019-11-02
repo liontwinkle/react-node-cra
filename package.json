@@ -58,7 +58,7 @@
     "lint-staged": "^8.2.1"
   },
   "lint-staged": {
-    "backend/**/*.{js,jsx,ts,tsx,json}": [
+    "backend/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "git add"
     ],

@@ -2,8 +2,8 @@
 const db = require('mongoose').connection;
 const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
-// const base64ToImage = require('base64-to-image');
 const fs = require('fs');
+const base64ToImage = require('base64-to-image');
 
 const AppearCollection = require('../modules/appear/appear.model');
 
@@ -211,8 +211,8 @@ function uploadImageProperties(data, clientId, type) {
       if (item.image && item.image.imageData) {
         const dir = `/images/${clientId}/${type}`;
         const fileName = item.image.path;
-        // const fileType = item.image.type.split('/')[1];
-        // const optionalObj = { fileName, type: fileType };
+        const fileType = item.image.type.split('/')[1];
+        const optionalObj = { fileName, type: fileType };
 
         if (!fs.existsSync('../public/images')) {
           fs.mkdirSync('../public/images');
@@ -223,7 +223,7 @@ function uploadImageProperties(data, clientId, type) {
         if (!fs.existsSync(`../public/images/${clientId}/${type}`)) {
           fs.mkdirSync(`../public/images/${clientId}/${type}`);
         }
-        // base64ToImage(item.image.imageData, `../public/${dir}/`, optionalObj);
+        base64ToImage(item.image.imageData, `../public/${dir}/`, optionalObj);
         const updatedData = item;
         const image = item.image;
         delete image.imageData;
