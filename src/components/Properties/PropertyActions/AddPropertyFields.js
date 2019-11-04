@@ -86,7 +86,6 @@ function AddPropertyFields({
   };
 
   const handleChangeFileName = (e) => {
-    console.log('##### DEBUG IMAGE: ', imageName); // fixme
     e.persist();
     setImageName(e.target.value);
   };
