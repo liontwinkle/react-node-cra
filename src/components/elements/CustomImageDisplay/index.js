@@ -16,6 +16,7 @@ function CustomImageDisplay({
   inlineWidth,
   hint,
   value,
+  name,
 }) {
   const [editState, setEditState] = useState(false);
   const handleEditImage = () => {
@@ -47,8 +48,10 @@ function CustomImageDisplay({
             <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
           </IconButton>
         </div>
+        <div className="mg-display-name">
+          <span>{name}</span>
+        </div>
       </div>
-
       {hint && (
         <div className="mg-input-hint">{hint}</div>
       )}
@@ -68,6 +71,7 @@ CustomImageDisplay.propTypes = {
   inlineWidth: PropTypes.number,
   hint: PropTypes.string,
   value: PropTypes.any,
+  name: PropTypes.string,
 };
 
 CustomImageDisplay.defaultProps = {
@@ -79,6 +83,7 @@ CustomImageDisplay.defaultProps = {
   inlineWidth: 150,
   hint: '',
   value: '',
+  name: '',
 };
 
 export default CustomImageDisplay;

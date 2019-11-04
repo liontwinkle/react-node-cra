@@ -211,6 +211,7 @@ function uploadImageProperties(data, clientId, type) {
       if (item.image && item.image.imageData) {
         const dir = `/images/${clientId}/${type}`;
         const fileName = item.image.path;
+        console.log('##### NAME: ', fileName); // fixme
         const fileType = item.image.type.split('/')[1];
         const optionalObj = { fileName, type: fileType };
 
@@ -236,6 +237,24 @@ function uploadImageProperties(data, clientId, type) {
   return data;
 }
 
+function removeImageUploaded(originData, newData) {
+  let diffData = null;
+  for (let index = 0; index < originData.length; index++) {
+    if (newData.findIndex(newItem => (newItem.key === originData[index].key)) < 0) {
+      diffData = originData[index];
+      break;
+    }
+  }
+  if (diffData && diffData.image) {
+    const imageUrl = `../public/${diffData.image.path}`;
+    try {
+      fs.unlinkSync(imageUrl);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
@@ -248,6 +267,8 @@ function saveUpdates(updates) {
 function savePropertiesUpdates(updates) {
   return (entity) => {
     if (updates) {
+      const originData = JSON.parse(JSON.stringify(entity));
+      removeImageUploaded(originData.propertyFields, updates.propertyFields);
       const data = uploadImageProperties(updates, entity.clientId, entity.type);
       _.assign(entity, data);
     }

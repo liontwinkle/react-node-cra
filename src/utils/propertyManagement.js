@@ -244,6 +244,7 @@ export const sectionRender = (
             inline
             key={p.key}
             value={p.image ? p.image.path : null}
+            name={p.image ? p.image.name : null}
           />,
         );
       }

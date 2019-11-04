@@ -45,22 +45,21 @@
         border: none;
         display: none;
         background-color: #fff;
+        box-shadow: 0 8px 12px rgba(0,0,0,0.25);
       }
       &:hover {
         .mg-display-image-edit {
           display: flex;
           color: #000 !important;
-          &:hover {
-            width: 50px;
-            height: 50px;
-            border: none;
-            background-color: #000;
-            color: #fff !important;
-          }
+        }
+        img {
+          opacity: 0.6;
         }
       }
     }
-
+    .mg-display-name {
+      font-size: 16px;
+    }
     .mg-display {
       width: unset;
       height: 100%;

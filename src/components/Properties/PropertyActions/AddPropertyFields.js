@@ -86,20 +86,13 @@ function AddPropertyFields({
   };
 
   const handleChangeFileName = (e) => {
+    console.log('##### DEBUG IMAGE: ', imageName); // fixme
+    e.persist();
     setImageName(e.target.value);
-    const newFile = {
-      ...propertyFieldData,
-      image: {
-        path: propertyFieldData.image.name,
-        imageData: propertyFieldData.image.imageData,
-        type: propertyFieldData.image.type,
-        name: e.target.value,
-      },
-    };
-    setPropertyFieldData(newFile);
   };
 
   const handleChangeImage = (data) => {
+    console.log('##### DEBUG IMAGE: ', imageName); // fixme
     if (data.length > 0) {
       const { file, fileType } = data[0];
       setImageFile(data);
@@ -112,7 +105,7 @@ function AddPropertyFields({
               const newFile = {
                 ...propertyFieldData,
                 image: {
-                  name: propertyFieldData.image.name,
+                  name: imageName,
                   path: file.name,
                   type: fileType,
                   imageData: reader.result,
@@ -141,7 +134,6 @@ function AddPropertyFields({
           propertyType: propertyFieldData.propertyType.key,
           section: propertyFieldData.section && propertyFieldData.section.key,
         });
-        console.log('##### DEBUG FIELD DATA: ', propertyFields); // fixme
         const updateDefaultFunc = (objectItem.parentId !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
         if (!isEqual(propertyField.propertyFields, propertyFields)) {

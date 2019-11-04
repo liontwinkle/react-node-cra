@@ -71,7 +71,7 @@ CustomImageUpload.propTypes = {
   inlineWidth: PropTypes.number,
   hint: PropTypes.string,
   value: PropTypes.any,
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onFileNameChange: PropTypes.func.isRequired,
   getWrapper: PropTypes.func,
@@ -80,7 +80,6 @@ CustomImageUpload.propTypes = {
 CustomImageUpload.defaultProps = {
   id: uuidv4(),
   className: '',
-  name: 'image',
   label: '',
   labelAlignment: '',
   inline: false,
