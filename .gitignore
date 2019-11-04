@@ -27,3 +27,6 @@ yarn-error.log*
 # dev tools
 .idea
 .vscode
+
+#images
+/public/images
