@@ -45,7 +45,7 @@ const CustomImageUpload = ({
           {label}
         </label>
       )}
-      <CustomInput onChange={onFileNameChange} value={name} />
+      <CustomInput className="mb-3" onChange={onFileNameChange} value={name} />
       <FilePond
         ref={getWrapper}
         files={value}

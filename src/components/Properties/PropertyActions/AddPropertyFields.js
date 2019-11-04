@@ -91,7 +91,6 @@ function AddPropertyFields({
   };
 
   const handleChangeImage = (data) => {
-    console.log('##### DEBUG IMAGE: ', imageName); // fixme
     if (data.length > 0) {
       const { file, fileType } = data[0];
       setImageFile(data);
@@ -123,15 +122,17 @@ function AddPropertyFields({
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
+    const savedPropertyFieldData = JSON.parse(JSON.stringify(propertyFieldData));
+    savedPropertyFieldData.image.name = imageName;
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
-      const errList = checkTemplate(propertyFields, propertyFieldData);
-      const validatePath = checkPathValidate(propertyFields, propertyFieldData);
-      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '' && validatePath) {
+      const errList = checkTemplate(propertyFields, savedPropertyFieldData);
+      const validatePath = checkPathValidate(propertyFields, savedPropertyFieldData);
+      if (isExist(propertyFields, savedPropertyFieldData.key) === 0 && errList === '' && validatePath) {
         propertyFields.push({
-          ...propertyFieldData,
-          propertyType: propertyFieldData.propertyType.key,
-          section: propertyFieldData.section && propertyFieldData.section.key,
+          ...savedPropertyFieldData,
+          propertyType: savedPropertyFieldData.propertyType.key,
+          section: savedPropertyFieldData.section && savedPropertyFieldData.section.key,
         });
         const updateDefaultFunc = (objectItem.parentId !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
@@ -141,8 +142,8 @@ function AddPropertyFields({
               updateDefaultFunc(propertyFields)
                 .then(() => {
                   addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
-                    `Create Property(${propertyFieldData.propertyType.key})`,
-                    `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
+                    `Create Property(${savedPropertyFieldData.propertyType.key})`,
+                    `Create Property(${savedPropertyFieldData.propertyType.key}) by ${objectItem.name}`,
                     'virtual');
                   confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
                   handleClose();
@@ -162,7 +163,7 @@ function AddPropertyFields({
         if (errList !== '') {
           errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
         } else if (validatePath) {
-          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.`;
+          errMsg = `Error: Another property is using the key (${savedPropertyFieldData.key}) you specified.`;
         } else {
           errMsg = 'URL Path is not valid.';
         }
