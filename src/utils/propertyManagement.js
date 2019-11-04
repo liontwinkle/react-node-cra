@@ -98,7 +98,7 @@ export const updateProperties = (propertyFields, properties) => {
 export const sectionRender = (
   propertyFields, state, section,
   changeInput, changeSelect, changeArrayInput,
-  handleSelItemToggle, toggleSwitch, changeMonaco,
+  handleSelItemToggle, handleEditImage, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
   let fields = propertyFields;
@@ -245,6 +245,7 @@ export const sectionRender = (
             key={p.key}
             value={p.image ? p.image.path : null}
             name={p.image ? p.image.name : null}
+            handleEditImage={() => handleEditImage(p.key, state.properties[p.key])}
           />,
         );
       }

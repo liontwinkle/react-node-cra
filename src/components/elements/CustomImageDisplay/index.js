@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 import EditIcon from '@material-ui/icons/Edit';
@@ -17,12 +17,8 @@ function CustomImageDisplay({
   hint,
   value,
   name,
+  handleEditImage,
 }) {
-  const [editState, setEditState] = useState(false);
-  const handleEditImage = () => {
-    setEditState(!editState);
-  };
-
   return (
     <div className={`mg-display-control ${className}`}>
       {label && !inline && (
@@ -44,12 +40,14 @@ function CustomImageDisplay({
 
         <div className="mg-display-image">
           <img src={value} alt="User" />
-          <IconButton className="mg-display-image-edit">
-            <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
-          </IconButton>
-        </div>
-        <div className="mg-display-name">
-          <span>{name}</span>
+          <div className="mg-display-tooltip-section">
+            <IconButton className="mg-display-image-edit">
+              <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
+            </IconButton>
+            <div className="mg-display-name">
+              <span>{name}</span>
+            </div>
+          </div>
         </div>
       </div>
       {hint && (
@@ -72,6 +70,7 @@ CustomImageDisplay.propTypes = {
   hint: PropTypes.string,
   value: PropTypes.any,
   name: PropTypes.string,
+  handleEditImage: PropTypes.func.isRequired,
 };
 
 CustomImageDisplay.defaultProps = {

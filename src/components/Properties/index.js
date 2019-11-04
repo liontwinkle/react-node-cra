@@ -14,6 +14,7 @@ import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
+import EditImageSection from './PropertyActions/EditImageSection';
 
 class Properties extends Component {
   state = {
@@ -22,9 +23,11 @@ class Properties extends Component {
     isUpdating: false,
     noSectionPropertyFields: [],
     selectKey: '',
+    imageKey: '',
+    imageValue: '',
     isOpenSelItemModal: false,
     isOpenSelItemEditModal: false,
-    uploadImage: null,
+    isOpenEditImage: false,
   };
 
   componentDidMount() {
@@ -126,6 +129,15 @@ class Properties extends Component {
     }));
   };
 
+  handleEditImage = (key, value) => {
+    console.log('#### DEBUG KEY, VALUE: ', key, value); // fixme
+    this.setState(prevState => ({
+      isOpenEditImage: !prevState.isOpenEditImage,
+      imageKey: key || '',
+      imageValue: value || '',
+    }));
+  };
+
   handleChangeImage = type => (data) => {
     if (data.length > 0) {
       const { file, fileType } = data[0];
@@ -154,7 +166,7 @@ class Properties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
+      this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
     );
   };
 
@@ -164,7 +176,10 @@ class Properties extends Component {
       sections,
       isOpenSelItemModal,
       isOpenSelItemEditModal,
+      isOpenEditImage,
       selectKey,
+      imageKey,
+      // imageValue,
       noSectionPropertyFields,
     } = this.state;
 
@@ -200,6 +215,15 @@ class Properties extends Component {
               handleClose={this.handleSelItemToggle('isOpenSelItemEditModal')}
               objectItem={this.props.objectItem}
               updateObject={this.props.updateObject}
+            />
+          )}
+          {isOpenEditImage && (
+            <EditImageSection
+              open={isOpenEditImage}
+              key={imageKey}
+              // value={imageValue}
+              objectItem={this.props.objectItem}
+              handleClose={this.handleEditImage}
             />
           )}
         </div>
