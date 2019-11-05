@@ -256,18 +256,22 @@ function removeImageUploaded(originData, newData) {
     }
   }
   if (diffData && diffData.image) {
-    deleteFile(`../public/${diffData.image.path}`);
+    deleteFile(`../public/images/${diffData.image.path}`);
   }
 }
 
-function updateFile(url, id) {
-  const destUrl = url.replace(/\default\//g, id);
+function updateFile(clientId, type, url, id) {
+  const copyUrl = url.replace(/\/default\//g, `/${id}/`);
+  const destUrl = `/images/${clientId}/${type}/${id}`;
   console.log('#### DEBUG DESTINATION URL: ', destUrl); // fixme
-  fs.copyFile(url, destUrl, (err) => {
+  if (!fs.existsSync(`../public${destUrl}`)) {
+    fs.mkdirSync(`../public${destUrl}`);
+  }
+  fs.copyFile(`../public${url}`, `../public${copyUrl}/`, (err) => {
     if (err) {
       throw err;
     } else {
-      deleteFile(url);
+      deleteFile(`../public${url}`);
     }
   });
   return destUrl;
@@ -320,9 +324,11 @@ function prepareImageProperties(originData, updates, clientId, type) {
         if (!originProperties
           || originProperties[keyItem][subKeyItem] !== updateProperties[keyItem][subKeyItem]) {
           console.log('##### DEBUG WILL UPDATED : ', updateProperties[keyItem][subKeyItem]);
-          if (updateProperties[keyItem][subKeyItem].path) {
-            if (originProperties && originProperties[keyItem][subKeyItem].path) {
-              const newUrl = updateFile(updates[keyItem][subKeyItem].path, originData.categoryId);
+          if (updateProperties[keyItem][subKeyItem] && updateProperties[keyItem][subKeyItem].path) {
+            if (!updateProperties[keyItem][subKeyItem].imageData) {
+              const newUrl = updateFile(clientId,
+                type, updateProperties[keyItem][subKeyItem].path,
+                originData.categoryId);
               console.log('##### DEBUG URL: ', newUrl); // fixme
               updatedNewProperties.properties[keyItem][subKeyItem].path = newUrl;
             } else {
@@ -332,9 +338,10 @@ function prepareImageProperties(originData, updates, clientId, type) {
           }
         }
       });
-    } else if (updateProperties[keyItem].path) {
-      if (originProperties && originProperties[keyItem].path) {
-        const newUrl = updateFile(updates[keyItem].path, originData.categoryId);
+    } else if (updateProperties[keyItem] && updateProperties[keyItem].path) {
+      if (!updateProperties[keyItem].imageData) {
+        const newUrl = updateFile(clientId,
+          type, updates[keyItem].path, originData.categoryId);
         console.log('##### DEBUG URL: ', newUrl); // fixme
         updatedNewProperties.properties[keyItem].path = newUrl;
       } else {
