@@ -209,11 +209,10 @@ function uploadImageProperties(data, clientId, type) {
   if (data.propertyFields) {
     data.propertyFields.forEach((item, index) => {
       if (item.image && item.image.imageData) {
-        const dir = `/images/${clientId}/${type}`;
-        const fileName = item.image.path;
-        console.log('##### NAME: ', fileName); // fixme
+        const dir = `/images/${clientId}/${type}/default`;
+        const fileName = `${item.key}_${item.image.path}`;
         const fileType = item.image.type.split('/')[1];
-        const optionalObj = { fileName, type: fileType };
+        const imageType = { fileName, type: fileType }; // Png, Jpg, Jpeg
 
         if (!fs.existsSync('../public/images')) {
           fs.mkdirSync('../public/images');
@@ -224,7 +223,10 @@ function uploadImageProperties(data, clientId, type) {
         if (!fs.existsSync(`../public/images/${clientId}/${type}`)) {
           fs.mkdirSync(`../public/images/${clientId}/${type}`);
         }
-        base64ToImage(item.image.imageData, `../public/${dir}/`, optionalObj);
+        if (!fs.existsSync(`../public/images/${clientId}/${type}/default`)) {
+          fs.mkdirSync(`../public/images/${clientId}/${type}/default`);
+        }
+        base64ToImage(item.image.imageData, `../public/${dir}/`, imageType);
         const updatedData = item;
         const image = item.image;
         delete image.imageData;
@@ -237,6 +239,14 @@ function uploadImageProperties(data, clientId, type) {
   return data;
 }
 
+function deleteFile(url) {
+  try {
+    fs.unlinkSync(url);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 function removeImageUploaded(originData, newData) {
   let diffData = null;
   for (let index = 0; index < originData.length; index++) {
@@ -246,18 +256,57 @@ function removeImageUploaded(originData, newData) {
     }
   }
   if (diffData && diffData.image) {
-    const imageUrl = `../public/${diffData.image.path}`;
-    try {
-      fs.unlinkSync(imageUrl);
-    } catch (err) {
-      console.error(err);
-    }
+    deleteFile(`../public/${diffData.image.path}`);
   }
 }
 
+// function updateFile(url, id) {
+//   const destUrl = url.replace(/\default\//g, id);
+//   console.log('#### DEBUG DESTINATION URL: ', destUrl); // fixme
+//   fs.copyFile(url, destUrl, (err) => {
+//     if (err) {
+//       throw err;
+//     } else {
+//       deleteFile(url);
+//     }
+//   });
+// }
+
+// function createFile() {
+//
+// }
+// function prepareImageProperties(originData, updates) {
+//   console.log('##### DEBUG ORIGIN DATA: ', originData);
+//   console.log('##### DEBUG UPDATE DATA: ', updates);
+//   const originProperties = JSON.parse(JSON.stringify(originData.properties));
+//   const updateProperties = JSON.parse(JSON.stringify(updates.properties));
+//   const updatedNewProperties = JSON.parse(JSON.stringify(updates));
+//   const dataKeys = Object.keys(updateProperties);
+//   dataKeys.forEach((keyItem) => {
+//     if (typeof updateProperties[keyItem] === 'object') {
+//       const subKeys = Object.keys(updateProperties[keyItem]);
+//       subKeys.forEach((subKeyItem) => {
+//         if (originProperties[subKeyItem][subKeyItem] !== updateProperties[keyItem][subKeyItem]) {
+//           console.log('##### DEBUG WILL UPDATED : ', updateProperties[keyItem][subKeyItem]);
+//           if (updateProperties[keyItem][subKeyItem].path) {
+//             if (originProperties[keyItem][subKeyItem].path) {
+//               updateFile(updates[subKeyItem].path, originData.categoryId);
+//             } else {
+//               createFile(updateProperties[keyItem][subKeyItem]);
+//             }
+//           }
+//         }
+//       });
+//     } else {
+//
+//     }
+//   });
+// }
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
+      // const originData = JSON.parse(JSON.stringify(entity));
+      // removeImageProperties(originData, updates);
       _.assign(entity, updates);
     }
     return entity.saveAsync();

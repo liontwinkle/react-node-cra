@@ -134,31 +134,8 @@ class Properties extends Component {
     this.setState(prevState => ({
       isOpenEditImage: !prevState.isOpenEditImage,
       imageKey: key || '',
-      imageValue: value || '',
+      // imageValue: value || '',
     }));
-  };
-
-  handleChangeImage = type => (data) => {
-    if (data.length > 0) {
-      const { file, fileType } = data[0];
-      if (fileType && fileType.indexOf('image/') === 0) {
-        if (file) {
-          const reader = new FileReader();
-          reader.addEventListener(
-            'load',
-            () => {
-              this.setState(prevState => ({
-                ...prevState.properties,
-                [type]: file,
-                uploadImage: reader.result,
-              }));
-            },
-            false,
-          );
-          reader.readAsDataURL(file);
-        }
-      }
-    }
   };
 
   renderSectionFields = (section) => {
@@ -220,10 +197,11 @@ class Properties extends Component {
           {isOpenEditImage && (
             <EditImageSection
               open={isOpenEditImage}
-              key={imageKey}
-              // value={imageValue}
+              imageKey={imageKey}
               objectItem={this.props.objectItem}
               handleClose={this.handleEditImage}
+              updateObject={this.props.updateObject}
+              isObjectUpdating={this.props.isObjectUpdating}
             />
           )}
         </div>

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 // import { useSnackbar } from 'notistack';
@@ -9,16 +7,13 @@ import {
 } from '@material-ui/core';
 
 import { useStyles } from 'utils';
-import { updatePropertyField } from 'redux/actions/propertyFields';
-import { updateDefaultOnCategory } from 'redux/actions/categories';
-import { updateDefaultOnAttriute } from 'redux/actions/attribute';
 import { CustomImageUpload } from 'components/elements';
 
 function EditImageSection({
   open,
-  isUpdating,
-  key,
-  // value,
+  isObjectUpdating,
+  // updateObject,
+  imageKey,
   objectItem,
   handleClose,
 }) {
@@ -37,10 +32,6 @@ function EditImageSection({
   const handleChangeFileName = (e) => {
     e.persist();
     setImageName(e.target.value);
-    setImage({
-      ...image,
-      name: e.target.value,
-    });
   };
 
   const handleChangeImage = (data) => {
@@ -68,12 +59,14 @@ function EditImageSection({
     }
   };
 
-  const disabled = !(imageName !== '' && imageFile.length > 0);
+  const disabled = !(imageName !== '' && imageFile);
 
   const handleSubmit = () => {
+    const imageUpdateData = JSON.parse(JSON.stringify(image));
+    imageUpdateData.name = imageName;
     const savedProperties = JSON.parse(JSON.stringify(objectItem.properties));
-    savedProperties[key] = JSON.stringify(image);
-    if (!isUpdating && !disabled) {
+    savedProperties[imageKey] = JSON.stringify(imageUpdateData);
+    if (!isObjectUpdating && !disabled) {
       console.log('##### DEBUG SAVED PROPERTIES: ', savedProperties);
     }
   };
@@ -102,14 +95,14 @@ function EditImageSection({
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
-          disabled={isUpdating}
+          disabled={isObjectUpdating}
           onClick={handleClose}
         >
           Cancel
         </button>
         <button
           className="mg-button primary"
-          disabled={isUpdating || disabled}
+          disabled={isObjectUpdating || disabled}
           onClick={handleSubmit}
         >
           Save
@@ -120,25 +113,12 @@ function EditImageSection({
 }
 
 EditImageSection.propTypes = {
-  key: PropTypes.string.isRequired,
-  // value: PropTypes.string.isRequired,
+  imageKey: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  isUpdating: PropTypes.bool.isRequired,
+  isObjectUpdating: PropTypes.bool.isRequired,
   objectItem: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
+  // updateObject: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
-  isUpdating: store.propertyFieldsData.isUpdating,
-});
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  updatePropertyField,
-  updateDefaultOnCategory,
-  updateDefaultOnAttriute,
-}, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditImageSection);
+export default EditImageSection;

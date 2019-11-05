@@ -237,15 +237,17 @@ export const sectionRender = (
             ),
         );
       } else if (p.propertyType === 'image') {
+        const image = (state.properties[p.key]) ? JSON.parse(state.properties[p.key]) : p.image;
+        console.log('##### DEBUG IMAGE: ', image); // fixme
         res.push(
           <CustomImageDisplay
             id={p.key}
             label={p.label}
             inline
             key={p.key}
-            value={p.image ? p.image.path : null}
-            name={p.image ? p.image.name : null}
-            handleEditImage={() => handleEditImage(p.key, state.properties[p.key])}
+            value={image ? image.path : null}
+            name={image ? image.name : null}
+            handleEditImage={() => handleEditImage(p.key, image)}
           />,
         );
       }
@@ -313,6 +315,8 @@ export const setDefault = (properties, fields) => {
         tempProperties[item.key] = false;
       } else if (item.propertyType === 'array') {
         tempProperties[item.key] = null;
+      } else if (item.propertyType === 'image') {
+        tempProperties[item.key] = item.image;
       } else {
         tempProperties[item.key] = '';
       }
