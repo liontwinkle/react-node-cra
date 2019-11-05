@@ -56,14 +56,14 @@ function PropertyActions({
     property: 20,
   });
 
-  const onChangePageNum = field => (page) => {
+  const onChangePageNum = (field) => (page) => {
     setPageNum({
       ...pageNum,
       [field]: page,
     });
   };
 
-  const onChangeOrder = field => (index, direction) => {
+  const onChangeOrder = (field) => (index, direction) => {
     setSortHistory({
       ...sortHistory,
       [field]: {
@@ -72,7 +72,7 @@ function PropertyActions({
       },
     });
   };
-  const handleToggle = field => () => {
+  const handleToggle = (field) => () => {
     setOpen({
       ...open,
       [field]: !open[field],
@@ -81,10 +81,13 @@ function PropertyActions({
 
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
+    console.log('#### DEBUG PREPARE: ', saveData); // fixme
     if (saveData.errMsg === '') {
       if (!isObjectUpdating && !isHistoryCreating) {
         if (!isEqual(objectItem.properties, saveData.tempProperties)) {
           const updatedData = makeUpdatedData(saveData.tempProperties, fields, sections);
+          console.log('#### DEBUG UPDATE DATA: ', updatedData); // fixme
+
           updateObject(objectItem.id, { properties: updatedData })
             .then(() => {
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
@@ -220,11 +223,11 @@ PropertyActions.propTypes = {
 PropertyActions.defaultProps = {
   uploadImage: null,
 };
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isHistoryCreating: store.historyData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createHistory,
 }, dispatch);
 
