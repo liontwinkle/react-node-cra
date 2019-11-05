@@ -2,7 +2,7 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
+  saveCategoriesUpdates,
   handleCreate,
   removeCategoryEntity,
   removeChildren
@@ -47,7 +47,7 @@ exports.update = (req, res) => {
   req.category
     .findByIdAsync(req.params.categoryId)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(saveCategoriesUpdates(req))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

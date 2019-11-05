@@ -302,11 +302,23 @@ function removeImageUploaded(originData, newData) {
 //     }
 //   });
 // }
+
+function saveCategoriesUpdates(req) {
+  return (entity) => {
+    if (req.body) {
+      console.log('### DEBUG ', req.client._id);
+      // const originData = JSON.parse(JSON.stringify(entity));
+      // removeImageProperties(originData, updates);
+      _.assign(entity, req.body);
+    }
+    return entity.saveAsync();
+  };
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
-      // const originData = JSON.parse(JSON.stringify(entity));
-      // removeImageProperties(originData, updates);
+      console.log('### DEBUG ');
       _.assign(entity, updates);
     }
     return entity.saveAsync();
@@ -527,6 +539,8 @@ module.exports = {
   handleEntityNotFound,
   saveUpdates,
   savePropertiesUpdates,
+  saveCategoriesUpdates,
+  saveAttributeUpdates,
   handleCreate,
   handleAttributeCreate,
   handleAttributeFetch,
@@ -534,7 +548,6 @@ module.exports = {
   removeCategoryEntity,
   createCollection,
   handleExistingRemove,
-  saveAttributeUpdates,
   uploadAppear,
   setAppearForCategory,
 };
