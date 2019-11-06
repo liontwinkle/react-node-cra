@@ -313,7 +313,10 @@ function prepareImageProperties(originData, updates, clientId, type) {
   const updatedNewProperties = JSON.parse(JSON.stringify(updates));
   const dataKeys = Object.keys(updateProperties);
   dataKeys.forEach((keyItem) => {
-    if (typeof updateProperties[keyItem] === 'object') {
+    if (typeof updateProperties[keyItem] === 'object'
+      && updateProperties[keyItem] !== null
+      && !Array.isArray(updateProperties[keyItem])
+    ) {
       const subKeys = Object.keys(updateProperties[keyItem]);
       subKeys.forEach((subKeyItem) => {
         if (!originProperties
@@ -475,7 +478,12 @@ function saveAttributeUpdates(req, res) {
     }
 
     /** *** Update the Attributes and Appears Collection***** */
-    _.assign(entity, req.body);
+    const originData = JSON.parse(JSON.stringify(entity));
+    let data = req.body;
+    if (req.body.properties) {
+      data = prepareImageProperties(originData, req.body, req.client._id, 'attributes');
+    }
+    _.assign(entity, data);
     const returnValue = JSON.parse(JSON.stringify(entity));
 
     collectionAppear.find({ attributeId: entity.attributeId })

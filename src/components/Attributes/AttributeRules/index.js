@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -22,13 +22,16 @@ import './style.scss';
 import { CustomToggle } from '../../elements';
 
 class AttributeRules extends Component {
-  state = {
-    newRules: [],
-    newEditRules: [],
-    editRules: [],
-    displayRules: [],
-    fetchingFlag: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newRules: [],
+      newEditRules: [],
+      editRules: [],
+      displayRules: [],
+      fetchingFlag: true,
+    };
+  }
 
   componentDidMount() {
     this.setState({
@@ -64,9 +67,9 @@ class AttributeRules extends Component {
     const matchKey = `:${detailValue[1]}`;
     const valueKey = partValue[1];
     const detailObj = this.props.valueDetails.find(
-      valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
+      (valueDetailsItem) => (valueDetailsItem.key === detailKey.replace(' ', '')),
     );
-    const matchObj = match.find(matchItem => (matchItem.key === matchKey));
+    const matchObj = match.find((matchItem) => (matchItem.key === matchKey));
     return {
       detailObj,
       matchObj,
@@ -76,8 +79,8 @@ class AttributeRules extends Component {
 
   setRuleArray = (srcList, ruleArray, type = null) => {
     srcList.forEach((item) => {
-      const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
-      const referObj = refer.find(referItem => (referItem.key === item.refer));
+      const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
+      const referObj = refer.find((referItem) => (referItem.key === item.refer));
       const otherObj = this.AnaylsisDetails(item.value);
       if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
         ruleArray.push({
@@ -95,7 +98,7 @@ class AttributeRules extends Component {
 
   setMap = (attribute) => {
     let currentRules = [];
-    const grpRules = this.props.attributes.filter(attributeItem => (
+    const grpRules = this.props.attributes.filter((attributeItem) => (
       attributeItem.attributeId.toString() === attribute.groupId));
     if (attribute.rules) {
       currentRules = _union(currentRules, attribute.rules);
@@ -122,7 +125,7 @@ class AttributeRules extends Component {
   };
 
   onHandleSwtichView = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       productsFlag: !prevState.productsFlag,
     }));
     if (this.state.productsFlag) {
@@ -144,7 +147,7 @@ class AttributeRules extends Component {
         {
           !this.state.fetchingFlag
             ? (
-              <Fragment>
+              <>
                 <div className="mg-rule-content">
                   <CustomToggle
                     label="Products Switch"
@@ -162,7 +165,7 @@ class AttributeRules extends Component {
                   matchRules={newRules}
                   displayRules={displayRules}
                 />
-              </Fragment>
+              </>
             )
             : (
               <div className="loader">
@@ -185,7 +188,7 @@ AttributeRules.propTypes = {
   setProductViewType: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attribute: store.attributesData.attribute,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
@@ -193,7 +196,7 @@ const mapStateToProps = store => ({
   nodes: store.attributesData.nodes,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchProducts,
   setPrefilterData,
   setProductViewType,
