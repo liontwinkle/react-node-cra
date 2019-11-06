@@ -29,6 +29,7 @@ class AttributeRules extends Component {
       newEditRules: [],
       editRules: [],
       displayRules: [],
+      productsFlag: false,
       fetchingFlag: true,
     };
   }
