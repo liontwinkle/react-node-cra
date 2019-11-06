@@ -7,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils';
-import { initProperties, updateProperties, sectionRender } from 'utils/propertyManagement';
+import { updateProperties, sectionRender } from 'utils/propertyManagement';
 import { CustomSection } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
@@ -48,16 +48,9 @@ class Properties extends Component {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
     if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
-      if (objectItem.id === prevProps.objectItem.id) {
-        const updatedProperties = initProperties(properties, objectItem.properties);
-        this.updateState({
-          properties: updatedProperties,
-        });
-      } else {
-        this.updateState({
-          properties: objectItem.properties || {},
-        });
-      }
+      this.updateState({
+        properties: objectItem.properties || {},
+      });
     }
     if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nonSection = propertyField.propertyFields.filter((item) => item.section === null);

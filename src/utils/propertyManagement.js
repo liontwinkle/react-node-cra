@@ -66,19 +66,6 @@ const getStringTypeValue = (property, state, propertyFields) => {
 };
 
 /** exports * */
-export const initProperties = (properties, matchProperties) => {
-  const updateProperties = {};
-  const keys = Object.keys(properties);
-  const propKeys = Object.keys(matchProperties);
-
-  keys.forEach((key) => {
-    if (propKeys.indexOf(key) > -1) {
-      updateProperties[key] = matchProperties[key];
-    }
-  });
-  return updateProperties;
-};
-
 export const updateProperties = (propertyFields, properties) => {
   const nextProperties = {};
   propertyFields.forEach((item, key) => {

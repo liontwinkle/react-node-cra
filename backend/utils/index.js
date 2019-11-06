@@ -354,7 +354,10 @@ function saveCategoriesUpdates(req) {
   return (entity) => {
     if (req.body) {
       const originData = JSON.parse(JSON.stringify(entity));
-      const data = prepareImageProperties(originData, req.body, req.client._id, 'virtual');
+      let data = req.body;
+      if (req.body.properties) {
+        data = prepareImageProperties(originData, req.body, req.client._id, 'virtual');
+      }
       _.assign(entity, data);
     }
     return entity.saveAsync();

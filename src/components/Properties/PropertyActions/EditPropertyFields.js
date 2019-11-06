@@ -47,7 +47,7 @@ function EditPropertyFields({
   const { propertyFields } = propertyField;
   const tableData = getTableData(sections, propertyFields, order);
 
-  const handleAdd = newData => new Promise((resolve) => {
+  const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
       const errList = checkTemplate(propertyFields, newData);
@@ -62,6 +62,7 @@ function EditPropertyFields({
           section: newData.section,
           order: newData.order,
           items: newData.items,
+          image: (newData.image) ? newData.image : {},
         });
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
@@ -185,7 +186,7 @@ function EditPropertyFields({
       resolve();
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
-      const ruleKeyIndex = sendData.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         sendData.splice(ruleKeyIndex, 1, {
           key: newData.key,
@@ -196,6 +197,7 @@ function EditPropertyFields({
           section: newData.section,
           order: newData.order,
           items: newData.items,
+          image: (newData.image) ? newData.image : {},
           _id: newData._id,
         });
         delete data.tableData;
@@ -222,11 +224,11 @@ function EditPropertyFields({
     }, 600);
   });
 
-  const handleDelete = oldData => new Promise((resolve) => {
+  const handleDelete = (oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = propertyFields.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = propertyFields.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         const deletedKey = propertyFields[ruleKeyIndex].key;
         propertyFields.splice(ruleKeyIndex, 1);
@@ -324,12 +326,12 @@ EditPropertyFields.propTypes = {
   onChangePageNum: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
   updateDefaultOnCategory,
   updateDefaultOnAttriute,
