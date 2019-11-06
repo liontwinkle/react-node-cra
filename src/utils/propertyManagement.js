@@ -73,7 +73,7 @@ export const initProperties = (properties, matchProperties) => {
 
   keys.forEach((key) => {
     if (propKeys.indexOf(key) > -1) {
-      updateProperties[key] = properties[key];
+      updateProperties[key] = matchProperties[key];
     }
   });
   return updateProperties;
@@ -238,7 +238,6 @@ export const sectionRender = (
         );
       } else if (p.propertyType === 'image') {
         const image = (state.properties[p.key]) ? state.properties[p.key] : p.image;
-        console.log('##### DEBUG IMAGE: ', image); // fixme
         res.push(
           <CustomImageDisplay
             id={p.key}
@@ -247,7 +246,7 @@ export const sectionRender = (
             key={p.key}
             value={image ? image.path : null}
             name={image ? image.name : null}
-            handleEditImage={() => handleEditImage(p.key, image)}
+            handleEditImage={() => handleEditImage(p.key)}
           />,
         );
       }

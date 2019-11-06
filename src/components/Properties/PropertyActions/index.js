@@ -81,13 +81,10 @@ function PropertyActions({
 
   const saveProperties = () => {
     const saveData = setDefault(properties, fields);
-    console.log('#### DEBUG PREPARE: ', saveData); // fixme
     if (saveData.errMsg === '') {
       if (!isObjectUpdating && !isHistoryCreating) {
         if (!isEqual(objectItem.properties, saveData.tempProperties)) {
           const updatedData = makeUpdatedData(saveData.tempProperties, fields, sections);
-          console.log('#### DEBUG UPDATE DATA: ', updatedData); // fixme
-
           updateObject(objectItem.id, { properties: updatedData })
             .then(() => {
               addNewRuleHistory(createHistory, objectItem, objectItem.parentId,

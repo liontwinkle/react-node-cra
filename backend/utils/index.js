@@ -263,27 +263,24 @@ function removeImageUploaded(originData, newData) {
 function updateFile(clientId, type, url, id) {
   const copyUrl = url.replace(/\/default\//g, `/${id}/`);
   const destUrl = `/images/${clientId}/${type}/${id}`;
-  console.log('#### DEBUG DESTINATION URL: ', destUrl); // fixme
   if (!fs.existsSync(`../public${destUrl}`)) {
     fs.mkdirSync(`../public${destUrl}`);
   }
-  fs.copyFile(`../public${url}`, `../public${copyUrl}/`, (err) => {
-    if (err) {
-      throw err;
-    } else {
-      deleteFile(`../public${url}`);
-    }
-  });
-  return destUrl;
+  if (`../public${url}` !== `../public${copyUrl}`) {
+    fs.copyFile(`../public${url}`, `../public${copyUrl}`, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+  return copyUrl;
 }
 
-function createFile(clientId, type, data, key, categoryId) {
-  console.log('#### DEBUG CID: ', clientId); // fixme
-  console.log('#### DEBUG TYPE: ', type); // fixme
-  console.log('#### DEBUG DATA: ', data); // fixme
-  console.log('#### DEBUG KEY: ', key); // fixme
-  console.log('#### DEBUG CATEGORY ID: ', categoryId); // fixme
+function createFile(clientId, type, data, key, categoryId, originUrl) {
   if (data && data.imageData) {
+    if (originUrl) {
+      deleteFile(`../public/${originUrl}`);
+    }
     const dir = `/images/${clientId}/${type}/${categoryId}`;
     const fileName = `${key}_${data.path}`;
     const fileType = data.type.split('/')[1];
@@ -309,8 +306,6 @@ function createFile(clientId, type, data, key, categoryId) {
   }
 }
 function prepareImageProperties(originData, updates, clientId, type) {
-  console.log('##### DEBUG ORIGIN DATA: ', originData);
-  console.log('##### DEBUG UPDATE DATA: ', updates);
   const originProperties = (originData.properties)
     ? JSON.parse(JSON.stringify(originData.properties))
     : null;
@@ -323,27 +318,27 @@ function prepareImageProperties(originData, updates, clientId, type) {
       subKeys.forEach((subKeyItem) => {
         if (!originProperties
           || originProperties[keyItem][subKeyItem] !== updateProperties[keyItem][subKeyItem]) {
-          console.log('##### DEBUG WILL UPDATED : ', updateProperties[keyItem][subKeyItem]);
           if (updateProperties[keyItem][subKeyItem] && updateProperties[keyItem][subKeyItem].path) {
             if (!updateProperties[keyItem][subKeyItem].imageData) {
-              const newUrl = updateFile(clientId,
+              updatedNewProperties.properties[keyItem][subKeyItem].path = updateFile(clientId,
                 type, updateProperties[keyItem][subKeyItem].path,
                 originData.categoryId);
-              console.log('##### DEBUG URL: ', newUrl); // fixme
-              updatedNewProperties.properties[keyItem][subKeyItem].path = newUrl;
             } else {
+              const originUrl = (originProperties
+                && originProperties[keyItem][subKeyItem])
+                ? originProperties[keyItem][subKeyItem].path : null;
               updatedNewProperties.properties[keyItem][subKeyItem] = createFile(clientId,
-                type, updateProperties[keyItem][subKeyItem], subKeyItem, originData.categoryId);
+                type,
+                updateProperties[keyItem][subKeyItem],
+                subKeyItem, originData.categoryId, originUrl);
             }
           }
         }
       });
     } else if (updateProperties[keyItem] && updateProperties[keyItem].path) {
       if (!updateProperties[keyItem].imageData) {
-        const newUrl = updateFile(clientId,
+        updatedNewProperties.properties[keyItem].path = updateFile(clientId,
           type, updates[keyItem].path, originData.categoryId);
-        console.log('##### DEBUG URL: ', newUrl); // fixme
-        updatedNewProperties.properties[keyItem].path = newUrl;
       } else {
         updatedNewProperties.properties[keyItem] = createFile(clientId,
           type,
@@ -360,8 +355,7 @@ function saveCategoriesUpdates(req) {
     if (req.body) {
       const originData = JSON.parse(JSON.stringify(entity));
       const data = prepareImageProperties(originData, req.body, req.client._id, 'virtual');
-      console.log('###### DEBUG DATA: ', data); // fixme
-      _.assign(entity, req.body);
+      _.assign(entity, data);
     }
     return entity.saveAsync();
   };
@@ -370,7 +364,6 @@ function saveCategoriesUpdates(req) {
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
-      console.log('### DEBUG ');
       _.assign(entity, updates);
     }
     return entity.saveAsync();

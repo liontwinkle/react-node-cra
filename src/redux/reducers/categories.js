@@ -46,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: tempDatas,
-        category: tempDatas.filter(item => (item.parentId === 'null'))[0] || null,
+        category: tempDatas.filter((item) => (item.parentId === 'null'))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };
@@ -102,6 +102,8 @@ export default (state = INITIAL_STATE, action) => {
         keys.forEach((key) => {
           if (Array.isArray(properties[key])) {
             updateData.properties[key] = JSON.stringify(updateData.properties[key]);
+          } else if (properties[key] !== null && typeof properties[key] === 'object') {
+            updateData.properties[key] = JSON.parse(JSON.stringify(updateData.properties[key]));
           }
         });
       }
