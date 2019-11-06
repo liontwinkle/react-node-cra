@@ -380,8 +380,11 @@ function savePropertiesUpdates(updates) {
   return (entity) => {
     if (updates) {
       const originData = JSON.parse(JSON.stringify(entity));
-      removeImageUploaded(originData.propertyFields, updates.propertyFields);
-      const data = uploadImageProperties(updates, entity.clientId, entity.type);
+      let data = updates;
+      if (updates.propertyFields) {
+        removeImageUploaded(originData.propertyFields, updates.propertyFields);
+        data = uploadImageProperties(updates, entity.clientId, entity.type);
+      }
       _.assign(entity, data);
     }
     return entity.saveAsync();
