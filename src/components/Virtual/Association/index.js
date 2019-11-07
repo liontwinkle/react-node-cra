@@ -109,7 +109,7 @@ function Association({
 
       if (nodeTarget.checked) {
         appearData = _union(targetAppear.appear, updateNewAppear);
-        if (targetAppear.groupId) {
+        if (targetAppear.groupId !== 'null') {
           const includeCategoryList = attributes.filter(
             (attrItem) => (!!attrItem.appear.find(
               ((arrItem) => (arrItem === category.categoryId)),
