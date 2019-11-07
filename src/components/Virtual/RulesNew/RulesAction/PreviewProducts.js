@@ -50,7 +50,7 @@ PreviewProducts.propTypes = {
   filterProducts: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   columns: store.productsData.data.columns,
   headers: store.productsData.data.headers,
 });

@@ -87,10 +87,10 @@ function EditRules({
     }
   };
 
-  const handleAdd = newData => new Promise((resolve) => {
+  const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-      if (!isCreating && !rules.find(item => (
+      if (!isCreating && !rules.find((item) => (
         item.detail === newData.detail
         && item.match === newData.match
         && item.value === newData.value
@@ -120,7 +120,7 @@ function EditRules({
       resolve();
 
       const data = JSON.parse(JSON.stringify(oldData));
-      const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = rules.findIndex((rk) => rk._id === oldData._id);
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
           _id: newData._id,
@@ -147,11 +147,11 @@ function EditRules({
     }, 600);
   });
 
-  const handleDelete = oldData => new Promise((resolve) => {
+  const handleDelete = (oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = rules.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = rules.findIndex((rk) => rk._id === oldData._id);
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
@@ -216,14 +216,14 @@ EditRules.propTypes = {
   valueDetails: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.attributesData.isUpdating,
   attribute: store.attributesData.attribute,
   valueDetails: store.productsData.data.valueDetails,
   isCreating: store.historyData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   createHistory,
 }, dispatch);

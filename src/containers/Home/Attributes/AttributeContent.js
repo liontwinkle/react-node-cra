@@ -25,7 +25,7 @@ function AttributeContent({
 }) {
   const [tab, setTab] = useState('properties');
 
-  const handleClick = value => () => { setTab(value); };
+  const handleClick = (value) => () => { setTab(value); };
 
   return (
     <div className="attribute-container">
@@ -62,12 +62,12 @@ AttributeContent.defaultProps = {
   attribute: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.attributesData.isUpdating,
   attribute: store.attributesData.attribute,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
 }, dispatch);
 

@@ -20,9 +20,9 @@ const validateKey = {
 const checkException = (keys, dataItem, type) => {
   let passFlag = true;
   validateKey[type].forEach((validateItem) => {
-    if (keys.findIndex(item => (item === validateItem)) === -1) {
+    if (keys.findIndex((item) => (item === validateItem)) === -1) {
       if (validateItem === 'categoryid' || validateItem === 'attributeid') {
-        if (keys.findIndex(item => (item === '_id')) === -1) {
+        if (keys.findIndex((item) => (item === '_id')) === -1) {
           passFlag = false;
         }
       } else {
@@ -37,8 +37,8 @@ const checkException = (keys, dataItem, type) => {
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
   const parentId = dataItem.parent_id || dataItem.parentid || 'null';
-  if (parentId !== 'null' && categories.findIndex(item => (item.categoryId === parentId)) === -1) {
-    if (newData.findIndex(newItem => (
+  if (parentId !== 'null' && categories.findIndex((item) => (item.categoryId === parentId)) === -1) {
+    if (newData.findIndex((newItem) => (
       newItem.categoryid === parentId || newItem._id === parentId
     ) === -1)) {
       passFlag = false;
@@ -51,11 +51,11 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   let passFlag = true;
   const deletedData = [];
   const recvGroupId = dataItem.groupid || dataItem.group_id || 'null';
-  const groupIds = attributes.filter((attributeItem => (attributeItem.groupId === 'null')));
-  const groupItem = groupIds.filter(item => (item.attributeId === recvGroupId));
+  const groupIds = attributes.filter(((attributeItem) => (attributeItem.groupId === 'null')));
+  const groupItem = groupIds.filter((item) => (item.attributeId === recvGroupId));
   let groupData = [];
   if (recvGroupId !== 'null' && groupItem.length === 0) {
-    if (newData.findIndex(newItem => (
+    if (newData.findIndex((newItem) => (
       newItem.attributeid === recvGroupId || newItem._id === recvGroupId
     ) === -1)) {
       passFlag = false;
@@ -66,7 +66,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {
-      if (categories.findIndex(categoryItem => categoryItem.categoryId === appearItem) === -1) {
+      if (categories.findIndex((categoryItem) => categoryItem.categoryId === appearItem) === -1) {
         deletedData.push(appearItem);
       }
     });

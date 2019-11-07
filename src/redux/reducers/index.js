@@ -10,7 +10,7 @@ import attributesData from './attribute';
 import historyData from './history';
 import uploadData from './upload';
 
-export default history => combineReducers({
+export default (history) => combineReducers({
   router: connectRouter(history),
   clientsData,
   categoriesData,

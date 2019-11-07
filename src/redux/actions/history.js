@@ -27,7 +27,7 @@ export const fetchHistories = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createHistory = history => (dispatch, getState) => {
+export const createHistory = (history) => (dispatch, getState) => {
   if (getState().historyData.isCreating) {
     return Promise.reject();
   }
@@ -57,7 +57,7 @@ export const createHistory = history => (dispatch, getState) => {
     });
 };
 
-export const removeHistory = id => (dispatch, getState) => {
+export const removeHistory = (id) => (dispatch, getState) => {
   if (getState().historyData.isDeleting) {
     return;
   }

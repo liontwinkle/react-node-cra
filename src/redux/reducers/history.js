@@ -63,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.HISTORY_REMOVE_SUCCESS:
-      const filteredData = history.filter(historyItem => (historyItem.itemId === action.payload.id));
+      const filteredData = history.filter((historyItem) => (historyItem.itemId === action.payload.id));
       const updatedHistory = _difference(history, filteredData);
       return {
         ...state,

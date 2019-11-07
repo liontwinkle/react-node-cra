@@ -16,7 +16,7 @@ const getAllmatched = (products, match, value) => {
   const rule = RuleEngine[match](value);
   products.forEach((proItem) => {
     const values = Object.values(proItem);
-    if (values.filter(item => (rule.test(item))).length > 0) {
+    if (values.filter((item) => (rule.test(item))).length > 0) {
       returnValue[index] = proItem;
       index++;
     }
@@ -45,9 +45,9 @@ const AnaylsisDetails = (valueStr, valueDetails) => {
   const matchKey = `:${detailValue[1]}`;
   const valueKey = partValue[1];
   const detailObj = valueDetails.find(
-    valueDetailsItem => (valueDetailsItem.key === detailKey.replace(' ', '')),
+    (valueDetailsItem) => (valueDetailsItem.key === detailKey.replace(' ', '')),
   );
-  const matchObj = match.find(matchItem => (matchItem.key === matchKey));
+  const matchObj = match.find((matchItem) => (matchItem.key === matchKey));
   return {
     detailObj,
     matchObj,
@@ -102,8 +102,8 @@ export const getRules = (srcRules, valueDetails) => {
   const newRules = [];
   const editRules = [];
   srcRules.forEach((item) => {
-    const basisObj = basis.find(basisItem => (basisItem.key === item.basis));
-    const referObj = refer.find(referItem => (referItem.key === item.refer));
+    const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
+    const referObj = refer.find((referItem) => (referItem.key === item.refer));
     const otherObj = AnaylsisDetails(item.value, valueDetails);
     if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
       newRules.push({

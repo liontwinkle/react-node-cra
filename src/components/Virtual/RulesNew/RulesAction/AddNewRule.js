@@ -47,7 +47,7 @@ function AddNewRule({
     setPreviewValue(filterProducts().length);
   };
 
-  const handleSelectChange = field => (item) => {
+  const handleSelectChange = (field) => (item) => {
     const newClient = {
       ...ruleData,
       [field]: item,
@@ -116,7 +116,7 @@ function AddNewRule({
 
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
-      if (!rules.find(item => (
+      if (!rules.find((item) => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
         && item.value === ruleData.value
@@ -189,14 +189,14 @@ AddNewRule.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.categoriesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
   products: store.categoriesData.preProducts,
   category: store.categoriesData.category,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateCategory,
   createHistory,
 }, dispatch);

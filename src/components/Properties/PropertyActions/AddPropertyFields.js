@@ -53,7 +53,7 @@ function AddPropertyFields({
 
   const [imageFile, setImageFile] = useState(null);
   const [imageName, setImageName] = useState('');
-  const handleChange = field => (e) => {
+  const handleChange = (field) => (e) => {
     const newClient = {
       ...propertyFieldData,
       [field]: e.target.value,
@@ -61,7 +61,7 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
-  const handleChangeTemplate = field => (value) => {
+  const handleChangeTemplate = (field) => (value) => {
     const newClient = {
       ...propertyFieldData,
       [field]: value,
@@ -199,7 +199,7 @@ function AddPropertyFields({
         />
         <CustomSearchFilter
           className="mb-3"
-          searchItems={propertyField.propertyFields.map(item => (item.key))}
+          searchItems={propertyField.propertyFields.map((item) => (item.key))}
           placeholder="Input search filter"
           label="Default"
           value={propertyFieldData.default}
@@ -222,7 +222,7 @@ function AddPropertyFields({
           && (
             <CustomSearchFilter
               className="mb-3"
-              searchItems={propertyField.propertyFields.map(item => (item.key))}
+              searchItems={propertyField.propertyFields.map((item) => (item.key))}
               placeholder="Input search filter"
               label="Template"
               value={propertyFieldData.template}
@@ -294,12 +294,12 @@ AddPropertyFields.propTypes = {
   createHistory: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.propertyFieldsData.isUpdating,
   propertyField: store.propertyFieldsData.propertyField,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
   updateDefaultOnCategory,
   updateDefaultOnAttriute,

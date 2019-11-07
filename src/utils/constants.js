@@ -1,4 +1,4 @@
-/* eslint-disable import/no-cycle */
+/* eslint-disable import/no-cycle,react/jsx-props-no-spreading */
 import React, { forwardRef } from 'react';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';

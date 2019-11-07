@@ -31,7 +31,7 @@ function AddSections({
     order: defaultOrder,
   });
 
-  const handleChange = field => (e) => {
+  const handleChange = (field) => (e) => {
     const newClient = {
       ...sectionsData,
       [field]: e.target.value,
@@ -131,12 +131,12 @@ AddSections.propTypes = {
   defaultOrder: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.propertyFieldsData.isUpdating,
   propertyField: store.propertyFieldsData.propertyField,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
 }, dispatch);
 

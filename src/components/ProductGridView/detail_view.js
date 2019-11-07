@@ -23,33 +23,32 @@ function DetailView({
       }}
       onMouseLeave={close}
     >
-      {
-        <PerfectScrollbar>
-          <div className="info-product-container">
-            <table>
-              <tbody>
-                {headers.map(itemKey => (
-                  ((productsField[itemKey] === undefined)
+      <PerfectScrollbar>
+        <div className="info-product-container">
+          <table>
+            <tbody>
+              {headers.map((itemKey) => (
+                ((productsField[itemKey] === undefined)
                   || productsField[itemKey].grid === (undefined || true))
                   && detail[itemKey] !== undefined
-                    ? (
-                      <tr key={itemKey}>
-                        <td>
-                          {`${itemKey} `}
-                        </td>
-                        <td>
+                  ? (
+                    <tr key={itemKey}>
+                      <td>
+                        {`${itemKey} `}
+                      </td>
+                      <td>
                           :
-                        </td>
-                        <td>
-                          {`${detail[itemKey]}`}
-                        </td>
-                      </tr>
-                    ) : null
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </PerfectScrollbar>}
+                      </td>
+                      <td>
+                        {`${detail[itemKey]}`}
+                      </td>
+                    </tr>
+                  ) : null
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </PerfectScrollbar>
     </div>
   );
 }

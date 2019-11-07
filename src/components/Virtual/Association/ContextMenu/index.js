@@ -43,7 +43,7 @@ function ContextMenu({
   const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
     if (attribute.groupId === 'null') {
-      filterAttribute = attributes.filter(attributeItem => (
+      filterAttribute = attributes.filter((attributeItem) => (
         attributeItem.groupId === attribute.attributeId.toString()));
       filterAttribute.push(attribute);
     } else {
@@ -70,7 +70,7 @@ function ContextMenu({
     return () => { window.removeEventListener('click', handleClick); };
   }, [FilterProducts, handleClick, isActive, setPrefilterData]);
 
-  const handleMenuItem = type => () => {
+  const handleMenuItem = (type) => () => {
     if (type === 'match') {
       if (prefilterData.length > 0) {
         setDisplayData(true);
@@ -82,7 +82,7 @@ function ContextMenu({
     }
   };
 
-  const handlePreviewClose = type => () => {
+  const handlePreviewClose = (type) => () => {
     if (type === 'match') {
       setDisplayData(false);
     } else {
@@ -99,7 +99,7 @@ function ContextMenu({
       >
         <ul>
           {
-            menuItem.map(item => (
+            menuItem.map((item) => (
               <li key={item.key} onClick={handleMenuItem(item.key)}>
                 {
                   (item.key !== 'match') ? item.label : `${item.label}(${prefilterData.length})`
@@ -140,7 +140,7 @@ ContextMenu.propTypes = {
   valueDetails: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attribute: store.attributesData.attribute,
 });
 

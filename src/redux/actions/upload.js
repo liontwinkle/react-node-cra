@@ -2,7 +2,7 @@
 import uploadService from 'services/upload.service';
 import types from '../actionTypes';
 
-export const fileUpload = data => (dispatch, getState) => {
+export const fileUpload = (data) => (dispatch, getState) => {
   if (getState().uploadData.isUploading) {
     return Promise.reject();
   }

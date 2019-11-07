@@ -27,7 +27,7 @@ export const fetchClients = () => (dispatch, getState) => {
     });
 };
 
-export const createClient = client => (dispatch, getState) => {
+export const createClient = (client) => (dispatch, getState) => {
   if (getState().clientsData.isCreating) {
     return;
   }
@@ -55,7 +55,7 @@ export const createClient = client => (dispatch, getState) => {
     });
 };
 
-export const updateClient = updatedData => (dispatch, getState) => {
+export const updateClient = (updatedData) => (dispatch, getState) => {
   if (getState().clientsData.isUpdating) {
     return;
   }
@@ -114,20 +114,20 @@ export const removeClient = () => (dispatch, getState) => {
     });
 };
 
-export const setClient = client => (dispatch) => {
+export const setClient = (client) => (dispatch) => {
   dispatch({
     type: types.CLIENT_SET,
     payload: { client },
   });
 };
 
-export const setClientType = type => (dispatch) => {
+export const setClientType = (type) => (dispatch) => {
   dispatch({
     type: types.CLIENT_SET_TYPE,
     payload: { type },
   });
 };
-export const setProductViewType = productViewType => (dispatch) => {
+export const setProductViewType = (productViewType) => (dispatch) => {
   dispatch({
     type: types.CLIENT_SET_PRODUCT_VIEW_TYPE,
     payload: { productViewType },

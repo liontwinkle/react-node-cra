@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Section, Bar } from 'react-simple-resizer';
 import PropTypes from 'prop-types';
@@ -30,7 +30,7 @@ function Home({
         <Bar className="resizer" size={8} />
 
         <Section minSize={(value === 'products') ? '30%' : '65%'}>
-          <Fragment>
+          <>
             {value === 'products' && (
               <ProductsDetail ref={tableRef} productViewType={productViewType} />
             )}
@@ -40,7 +40,7 @@ function Home({
             {category && (value === 'virtual' || value === 'native') && (
               <VirtualDetail />
             )}
-          </Fragment>
+          </>
         </Section>
       </Container>
     </div>
@@ -61,7 +61,7 @@ Home.defaultProps = {
   attribute: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   type: store.clientsData.type,
   productViewType: store.clientsData.productViewType,
   category: store.categoriesData.category,

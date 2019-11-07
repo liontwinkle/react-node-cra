@@ -27,7 +27,7 @@ export const fetchAttributes = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createAttribute = attribute => (dispatch, getState) => {
+export const createAttribute = (attribute) => (dispatch, getState) => {
   if (getState().attributesData.isCreating) {
     return;
   }
@@ -87,7 +87,7 @@ export const updateAttribute = (id, updatedData) => (dispatch, getState) => {
     });
 };
 
-export const removeAttribute = id => (dispatch, getState) => {
+export const removeAttribute = (id) => (dispatch, getState) => {
   if (getState().attributesData.isUpdating) {
     return;
   }
@@ -116,14 +116,14 @@ export const removeAttribute = id => (dispatch, getState) => {
     });
 };
 
-export const setAttribute = attribute => (dispatch) => {
+export const setAttribute = (attribute) => (dispatch) => {
   dispatch({
     type: types.ATTRIBUTE_SET,
     payload: { attribute },
   });
 };
 
-export const updateNodeData = nodeData => (dispatch) => {
+export const updateNodeData = (nodeData) => (dispatch) => {
   dispatch({
     type: types.ATTRIBUTE_NODE_SET,
     payload: nodeData,

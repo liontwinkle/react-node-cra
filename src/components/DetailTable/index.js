@@ -18,8 +18,8 @@ function DetailTable({
     if (historyStr !== '') {
       const item = (type === 'virtual') ? category : attribute;
       const parentId = item ? item.id : 'null';
-      const displayHistory = history.filter(historyItem => (historyItem.itemId === parentId));
-      setData(displayHistory.map(c => ({
+      const displayHistory = history.filter((historyItem) => (historyItem.itemId === parentId));
+      setData(displayHistory.map((c) => ({
         action: c.label,
         createdAt: convertDateFormat(item.createdAt),
         updatedAt: convertDateFormat(c.updatedAt),
@@ -67,7 +67,7 @@ DetailTable.defaultProps = {
   attribute: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   history: store.historyData.history,
   historyStr: store.historyData.historyStr,
   category: store.categoriesData.category,

@@ -26,7 +26,7 @@ function AttributeTree({
   const { enqueueSnackbar } = useSnackbar();
 
   const addRootCategory = () => {
-    const filterGroup = attributes.filter(attrItem => (attrItem.groupId === 'null' && attrItem.name === ''));
+    const filterGroup = attributes.filter((attrItem) => (attrItem.groupId === 'null' && attrItem.name === ''));
     const flag = (filterGroup.length === 0);
     if (flag && !isCreating) {
       createAttribute({ name: '' })
@@ -92,13 +92,13 @@ AttributeTree.propTypes = {
   updateNodeData: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
   isCreating: store.attributesData.isCreating,
   nodeData: store.attributesData.nodes,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createAttribute,
   createHistory,
   updateNodeData,

@@ -16,7 +16,7 @@ function RulesTable({ rules, products, productViewType }) {
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
 
-  const handleToggle = key => () => {
+  const handleToggle = (key) => () => {
     if (key !== 'close') {
       const data = filterProducts(products, rules, key);
       if (data.length === 0) {
@@ -122,7 +122,7 @@ RulesTable.propTypes = {
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
   productViewType: store.clientsData.productViewType,
 });

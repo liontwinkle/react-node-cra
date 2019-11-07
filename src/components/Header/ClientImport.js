@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -26,7 +26,7 @@ import UploadDlg from './UploadDlg';
 
 import './style.scss';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
 }));
 
@@ -118,7 +118,7 @@ function ClientImport({
     }
   };
 
-  const onChangeHandle = dataType => (fileItem) => {
+  const onChangeHandle = (dataType) => (fileItem) => {
     if (fileItem.length > 0) {
       const { file, fileType } = fileItem[0];
       setFileSize(file.size);
@@ -166,7 +166,7 @@ function ClientImport({
       <DialogContent>
         {
           !uploadFlag ? (
-            <Fragment>
+            <>
               <UploadDlg
                 onChangeData={onChangeHandle('data')}
                 clientType={type.key}
@@ -178,11 +178,11 @@ function ClientImport({
                     label="Edit"
                     value={importData}
                     key="upload"
-                    onChange={data => onEditHandle(data)}
+                    onChange={(data) => onEditHandle(data)}
                   />
                 )
               }
-            </Fragment>
+            </>
           ) : (
             <div className="upload_loader">
               <Loader size="small" color="dark" />
@@ -236,13 +236,13 @@ ClientImport.defaultProps = {
   type: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   categories: store.categoriesData.categories,
   attributes: store.attributesData.attributes,
   isUploading: store.uploadData.isUploading,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fileUpload,
   fetchPropertyField,
   fetchCategories,

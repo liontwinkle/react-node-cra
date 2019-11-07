@@ -39,7 +39,7 @@ function RulesAction({
     return filterProducts;
   };
 
-  const handleToggle = field => () => {
+  const handleToggle = (field) => () => {
     let displayData = [];
     if (field === 'preview_products') { displayData = filterProducts(); }
 
@@ -129,7 +129,7 @@ RulesAction.propTypes = {
   productViewType: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
   productViewType: store.clientsData.productViewType,
 });

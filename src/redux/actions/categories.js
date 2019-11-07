@@ -27,7 +27,7 @@ export const fetchCategories = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createCategory = category => (dispatch, getState) => {
+export const createCategory = (category) => (dispatch, getState) => {
   if (getState().categoriesData.isCreating) {
     return;
   }
@@ -87,7 +87,7 @@ export const updateCategory = (id, updatedData) => (dispatch, getState) => {
     });
 };
 
-export const removeCategory = id => (dispatch, getState) => {
+export const removeCategory = (id) => (dispatch, getState) => {
   if (getState().categoriesData.isDeleting) {
     return;
   }
@@ -117,21 +117,21 @@ export const removeCategory = id => (dispatch, getState) => {
     });
 };
 
-export const setCategory = category => (dispatch) => {
+export const setCategory = (category) => (dispatch) => {
   dispatch({
     type: types.CATEGORY_SET,
     payload: { category },
   });
 };
 
-export const updateTreeData = treeData => (dispatch) => {
+export const updateTreeData = (treeData) => (dispatch) => {
   dispatch({
     type: types.TREE_SET,
     payload: treeData,
   });
 };
 
-export const setPrefilterData = matchedProduct => (dispatch) => {
+export const setPrefilterData = (matchedProduct) => (dispatch) => {
   dispatch({
     type: types.MATCHED_PRODUCT,
     payload: matchedProduct,

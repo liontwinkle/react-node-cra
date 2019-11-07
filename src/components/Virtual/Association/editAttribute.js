@@ -18,7 +18,7 @@ import { confirmMessage } from 'utils';
 import { checkNameDuplicate } from 'utils/attributeManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
 }));
 
@@ -111,12 +111,12 @@ EditAttribute.defaultProps = {
   attribute: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.attributesData.isUpdating,
   attributes: store.attributesData.attributes,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   createHistory,
 }, dispatch);
