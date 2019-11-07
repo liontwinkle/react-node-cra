@@ -31,7 +31,7 @@ function RulesAction({
 
   const [previewProducts, setProducts] = useState([]);
   const filterProducts = () => getPreFilterData(rules, products);
-  const handleToggle = field => () => {
+  const handleToggle = (field) => () => {
     let displayData = [];
     if (field === 'preview_products') {
       displayData = filterProducts();
@@ -115,7 +115,7 @@ RulesAction.propTypes = {
   productViewType: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   products: store.categoriesData.preProducts,
   productViewType: store.clientsData.productViewType,
 });

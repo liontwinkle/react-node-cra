@@ -28,7 +28,7 @@ export const fetchProductsField = () => (dispatch, getState) => {
     });
 };
 
-export const updateProductsField = updatedData => (dispatch, getState) => {
+export const updateProductsField = (updatedData) => (dispatch, getState) => {
   if (getState().productsFieldsData.isUpdating) {
     return;
   }
@@ -86,7 +86,7 @@ export const removeProductsField = () => (dispatch, getState) => {
     });
 };
 
-export const setImageKey = imageKey => (dispatch, getState) => {
+export const setImageKey = (imageKey) => (dispatch, getState) => {
   if (getState().productsFieldsData.isUpdating) {
     return Promise.reject();
   }
@@ -117,7 +117,7 @@ export const setImageKey = imageKey => (dispatch, getState) => {
     });
 };
 
-export const setSizeSet = size => (dispatch) => {
+export const setSizeSet = (size) => (dispatch) => {
   dispatch({
     type: types.PRODUCTS_HOVER_SIZE,
     payload: { size },

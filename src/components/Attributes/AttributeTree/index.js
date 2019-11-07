@@ -51,7 +51,7 @@ function AttributeNode({
     );
   };
 
-  const handleClick = node => () => {
+  const handleClick = (node) => () => {
     if (!node.editable) { setAttribute(node.item); }
   };
 
@@ -114,7 +114,7 @@ function AttributeNode({
       }),
     );
   };
-  const isSelected = node => (attribute && attribute.id) === node.item.id;
+  const isSelected = (node) => (attribute && attribute.id) === node.item.id;
 
   return (
     <SortableTree
@@ -167,14 +167,14 @@ AttributeNode.defaultProps = {
   attribute: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
   attribute: store.attributesData.attribute,
   isUpdating: store.attributesData.isUpdating,
   isCreating: store.attributesData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   setAttribute,
   createHistory,

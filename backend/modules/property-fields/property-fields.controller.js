@@ -4,11 +4,11 @@ const {
   handleError,
   responseWithResult,
   handleEntityNotFound,
-  saveUpdates,
+  savePropertiesUpdates,
   respondWith,
 } = require('../../utils');
 
-// Gets a list of Categories
+// Gets a list of Property Fields
 exports.index = (req, res) => {
   PropertyFields
     .find()
@@ -18,7 +18,7 @@ exports.index = (req, res) => {
     .catch(handleError(res));
 };
 
-// Creates a new Category in the DB
+// Creates a new Property Fields in the DB
 exports.create = (req, res) => {
   PropertyFields
     .insertMany(req.body.propertyField, (err, result) => {
@@ -30,7 +30,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Gets a single Category from the DB
+// Gets a single Property Fields from the DB
 exports.show = (req, res) => {
   PropertyFields
     .find({ clientId: req.params.clientId, type: req.params.type })
@@ -40,7 +40,7 @@ exports.show = (req, res) => {
     .catch(handleError(res));
 };
 
-// Updates an existing Category in the DB
+// Updates an existing Property Fields in the DB
 exports.update = (req, res) => {
   if (req.body._id) {
     delete req.body._id;
@@ -49,12 +49,12 @@ exports.update = (req, res) => {
   PropertyFields
     .findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(savePropertiesUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Deletes a Category from the DB
+// Deletes a Property Fields from the DB
 exports.remove = (req, res) => {
   PropertyFields
     .deleteMany({ clientId: req.params.clientId }, (err) => {

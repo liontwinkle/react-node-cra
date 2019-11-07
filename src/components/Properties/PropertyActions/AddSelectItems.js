@@ -29,7 +29,7 @@ function AddSelectItems({
     key: '',
     label: '',
   });
-  const handleChange = field => (e) => {
+  const handleChange = (field) => (e) => {
     const newClient = {
       ...sectionsData,
       [field]: e.target.value,
@@ -42,7 +42,7 @@ function AddSelectItems({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { propertyFields } = propertyField;
-      const selectItems = propertyFields.filter(item => (item.key === selectKey))[0];
+      const selectItems = propertyFields.filter((item) => (item.key === selectKey))[0];
       let updateFlag = true;
 
       if (selectItems.items) {
@@ -127,12 +127,12 @@ AddSelectItems.propTypes = {
   updatePropertyField: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.propertyFieldsData.isUpdating,
   propertyField: store.propertyFieldsData.propertyField,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
 }, dispatch);
 

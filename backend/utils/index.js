@@ -2,6 +2,9 @@
 const db = require('mongoose').connection;
 const _ = require('lodash');
 const { ValidationError } = require('mongoose').Error;
+const fs = require('fs');
+const base64ToImage = require('base64-to-image');
+
 const AppearCollection = require('../modules/appear/appear.model');
 
 function insertAppear(collection, attributeId, appear) {
@@ -110,7 +113,7 @@ function handleCreate(req) {
       collectionAppear.find({ categoryId: parseInt(createData.parentId, 10) })
         .then((result) => {
           if (result.length > 0) {
-            const attributs = result.map(item => ({
+            const attributs = result.map((item) => ({
               attributeId: item.attributeId,
               categoryId: newId,
             }));
@@ -131,7 +134,7 @@ function setAppearForCategory(data, client) {
       collectionAppear.find({ categoryId: parseInt(item.parentId, 10) })
         .then((result) => {
           if (result.length > 0) {
-            const attributs = result.map(attributeItem => ({
+            const attributs = result.map((attributeItem) => ({
               attributeId: attributeItem.attributeId,
               categoryId: item.categoryId,
             }));
@@ -186,10 +189,10 @@ function handleAttributeFetch(req, res) {
         .then((result) => {
           entity.forEach((entityItem, index) => {
             if (result.length > 0) {
-              attributeData[index].appear = result.filter((appearItem =>
+              attributeData[index].appear = result.filter(((appearItem) =>
                 (appearItem.attributeId === entityItem.attributeId)
               ))
-                .map(item => (item.categoryId));
+                .map((item) => (item.categoryId));
             } else {
               attributeData[index].appear = [];
             }
@@ -202,6 +205,168 @@ function handleAttributeFetch(req, res) {
   };
 }
 
+function uploadImageProperties(data, clientId, type) {
+  if (data.propertyFields) {
+    data.propertyFields.forEach((item, index) => {
+      if (item.image && item.image.imageData) {
+        const dir = `/images/${clientId}/${type}/default`;
+        const fileName = `${item.key}_${item.image.path}`;
+        const fileType = item.image.type.split('/')[1];
+        const imageType = { fileName, type: fileType }; // Png, Jpg, Jpeg
+
+        if (!fs.existsSync('../public/images')) {
+          fs.mkdirSync('../public/images');
+        }
+        if (!fs.existsSync(`../public/images/${clientId}`)) {
+          fs.mkdirSync(`../public/images/${clientId}`);
+        }
+        if (!fs.existsSync(`../public/images/${clientId}/${type}`)) {
+          fs.mkdirSync(`../public/images/${clientId}/${type}`);
+        }
+        if (!fs.existsSync(`../public/images/${clientId}/${type}/default`)) {
+          fs.mkdirSync(`../public/images/${clientId}/${type}/default`);
+        }
+        base64ToImage(item.image.imageData, `../public/${dir}/`, imageType);
+        const updatedData = item;
+        const image = item.image;
+        delete image.imageData;
+        image.path = `${dir}/${fileName}`;
+        updatedData.image = image;
+        data.propertyFields[index] = updatedData;
+      }
+    });
+  }
+  return data;
+}
+
+function deleteFile(url) {
+  try {
+    fs.unlinkSync(url);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function removeImageUploaded(originData, newData) {
+  let diffData = null;
+  for (let index = 0; index < originData.length; index++) {
+    if (newData.findIndex((newItem) => (newItem.key === originData[index].key)) < 0) {
+      diffData = originData[index];
+      break;
+    }
+  }
+  if (diffData && diffData.image) {
+    deleteFile(`../public/images/${diffData.image.path}`);
+  }
+}
+
+function updateFile(clientId, type, url, id) {
+  const copyUrl = url.replace(/\/default\//g, `/${id}/`);
+  const destUrl = `/images/${clientId}/${type}/${id}`;
+  if (!fs.existsSync(`../public${destUrl}`)) {
+    fs.mkdirSync(`../public${destUrl}`);
+  }
+  if (`../public${url}` !== `../public${copyUrl}`) {
+    fs.copyFile(`../public${url}`, `../public${copyUrl}`, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+  return copyUrl;
+}
+
+function createFile(clientId, type, data, key, categoryId, originUrl) {
+  if (data && data.imageData) {
+    if (originUrl) {
+      deleteFile(`../public/${originUrl}`);
+    }
+    const dir = `/images/${clientId}/${type}/${categoryId}`;
+    const fileName = `${key}_${data.path}`;
+    const fileType = data.type.split('/')[1];
+    const imageType = { fileName, type: fileType }; // Png, Jpg, Jpeg
+
+    if (!fs.existsSync('../public/images')) {
+      fs.mkdirSync('../public/images');
+    }
+    if (!fs.existsSync(`../public/images/${clientId}`)) {
+      fs.mkdirSync(`../public/images/${clientId}`);
+    }
+    if (!fs.existsSync(`../public/images/${clientId}/${type}`)) {
+      fs.mkdirSync(`../public/images/${clientId}/${type}`);
+    }
+    if (!fs.existsSync(`../public/images/${clientId}/${type}/${categoryId}`)) {
+      fs.mkdirSync(`../public/images/${clientId}/${type}/${categoryId}`);
+    }
+    base64ToImage(data.imageData, `../public/${dir}/`, imageType);
+    const image = data;
+    delete image.imageData;
+    image.path = `${dir}/${fileName}`;
+    return image;
+  }
+}
+function prepareImageProperties(originData, updates, clientId, type) {
+  const originProperties = (originData.properties)
+    ? JSON.parse(JSON.stringify(originData.properties))
+    : null;
+  const updateProperties = JSON.parse(JSON.stringify(updates.properties));
+  const updatedNewProperties = JSON.parse(JSON.stringify(updates));
+  const dataKeys = Object.keys(updateProperties);
+  dataKeys.forEach((keyItem) => {
+    if (typeof updateProperties[keyItem] === 'object'
+      && updateProperties[keyItem] !== null
+      && !Array.isArray(updateProperties[keyItem])
+    ) {
+      const subKeys = Object.keys(updateProperties[keyItem]);
+      subKeys.forEach((subKeyItem) => {
+        if (!originProperties || !originProperties[keyItem]
+          || originProperties[keyItem][subKeyItem] !== updateProperties[keyItem][subKeyItem]) {
+          if (updateProperties[keyItem][subKeyItem] && updateProperties[keyItem][subKeyItem].path) {
+            if (!updateProperties[keyItem][subKeyItem].imageData) {
+              updatedNewProperties.properties[keyItem][subKeyItem].path = updateFile(clientId,
+                type, updateProperties[keyItem][subKeyItem].path,
+                originData.categoryId);
+            } else {
+              const originUrl = (originProperties[keyItem]
+                && originProperties[keyItem][subKeyItem])
+                ? originProperties[keyItem][subKeyItem].path : null;
+              updatedNewProperties.properties[keyItem][subKeyItem] = createFile(clientId,
+                type,
+                updateProperties[keyItem][subKeyItem],
+                subKeyItem, originData.categoryId, originUrl);
+            }
+          }
+        }
+      });
+    } else if (updateProperties[keyItem] && updateProperties[keyItem].path) {
+      if (!updateProperties[keyItem].imageData) {
+        updatedNewProperties.properties[keyItem].path = updateFile(clientId,
+          type, updates[keyItem].path, originData.categoryId);
+      } else {
+        updatedNewProperties.properties[keyItem] = createFile(clientId,
+          type,
+          updateProperties[keyItem],
+          keyItem, originData.categoryId);
+      }
+    }
+  });
+  return updatedNewProperties;
+}
+
+function saveCategoriesUpdates(req) {
+  return (entity) => {
+    if (req.body) {
+      const originData = JSON.parse(JSON.stringify(entity));
+      let data = req.body;
+      if (req.body.properties) {
+        data = prepareImageProperties(originData, req.body, req.client._id, 'virtual');
+      }
+      _.assign(entity, data);
+    }
+    return entity.saveAsync();
+  };
+}
+
 function saveUpdates(updates) {
   return (entity) => {
     if (updates) {
@@ -211,8 +376,23 @@ function saveUpdates(updates) {
   };
 }
 
+function savePropertiesUpdates(updates) {
+  return (entity) => {
+    if (updates) {
+      const originData = JSON.parse(JSON.stringify(entity));
+      let data = updates;
+      if (updates.propertyFields) {
+        removeImageUploaded(originData.propertyFields, updates.propertyFields);
+        data = uploadImageProperties(updates, entity.clientId, entity.type);
+      }
+      _.assign(entity, data);
+    }
+    return entity.saveAsync();
+  };
+}
+
 function getAppear(appearArray) {
-  return appearArray.map(item => item.categoryId);
+  return appearArray.map((item) => item.categoryId);
 }
 
 function checkOffForAttribute(oldData, req, collection, entity) {
@@ -301,7 +481,12 @@ function saveAttributeUpdates(req, res) {
     }
 
     /** *** Update the Attributes and Appears Collection***** */
-    _.assign(entity, req.body);
+    const originData = JSON.parse(JSON.stringify(entity));
+    let data = req.body;
+    if (req.body.properties) {
+      data = prepareImageProperties(originData, req.body, req.client._id, 'attributes');
+    }
+    _.assign(entity, data);
     const returnValue = JSON.parse(JSON.stringify(entity));
 
     collectionAppear.find({ attributeId: entity.attributeId })
@@ -337,7 +522,7 @@ function removeCategoryEntity(req, res) {
 }
 
 function removeEntity(res) {
-  return entity => entity && entity.removeAsync()
+  return (entity) => entity && entity.removeAsync()
     .then(respondWith(res, 204));
 }
 
@@ -412,6 +597,9 @@ module.exports = {
   responseWithResult,
   handleEntityNotFound,
   saveUpdates,
+  savePropertiesUpdates,
+  saveCategoriesUpdates,
+  saveAttributeUpdates,
   handleCreate,
   handleAttributeCreate,
   handleAttributeFetch,
@@ -419,7 +607,6 @@ module.exports = {
   removeCategoryEntity,
   createCollection,
   handleExistingRemove,
-  saveAttributeUpdates,
   uploadAppear,
   setAppearForCategory,
 };

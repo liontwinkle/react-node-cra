@@ -57,7 +57,7 @@ function ProductsGridDetail({
     }
   };
 
-  const handleSizeInput = type => (event) => {
+  const handleSizeInput = (type) => (event) => {
     const size = JSON.parse(JSON.stringify(hoverSize));
     size[type] = event.target.value;
     setSizeSet(size);
@@ -112,7 +112,7 @@ ProductsGridDetail.propTypes = {
   setSizeSet: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   headers: store.productsData.data.headers,
   isUpdating: store.productsFieldsData.isUpdating,
   isFetchingList: store.productsData.isFetchingList,
@@ -120,7 +120,7 @@ const mapStateToProps = store => ({
   hoverSize: store.productsFieldsData.hoverSize,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateProductsField,
   setSizeSet,
 }, dispatch);

@@ -15,7 +15,7 @@ function ShowFields({
   const [checkAll, setCheckAll] = useState(false);
   const [unCheckAll, setUnCheckAll] = useState(false);
 
-  const handleChange = value => (e) => {
+  const handleChange = (value) => (e) => {
     if (value !== 'allc' && value !== 'allu') {
       const index = fields.indexOf(value);
       onChange(index, e.target.checked);
@@ -52,7 +52,7 @@ function ShowFields({
           value="clear all selections"
           onChange={handleChange('allu')}
         />
-        {fields.map(item => (
+        {fields.map((item) => (
           <CustomCheck
             key={item}
             insertValue={

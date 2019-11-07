@@ -70,9 +70,9 @@ class RuleBuilder extends Component {
     );
   };
 
-  changeGlue = hashKey => (glue) => {
+  changeGlue = (hashKey) => (glue) => {
     this.props.changeMap(
-      this.props.map.update(hashKey, val => ({
+      this.props.map.update(hashKey, (val) => ({
         ...val,
         glue,
       })),
@@ -100,27 +100,27 @@ class RuleBuilder extends Component {
     this.props.changeMap(map);
   };
 
-  changeField = hashKey => (key) => {
+  changeField = (hashKey) => (key) => {
     this.props.changeMap(
-      this.props.map.update(hashKey, val => ({
+      this.props.map.update(hashKey, (val) => ({
         ...val,
         key,
       })),
     );
   };
 
-  changeRule = hashKey => (rule) => {
+  changeRule = (hashKey) => (rule) => {
     this.props.changeMap(
-      this.props.map.update(hashKey, val => ({
+      this.props.map.update(hashKey, (val) => ({
         ...val,
         rule,
       })),
     );
   };
 
-  changeValue = hashKey => (value) => {
+  changeValue = (hashKey) => (value) => {
     this.props.changeMap(
-      this.props.map.update(hashKey, val => ({
+      this.props.map.update(hashKey, (val) => ({
         ...val,
         value,
       })),

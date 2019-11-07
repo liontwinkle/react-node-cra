@@ -16,7 +16,7 @@ import { createPropertyField, updatePropertyField } from 'redux/actions/property
 import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
 }));
 
@@ -39,7 +39,7 @@ function ClientForm({
     code: isAdd ? '' : client.code,
     url: isAdd ? '' : client.url,
   });
-  const handleChange = field => (e) => {
+  const handleChange = (field) => (e) => {
     const newClient = {
       ...clientData,
       [field]: e.target.value,
@@ -139,12 +139,12 @@ ClientForm.defaultProps = {
   client: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isSaving: store.clientsData.isCreating || store.clientsData.isUpdating,
   client: store.clientsData.client,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createClient,
   updateClient,
   createPropertyField,

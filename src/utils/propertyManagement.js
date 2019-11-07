@@ -15,16 +15,17 @@ import CustomMonaco from 'components/elements/CustomMonaco';
 
 import { propertyTypes } from './constants';
 import { sortByOrder } from './index';
+import CustomImageDisplay from '../components/elements/CustomImageDisplay';
 
 /** utils * */
 const createValuefromtemplate = (template, state, propertyFields) => {
   let string = template;
   const regex = /\$\w+/g;
   const result = regex[Symbol.matchAll](string);
-  const matchedArray = Array.from(result, x => x[0]);
+  const matchedArray = Array.from(result, (x) => x[0]);
   matchedArray.forEach((resultItem) => {
     const keyValue = resultItem.substr(1, resultItem.length - 1);
-    const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+    const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
     let expectedValue = '';
     if (property) {
       if (property.template && property.template !== '') {
@@ -57,6 +58,7 @@ const getStringTypeValue = (property, state, propertyFields) => {
     value = value.replace('_', '-');
     value = value.replace(' ', '-');
   }
+  value = (value === null) ? '' : value;
   return {
     value,
     templateFlag,
@@ -64,19 +66,6 @@ const getStringTypeValue = (property, state, propertyFields) => {
 };
 
 /** exports * */
-export const initProperties = (properties, matchProperties) => {
-  const updateProperties = {};
-  const keys = Object.keys(properties);
-  const propKeys = Object.keys(matchProperties);
-
-  keys.forEach((key) => {
-    if (propKeys.indexOf(key) > -1) {
-      updateProperties[key] = properties[key];
-    }
-  });
-  return updateProperties;
-};
-
 export const updateProperties = (propertyFields, properties) => {
   const nextProperties = {};
   propertyFields.forEach((item, key) => {
@@ -96,7 +85,7 @@ export const updateProperties = (propertyFields, properties) => {
 export const sectionRender = (
   propertyFields, state, section,
   changeInput, changeSelect, changeArrayInput,
-  handleSelItemToggle, toggleSwitch, changeMonaco,
+  handleSelItemToggle, handleEditImage, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
   let fields = propertyFields;
@@ -118,7 +107,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'select') {
-        const item = (p.items) ? p.items.filter(item => (item.key === state.properties[p.key]))[0] || {} : {};
+        const item = (p.items) ? p.items.filter((item) => (item.key === state.properties[p.key]))[0] || {} : {};
         res.push(
           <div className="mg-select-section" key={p.key}>
             <CustomSelectWithLabel
@@ -234,6 +223,19 @@ export const sectionRender = (
               />
             ),
         );
+      } else if (p.propertyType === 'image') {
+        const image = (state.properties[p.key]) ? state.properties[p.key] : p.image;
+        res.push(
+          <CustomImageDisplay
+            id={p.key}
+            label={p.label}
+            inline
+            key={p.key}
+            value={image ? image.path : null}
+            name={image ? image.name : null}
+            handleEditImage={() => handleEditImage(p.key)}
+          />,
+        );
       }
     }
   });
@@ -299,6 +301,8 @@ export const setDefault = (properties, fields) => {
         tempProperties[item.key] = false;
       } else if (item.propertyType === 'array') {
         tempProperties[item.key] = null;
+      } else if (item.propertyType === 'image') {
+        tempProperties[item.key] = item.image;
       } else {
         tempProperties[item.key] = '';
       }
@@ -325,7 +329,7 @@ export const makeUpdatedData = (properties, fields, sections) => {
   let currentSection = JSON.parse(JSON.stringify(sections));
   const result = {};
   fields.forEach((item) => {
-    currentSection = currentSection.filter(sectionItem => (sectionItem.key !== item.section));
+    currentSection = currentSection.filter((sectionItem) => (sectionItem.key !== item.section));
     if (!result[item.section]) {
       result[item.section] = {};
       result[item.section][item.key] = properties[item.key];
@@ -355,10 +359,10 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     const string = propertyFieldData.template;
     const regex = /\$\w+/g;
     const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, x => x[0]);
+    const matchedArray = Array.from(result, (x) => x[0]);
     matchedArray.forEach((item) => {
       const keyValue = item.substr(1, item.length - 1);
-      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
       if (!property) {
         invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
       }
@@ -369,10 +373,10 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     const string = propertyFieldData.default;
     const regex = /\$\w+/g;
     const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, x => x[0]);
+    const matchedArray = Array.from(result, (x) => x[0]);
     matchedArray.forEach((item) => {
       const keyValue = item.substr(1, item.length - 1);
-      const property = propertyFields.find(propertyItem => (propertyItem.key === keyValue));
+      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
       if (!property) {
         invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
       }

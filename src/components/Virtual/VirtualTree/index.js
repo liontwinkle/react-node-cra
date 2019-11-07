@@ -98,7 +98,7 @@ function VirtualSortableTree(props) {
     );
   };
 
-  const handleClick = node => () => {
+  const handleClick = (node) => () => {
     if (!node.editable) {
       setCategory(node.item);
     }
@@ -142,7 +142,7 @@ function VirtualSortableTree(props) {
     }
   };
 
-  const isSelected = node => (category && category.id) === node.item.id;
+  const isSelected = (node) => (category && category.id) === node.item.id;
   const editable = (clientType.key === 'virtual');
 
   return (
@@ -199,7 +199,7 @@ VirtualSortableTree.defaultProps = {
   category: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.categoriesData.isUpdating,
   categories: store.categoriesData.categories,
   category: store.categoriesData.category,
@@ -208,7 +208,7 @@ const mapStateToProps = store => ({
   isCreating: store.historyData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateCategory,
   setCategory,
   createHistory,

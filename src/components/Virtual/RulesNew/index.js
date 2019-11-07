@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -21,12 +21,15 @@ import './style.scss';
 import { CustomToggle } from '../../elements';
 
 class NewRules extends Component {
-  state = {
-    newRules: [],
-    editRules: [],
-    fetchingFlag: true,
-    productsFlag: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newRules: [],
+      editRules: [],
+      fetchingFlag: true,
+      productsFlag: false,
+    };
+  }
 
   componentDidMount() {
     this.setState({
@@ -66,20 +69,20 @@ class NewRules extends Component {
     } = this.props;
 
     let filterProduct = [];
-    let attributeList = attributes.filter(Item => (
-      !!Item.appear.find(appearItem => (appearItem === category.categoryId))));
+    let attributeList = attributes.filter((Item) => (
+      !!Item.appear.find((appearItem) => (appearItem === category.categoryId))));
     let filterAttribute = attributeList;
 
     if (attributeList.length > 0) {
-      const groups = attributeList.filter(item => (!item.groupId));
+      const groups = attributeList.filter((item) => (!item.groupId));
       attributeList = _difference(attributeList, groups);
       groups.forEach((groupItem) => {
-        const childrenList = attributeList.filter(childItem => (
+        const childrenList = attributeList.filter((childItem) => (
           childItem.groupId === groupItem.attributeId.toString()));
         attributeList = _difference(attributeList, childrenList);
       });
       attributeList.forEach((childListItem) => {
-        const groupChild = attributes.filter(item => (item.attributeId.toString() === childListItem.groupId));
+        const groupChild = attributes.filter((item) => (item.attributeId.toString() === childListItem.groupId));
         filterAttribute = _union(filterAttribute, groupChild);
       });
       const srcAttributeRules = setUnionRules(filterAttribute);
@@ -106,7 +109,7 @@ class NewRules extends Component {
   };
 
   onHandleSwtichView = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       productsFlag: !prevState.productsFlag,
     }));
     if (this.state.productsFlag) {
@@ -123,7 +126,7 @@ class NewRules extends Component {
         {
           !this.state.fetchingFlag
             ? (
-              <Fragment>
+              <>
                 <div className="mg-rule-content">
                   <CustomToggle
                     label="Products Switch"
@@ -135,7 +138,7 @@ class NewRules extends Component {
                   </PerfectScrollbar>
                 </div>
                 <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
-              </Fragment>
+              </>
             )
             : (
               <div className="loader">
@@ -160,7 +163,7 @@ NewRules.propTypes = {
   setProductViewType: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
@@ -168,7 +171,7 @@ const mapStateToProps = store => ({
   attributes: store.attributesData.attributes,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchProducts,
   setPrefilterData,
   setProductViewType,

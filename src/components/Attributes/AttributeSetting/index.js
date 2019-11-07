@@ -17,11 +17,14 @@ import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
 import './style.scss';
 
 class AttributeSetting extends Component {
-  state = {
-    categoryList: [],
-    checked: [],
-    expanded: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      categoryList: [],
+      checked: [],
+      expanded: [],
+    };
+  }
 
   componentDidMount() {
     const { attribute } = this.props;
@@ -46,7 +49,7 @@ class AttributeSetting extends Component {
   };
 
   updateList = (target) => {
-    const targetCategory = this.props.categories.filter(item => (item.categoryId === target.value));
+    const targetCategory = this.props.categories.filter((item) => (item.categoryId === target.value));
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
     const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
     willCheckedCategory.push(targetCategory[0].categoryId);
@@ -72,12 +75,12 @@ class AttributeSetting extends Component {
   checkedAction = (updateAppear) => {
     let returnId = null;
     const { attributes, attribute } = this.props;
-    const unCheckedSibling = attributes.find(item => (
+    const unCheckedSibling = attributes.find((item) => (
       item.groupId === attribute.groupId
       && item.attributeId !== attribute.attributeId
       && !hasSubArray(item.appear, updateAppear)));
     if (!unCheckedSibling && attribute.groupId !== 'null') {
-      returnId = attributes.find(item => (item.attributeId === parseInt(attribute.groupId, 10))).id;
+      returnId = attributes.find((item) => (item.attributeId === parseInt(attribute.groupId, 10))).id;
     } else {
       returnId = attribute.id;
     }
@@ -148,7 +151,7 @@ AttributeSetting.propTypes = {
   fetchAttributes: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attribute: store.attributesData.attribute,
   attributes: store.attributesData.attributes,
   isUpdating: store.attributesData.isUpdating,
@@ -157,7 +160,7 @@ const mapStateToProps = store => ({
   client: store.clientsData.client,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   fetchAttributes,
 }, dispatch);

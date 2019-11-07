@@ -87,7 +87,7 @@ function NodeMenu({
     if (!isDeleting) {
       removeAttribute(removeId)
         .then(() => {
-          const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+          const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item.id));
           if (deleteHistory.length > 0) {
             removeHistory(removeId)
               .then(() => {
@@ -186,14 +186,14 @@ NodeMenu.propTypes = {
   checkNameDuplicate: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createAttribute,
   createHistory,
   removeAttribute,
   removeHistory,
 }, dispatch);
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
   history: store.historyData.history,
   isUpdating: store.attributesData.isUpdating,

@@ -86,13 +86,13 @@ Tree.propTypes = {
   isCreating: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   categories: store.categoriesData.categories,
   treeData: store.categoriesData.trees,
   isCreating: store.categoriesData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createCategory,
   createHistory,
   updateTreeData,

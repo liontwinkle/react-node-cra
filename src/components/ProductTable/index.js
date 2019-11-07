@@ -101,9 +101,11 @@ class ProductTable extends Component {
       return;
     }
     if (changes[0][1] === 'id') {
-      const duplicate = this.props.products.find(item => (item.id === changes[0][3]));
+      const duplicate = this.props.products.find((item) => (item.id === changes[0][3]));
       if (duplicate) { this.props.setUpdatedProducts(changes); }
-    } else { this.props.setUpdatedProducts(changes); }
+    } else {
+      this.props.setUpdatedProducts(changes);
+    }
   };
 
   makeFilterResult = (changes) => {
@@ -177,7 +179,7 @@ class ProductTable extends Component {
   };
 
   loadMoreData = (viewCount, endIndex) => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       data: [...prevState.data, ...this.props.products.slice(endIndex, viewCount)],
     }));
   };
@@ -233,14 +235,15 @@ class ProductTable extends Component {
             <div className="table-loader">
               <Loader size="small" color="dark" />
             </div>
-          )
-        }
+          )}
       </div>
     );
   }
 }
 
 ProductTable.propTypes = {
+  isUpdating: PropTypes.bool.isRequired,
+  isUpdatingList: PropTypes.bool.isRequired,
   tableRef: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
@@ -253,7 +256,7 @@ ProductTable.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
   originProducts: store.productsData.originProducts,
   columns: store.productsData.data.columns,
@@ -263,7 +266,7 @@ const mapStateToProps = store => ({
   isUpdatingList: store.productsData.isUpdatingList,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchProducts,
   setUpdatedProducts,
   setProducts,

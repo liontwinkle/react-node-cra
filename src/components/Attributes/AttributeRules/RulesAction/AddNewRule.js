@@ -20,7 +20,7 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import { confirmMessage, getPreFilterData, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
-import AddNewRuleBody from '../../../Virtual/RulesNew/RulesAction/AddNewRuleBody';
+import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBody';
 
 function AddNewRule({
   open,
@@ -54,7 +54,7 @@ function AddNewRule({
     setPreviewValue(filterProducts().length);
   };
 
-  const handleSelectChange = field => (item) => {
+  const handleSelectChange = (field) => (item) => {
     const newClient = {
       ...ruleData,
       [field]: item,
@@ -123,7 +123,7 @@ function AddNewRule({
 
   const handleSubmit = () => {
     if (!isUpdating && !isCreating && !disabled) {
-      if (!displayRules.find(item => (
+      if (!displayRules.find((item) => (
         item.detail.key === ruleData.detail.key
         && item.match.key === ruleData.match.key
         && item.value === ruleData.value
@@ -198,7 +198,7 @@ AddNewRule.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.attributesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
@@ -206,7 +206,7 @@ const mapStateToProps = store => ({
   isCreating: store.historyData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   createHistory,
 }, dispatch);

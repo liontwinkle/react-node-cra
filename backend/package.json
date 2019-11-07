@@ -16,6 +16,7 @@
     "express-session": "^1.16.1",
     "express-status-monitor": "^1.2.6",
     "express-validator": "^5.3.1",
+    "base64-to-image": "^1.0.2",
     "lodash": "^4.17.15",
     "lusca": "^1.6.1",
     "mongoose": "^5.7.7",

@@ -28,6 +28,7 @@ function PropertyActions({
   createHistory,
   fields,
   sections,
+  uploadImage,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -55,14 +56,14 @@ function PropertyActions({
     property: 20,
   });
 
-  const onChangePageNum = field => (page) => {
+  const onChangePageNum = (field) => (page) => {
     setPageNum({
       ...pageNum,
       [field]: page,
     });
   };
 
-  const onChangeOrder = field => (index, direction) => {
+  const onChangeOrder = (field) => (index, direction) => {
     setSortHistory({
       ...sortHistory,
       [field]: {
@@ -71,7 +72,7 @@ function PropertyActions({
       },
     });
   };
-  const handleToggle = field => () => {
+  const handleToggle = (field) => () => {
     setOpen({
       ...open,
       [field]: !open[field],
@@ -183,6 +184,7 @@ function PropertyActions({
           handleClose={handleToggle('add')}
           createHistory={createHistory}
           objectItem={objectItem}
+          uploadImage={uploadImage}
           defaultOrder={getMaxValueFromArray('order', fields) + 1}
         />
       )}
@@ -212,13 +214,17 @@ PropertyActions.propTypes = {
   objectItem: PropTypes.object.isRequired,
   updateObject: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
+  uploadImage: PropTypes.any,
 };
 
-const mapStateToProps = store => ({
+PropertyActions.defaultProps = {
+  uploadImage: null,
+};
+const mapStateToProps = (store) => ({
   isHistoryCreating: store.historyData.isCreating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createHistory,
 }, dispatch);
 

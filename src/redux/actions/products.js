@@ -29,7 +29,7 @@ export const fetchProducts = () => (dispatch, getState) => {
     });
 };
 
-export const updateProducts = updateData => (dispatch, getState) => {
+export const updateProducts = (updateData) => (dispatch, getState) => {
   if (getState().productsData.isUpdatingList) {
     return Promise.reject();
   }
@@ -56,14 +56,14 @@ export const updateProducts = updateData => (dispatch, getState) => {
     });
 };
 
-export const setProducts = updateData => (dispatch) => {
+export const setProducts = (updateData) => (dispatch) => {
   dispatch({
     type: types.PRODUCTS_SET_PRODUCTS,
     payload: { updateData: JSON.stringify(updateData) },
   });
 };
 
-export const setUpdatedProducts = changes => (dispatch) => {
+export const setUpdatedProducts = (changes) => (dispatch) => {
   dispatch({
     type: types.PRODUCTS_SET_UPDATE_PRODUCTS,
     payload: { changes },

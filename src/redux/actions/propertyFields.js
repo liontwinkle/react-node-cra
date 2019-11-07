@@ -27,13 +27,13 @@ export const fetchPropertyField = (clientId, type) => (dispatch, getState) => {
     });
 };
 
-export const createPropertyField = clientData => (dispatch, getState) => {
+export const createPropertyField = (clientData) => (dispatch, getState) => {
   if (getState().propertyFieldsData.isCreating) {
     return;
   }
 
   const { clients } = getState().clientsData;
-  const client = clients.filter(item => (item.name === clientData.name));
+  const client = clients.filter((item) => (item.name === clientData.name));
   const type = ['virtual', 'native', 'products', 'attributes'];
   const propertyFields = [];
   type.forEach((item) => {
@@ -65,7 +65,7 @@ export const createPropertyField = clientData => (dispatch, getState) => {
     });
 };
 
-export const updatePropertyField = updatedData => (dispatch, getState) => {
+export const updatePropertyField = (updatedData) => (dispatch, getState) => {
   if (getState().propertyFieldsData.isUpdating) {
     return Promise.reject();
   }

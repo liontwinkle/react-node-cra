@@ -16,7 +16,9 @@ import { checkTemplate, checkPathValidate } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { updateDefaultOnAttriute } from 'redux/actions/attribute';
-import { CustomInput, CustomSelectWithLabel, CustomSearchFilter } from 'components/elements';
+import {
+  CustomInput, CustomSelectWithLabel, CustomSearchFilter, CustomImageUpload,
+} from 'components/elements';
 
 function AddPropertyFields({
   open,
@@ -40,10 +42,18 @@ function AddPropertyFields({
     template: '',
     propertyType: { key: 'string', label: 'String' },
     section: null,
+    image: {
+      name: '',
+      path: '',
+      type: '',
+      imageData: null,
+    },
     order: defaultOrder,
   });
 
-  const handleChange = field => (e) => {
+  const [imageFile, setImageFile] = useState(null);
+  const [imageName, setImageName] = useState('');
+  const handleChange = (field) => (e) => {
     const newClient = {
       ...propertyFieldData,
       [field]: e.target.value,
@@ -51,7 +61,7 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
-  const handleChangeTemplate = field => (value) => {
+  const handleChangeTemplate = (field) => (value) => {
     const newClient = {
       ...propertyFieldData,
       [field]: value,
@@ -75,18 +85,54 @@ function AddPropertyFields({
     setPropertyFieldData(newClient);
   };
 
+  const handleChangeFileName = (e) => {
+    e.persist();
+    setImageName(e.target.value);
+  };
+
+  const handleChangeImage = (data) => {
+    if (data.length > 0) {
+      const { file, fileType } = data[0];
+      setImageFile(data);
+      if (fileType && fileType.indexOf('image/') === 0) {
+        if (file) {
+          const reader = new FileReader();
+          reader.addEventListener(
+            'load',
+            () => {
+              const newFile = {
+                ...propertyFieldData,
+                image: {
+                  name: imageName,
+                  path: file.name,
+                  type: fileType,
+                  imageData: reader.result,
+                },
+              };
+              setPropertyFieldData(newFile);
+            },
+            false,
+          );
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+  };
+
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   const handleSubmit = () => {
+    const savedPropertyFieldData = JSON.parse(JSON.stringify(propertyFieldData));
+    savedPropertyFieldData.image.name = imageName;
     if (!isUpdating && !disabled) {
       const propertyFields = JSON.parse(JSON.stringify(propertyField.propertyFields));
-      const errList = checkTemplate(propertyFields, propertyFieldData);
-      const validatePath = checkPathValidate(propertyFields, propertyFieldData);
-      if (isExist(propertyFields, propertyFieldData.key) === 0 && errList === '' && validatePath) {
+      const errList = checkTemplate(propertyFields, savedPropertyFieldData);
+      const validatePath = checkPathValidate(propertyFields, savedPropertyFieldData);
+      if (isExist(propertyFields, savedPropertyFieldData.key) === 0 && errList === '' && validatePath) {
         propertyFields.push({
-          ...propertyFieldData,
-          propertyType: propertyFieldData.propertyType.key,
-          section: propertyFieldData.section && propertyFieldData.section.key,
+          ...savedPropertyFieldData,
+          propertyType: savedPropertyFieldData.propertyType.key,
+          section: savedPropertyFieldData.section && savedPropertyFieldData.section.key,
         });
         const updateDefaultFunc = (objectItem.parentId !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
@@ -96,8 +142,8 @@ function AddPropertyFields({
               updateDefaultFunc(propertyFields)
                 .then(() => {
                   addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
-                    `Create Property(${propertyFieldData.propertyType.key})`,
-                    `Create Property(${propertyFieldData.propertyType.key}) by ${objectItem.name}`,
+                    `Create Property(${savedPropertyFieldData.propertyType.key})`,
+                    `Create Property(${savedPropertyFieldData.propertyType.key}) by ${objectItem.name}`,
                     'virtual');
                   confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
                   handleClose();
@@ -117,7 +163,7 @@ function AddPropertyFields({
         if (errList !== '') {
           errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
         } else if (validatePath) {
-          errMsg = `Error: Another property is using the key (${propertyFieldData.key}) you specified.`;
+          errMsg = `Error: Another property is using the key (${savedPropertyFieldData.key}) you specified.`;
         } else {
           errMsg = 'URL Path is not valid.';
         }
@@ -153,7 +199,7 @@ function AddPropertyFields({
         />
         <CustomSearchFilter
           className="mb-3"
-          searchItems={propertyField.propertyFields.map(item => (item.key))}
+          searchItems={propertyField.propertyFields.map((item) => (item.key))}
           placeholder="Input search filter"
           label="Default"
           value={propertyFieldData.default}
@@ -176,13 +222,26 @@ function AddPropertyFields({
           && (
             <CustomSearchFilter
               className="mb-3"
-              searchItems={propertyField.propertyFields.map(item => (item.key))}
+              searchItems={propertyField.propertyFields.map((item) => (item.key))}
               placeholder="Input search filter"
               label="Template"
               value={propertyFieldData.template}
               onChange={handleChangeTemplate('template')}
             />
           )
+        }
+        {
+          propertyFieldData.propertyType.key === 'image'
+            && (
+              <CustomImageUpload
+                className="mb-3"
+                label="Image Upload"
+                value={imageFile}
+                name={imageName}
+                onFileNameChange={handleChangeFileName}
+                onChange={handleChangeImage}
+              />
+            )
         }
         <CustomInput
           className="mb-3"
@@ -235,12 +294,12 @@ AddPropertyFields.propTypes = {
   createHistory: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.propertyFieldsData.isUpdating,
   propertyField: store.propertyFieldsData.propertyField,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
   updateDefaultOnCategory,
   updateDefaultOnAttriute,

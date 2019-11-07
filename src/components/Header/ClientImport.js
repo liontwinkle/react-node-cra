@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -10,7 +10,7 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-import { fileUpload, keyUpload } from 'redux/actions/upload';
+import { fileUpload } from 'redux/actions/upload';
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
@@ -26,14 +26,13 @@ import UploadDlg from './UploadDlg';
 
 import './style.scss';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
 }));
 
 function ClientImport({
   status,
   isUploading,
-  isKeyUploading,
   client,
   type,
   handleClose,
@@ -43,6 +42,7 @@ function ClientImport({
   fetchCategories,
   fetchAttributes,
   fetchProducts,
+  fetchPropertyField,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,10 +53,24 @@ function ClientImport({
 
   const fetchData = () => {
     if (type.key === 'virtual' || type.key === 'native') {
-      fetchCategories(client.id, type.key)
-        .then(() => { fetchAttributes(client.id, 'attributes').then(() => { setUploadFlag(false); }); });
+      fetchPropertyField(client.id, type.key)
+        .then(() => {
+          fetchCategories(client.id, type.key)
+            .then(() => {
+              fetchAttributes(client.id, 'attributes')
+                .then(() => {
+                  setUploadFlag(false);
+                });
+            });
+        });
     } else if (type.key === 'attributes') {
-      fetchAttributes(client.id, type.key).then(() => { setUploadFlag(false); });
+      fetchPropertyField(client.id, type.key)
+        .then(() => {
+          fetchAttributes(client.id, type.key)
+            .then(() => {
+              setUploadFlag(false);
+            });
+        });
     } else {
       fetchProducts().then(() => { setUploadFlag(false); });
     }
@@ -104,7 +118,7 @@ function ClientImport({
     }
   };
 
-  const onChangeHandle = dataType => (fileItem) => {
+  const onChangeHandle = (dataType) => (fileItem) => {
     if (fileItem.length > 0) {
       const { file, fileType } = fileItem[0];
       setFileSize(file.size);
@@ -151,8 +165,8 @@ function ClientImport({
 
       <DialogContent>
         {
-          !uploadFlag && !isKeyUploading ? (
-            <Fragment>
+          !uploadFlag ? (
+            <>
               <UploadDlg
                 onChangeData={onChangeHandle('data')}
                 clientType={type.key}
@@ -164,11 +178,11 @@ function ClientImport({
                     label="Edit"
                     value={importData}
                     key="upload"
-                    onChange={data => onEditHandle(data)}
+                    onChange={(data) => onEditHandle(data)}
                   />
                 )
               }
-            </Fragment>
+            </>
           ) : (
             <div className="upload_loader">
               <Loader size="small" color="dark" />
@@ -210,11 +224,11 @@ ClientImport.propTypes = {
   categories: PropTypes.array.isRequired,
   handleClose: PropTypes.func.isRequired,
   isUploading: PropTypes.bool.isRequired,
-  isKeyUploading: PropTypes.bool.isRequired,
   fileUpload: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  fetchPropertyField: PropTypes.func.isRequired,
 };
 
 ClientImport.defaultProps = {
@@ -222,16 +236,14 @@ ClientImport.defaultProps = {
   type: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   categories: store.categoriesData.categories,
   attributes: store.attributesData.attributes,
   isUploading: store.uploadData.isUploading,
-  isKeyUploading: store.uploadData.isKeyUploading,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fileUpload,
-  keyUpload,
   fetchPropertyField,
   fetchCategories,
   fetchAttributes,

@@ -40,14 +40,13 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case types.PRODUCTS_UPDATE_FIELDS_REQUEST:
-      return Object.assign({}, state, {
-        isUpdating: true,
-      });
+      return { ...state, isUpdating: true };
     case types.PRODUCTS_UPDATE_FIELDS_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isUpdating: false,
         productsField: JSON.parse(action.payload.data).fields,
-      });
+      };
     case types.PRODUCTS_UPDATE_FIELDS_FAIL:
       return {
         ...state,

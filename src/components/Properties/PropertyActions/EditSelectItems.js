@@ -36,16 +36,16 @@ function EditPropertyFields({
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
     ],
-    data: (propertyFields.filter(item => (item.key === selectKey)).length > 0)
-      ? propertyFields.filter(item => (item.key === selectKey))[0].items
+    data: (propertyFields.filter((item) => (item.key === selectKey)).length > 0)
+      ? propertyFields.filter((item) => (item.key === selectKey))[0].items
       : [],
   };
 
-  const handleAdd = newData => new Promise((resolve) => {
+  const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const selectItems = propertyFields.filter(item => (item.key === selectKey))[0];
+      const selectItems = propertyFields.filter((item) => (item.key === selectKey))[0];
       let updateFlag = true;
       if (selectItems.items) {
         if (isExist(selectItems.items, newData.key) === 0) {
@@ -77,8 +77,8 @@ function EditPropertyFields({
     setTimeout(() => {
       resolve();
 
-      const selectItems = propertyFields.filter(item => (item.key === selectKey))[0].items;
-      const ruleKeyIndex = selectItems.findIndex(rk => rk._id === oldData._id);
+      const selectItems = propertyFields.filter((item) => (item.key === selectKey))[0].items;
+      const ruleKeyIndex = selectItems.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         selectItems.splice(ruleKeyIndex, 1, {
           key: newData.key,
@@ -99,12 +99,12 @@ function EditPropertyFields({
     }, 600);
   });
 
-  const handleDelete = oldData => new Promise((resolve) => {
+  const handleDelete = (oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const selectItems = propertyFields.filter(item => (item.key === selectKey))[0].items;
-      const ruleKeyIndex = selectItems.findIndex(rk => rk._id === oldData._id);
+      const selectItems = propertyFields.filter((item) => (item.key === selectKey))[0].items;
+      const ruleKeyIndex = selectItems.findIndex((rk) => rk._id === oldData._id);
       if (properties[selectKey] && properties[selectKey] === oldData.key) {
         properties[selectKey] = '';
       }
@@ -174,12 +174,12 @@ EditPropertyFields.propTypes = {
   selectKey: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
 }, dispatch);
 

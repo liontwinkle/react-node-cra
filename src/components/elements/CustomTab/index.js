@@ -9,7 +9,7 @@ const CustomTab = ({
   onClick,
 }) => (
   <div className="mg-tab-container d-flex">
-    {tabs.map(tab => (
+    {tabs.map((tab) => (
       <div
         className={`mg-tab${tab.value === value ? ' active' : ''}`}
         onClick={onClick(tab.value)}

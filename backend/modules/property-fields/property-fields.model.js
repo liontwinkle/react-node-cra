@@ -21,6 +21,10 @@ const PropertyFieldsSchema = new Schema({
       key: String,
       label: String
     }],
+    image: {
+      name: String,
+      path: String,
+    },
     order: Number,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });

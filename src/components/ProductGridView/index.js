@@ -143,8 +143,7 @@ class ProductGridView extends Component {
             <div className="table-loader">
               <Loader size="small" color="dark" />
             </div>
-          )
-        }
+          )}
         {viewDetailFlag && (
           <DetailView
             pointX={pointX}
@@ -177,7 +176,7 @@ ProductGridView.defaultProps = {
   filterProducts: [],
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
   productsField: store.productsFieldsData.productsField,
   headers: store.productsData.data.headers,
@@ -185,7 +184,7 @@ const mapStateToProps = store => ({
   hoverSize: store.productsFieldsData.hoverSize,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchProducts,
 }, dispatch);
 

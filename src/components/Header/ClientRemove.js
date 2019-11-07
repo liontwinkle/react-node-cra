@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { bindActionCreators } from 'redux';
@@ -20,7 +20,7 @@ import { removeProductsField } from 'redux/actions/productsFields';
 import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogAction: {
     margin: theme.spacing(2),
     marginTop: 0,
@@ -70,7 +70,7 @@ function ClientRemove({
   };
 
   return (
-    <Fragment>
+    <>
       <Tooltip
         title="Delete Client"
         position="bottom"
@@ -112,7 +112,7 @@ function ClientRemove({
           </button>
         </DialogActions>
       </Dialog>
-    </Fragment>
+    </>
   );
 }
 
@@ -130,12 +130,12 @@ ClientRemove.defaultProps = {
   disabled: false,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isDeleting: store.clientsData.isDeleting,
   client: store.clientsData.client,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   removeClient,
   removePropertyField,
   removeProductsField,

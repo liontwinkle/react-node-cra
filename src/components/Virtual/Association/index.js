@@ -57,7 +57,7 @@ function Association({
     event.preventDefault();
     const strId = event.path[2].id.split('-');
     const attributeId = strId[strId.length - 1];
-    const attribute = attributes.find(attributeItem => (attributeItem.attributeId.toString() === attributeId));
+    const attribute = attributes.find((attributeItem) => (attributeItem.attributeId.toString() === attributeId));
     setAttribute(attribute);
     setInfo({
       label: event.target.innerText,
@@ -72,7 +72,7 @@ function Association({
     if (category) {
       const updateChecked = [];
       attributes.forEach((attrItem) => {
-        if (attrItem.appear && attrItem.appear.find(appearItem => (appearItem === category.categoryId))) {
+        if (attrItem.appear && attrItem.appear.find((appearItem) => (appearItem === category.categoryId))) {
           updateChecked.push(attrItem.attributeId);
         }
       });
@@ -99,7 +99,7 @@ function Association({
 
   const handleAttributeChange = (checked, nodeTarget) => {
     if (!isUpdating) {
-      const targetAppear = attributes.filter(attrItem => (attrItem.attributeId === nodeTarget.value))[0];
+      const targetAppear = attributes.filter((attrItem) => (attrItem.attributeId === nodeTarget.value))[0];
       let checkGrp = false;
       let appearData = [];
       const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
@@ -111,11 +111,11 @@ function Association({
         appearData = _union(targetAppear.appear, updateNewAppear);
         if (targetAppear.groupId) {
           const includeCategoryList = attributes.filter(
-            attrItem => (!!attrItem.appear.find(
-              (arrItem => (arrItem === category.categoryId)),
+            (attrItem) => (!!attrItem.appear.find(
+              ((arrItem) => (arrItem === category.categoryId)),
             ) && (attrItem.groupId === targetAppear.groupId)),
           );
-          const groupList = attributes.filter(attrItem => (attrItem.groupId === targetAppear.groupId));
+          const groupList = attributes.filter((attrItem) => (attrItem.groupId === targetAppear.groupId));
           if (includeCategoryList.length === groupList.length - 1) {
             checkGrp = true;
           }
@@ -125,10 +125,10 @@ function Association({
       }
 
       if (checkGrp) {
-        const groupAdd = attributes.filter(attrItem => (attrItem.attributeId.toString() === targetAppear.groupId))[0];
+        const groupAdd = attributes.filter((attrItem) => (attrItem.attributeId.toString() === targetAppear.groupId))[0];
         const groupAddAppear = groupAdd.appear;
         groupAddAppear.push(category.categoryId);
-        const updateItemId = attributes.find(item => (item.attributeId.toString() === targetAppear.groupId))._id;
+        const updateItemId = attributes.find((item) => (item.attributeId.toString() === targetAppear.groupId))._id;
         updateAttribute(updateItemId, { appear: groupAddAppear })
           .then(() => { fetchAttributes(client.id, 'attributes'); });
       } else {
@@ -205,7 +205,7 @@ Association.propTypes = {
   setAttribute: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   nodes: store.attributesData.nodes,
   attributes: store.attributesData.attributes,
   isUpdating: store.attributesData.isUpdating,
@@ -218,7 +218,7 @@ const mapStateToProps = store => ({
   client: store.clientsData.client,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateAttribute,
   fetchAttributes,
   fetchProducts,

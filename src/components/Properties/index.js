@@ -7,29 +7,36 @@ import isEqual from 'lodash/isEqual';
 import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils';
-import { initProperties, updateProperties, sectionRender } from 'utils/propertyManagement';
+import { updateProperties, sectionRender } from 'utils/propertyManagement';
 import { CustomSection } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
 
 import './style.scss';
+import EditImageSection from './PropertyActions/EditImageSection';
 
 class Properties extends Component {
-  state = {
-    properties: {},
-    sections: [],
-    isUpdating: false,
-    noSectionPropertyFields: [],
-    selectKey: '',
-    isOpenSelItemModal: false,
-    isOpenSelItemEditModal: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      properties: {},
+      sections: [],
+      isUpdating: false,
+      noSectionPropertyFields: [],
+      selectKey: '',
+      imageKey: '',
+      imageValue: '',
+      isOpenSelItemModal: false,
+      isOpenSelItemEditModal: false,
+      isOpenEditImage: false,
+    };
+  }
 
   componentDidMount() {
     const { propertyField, objectItem } = this.props;
     const nonSection = (propertyField.propertyFields)
-      ? propertyField.propertyFields.filter(item => item.section === null) : [];
+      ? propertyField.propertyFields.filter((item) => item.section === null) : [];
     this.setState({
       noSectionPropertyFields: nonSection || [],
       properties: objectItem.properties || {},
@@ -41,18 +48,12 @@ class Properties extends Component {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
     if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
-      if (objectItem.id === prevProps.objectItem.id) {
-        this.updateState({
-          properties: initProperties(properties, objectItem.properties),
-        });
-      } else {
-        this.updateState({
-          properties: objectItem.properties || {},
-        });
-      }
+      this.updateState({
+        properties: objectItem.properties || {},
+      });
     }
     if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
-      const nonSection = propertyField.propertyFields.filter(item => item.section === null);
+      const nonSection = propertyField.propertyFields.filter((item) => item.section === null);
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
@@ -71,9 +72,9 @@ class Properties extends Component {
     this.setState(data);
   };
 
-  changeInput = field => (e) => {
+  changeInput = (field) => (e) => {
     e.persist();
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       properties: {
         ...prevState.properties,
         [field]: e.target.value,
@@ -81,9 +82,9 @@ class Properties extends Component {
     }));
   };
 
-  changeArrayInput = field => (e) => {
+  changeArrayInput = (field) => (e) => {
     e.persist();
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       properties: {
         ...prevState.properties,
         [field]: e.target.value,
@@ -91,8 +92,8 @@ class Properties extends Component {
     }));
   };
 
-  changeSelect = field => (value) => {
-    this.setState(prevState => ({
+  changeSelect = (field) => (value) => {
+    this.setState((prevState) => ({
       properties: {
         ...prevState.properties,
         [field]: value.key,
@@ -100,8 +101,8 @@ class Properties extends Component {
     }));
   };
 
-  changeMonaco = field => (newValue) => {
-    this.setState(prevState => ({
+  changeMonaco = (field) => (newValue) => {
+    this.setState((prevState) => ({
       properties: {
         ...prevState.properties,
         [field]: newValue,
@@ -109,8 +110,8 @@ class Properties extends Component {
     }));
   };
 
-  toggleSwitch = field => () => {
-    this.setState(prevState => ({
+  toggleSwitch = (field) => () => {
+    this.setState((prevState) => ({
       properties: {
         ...prevState.properties,
         [field]: !prevState.properties[field],
@@ -118,10 +119,17 @@ class Properties extends Component {
     }));
   };
 
-  handleSelItemToggle = type => (key) => {
-    this.setState(prevState => ({
+  handleSelItemToggle = (type) => (key) => {
+    this.setState((prevState) => ({
       [type]: !prevState[type],
       selectKey: key,
+    }));
+  };
+
+  handleEditImage = (key) => {
+    this.setState((prevState) => ({
+      isOpenEditImage: !prevState.isOpenEditImage,
+      imageKey: key || '',
     }));
   };
 
@@ -130,7 +138,7 @@ class Properties extends Component {
     return sectionRender(
       propertyFields, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.toggleSwitch, this.changeMonaco,
+      this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
     );
   };
 
@@ -140,7 +148,10 @@ class Properties extends Component {
       sections,
       isOpenSelItemModal,
       isOpenSelItemEditModal,
+      isOpenEditImage,
       selectKey,
+      imageKey,
+      // imageValue,
       noSectionPropertyFields,
     } = this.state;
 
@@ -149,7 +160,7 @@ class Properties extends Component {
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
           <PerfectScrollbar options={{ suppressScrollX: true, minScrollbarLength: 50 }}>
-            {sections.map(section => (
+            {sections.map((section) => (
               <CustomSection title={section.label} key={section.key}>
                 {this.renderSectionFields(section)}
               </CustomSection>
@@ -159,8 +170,7 @@ class Properties extends Component {
                   <CustomSection title="No Section" key="no_section">
                     {this.renderSectionFields(null)}
                   </CustomSection>
-                )
-            }
+                )}
           </PerfectScrollbar>
           {isOpenSelItemModal && (
             <AddSelectItems
@@ -178,10 +188,23 @@ class Properties extends Component {
               updateObject={this.props.updateObject}
             />
           )}
+          {isOpenEditImage && (
+            <EditImageSection
+              open={isOpenEditImage}
+              fields={propertyFields}
+              sections={sections}
+              imageKey={imageKey}
+              objectItem={this.props.objectItem}
+              handleClose={this.handleEditImage}
+              updateObject={this.props.updateObject}
+              isObjectUpdating={this.props.isObjectUpdating}
+            />
+          )}
         </div>
         <PropertyActions
           properties={properties}
           fields={propertyFields}
+          uploadImage={this.state.uploadImage}
           sections={sections}
           isObjectUpdating={this.props.isObjectUpdating}
           updateObject={this.props.updateObject}
@@ -199,7 +222,7 @@ Properties.propTypes = {
   propertyField: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
 });

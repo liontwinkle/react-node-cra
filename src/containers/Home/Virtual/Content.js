@@ -24,7 +24,7 @@ function Content({
 }) {
   const [tab, setTab] = useState('properties');
 
-  const handleClick = value => () => { setTab(value); };
+  const handleClick = (value) => () => { setTab(value); };
 
   return (
     <div className="virtual-container">
@@ -56,12 +56,12 @@ Content.propTypes = {
   updateCategory: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   isUpdating: store.categoriesData.isUpdating,
   category: store.categoriesData.category,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateCategory,
 }, dispatch);
 export default connect(

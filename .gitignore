@@ -4,7 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-yarn.lock
+/package-lock.json
+backend/yarn.lock
 
 # testing
 /coverage
@@ -22,3 +23,6 @@ yarn-error.log*
 # dev tools
 .idea
 .vscode
+
+#images
+/public/images

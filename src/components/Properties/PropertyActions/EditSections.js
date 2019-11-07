@@ -37,7 +37,7 @@ function EditSections({
   if (order.index >= 0) {
     tableData.columns[order.index].defaultSort = order.direction;
   }
-  const handleAdd = newData => new Promise((resolve) => {
+  const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
@@ -68,7 +68,7 @@ function EditSections({
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = sections.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         sections.splice(ruleKeyIndex, 1, {
           key: newData.key,
@@ -89,11 +89,11 @@ function EditSections({
     }, 600);
   });
 
-  const handleDelete = oldData => new Promise((resolve) => {
+  const handleDelete = (oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = sections.findIndex(rk => rk._id === oldData._id);
+      const ruleKeyIndex = sections.findIndex((rk) => rk._id === oldData._id);
       const deletedSection = sections[ruleKeyIndex];
       const { propertyFields } = propertyField;
       const updatedProperties = JSON.parse(JSON.stringify(propertyFields));
@@ -165,12 +165,12 @@ EditSections.propTypes = {
   onChangePageNum: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePropertyField,
 }, dispatch);
 

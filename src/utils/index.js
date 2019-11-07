@@ -22,7 +22,7 @@ export const sortByOrder = (a, b) => {
   return fieldItemA - fieldItemB;
 };
 
-export const sortByField = field => (a, b) => {
+export const sortByField = (field) => (a, b) => {
   const fieldItemA = a[field].toUpperCase();
   const fieldItemB = b[field].toUpperCase();
   let comparison = 0;
@@ -46,7 +46,7 @@ const getAllmatched = (products, match, value, basis) => {
 
   products.forEach((proItem) => {
     const values = Object.values(proItem);
-    if (values.filter(item => (rule.test(item))).length > 0) {
+    if (values.filter((item) => (rule.test(item))).length > 0) {
       if (basis === 'include') {
         returnValue.includes[includeIndex] = proItem;
         includeIndex++;
@@ -86,7 +86,7 @@ const getSubTree = (list, parentId, type, originNode) => {
   list.sort(sortByField('name'));
   const subTree = [];
   const association = [];
-  const sublist = list.filter(item => item[type] === parentId.toString());
+  const sublist = list.filter((item) => item[type] === parentId.toString());
   const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
   if (sublist.length > 0) {
     sublist.forEach((item, key) => {
@@ -131,7 +131,7 @@ const getRulesKey = (keys) => {
 
 /** ** EXPORTS DEFINE **** */
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles((theme) => ({
   dialogAction: {
     margin: theme.spacing(2),
   },
@@ -140,7 +140,7 @@ export const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const hasSubArray = (master, sub) => sub.every((i => master.indexOf(i) > -1));
+export const hasSubArray = (master, sub) => sub.every(((i) => master.indexOf(i) > -1));
 
 export const confirmMessage = (func, msg, type) => {
   const duration = (type === 'success' || type === 'info') ? 2000 : 4000;
@@ -225,7 +225,7 @@ export const changePropertiesData = (data) => {
   return recvData;
 };
 export const isExist = (obj, key) => {
-  const filterArr = obj.filter(item => (item.key === key));
+  const filterArr = obj.filter((item) => (item.key === key));
   return filterArr.length;
 };
 
