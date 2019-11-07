@@ -319,7 +319,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
     ) {
       const subKeys = Object.keys(updateProperties[keyItem]);
       subKeys.forEach((subKeyItem) => {
-        if (!originProperties
+        if (!originProperties || !originProperties[keyItem]
           || originProperties[keyItem][subKeyItem] !== updateProperties[keyItem][subKeyItem]) {
           if (updateProperties[keyItem][subKeyItem] && updateProperties[keyItem][subKeyItem].path) {
             if (!updateProperties[keyItem][subKeyItem].imageData) {
@@ -327,7 +327,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
                 type, updateProperties[keyItem][subKeyItem].path,
                 originData.categoryId);
             } else {
-              const originUrl = (originProperties
+              const originUrl = (originProperties[keyItem]
                 && originProperties[keyItem][subKeyItem])
                 ? originProperties[keyItem][subKeyItem].path : null;
               updatedNewProperties.properties[keyItem][subKeyItem] = createFile(clientId,
