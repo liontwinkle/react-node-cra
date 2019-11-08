@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
 import Popper from '@material-ui/core/Popper';
 
 import { getFilterItem } from 'utils/propertyManagement';
@@ -57,7 +57,7 @@ function CustomSearchFilter({
     }
   };
 
-  const changeValue = propertyKey => () => {
+  const changeValue = (propertyKey) => () => {
     if (!disabled) {
       const updateValue = `${value.substr(0, chunkIndex)}${propertyKey}`;
       clearSearchResult();
@@ -107,7 +107,7 @@ function CustomSearchFilter({
               minScrollbarLength: 50,
             }}
           >
-            {searched.map(item => (
+            {searched.map((item) => (
               <li
                 key={item}
                 className="mg-search-filter-item"

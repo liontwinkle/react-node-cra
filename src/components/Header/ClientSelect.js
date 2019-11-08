@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -52,7 +52,7 @@ function ClientSelect({
       .catch(() => { confirmMessage(enqueueSnackbar, 'Error in fetching clients.', 'error'); });
   }, [fetchClients, enqueueSnackbar]);
 
-  const items = clients.map(c => ({ key: c.id, label: c.name }));
+  const items = clients.map((c) => ({ key: c.id, label: c.name }));
 
   const actionChangeType = (type, client) => {
     setClientType(type);
@@ -91,7 +91,7 @@ function ClientSelect({
   const current = client ? { key: client.id, label: client.name } : null;
   const disabled = (isFetchingAttributes || isFetchingCategories || isFetchingProducts);
   return (
-    <Fragment>
+    <>
       {clients && clients.length > 0 && (
         <CustomSelect
           className="mr-3"
@@ -104,7 +104,7 @@ function ClientSelect({
       )}
 
       {client && (
-        <Fragment>
+        <>
           <CustomSelect
             className="mr-3"
             placeholder="Select Type"
@@ -126,9 +126,9 @@ function ClientSelect({
               />
             )
           }
-        </Fragment>
+        </>
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -161,7 +161,7 @@ ClientSelect.defaultProps = {
   productViewType: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   clients: store.clientsData.clients,
   categories: store.categoriesData.categories,
   client: store.clientsData.client,
@@ -172,7 +172,7 @@ const mapStateToProps = store => ({
   isFetchingAttributes: store.attributesData.isFetchingList,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchClients,
   setClient,
   setClientType,

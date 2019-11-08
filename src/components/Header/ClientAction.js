@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
+import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import CopyIcon from '@material-ui/icons/CloudUpload';
@@ -23,7 +23,7 @@ function ClientAction(props) {
   const disabled = (isFetchingAttributes || isFetchingCategories || isFetchingProducts);
 
   const [formState, setFormState] = useState({ open: false, type: '' });
-  const handleOpen = type => () => {
+  const handleOpen = (type) => () => {
     if (!disabled) {
       setFormState({ open: true, type });
     }
@@ -36,7 +36,7 @@ function ClientAction(props) {
   };
 
   return (
-    <Fragment>
+    <>
       <Tooltip
         title="Add Client"
         position="bottom"
@@ -47,7 +47,7 @@ function ClientAction(props) {
         </IconButton>
       </Tooltip>
       {client && (
-        <Fragment>
+        <>
           <Tooltip
             title="Edit Client"
             position="bottom"
@@ -58,7 +58,7 @@ function ClientAction(props) {
             </IconButton>
           </Tooltip>
           <ClientRemove disabled={disabled} />
-        </Fragment>
+        </>
       )}
       {type && (
         <Tooltip
@@ -76,7 +76,7 @@ function ClientAction(props) {
           ? <ClientImport status={formState} handleClose={handleClose} client={client} type={type} />
           : <ClientForm status={formState} handleClose={handleClose} />
       )}
-    </Fragment>
+    </>
   );
 }
 
@@ -93,7 +93,7 @@ ClientAction.defaultProps = {
   type: null,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   client: store.clientsData.client,
   type: store.clientsData.type,
   isFetchingProducts: store.productsData.isFetchingList,

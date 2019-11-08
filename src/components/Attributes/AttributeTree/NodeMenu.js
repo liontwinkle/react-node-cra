@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
@@ -64,7 +64,7 @@ function NodeMenu({
 
   const handleAdd = () => {
     if (!isCreating && checkNameDuplicate(attributes, '', node.item.attributeId.toString()) === 0) {
-      createAttribute({ name: '', groupId: node.item.attributeId, appear: node.item.appear })
+      createAttribute({ name: '', groupId: node.item.attributeId.toString(), appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,

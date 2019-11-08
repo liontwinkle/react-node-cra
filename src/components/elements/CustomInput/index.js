@@ -65,10 +65,10 @@ CustomInput.propTypes = {
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
   placeholder: PropTypes.string,
+  hint: PropTypes.string,
   min: PropTypes.number,
   inline: PropTypes.bool,
   inlineWidth: PropTypes.number,
-  hint: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,

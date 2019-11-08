@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import MaterialTable from 'material-table';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import MaterialTable from 'material-table';
 
 import { convertDateFormat } from 'utils';
 import { tableIcons } from 'utils/constants';
@@ -57,9 +57,9 @@ function DetailTable({
 DetailTable.propTypes = {
   history: PropTypes.array.isRequired,
   historyStr: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   category: PropTypes.object,
   attribute: PropTypes.object,
-  type: PropTypes.string.isRequired,
 };
 
 DetailTable.defaultProps = {
