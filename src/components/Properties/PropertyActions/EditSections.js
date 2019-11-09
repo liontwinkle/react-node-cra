@@ -155,14 +155,14 @@ function EditSections({
 
 EditSections.propTypes = {
   open: PropTypes.bool.isRequired,
-  order: PropTypes.object.isRequired,
-  pageNum: PropTypes.number.isRequired,
-  propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  updatePropertyField: PropTypes.func.isRequired,
+  pageNum: PropTypes.number.isRequired,
+  order: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   onChangeOrder: PropTypes.func.isRequired,
   onChangePageNum: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({

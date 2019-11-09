@@ -7,6 +7,7 @@ import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { confirmMessage, getObjectFromArray } from 'utils/index';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
@@ -186,14 +187,14 @@ function EditRules({
 
 EditRules.propTypes = {
   open: PropTypes.bool.isRequired,
-  rules: PropTypes.array.isRequired,
-  updateCategory: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  createHistory: PropTypes.func.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
   category: PropTypes.object.isRequired,
+  rules: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -16,12 +17,11 @@ import NotFound from './containers/NotFound';
 const PublicRoute = ({ component: C, props: cProps, ...rest }) => (
   <Route
     {...rest}
-    render={props => (!cProps.user ? (
+    render={(props) => (!cProps.user ? (
       <C {...props} {...cProps} match={rest.computedMatch} />
     ) : (
       <Redirect to="/" />
-    ))
-    }
+    ))}
   />
 );
 
@@ -33,7 +33,7 @@ PublicRoute.propTypes = {
   props: PropTypes.object.isRequired,
 };
 
-const App = props => (
+const App = (props) => (
   <SnackbarProvider maxSnack={3}>
     <Header />
 

@@ -244,9 +244,9 @@ ProductsDataDetail.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   imageKey: PropTypes.string.isRequired,
   tableRef: PropTypes.object.isRequired,
+  productsField: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
   setImageKey: PropTypes.func.isRequired,
-  productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
 };
@@ -257,9 +257,9 @@ const mapStateToProps = (store) => ({
   updated: store.productsData.updatedData,
   isFetchingList: store.productsData.isFetchingList,
   isUpdatingList: store.productsData.isUpdatingList,
+  originProducts: store.productsData.originProducts,
   isUpdating: store.productsFieldsData.isUpdating,
   productsField: store.productsFieldsData.productsField,
-  originProducts: store.productsData.originProducts,
   imageKey: store.productsFieldsData.imageKey,
 });
 

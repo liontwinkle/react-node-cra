@@ -190,15 +190,15 @@ function Association({
 
 Association.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
+  client: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   nodes: PropTypes.array.isRequired,
-  isFetchingList: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   associationAttributes: PropTypes.array.isRequired,
-  client: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,

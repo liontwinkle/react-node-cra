@@ -260,10 +260,10 @@ const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
   originProducts: store.productsData.originProducts,
   columns: store.productsData.data.columns,
+  isUpdatingList: store.productsData.isUpdatingList,
   headers: store.productsData.data.headers,
   productsField: store.productsFieldsData.productsField,
   isUpdating: store.productsFieldsData.isUpdating,
-  isUpdatingList: store.productsData.isUpdatingList,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

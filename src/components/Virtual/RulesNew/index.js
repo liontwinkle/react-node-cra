@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import _difference from 'lodash/difference';
 import _union from 'lodash/union';
 
@@ -14,11 +14,11 @@ import { confirmMessage, getPreFilterData } from 'utils';
 import { setUnionRules, getRules } from 'utils/ruleManagement';
 import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
+import { CustomToggle } from 'components/elements';
 import RulesTable from './RulesTable/index';
 import RulesAction from './RulesAction/index';
 
 import './style.scss';
-import { CustomToggle } from '../../elements';
 
 class NewRules extends Component {
   constructor(props) {
@@ -165,8 +165,8 @@ NewRules.propTypes = {
 
 const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
-  valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
+  valueDetails: store.productsData.data.valueDetails,
   isFetchingList: store.productsData.isFetchingList,
   attributes: store.attributesData.attributes,
 });

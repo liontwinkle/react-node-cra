@@ -8,6 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import { CustomConfirmDlg } from 'components/elements';
 import { isExist, confirmMessage } from 'utils';
 import { tableIcons } from 'utils/constants';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
@@ -15,7 +16,6 @@ import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
 import { updateDefaultOnAttriute } from 'redux/actions/attribute';
-import { CustomConfirmDlg } from 'components/elements';
 
 function EditPropertyFields({
   open,
@@ -312,18 +312,18 @@ function EditPropertyFields({
 
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
-  propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  objectItem: PropTypes.object.isRequired,
-  order: PropTypes.object.isRequired,
   pageNum: PropTypes.number.isRequired,
-  updatePropertyField: PropTypes.func.isRequired,
-  updateDefaultOnCategory: PropTypes.func.isRequired,
-  updateDefaultOnAttriute: PropTypes.func.isRequired,
+  order: PropTypes.object.isRequired,
+  objectItem: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   onChangeOrder: PropTypes.func.isRequired,
   onChangePageNum: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
+  updateDefaultOnCategory: PropTypes.func.isRequired,
+  updateDefaultOnAttriute: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({

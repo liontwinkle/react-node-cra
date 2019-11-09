@@ -7,9 +7,9 @@ import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
 import { confirmMessage, getNodeKey } from 'utils/index';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory, setCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
-import { addNewRuleHistory } from 'utils/ruleManagement';
 import TreeNodeMenu from './NodeMenu';
 
 import './style.scss';
@@ -184,11 +184,11 @@ function VirtualSortableTree(props) {
 VirtualSortableTree.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
-  categories: PropTypes.array.isRequired,
-  history: PropTypes.array.isRequired,
   category: PropTypes.object,
   clientType: PropTypes.object.isRequired,
+  history: PropTypes.array.isRequired,
   treeData: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
   setCategory: PropTypes.func.isRequired,

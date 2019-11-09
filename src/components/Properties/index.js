@@ -12,9 +12,9 @@ import { CustomSection } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
 import EditSelectItems from './PropertyActions/EditSelectItems';
+import EditImageSection from './PropertyActions/EditImageSection';
 
 import './style.scss';
-import EditImageSection from './PropertyActions/EditImageSection';
 
 class Properties extends Component {
   constructor(props) {
@@ -151,7 +151,6 @@ class Properties extends Component {
       isOpenEditImage,
       selectKey,
       imageKey,
-      // imageValue,
       noSectionPropertyFields,
     } = this.state;
 
@@ -217,9 +216,9 @@ class Properties extends Component {
 
 Properties.propTypes = {
   objectItem: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
   updateObject: PropTypes.func.isRequired,
-  propertyField: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (store) => ({
