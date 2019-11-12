@@ -141,7 +141,10 @@ class ProductGridView extends Component {
             </div>
           ) : (
             <div className="table-loader">
-              <Loader size="small" color="dark" />
+              <Loader
+                size="small"
+                color="dark"
+              />
             </div>
           )}
         {viewDetailFlag && (

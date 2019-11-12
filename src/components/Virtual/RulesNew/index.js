@@ -99,12 +99,30 @@ class NewRules extends Component {
     });
   };
 
+  getParentRules = (parentId) => {
+    const { categories } = this.props;
+    let parentRules = [];
+    const filteredData = categories.filter((categoryItem) => (
+      categoryItem.categoryId.toString() === parentId
+    ));
+    const filteredRules = filteredData[0].rules || [];
+    parentRules = _union(parentRules, filteredRules);
+    if (filteredData.parentId !== 'null') {
+      parentRules = _union(parentRules, this.getParentRules(filteredData.parentId));
+    }
+    return parentRules;
+  };
+
   setMap = (category) => {
+    const parentRules = this.getParentRules(this.props.category.id);
     const recvNewRules = category.rules || [];
-    const attributeRules = getRules(recvNewRules, this.props.valueDetails);
+    const displayRules = _union(recvNewRules, parentRules);
+    const recvAttributeRules = getRules(recvNewRules, this.props.valueDetails);
+    const editAttributeRules = getRules(displayRules, this.props.valueDetails);
+    console.log('##### DEBUG RULES ', displayRules); // fixme
     this.setState({
-      newRules: attributeRules.newRules,
-      editRules: attributeRules.editRules,
+      newRules: recvAttributeRules.newRules,
+      editRules: editAttributeRules.editRules,
     });
   };
 
@@ -153,6 +171,7 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
@@ -165,6 +184,7 @@ NewRules.propTypes = {
 
 const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
+  categories: store.categoriesData.categories,
   products: store.productsData.data.products,
   valueDetails: store.productsData.data.valueDetails,
   isFetchingList: store.productsData.isFetchingList,
