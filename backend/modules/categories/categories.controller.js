@@ -5,7 +5,8 @@ const {
   saveCategoriesUpdates,
   handleCreate,
   removeCategoryEntity,
-  removeChildren
+  removeChildren,
+  removeDeletedProperty
 } = require('../../utils');
 
 // Gets a list of Categories
@@ -64,23 +65,7 @@ exports.updateDefault = (req, res) => {
         const deleteKey = req.body.deletedKey;
         req.category.find({}, (err, result) => {
           if (!err) {
-            result.forEach((resultItem) => {
-              if (resultItem.properties) {
-                if (resultItem.properties[deleteKey]) {
-                  delete resultItem.properties[deleteKey];
-
-                  req.category.updateMany({ categoryId: resultItem.categoryId }, {
-                    $set: {
-                      properties: resultItem.properties
-                    }
-                  }, (err) => {
-                    if (err) {
-                      console.log(err);
-                    }
-                  });
-                }
-              }
-            });
+            removeDeletedProperty(result, deleteKey, req.category);
           }
         });
       }

@@ -134,7 +134,7 @@ function ProductsDataDetail({
     return updatedData;
   };
 
-  const toggleSwitch = field => () => {
+  const toggleSwitch = (field) => () => {
     if (updateFg) {
       setUpdateFg(false);
       let updateData = JSON.parse(JSON.stringify(originProducts));
@@ -244,26 +244,26 @@ ProductsDataDetail.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   imageKey: PropTypes.string.isRequired,
   tableRef: PropTypes.object.isRequired,
+  productsField: PropTypes.object.isRequired,
   updateProducts: PropTypes.func.isRequired,
   setImageKey: PropTypes.func.isRequired,
-  productsField: PropTypes.object.isRequired,
   updateProductsField: PropTypes.func.isRequired,
   setProducts: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   headers: store.productsData.data.headers,
   products: store.productsData.data.products,
   updated: store.productsData.updatedData,
   isFetchingList: store.productsData.isFetchingList,
   isUpdatingList: store.productsData.isUpdatingList,
+  originProducts: store.productsData.originProducts,
   isUpdating: store.productsFieldsData.isUpdating,
   productsField: store.productsFieldsData.productsField,
-  originProducts: store.productsData.originProducts,
   imageKey: store.productsFieldsData.imageKey,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateProducts,
   setProducts,
   setImageKey,

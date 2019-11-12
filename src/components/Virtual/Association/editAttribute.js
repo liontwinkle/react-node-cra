@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -11,9 +11,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
+import { CustomInput } from 'components/elements';
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
-import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
 import { checkNameDuplicate } from 'utils/attributeManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import connect from 'react-redux/es/connect/connect';
+import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import { Tooltip } from 'react-tippy';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -35,8 +35,7 @@ function RulesAction({
 
   const filterProducts = () => {
     const recvRules = displayRules || [];
-    const filterProducts = getPreFilterData(recvRules, products);
-    return filterProducts;
+    return getPreFilterData(recvRules, products);
   };
 
   const handleToggle = (field) => () => {

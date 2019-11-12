@@ -206,14 +206,14 @@ function EditRules({
 
 EditRules.propTypes = {
   open: PropTypes.bool.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   rules: PropTypes.array.isRequired,
+  valueDetails: PropTypes.array.isRequired,
+  attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
-  isUpdating: PropTypes.bool.isRequired,
-  isCreating: PropTypes.bool.isRequired,
-  attribute: PropTypes.object.isRequired,
-  valueDetails: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (store) => ({

@@ -165,13 +165,13 @@ function EditPropertyFields({
 
 EditPropertyFields.propTypes = {
   open: PropTypes.bool.isRequired,
-  propertyField: PropTypes.object.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  selectKey: PropTypes.string.isRequired,
+  propertyField: PropTypes.object.isRequired,
   objectItem: PropTypes.object.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
   updateObject: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-  selectKey: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (store) => ({

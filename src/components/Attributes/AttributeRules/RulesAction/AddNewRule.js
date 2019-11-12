@@ -10,17 +10,17 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
+import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBody';
+import { updateAttribute } from 'redux/actions/attribute';
+import { createHistory } from 'redux/actions/history';
 import {
   basis,
   refer,
   match,
   scope,
 } from 'utils/constants';
-import { updateAttribute } from 'redux/actions/attribute';
-import { createHistory } from 'redux/actions/history';
 import { confirmMessage, getPreFilterData, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
-import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBody';
 
 function AddNewRule({
   open,
@@ -189,9 +189,9 @@ AddNewRule.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
+  attribute: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
   rules: PropTypes.array.isRequired,
   displayRules: PropTypes.array.isRequired,
@@ -200,9 +200,9 @@ AddNewRule.propTypes = {
 
 const mapStateToProps = (store) => ({
   isUpdating: store.attributesData.isUpdating,
+  attribute: store.attributesData.attribute,
   valueDetails: store.productsData.data.valueDetails,
   products: store.productsData.data.products,
-  attribute: store.attributesData.attribute,
   isCreating: store.historyData.isCreating,
 });
 

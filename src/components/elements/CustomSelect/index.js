@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
 import Popper from '@material-ui/core/Popper';
 import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -42,7 +42,7 @@ function CustomSelect(props) {
     };
   });
 
-  const changeValue = value => () => {
+  const changeValue = (value) => () => {
     if (!props.disabled) {
       props.onChange(value);
       handleClick();
@@ -59,7 +59,7 @@ function CustomSelect(props) {
   let current;
   const isValueString = typeof value === 'string';
   if (isValueString) {
-    current = items.find(item => item.key === value);
+    current = items.find((item) => item.key === value);
   } else {
     current = value;
   }
@@ -108,7 +108,7 @@ function CustomSelect(props) {
               minScrollbarLength: 50,
             }}
           >
-            {items.map(item => (
+            {items.map((item) => (
               <li
                 key={item.key}
                 className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
@@ -132,8 +132,8 @@ CustomSelect.propTypes = {
     PropTypes.string,
   ]),
   items: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
 };
 
 CustomSelect.defaultProps = {

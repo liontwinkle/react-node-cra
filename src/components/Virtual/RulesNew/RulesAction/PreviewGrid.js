@@ -30,8 +30,8 @@ const PreviewGrid = ({
 
 PreviewGrid.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
   filterProducts: PropTypes.array.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default PreviewGrid;

@@ -162,14 +162,14 @@ class ProductGridView extends Component {
 }
 
 ProductGridView.propTypes = {
-  enqueueSnackbar: PropTypes.func.isRequired,
   imageKey: PropTypes.string.isRequired,
   hoverSize: PropTypes.object.isRequired,
-  products: PropTypes.array.isRequired,
   productsField: PropTypes.object.isRequired,
+  products: PropTypes.array.isRequired,
   filterProducts: PropTypes.array,
   headers: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 ProductGridView.defaultProps = {
@@ -178,8 +178,8 @@ ProductGridView.defaultProps = {
 
 const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
-  productsField: store.productsFieldsData.productsField,
   headers: store.productsData.data.headers,
+  productsField: store.productsFieldsData.productsField,
   imageKey: store.productsFieldsData.imageKey,
   hoverSize: store.productsFieldsData.hoverSize,
 });

@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 import React from 'react';
-import PropTypes from 'prop-types';
 import FroalaEditorComponent from 'react-froala-wysiwyg';
+import PropTypes from 'prop-types';
 import CodeMirror from 'codemirror/lib/codemirror.js';
 import uuidv4 from 'uuid/v4';
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
@@ -88,7 +88,7 @@ function NodeMenu({
         .then(() => {
           fetchAttributes(client.id, 'attributes')
             .then(() => {
-              const deleteHistory = history.filter(historyItem => (historyItem.itemId === node.item.id));
+              const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item.id));
               if (deleteHistory.length > 0) {
                 removeHistory(node.item.id)
                   .then(() => {
@@ -167,15 +167,15 @@ function NodeMenu({
 }
 
 NodeMenu.propTypes = {
-  treeData: PropTypes.array.isRequired,
-  history: PropTypes.array.isRequired,
+  editable: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
+  isDeleting: PropTypes.bool.isRequired,
+  isFetchAttributes: PropTypes.bool.isRequired,
   node: PropTypes.object.isRequired,
   client: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
-  editable: PropTypes.bool.isRequired,
-  isCreating: PropTypes.bool.isRequired,
-  isFetchAttributes: PropTypes.bool.isRequired,
-  isDeleting: PropTypes.bool.isRequired,
+  history: PropTypes.array.isRequired,
+  treeData: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
@@ -184,14 +184,14 @@ NodeMenu.propTypes = {
   fetchAttributes: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   client: store.clientsData.client,
   isCreating: store.categoriesData.isCreating,
   isFetchAttributes: store.attributesData.isFetchingList,
   isDeleting: store.categoriesData.isDeleting,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   createCategory,
   createHistory,
   removeCategory,

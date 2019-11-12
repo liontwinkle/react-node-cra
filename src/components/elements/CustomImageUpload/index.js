@@ -8,9 +8,9 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css';
 import uuidv4 from 'uuid/v4';
+import CustomInput from '../CustomInput';
 
 import './style.scss';
-import CustomInput from '../CustomInput';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageEdit);
 
@@ -67,11 +67,11 @@ CustomImageUpload.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
+  hint: PropTypes.string,
+  name: PropTypes.string,
   inline: PropTypes.bool,
   inlineWidth: PropTypes.number,
-  hint: PropTypes.string,
   value: PropTypes.any,
-  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onFileNameChange: PropTypes.func.isRequired,
   getWrapper: PropTypes.func,

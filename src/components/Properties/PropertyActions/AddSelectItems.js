@@ -120,8 +120,8 @@ function AddSelectItems({
 
 AddSelectItems.propTypes = {
   open: PropTypes.bool.isRequired,
-  selectKey: PropTypes.string.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  selectKey: PropTypes.string.isRequired,
   propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,

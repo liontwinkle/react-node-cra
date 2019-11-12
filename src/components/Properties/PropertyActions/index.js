@@ -206,12 +206,12 @@ function PropertyActions({
 }
 
 PropertyActions.propTypes = {
-  properties: PropTypes.object.isRequired,
-  fields: PropTypes.array.isRequired,
-  sections: PropTypes.array.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
   isHistoryCreating: PropTypes.bool.isRequired,
+  properties: PropTypes.object.isRequired,
   objectItem: PropTypes.object.isRequired,
+  fields: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
   updateObject: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   uploadImage: PropTypes.any,

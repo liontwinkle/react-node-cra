@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
 
 function DetailView({
   headers,

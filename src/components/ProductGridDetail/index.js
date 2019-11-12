@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { updateProductsField, setSizeSet } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection } from 'components/elements';
@@ -114,8 +114,8 @@ ProductsGridDetail.propTypes = {
 
 const mapStateToProps = (store) => ({
   headers: store.productsData.data.headers,
-  isUpdating: store.productsFieldsData.isUpdating,
   isFetchingList: store.productsData.isFetchingList,
+  isUpdating: store.productsFieldsData.isUpdating,
   productsField: store.productsFieldsData.productsField,
   hoverSize: store.productsFieldsData.hoverSize,
 });

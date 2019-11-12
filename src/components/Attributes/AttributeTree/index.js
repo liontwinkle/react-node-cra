@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
 import { useSnackbar } from 'notistack';
 import _find from 'lodash/find';
 
@@ -152,9 +152,9 @@ function AttributeNode({
 }
 
 AttributeNode.propTypes = {
-  nodeData: PropTypes.array.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
+  nodeData: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
   attribute: PropTypes.object,
   setNodeData: PropTypes.func.isRequired,

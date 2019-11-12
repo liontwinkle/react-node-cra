@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
 import { OrderedMap } from 'immutable';
 import uuidv4 from 'uuid/v4';
 
@@ -194,8 +194,8 @@ class RuleBuilder extends Component {
 
 RuleBuilder.propTypes = {
   map: PropTypes.object.isRequired,
-  ruleKeys: PropTypes.array.isRequired,
   json: PropTypes.object.isRequired,
+  ruleKeys: PropTypes.array.isRequired,
   changeMap: PropTypes.func.isRequired,
 };
 

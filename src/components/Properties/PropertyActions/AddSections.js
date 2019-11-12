@@ -125,10 +125,10 @@ function AddSections({
 AddSections.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
+  defaultOrder: PropTypes.number.isRequired,
   propertyField: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
-  defaultOrder: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (store) => ({

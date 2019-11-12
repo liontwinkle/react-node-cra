@@ -7,6 +7,9 @@ const base64ToImage = require('base64-to-image');
 
 const AppearCollection = require('../modules/appear/appear.model');
 
+function checkObject(data) {
+  return (typeof data === 'object') && !Array.isArray(data) && (data !== null);
+}
 function insertAppear(collection, attributeId, appear) {
   const addAppearData = [];
   appear.forEach((item) => {
@@ -205,6 +208,37 @@ function handleAttributeFetch(req, res) {
   };
 }
 
+function removeDeletedProperty(data, deleteKey, collection) {
+  data.forEach((resultItem) => {
+    if (resultItem.properties) {
+      const keys = Object.keys(resultItem.properties);
+      keys.forEach((keyItem) => {
+        if (checkObject(resultItem.properties[keyItem])) {
+          const subObject = JSON.parse(JSON.stringify(resultItem.properties[keyItem]));
+          const subKeys = Object.keys(subObject);
+          subKeys.forEach((subKeyItem) => {
+            if (subKeyItem === deleteKey) {
+              delete subObject[subKeyItem];
+            }
+          });
+          resultItem.properties[keyItem] = subObject;
+        } else if (keyItem === deleteKey) {
+          delete resultItem.properties[deleteKey];
+        }
+      });
+
+      collection.updateMany({ categoryId: resultItem.categoryId }, {
+        $set: {
+          properties: resultItem.properties
+        }
+      }, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  });
+}
 function uploadImageProperties(data, clientId, type) {
   if (data.propertyFields) {
     data.propertyFields.forEach((item, index) => {
@@ -605,6 +639,7 @@ module.exports = {
   handleAttributeFetch,
   removeEntity,
   removeCategoryEntity,
+  removeDeletedProperty,
   createCollection,
   handleExistingRemove,
   uploadAppear,

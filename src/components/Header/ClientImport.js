@@ -15,12 +15,12 @@ import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { fetchPropertyField } from 'redux/actions/propertyFields';
 import { fetchProducts } from 'redux/actions/products';
+import CustomMonaco from 'components/elements/CustomMonaco';
 import {
   validateData, makeUploadData, asyncForEach, checkJSONData, convertArray,
 } from 'utils/uploadManagement';
 
 import { confirmMessage } from 'utils';
-import CustomMonaco from '../elements/CustomMonaco';
 import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 

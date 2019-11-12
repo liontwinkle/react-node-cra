@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-
 import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setProductViewType } from 'redux/actions/clients';
 import { setPrefilterData } from 'redux/actions/categories';
+import Loader from 'components/Loader';
+import { CustomToggle } from 'components/elements';
 import {
   basis, refer, match, scope, productViewTypes,
 } from 'utils/constants';
 import { confirmMessage } from 'utils';
-import Loader from 'components/Loader';
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 
 import './style.scss';
-import { CustomToggle } from '../../elements';
 
 class AttributeRules extends Component {
   constructor(props) {
@@ -191,10 +190,10 @@ AttributeRules.propTypes = {
 
 const mapStateToProps = (store) => ({
   attribute: store.attributesData.attribute,
-  valueDetails: store.productsData.data.valueDetails,
-  products: store.productsData.data.products,
   attributes: store.attributesData.attributes,
   nodes: store.attributesData.nodes,
+  valueDetails: store.productsData.data.valueDetails,
+  products: store.productsData.data.products,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

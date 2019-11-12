@@ -13,11 +13,11 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { IconButton } from 'components/elements';
 
 import { removeClient } from 'redux/actions/clients';
 import { removePropertyField } from 'redux/actions/propertyFields';
 import { removeProductsField } from 'redux/actions/productsFields';
-import { IconButton } from 'components/elements';
 import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles((theme) => ({

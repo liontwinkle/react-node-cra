@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import MonacoEditor from 'react-monaco-editor';
+import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 
 import './style.scss';

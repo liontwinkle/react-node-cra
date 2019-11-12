@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';
@@ -143,12 +143,12 @@ AttributeSetting.propTypes = {
   isUpdating: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired,
-  attribute: PropTypes.object.isRequired,
   assoicationCategories: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
+  attribute: PropTypes.object.isRequired,
   updateAttribute: PropTypes.func.isRequired,
   fetchAttributes: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({

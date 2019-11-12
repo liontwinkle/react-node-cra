@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './style.scss';
@@ -11,7 +11,7 @@ const AddNewRuleBody = ({
   valueDetails, ruleData, previewNumber,
   handleSelectChange, handleChange,
 }) => (
-  <Fragment>
+  <>
     <CustomSelect
       className="mb-3"
       label="Basis"
@@ -66,15 +66,15 @@ const AddNewRuleBody = ({
       value={previewNumber}
       onChange={() => {}}
     />
-  </Fragment>
+  </>
 );
 
 AddNewRuleBody.propTypes = {
-  valueDetails: PropTypes.array.isRequired,
-  ruleData: PropTypes.object.isRequired,
   previewNumber: PropTypes.number.isRequired,
-  handleSelectChange: PropTypes.func.isRequired,
+  ruleData: PropTypes.object.isRequired,
+  valueDetails: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
+  handleSelectChange: PropTypes.func.isRequired,
 };
 
 export default AddNewRuleBody;

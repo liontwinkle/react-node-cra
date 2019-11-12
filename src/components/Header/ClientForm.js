@@ -126,8 +126,8 @@ function ClientForm({
 
 ClientForm.propTypes = {
   status: PropTypes.object.isRequired,
-  isSaving: PropTypes.bool.isRequired,
   client: PropTypes.object,
+  isSaving: PropTypes.bool.isRequired,
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,

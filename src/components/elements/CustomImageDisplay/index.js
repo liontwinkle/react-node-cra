@@ -65,11 +65,11 @@ CustomImageDisplay.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
+  hint: PropTypes.string,
+  name: PropTypes.string,
   inline: PropTypes.bool,
   inlineWidth: PropTypes.number,
-  hint: PropTypes.string,
   value: PropTypes.any,
-  name: PropTypes.string,
   handleEditImage: PropTypes.func.isRequired,
 };
 

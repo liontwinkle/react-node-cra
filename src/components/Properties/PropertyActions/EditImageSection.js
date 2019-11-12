@@ -143,13 +143,13 @@ function EditImageSection({
 }
 
 EditImageSection.propTypes = {
-  fields: PropTypes.array.isRequired,
-  isHistoryCreating: PropTypes.bool.isRequired,
-  sections: PropTypes.array.isRequired,
-  imageKey: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
+  isHistoryCreating: PropTypes.bool.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
+  imageKey: PropTypes.string.isRequired,
   objectItem: PropTypes.object.isRequired,
+  fields: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
   handleClose: PropTypes.func.isRequired,
   updateObject: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,

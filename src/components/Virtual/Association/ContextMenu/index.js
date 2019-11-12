@@ -39,7 +39,6 @@ function ContextMenu({
       if (!displayEdit && !displayData) { handleClose(); }
     }
   }, [displayData, displayEdit, handleClose, info.positionX, info.positionY]);
-
   const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
     if (attribute.groupId === 'null') {
@@ -132,10 +131,10 @@ ContextMenu.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   info: PropTypes.object.isRequired,
-  menuItem: PropTypes.array.isRequired,
-  attributes: PropTypes.array.isRequired,
   attribute: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
+  menuItem: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
 };

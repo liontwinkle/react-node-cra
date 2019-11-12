@@ -180,20 +180,20 @@ function AddNewRule({
 AddNewRule.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  category: PropTypes.object.isRequired,
-  updateCategory: PropTypes.func.isRequired,
-  createHistory: PropTypes.func.isRequired,
-  valueDetails: PropTypes.array.isRequired,
   rules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  valueDetails: PropTypes.array.isRequired,
+  category: PropTypes.object.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  createHistory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({
-  isUpdating: store.categoriesData.isUpdating,
-  valueDetails: store.productsData.data.valueDetails,
   products: store.categoriesData.preProducts,
   category: store.categoriesData.category,
+  isUpdating: store.categoriesData.isUpdating,
+  valueDetails: store.productsData.data.valueDetails,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

@@ -44,10 +44,10 @@ const PreviewProducts = ({
 
 PreviewProducts.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
   filterProducts: PropTypes.array.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({

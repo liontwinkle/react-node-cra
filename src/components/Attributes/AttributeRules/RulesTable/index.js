@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Tooltip } from 'react-tippy';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 
 import { filterProducts } from 'utils/ruleManagement';
