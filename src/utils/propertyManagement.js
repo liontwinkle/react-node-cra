@@ -19,6 +19,7 @@ import CustomMonaco from 'components/elements/CustomMonaco';
 import { propertyTypes } from './constants';
 import { sortByOrder } from './index';
 import CustomImageDisplay from '../components/elements/CustomImageDisplay';
+import TemplateToggle from '../components/StaticTemplate/TemplateToggle';
 
 /** utils * */
 const createValuefromtemplate = (template, state, propertyFields) => {
@@ -260,6 +261,7 @@ export const sectionPreviewRender = (
         res.push(
           <TemplateString
             value={value}
+            key={p.key}
           />,
         );
       } else if (p.propertyType === 'select') {
@@ -276,7 +278,7 @@ export const sectionPreviewRender = (
             ? (state.properties[p.key] === 'true') : state.properties[p.key];
         }
         res.push(
-          <CustomToggle
+          <TemplateToggle
             label={p.label}
             value={value}
             onToggle={() => {}}
@@ -312,8 +314,6 @@ export const sectionPreviewRender = (
         const { value } = getStringTypeValue(p, state, propertyFields);
         res.push(
           <TemplateText
-            label={p.label}
-            inline
             value={value}
             key={p.key}
           />,
