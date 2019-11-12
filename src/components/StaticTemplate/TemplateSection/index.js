@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import './style.scss';
 
 const TemplateSection = ({ title, children }) => (
-  <div className="mg-section-control">
-    <div className="mg-section-title">
-      <div className="mg-section-template">
-        {title}
-      </div>
+  <div className="temp-section-wrapper">
+    <div className="temp-section-title">
+      {title}
     </div>
     {children}
   </div>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import isEqual from 'lodash/isEqual';
-import { updateProperties } from 'utils/propertyManagement';
+import { sectionPreviewRender, updateProperties } from 'utils/propertyManagement';
 import { sortByOrder } from 'utils';
 import TemplateSection from 'components/StaticTemplate/TemplateSection';
 
@@ -61,6 +61,13 @@ class Preview extends Component {
     this.setState(data);
   };
 
+  renderSectionFields = (section) => {
+    const { propertyFields } = this.props.propertyField;
+    return sectionPreviewRender(
+      propertyFields, this.state, section,
+    );
+  };
+
   render() {
     const {
       // properties,
@@ -72,7 +79,7 @@ class Preview extends Component {
         <PerfectScrollbar options={{ suppressScrollX: true, minScrollbarLength: 50 }}>
           {
             sections.map((section) => (
-              <TemplateSection title="No Section" key="no_section">
+              <TemplateSection title={section.label} key={section.key}>
                 {this.renderSectionFields(section)}
               </TemplateSection>
             ))

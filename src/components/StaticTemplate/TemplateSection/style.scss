@@ -1,0 +1,19 @@
+.temp-section-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  position: relative;
+  &::before {
+    content:"";
+    position: absolute;
+    height: 100%;
+    border-left: 1px solid black;
+    left:2px;
+  }
+  .temp-section-title {
+    font-size: 25px;
+    color: blue;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+}

@@ -11,6 +11,9 @@ import {
   CustomToggle,
   IconButton,
 } from 'components/elements';
+
+import TemplateText from 'components/StaticTemplate/TemplateText';
+import TemplateString from 'components/StaticTemplate/TemplateString';
 import CustomMonaco from 'components/elements/CustomMonaco';
 
 import { propertyTypes } from './constants';
@@ -234,6 +237,105 @@ export const sectionRender = (
             value={image ? image.path : null}
             name={image ? image.name : null}
             handleEditImage={() => handleEditImage(p.key)}
+          />,
+        );
+      }
+    }
+  });
+  return res;
+};
+
+export const sectionPreviewRender = (
+  propertyFields, state, section,
+) => {
+  const res = [];
+  let fields = propertyFields;
+  fields = propertyFields.sort(sortByOrder);
+  fields.forEach((p) => {
+    if ((section && (p.section === section.key))
+      || ((section === null) && (p.section === null))
+      || ((section === '') && (p.section === ''))) {
+      if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
+        const { value } = getStringTypeValue(p, state, fields);
+        res.push(
+          <TemplateString
+            value={value}
+          />,
+        );
+      } else if (p.propertyType === 'select') {
+        // const item = (p.items) ? p.items.filter((item) => (item.key === state.properties[p.key]))[0] || {} : {};
+        res.push(
+          <div className="mg-select-section" key={p.key} />,
+        );
+      } else if (p.propertyType === 'toggle') {
+        let value = true;
+        if (state.properties[p.key] === undefined) {
+          value = (p.default === 'true');
+        } else {
+          value = (typeof state.properties[p.key] === 'string')
+            ? (state.properties[p.key] === 'true') : state.properties[p.key];
+        }
+        res.push(
+          <CustomToggle
+            label={p.label}
+            value={value}
+            onToggle={() => {}}
+            key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'text') {
+        const { value } = getStringTypeValue(p, state, propertyFields);
+        res.push(
+          <TemplateText
+            label={p.label}
+            inline
+            value={value}
+            key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'array') {
+        let value = '';
+        if (state.properties[p.key] === null) {
+          value = p.default || '';
+        } else if (Array.isArray(state.properties[p.key])) {
+          value = JSON.stringify(state.properties[p.key]);
+        } else {
+          value = state.properties[p.key];
+        }
+        res.push(
+          <TemplateString
+            value={value}
+            key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'monaco') {
+        const { value } = getStringTypeValue(p, state, propertyFields);
+        res.push(
+          <TemplateText
+            label={p.label}
+            inline
+            value={value}
+            key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'richtext') {
+        const { value } = getStringTypeValue(p, state, propertyFields);
+        res.push(
+          <TemplateText
+            value={value}
+            key={p.key}
+          />,
+        );
+      } else if (p.propertyType === 'image') {
+        const image = (state.properties[p.key]) ? state.properties[p.key] : p.image;
+        res.push(
+          <CustomImageDisplay
+            id={p.key}
+            label={p.label}
+            inline
+            key={p.key}
+            value={image ? image.path : null}
+            name={image ? image.name : null}
           />,
         );
       }
