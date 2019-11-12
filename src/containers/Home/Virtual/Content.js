@@ -12,6 +12,7 @@ import Properties from 'components/Properties';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
+  { value: 'preview', label: 'Preview' },
   { value: 'attributes', label: 'Attributes' },
   { value: 'rules', label: 'Rules' },
   { value: 'history', label: 'History' },

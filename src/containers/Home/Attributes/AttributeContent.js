@@ -12,6 +12,7 @@ import DetailTable from 'components/DetailTable';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
+  { value: 'preview', label: 'Preview' },
   { value: 'categories', label: 'Categories' },
   { value: 'rules', label: 'Rules' },
   { value: 'history', label: 'History' },

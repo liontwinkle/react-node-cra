@@ -28,7 +28,6 @@ function Home({
         </Section>
 
         <Bar className="resizer" size={8} />
-
         <Section minSize={(value === 'products') ? '30%' : '65%'}>
           <>
             {value === 'products' && (
