@@ -105,21 +105,24 @@ class NewRules extends Component {
     const filteredData = categories.filter((categoryItem) => (
       categoryItem.categoryId.toString() === parentId
     ));
-    const filteredRules = filteredData[0].rules || [];
-    parentRules = _union(parentRules, filteredRules);
-    if (filteredData.parentId !== 'null') {
-      parentRules = _union(parentRules, this.getParentRules(filteredData.parentId));
+    let filteredRules = [];
+    if (filteredData.length > 0) {
+      filteredRules = filteredData[0].rules;
+      parentRules = _union(parentRules, filteredRules);
+      if (filteredData.parentId !== 'null') {
+        parentRules = _union(parentRules, this.getParentRules(filteredData.parentId));
+      }
     }
+
     return parentRules;
   };
 
   setMap = (category) => {
-    const parentRules = this.getParentRules(this.props.category.id);
+    const parentRules = this.getParentRules(this.props.category.parentId);
     const recvNewRules = category.rules || [];
     const displayRules = _union(recvNewRules, parentRules);
-    const recvAttributeRules = getRules(recvNewRules, this.props.valueDetails);
-    const editAttributeRules = getRules(displayRules, this.props.valueDetails);
-    console.log('##### DEBUG RULES ', displayRules); // fixme
+    const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
+    const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
     this.setState({
       newRules: recvAttributeRules.newRules,
       editRules: editAttributeRules.editRules,
