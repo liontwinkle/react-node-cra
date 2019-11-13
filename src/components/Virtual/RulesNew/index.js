@@ -11,7 +11,7 @@ import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { setProductViewType } from 'redux/actions/clients';
 import { confirmMessage, getPreFilterData } from 'utils';
-import { setUnionRules, getRules } from 'utils/ruleManagement';
+import { setUnionRules, getRules, unionRules } from 'utils/ruleManagement';
 import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
 import { CustomToggle } from 'components/elements';
@@ -108,11 +108,12 @@ class NewRules extends Component {
     let filteredRules = [];
     if (filteredData.length > 0) {
       const defaultRules = filteredData[0].rules.filter((item) => (item.ruleType === 'default'));
+
       const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
       filteredRules = (defaultFlag) ? _union(defaultRules, universalRules) : universalRules;
-      parentRules = _union(parentRules, filteredRules);
-      if (filteredData.parentId !== 'null') {
-        parentRules = _union(parentRules, this.getParentRules(filteredData.parentId));
+      parentRules = unionRules(parentRules, filteredRules);
+      if (filteredData[0].parentId !== 'null') {
+        parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parentId, defaultFlag));
       }
     }
 
@@ -122,7 +123,7 @@ class NewRules extends Component {
   setMap = (category) => {
     const defaultFlag = (this.props.category.rules.length <= 0);
     const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
-    const recvNewRules = category.rules || [];
+    const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
     const displayRules = _union(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
     const recvAttributeRules = getRules(displayRules, this.props.valueDetails);

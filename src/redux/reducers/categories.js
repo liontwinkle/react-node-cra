@@ -45,7 +45,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetchingList: false,
-        categories: tempDatas,
+        categories: JSON.parse(JSON.stringify(tempDatas)),
         category: tempDatas.filter((item) => (item.parentId === 'null'))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
@@ -77,7 +77,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCreating: false,
-        categories: createdCategories.slice(0),
+        categories: JSON.parse(JSON.stringify(createdCategories.slice(0))),
         trees: updateSaveData.subTree,
         associations: updateSaveData.association,
         category: data,
@@ -119,7 +119,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isUpdating: false,
-        categories: categories.slice(0),
+        categories: JSON.parse(JSON.stringify(categories.slice(0))),
         trees: newSaveData.subTree,
         associations: newSaveData.association,
         category: updateData,

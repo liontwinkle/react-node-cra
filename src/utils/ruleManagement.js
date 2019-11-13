@@ -134,3 +134,26 @@ export const getRules = (srcRules, valueDetails) => {
     editRules,
   };
 };
+
+export const unionRules = (ruleA, ruleB) => {
+  let ruleBigSet = [];
+  let ruleSmallSet = [];
+  if (ruleA.length > ruleB.length) {
+    ruleBigSet = ruleA;
+    ruleSmallSet = ruleB;
+  } else {
+    ruleBigSet = ruleB;
+    ruleSmallSet = ruleA;
+  }
+  const unionSet = [];
+  ruleBigSet.forEach((item) => {
+    const index = ruleSmallSet.findIndex((itemSmall) => (
+      itemSmall.basis === item.basis
+      || itemSmall.value === item.value
+    ));
+    if (index < 0) {
+      unionSet.push(item);
+    }
+  });
+  return _union(unionSet, ruleSmallSet);
+};
