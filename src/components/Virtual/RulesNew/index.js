@@ -26,6 +26,7 @@ class NewRules extends Component {
     this.state = {
       newRules: [],
       editRules: [],
+      displayRules: [],
       fetchingFlag: true,
       productsFlag: false,
     };
@@ -110,7 +111,7 @@ class NewRules extends Component {
       const defaultRules = filteredData[0].rules.filter((item) => (item.ruleType === 'default'));
 
       const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
-      filteredRules = (defaultFlag) ? _union(defaultRules, universalRules) : universalRules;
+      filteredRules = (defaultFlag) ? unionRules(defaultRules, universalRules) : universalRules;
       parentRules = unionRules(parentRules, filteredRules);
       if (filteredData[0].parentId !== 'null') {
         parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parentId, defaultFlag));
@@ -124,11 +125,12 @@ class NewRules extends Component {
     const defaultFlag = (this.props.category.rules.length <= 0);
     const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
     const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
-    const displayRules = _union(recvNewRules, parentRules);
+    const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
     const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
     this.setState({
-      newRules: recvAttributeRules.newRules,
+      displayRules: recvAttributeRules.newRules,
+      newRules: editAttributeRules.newRules,
       editRules: editAttributeRules.editRules,
     });
   };
@@ -145,7 +147,7 @@ class NewRules extends Component {
   };
 
   render() {
-    const { newRules, editRules } = this.state;
+    const { newRules, editRules, displayRules } = this.state;
     return (
       <div className="mg-rules-container d-flex">
         {
@@ -159,7 +161,7 @@ class NewRules extends Component {
                     onToggle={this.onHandleSwtichView}
                   />
                   <PerfectScrollbar>
-                    <RulesTable rules={newRules} />
+                    <RulesTable rules={displayRules} />
                   </PerfectScrollbar>
                 </div>
                 <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
