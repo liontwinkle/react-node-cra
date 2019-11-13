@@ -118,6 +118,7 @@ function NodeMenu({
   };
 
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
+  const [relateDlgOpen, setRelateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
 
   const handleDelete = () => {
@@ -128,10 +129,19 @@ function NodeMenu({
     setDeleteDlgOpen(false);
   };
   const handleRemove = () => {
+    console.log('#### DEBUG : ', node); // fixme
     const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);
     setDeleteDlgOpen(true);
     handleClose();
+  };
+
+  const handleRelate = () => {
+    setRelateDlgOpen(true);
+    handleClose();
+  };
+  const handleRelateDlgClose = () => {
+    setRelateDlgOpen(false);
   };
 
   return (
@@ -150,7 +160,14 @@ function NodeMenu({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <NodeButton editable={editable} handleRemove={handleRemove} handleEdit={handleEdit} handleAdd={handleAdd} />
+        <NodeButton
+          editable={editable}
+          handleRemove={handleRemove}
+          handleEdit={handleEdit}
+          handleAdd={handleAdd}
+          handleRelate={handleRelate}
+          rootNode={node.item.parentId === 'null'}
+        />
       </Popover>
 
       {deleteDlgOpen && (
@@ -160,6 +177,15 @@ function NodeMenu({
           msg="Are you sure you want to delete this category?"
           handleDelete={handleDelete}
           handleClose={handleDeleteDlgClose}
+        />
+      )}
+      {relateDlgOpen && (
+        <CustomConfirmDlg
+          open={relateDlgOpen}
+          subCategoryNumber={subCategoryNumber}
+          msg="Are you sure you want to delete this category?"
+          handleDelete={handleDelete}
+          handleClose={handleRelateDlgClose}
         />
       )}
     </div>
