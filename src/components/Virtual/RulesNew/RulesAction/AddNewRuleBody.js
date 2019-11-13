@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
 import {
-  basis, match, refer, scope,
+  basis, match, refer, scope, ruleType,
 } from 'utils/constants';
 
 const AddNewRuleBody = ({
@@ -65,6 +65,15 @@ const AddNewRuleBody = ({
       inline
       value={previewNumber}
       onChange={() => {}}
+    />
+    <CustomSelect
+      className="mb-3"
+      label="Rule Type"
+      inline
+      placeholder="Select Scope of Rule"
+      value={ruleData.type}
+      items={ruleType}
+      onChange={handleSelectChange('type')}
     />
   </>
 );

@@ -22,7 +22,8 @@ const AttributeSchema = new Schema({
     basis: String,
     refer: String,
     value: String,
-    scope: Number
+    scope: Number,
+    type: String,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 

@@ -9,11 +9,9 @@ import DetailTable from 'components/DetailTable';
 import { CustomTab } from 'components/elements';
 import { Association, NewRules } from 'components/Virtual/';
 import Properties from 'components/Properties';
-import Preview from '../../../components/Preview';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
-  { value: 'preview', label: 'Preview' },
   { value: 'attributes', label: 'Attributes' },
   { value: 'rules', label: 'Rules' },
   { value: 'history', label: 'History' },
@@ -44,9 +42,6 @@ function Content({
             updateObject={updateCategory}
             isObjectUpdating={isUpdating}
           />
-        )}
-        {tab === 'preview' && (
-          <Preview objectItem={category} />
         )}
         {tab === 'attributes' && <Association />}
         {tab === 'rules' && <NewRules />}

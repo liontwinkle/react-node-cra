@@ -142,3 +142,9 @@ export const productViewTypes = [
   { key: 'data', label: 'Product Table' },
   { key: 'grid', label: 'Product Image' },
 ];
+
+export const ruleType = [
+  { key: 'universal', label: 'Universal' },
+  { key: 'default', label: 'Default' },
+  { key: 'normal', label: 'Normal' },
+];

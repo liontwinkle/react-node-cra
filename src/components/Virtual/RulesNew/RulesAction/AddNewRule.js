@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 
 import {
-  basis, refer, match, scope,
+  basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
 import { confirmMessage, getPreFilterData, useStyles } from 'utils';
@@ -38,6 +38,7 @@ function AddNewRule({
     scope: scope[0],
     detail: valueDetails[0],
     value: '',
+    type: ruleType[0],
   });
 
   const [previewValue, setPreviewValue] = useState(0);
@@ -48,6 +49,8 @@ function AddNewRule({
   };
 
   const handleSelectChange = (field) => (item) => {
+    console.log('##### DEBUG Select Item: ', item); // fixme
+
     const newClient = {
       ...ruleData,
       [field]: item,
@@ -62,6 +65,8 @@ function AddNewRule({
     }];
     newRules[0][field] = item.key;
     getPreviewProducts(newRules);
+    console.log('##### DEBUG New Client: ', newClient); // fixme
+
     setRuleData(newClient);
   };
 
@@ -99,9 +104,11 @@ function AddNewRule({
         refer: item.refer.key,
         value,
         scope: 0,
+        type: item.type.key,
       });
     });
 
+    console.log('##### DEBUG updatedData: ', updatedData); // fixme
     if (!isUpdating) {
       updateCategory(category.id, { rules: updatedData })
         .then(() => {
