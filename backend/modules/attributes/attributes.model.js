@@ -23,7 +23,7 @@ const AttributeSchema = new Schema({
     refer: String,
     value: String,
     scope: Number,
-    type: String,
+    ruleType: String,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });
 

@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { confirmMessage, getObjectFromArray } from 'utils/index';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
-  basis, refer, match, scope, tableIcons,
+  basis, refer, match, scope, tableIcons, ruleType,
 } from 'utils/constants';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
@@ -38,6 +38,7 @@ function EditRules({
       { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
       { title: 'Value', field: 'value' },
       { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
+      { title: 'rule Type', field: 'ruleType', lookup: getObjectFromArray(ruleType) },
     ],
     data: rules,
   };
@@ -52,6 +53,7 @@ function EditRules({
         refer: item.refer,
         value,
         scope: 0,
+        ruleType: item.ruleType,
       });
     });
 
@@ -83,6 +85,7 @@ function EditRules({
           value: newData.value,
           match: newData.match,
           scope: newData.scope,
+          ruleType: newData.ruleType,
         });
         const msgCurrent = `Create New Rule(basis: ${newData.basis.key},refer: ${newData.refer.key},
             detail: ${newData.detail.key},match: ${newData.match.key},criteria: ${newData.value})`;
@@ -111,6 +114,7 @@ function EditRules({
           value: newData.value,
           match: newData.match,
           scope: newData.scope,
+          ruleType: newData.ruleType,
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {

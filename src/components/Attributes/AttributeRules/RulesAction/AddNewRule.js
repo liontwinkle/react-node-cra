@@ -14,10 +14,7 @@ import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBo
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import {
-  basis,
-  refer,
-  match,
-  scope,
+  basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 import { confirmMessage, getPreFilterData, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
@@ -44,6 +41,7 @@ function AddNewRule({
     match: match[0],
     scope: scope[0],
     detail: valueDetails[0],
+    ruleType: ruleType[0],
     value: '',
   });
 
@@ -66,6 +64,7 @@ function AddNewRule({
       scope: ruleData.scope.key,
       detail: ruleData.detail.key,
       value: ruleData.value,
+      ruleType: ruleData.ruleType.key,
     }];
     newRules[0][field] = item.key;
     getPreviewProducts(newRules);
@@ -84,6 +83,7 @@ function AddNewRule({
       scope: ruleData.scope.key,
       detail: ruleData.detail.key,
       value: e.target.value,
+      ruleType: ruleData.ruleType.key,
     }];
     getPreviewProducts(newRules);
     setRuleData(newClient);
@@ -106,6 +106,7 @@ function AddNewRule({
         refer: item.refer.key,
         value,
         scope: 0,
+        ruleType: item.ruleType.key,
       });
     });
 

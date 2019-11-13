@@ -71,9 +71,9 @@ const AddNewRuleBody = ({
       label="Rule Type"
       inline
       placeholder="Select Scope of Rule"
-      value={ruleData.type}
+      value={ruleData.ruleType}
       items={ruleType}
-      onChange={handleSelectChange('type')}
+      onChange={handleSelectChange('ruleType')}
     />
   </>
 );

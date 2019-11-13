@@ -12,7 +12,7 @@ import { setPrefilterData } from 'redux/actions/categories';
 import Loader from 'components/Loader';
 import { CustomToggle } from 'components/elements';
 import {
-  basis, refer, match, scope, productViewTypes,
+  basis, refer, match, scope, productViewTypes, ruleType,
 } from 'utils/constants';
 import { confirmMessage } from 'utils';
 import RulesTable from './RulesTable';
@@ -81,6 +81,7 @@ class AttributeRules extends Component {
     srcList.forEach((item) => {
       const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
       const referObj = refer.find((referItem) => (referItem.key === item.refer));
+      const ruleTypeObj = ruleType.find((ruleTypeObjItem) => (ruleTypeObjItem.key === item.ruleType));
       const otherObj = this.AnaylsisDetails(item.value);
       if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
         ruleArray.push({
@@ -91,6 +92,7 @@ class AttributeRules extends Component {
           match: (type) ? otherObj.matchObj.key : otherObj.matchObj,
           value: (type) ? otherObj.valueKey : otherObj.valueKey,
           scope: (type) ? scope[0].key : scope[0],
+          ruleType: (type) ? ruleTypeObj.key : ruleTypeObj,
         });
       }
     });

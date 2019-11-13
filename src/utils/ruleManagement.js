@@ -7,7 +7,7 @@ import {
   RuleEngine,
 } from './RuleEngine';
 import {
-  basis, match, refer, scope,
+  basis, match, refer, scope, ruleType,
 } from './constants';
 
 const getAllmatched = (products, match, value) => {
@@ -104,6 +104,7 @@ export const getRules = (srcRules, valueDetails) => {
   srcRules.forEach((item) => {
     const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
     const referObj = refer.find((referItem) => (referItem.key === item.refer));
+    const ruleTypeObj = ruleType.find((ruleTypeItem) => (ruleTypeItem.key === item.ruleType));
     const otherObj = AnaylsisDetails(item.value, valueDetails);
     if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
       newRules.push({
@@ -114,6 +115,7 @@ export const getRules = (srcRules, valueDetails) => {
         match: otherObj.matchObj,
         value: otherObj.valueKey,
         scope: scope[0],
+        ruleType: ruleTypeObj,
       });
       editRules.push({
         _id: item._id,
@@ -123,6 +125,7 @@ export const getRules = (srcRules, valueDetails) => {
         match: otherObj.matchObj.key,
         value: otherObj.valueKey,
         scope: scope[0].key,
+        ruleType: ruleTypeObj.key,
       });
     }
   });
