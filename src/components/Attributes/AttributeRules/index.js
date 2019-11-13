@@ -4,7 +4,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
-import _union from 'lodash/union';
 
 import { fetchProducts } from 'redux/actions/products';
 import { setProductViewType } from 'redux/actions/clients';
@@ -15,6 +14,8 @@ import {
   basis, refer, match, scope, productViewTypes, ruleType,
 } from 'utils/constants';
 import { confirmMessage } from 'utils';
+import { unionRules } from 'utils/ruleManagement';
+
 import RulesTable from './RulesTable';
 import RulesAction from './RulesAction';
 
@@ -103,15 +104,15 @@ class AttributeRules extends Component {
     const grpRules = this.props.attributes.filter((attributeItem) => (
       attributeItem.attributeId.toString() === attribute.groupId));
     if (attribute.rules) {
-      currentRules = _union(currentRules, attribute.rules);
+      currentRules = unionRules(currentRules, attribute.rules);
     }
     let displayRules = currentRules;
     const defaultFlag = (attribute.rules.length <= 0);
     if (grpRules.length > 0 && grpRules[0].rules) {
       const defaultRules = grpRules[0].rules.filter((item) => (item.ruleType === 'default'));
       const universalRules = grpRules[0].rules.filter((item) => (item.ruleType === 'universal'));
-      const filteredRules = (defaultFlag) ? _union(defaultRules, universalRules) : universalRules;
-      displayRules = _union(currentRules, filteredRules);
+      const filteredRules = (defaultFlag) ? unionRules(defaultRules, universalRules) : universalRules;
+      displayRules = unionRules(currentRules, filteredRules);
     }
     const newRules = [];
     const editRules = [];
