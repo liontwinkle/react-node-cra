@@ -108,7 +108,6 @@ function AddNewRule({
       });
     });
 
-    console.log('##### DEBUG updatedData: ', updatedData); // fixme
     if (!isUpdating) {
       updateCategory(category.id, { rules: updatedData })
         .then(() => {
