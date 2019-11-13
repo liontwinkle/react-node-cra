@@ -144,7 +144,7 @@ export const productViewTypes = [
 ];
 
 export const ruleType = [
+  { key: 'normal', label: 'Normal' },
   { key: 'universal', label: 'Universal' },
   { key: 'default', label: 'Default' },
-  { key: 'normal', label: 'Normal' },
 ];

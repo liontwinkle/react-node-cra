@@ -99,7 +99,7 @@ class NewRules extends Component {
     });
   };
 
-  getParentRules = (parentId) => {
+  getParentRules = (parentId, defaultFlag) => {
     const { categories } = this.props;
     let parentRules = [];
     const filteredData = categories.filter((categoryItem) => (
@@ -107,7 +107,9 @@ class NewRules extends Component {
     ));
     let filteredRules = [];
     if (filteredData.length > 0) {
-      filteredRules = filteredData[0].rules;
+      const defaultRules = filteredData[0].rules.filter((item) => (item.ruleType === 'default'));
+      const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
+      filteredRules = (defaultFlag) ? _union(defaultRules, universalRules) : universalRules;
       parentRules = _union(parentRules, filteredRules);
       if (filteredData.parentId !== 'null') {
         parentRules = _union(parentRules, this.getParentRules(filteredData.parentId));
@@ -118,7 +120,8 @@ class NewRules extends Component {
   };
 
   setMap = (category) => {
-    const parentRules = this.getParentRules(this.props.category.parentId);
+    const defaultFlag = (this.props.category.rules.length <= 0);
+    const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
     const recvNewRules = category.rules || [];
     const displayRules = _union(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);

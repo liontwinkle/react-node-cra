@@ -106,8 +106,12 @@ class AttributeRules extends Component {
       currentRules = _union(currentRules, attribute.rules);
     }
     let displayRules = currentRules;
+    const defaultFlag = (attribute.rules.length <= 0);
     if (grpRules.length > 0 && grpRules[0].rules) {
-      displayRules = _union(currentRules, grpRules[0].rules);
+      const defaultRules = grpRules[0].rules.filter((item) => (item.ruleType === 'default'));
+      const universalRules = grpRules[0].rules.filter((item) => (item.ruleType === 'universal'));
+      const filteredRules = (defaultFlag) ? _union(defaultRules, universalRules) : universalRules;
+      displayRules = _union(currentRules, filteredRules);
     }
     const newRules = [];
     const editRules = [];
