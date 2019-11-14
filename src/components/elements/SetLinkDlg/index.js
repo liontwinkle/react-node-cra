@@ -43,7 +43,6 @@ function SetLinkDlg({
   }, [setItemList, rootItems]);
 
   const changeSelect = (e) => {
-    console.log('#### DEBUG Event: ', e); // fixme
     setNewLinkedId(e.key);
   };
   return (
