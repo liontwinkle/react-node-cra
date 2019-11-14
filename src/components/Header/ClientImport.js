@@ -155,7 +155,7 @@ function ClientImport({
 
   return (
     <Dialog
-      open={status.open}
+      open={status.Type}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >

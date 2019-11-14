@@ -33,7 +33,7 @@ function ClientForm({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isAdd = status.type === 'Add';
+  const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
     name: isAdd ? '' : client.name,
     code: isAdd ? '' : client.code,
@@ -62,23 +62,23 @@ function ClientForm({
               handleClose();
             })
             .catch(() => {
-              confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
+              confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
             });
         })
         .catch(() => {
-          confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
+          confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
         });
     }
   };
 
   return (
     <Dialog
-      open={status.open}
+      open={status.Add || status.Edit}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {`${status.type} Client`}
+        {`${isAdd} Client`}
       </DialogTitle>
 
       <DialogContent>
