@@ -61,7 +61,7 @@ function SetLinkDlg({
           <CustomSelectWithLabel
             label="Related Category"
             inline
-            value={itemList[0]}
+            value={itemList.find(((item) => (item.key === newLinkedId)))}
             items={itemList || []}
             onChange={(e) => changeSelect(e)}
           />

@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import { createCategory, removeCategory } from 'redux/actions/categories';
+import { createCategory, removeCategory, updateCategory } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
 import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
@@ -26,6 +26,7 @@ function NodeMenu({
   isDeleting,
   setTreeData,
   createCategory,
+  updateCategory,
   createHistory,
   removeCategory,
   removeHistory,
@@ -46,7 +47,12 @@ function NodeMenu({
   useEffect(() => {
     if (categories.length > 0) {
       const items = categories.filter((item) => (item.parentId === 'null' && item.categoryId !== node.item.categoryId));
-      setRootItems(items);
+      const linkedItems = items.map((item) => item.linkedId);
+      let freeLinkItem = items;
+      linkedItems.forEach((item) => {
+        freeLinkItem = freeLinkItem.filter((filterItem) => (filterItem.id !== item));
+      });
+      setRootItems(freeLinkItem);
       setInitFlag(true);
     }
   }, [categories, initFlag, setInitFlag, setRootItems, node]);
@@ -130,7 +136,13 @@ function NodeMenu({
   };
 
   const handleSetLink = (linkedId) => () => {
-    console.log('#### DEBUG LINKED ID: ', linkedId); // fixme
+    updateCategory(node.item.id, { linkedId })
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'Setting the link is okay.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in setting the link.', 'error');
+      });
   };
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [relateDlgOpen, setRelateDlgOpen] = useState(false);
@@ -144,7 +156,6 @@ function NodeMenu({
     setDeleteDlgOpen(false);
   };
   const handleRemove = () => {
-    console.log('#### DEBUG : ', node); // fixme
     const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);
     setDeleteDlgOpen(true);
@@ -200,6 +211,7 @@ function NodeMenu({
           rootItems={rootItems}
           handleClose={handleRelateDlgClose}
           open={relateDlgOpen}
+          linkedId={node.item.linkedId || ''}
           msg="Please select the linked Node."
         />
       )}
@@ -220,6 +232,7 @@ NodeMenu.propTypes = {
   categories: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   removeCategory: PropTypes.func.isRequired,
   removeHistory: PropTypes.func.isRequired,
@@ -235,6 +248,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createCategory,
+  updateCategory,
   createHistory,
   removeCategory,
   removeHistory,
