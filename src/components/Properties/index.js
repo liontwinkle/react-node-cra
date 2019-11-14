@@ -135,8 +135,9 @@ class Properties extends Component {
 
   renderSectionFields = (section) => {
     const { propertyFields } = this.props.propertyField;
+    const template = this.props.objectItem.template || '';
     return sectionRender(
-      propertyFields, this.state, section,
+      propertyFields, template, this.state, section,
       this.changeInput, this.changeSelect, this.changeArrayInput,
       this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
     );

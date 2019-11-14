@@ -43,11 +43,14 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   return string;
 };
 
-const getStringTypeValue = (property, state, propertyFields) => {
+const getStringTypeValue = (property, state, propertyFields, template) => {
   let value = '';
-  let templateFlag = false;
+  let templateFlag = (template !== '' && template !== 'null' && template);
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
+    templateFlag = true;
+  } else if (template && template !== 'null' && template !== '') {
+    value = createValuefromtemplate(template, state, propertyFields);
     templateFlag = true;
   } else if (
     property.default && state.properties[property.key] === undefined) {
@@ -84,7 +87,7 @@ export const updateProperties = (propertyFields, properties) => {
 };
 
 export const sectionRender = (
-  propertyFields, state, section,
+  propertyFields, template, state, section,
   changeInput, changeSelect, changeArrayInput,
   handleSelItemToggle, handleEditImage, toggleSwitch, changeMonaco,
 ) => {
@@ -96,7 +99,7 @@ export const sectionRender = (
       || ((section === null) && (p.section === null))
       || ((section === '') && (p.section === ''))) {
       if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
-        const { value, templateFlag } = getStringTypeValue(p, state, fields);
+        const { value, templateFlag } = getStringTypeValue(p, state, fields, template);
         res.push(
           <CustomInput
             label={p.label}
@@ -162,7 +165,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'text') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           <CustomText
             label={p.label}
@@ -191,7 +194,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'monaco') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           <CustomMonaco
             label={p.label}
@@ -202,7 +205,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'richtext') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           templateFlag
             ? (

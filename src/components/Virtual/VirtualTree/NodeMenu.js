@@ -167,9 +167,11 @@ function NodeMenu({
     deleteItem();
     setDeleteDlgOpen(false);
   };
+
   const handleDeleteDlgClose = () => {
     setDeleteDlgOpen(false);
   };
+
   const handleRemove = () => {
     const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);

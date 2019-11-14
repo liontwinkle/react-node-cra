@@ -26,11 +26,9 @@ const NodeButton = ({
         Link with other
       </button>
     )}
-    {rootNode && (
-      <button className="mg-button transparent" onClick={handleTemplate}>
-        Set the template
-      </button>
-    )}
+    <button className="mg-button transparent" onClick={handleTemplate}>
+      Set the template
+    </button>
   </div>
 );
 
