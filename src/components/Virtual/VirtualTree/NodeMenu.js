@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -14,6 +14,7 @@ import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import NodeButton from './NodeButton';
+import SetLinkDlg from '../../elements/SetLinkDlg';
 
 function NodeMenu({
   treeData,
@@ -31,6 +32,7 @@ function NodeMenu({
   fetchAttributes,
   editable,
   client,
+  categories,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -38,6 +40,16 @@ function NodeMenu({
     event.preventDefault();
     event.stopPropagation();
   };
+
+  const [rootItems, setRootItems] = useState([]);
+  const [initFlag, setInitFlag] = useState(false);
+  useEffect(() => {
+    if (categories.length > 0) {
+      const items = categories.filter((item) => (item.parentId === 'null' && item.categoryId !== node.item.categoryId));
+      setRootItems(items);
+      setInitFlag(true);
+    }
+  }, [categories, initFlag, setInitFlag, setRootItems, node]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
@@ -117,6 +129,9 @@ function NodeMenu({
     }
   };
 
+  const handleSetLink = (linkedId) => () => {
+    console.log('#### DEBUG LINKED ID: ', linkedId); // fixme
+  };
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [relateDlgOpen, setRelateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
@@ -180,12 +195,12 @@ function NodeMenu({
         />
       )}
       {relateDlgOpen && (
-        <CustomConfirmDlg
-          open={relateDlgOpen}
-          subCategoryNumber={subCategoryNumber}
-          msg="Are you sure you want to delete this category?"
-          handleDelete={handleDelete}
+        <SetLinkDlg
+          handleSetLink={handleSetLink}
+          rootItems={rootItems}
           handleClose={handleRelateDlgClose}
+          open={relateDlgOpen}
+          msg="Please select the linked Node."
         />
       )}
     </div>
@@ -202,6 +217,7 @@ NodeMenu.propTypes = {
   path: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   treeData: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,

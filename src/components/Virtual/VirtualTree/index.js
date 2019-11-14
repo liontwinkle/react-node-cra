@@ -158,6 +158,7 @@ function VirtualSortableTree(props) {
             <TreeNodeMenu
               treeData={treeData}
               node={node}
+              categories={categories}
               path={path}
               setTreeData={setTreeData}
               editable={editable}

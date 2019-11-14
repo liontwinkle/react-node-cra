@@ -12,6 +12,10 @@ const CategorySchema = new Schema({
     type: String,
     default: 'null',
   },
+  linkedId: {
+    type: String,
+    default: 'null',
+  },
   properties: Object,
   defaultProperties: [{
     key: String,
