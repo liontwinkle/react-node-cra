@@ -14,23 +14,20 @@ import TreeNodeMenu from './NodeMenu';
 
 import './style.scss';
 
-function VirtualSortableTree(props) {
+function VirtualSortableTree({
+  isUpdating,
+  isCreating,
+  categories,
+  history,
+  category,
+  treeData,
+  setTreeData,
+  updateCategory,
+  setCategory,
+  clientType,
+  createHistory,
+}) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    isUpdating,
-    isCreating,
-    categories,
-    history,
-    category,
-    treeData,
-    setTreeData,
-    updateCategory,
-    setCategory,
-    clientType,
-    createHistory,
-  } = props;
-
   const handleConfirm = (node, path, title = null) => {
     let newNode = {
       ...node,
