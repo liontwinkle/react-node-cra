@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 
 const NodeButton = ({
-  editable, handleAdd, handleEdit, handleRemove, handleRelate, rootNode,
+  editable, handleAdd, handleEdit, handleRemove, handleRelate, rootNode, handleTemplate,
 }) => (
   <div className="d-flex flex-column">
     <button className="mg-button transparent" onClick={handleAdd}>
@@ -26,6 +26,11 @@ const NodeButton = ({
         Link with other
       </button>
     )}
+    {rootNode && (
+      <button className="mg-button transparent" onClick={handleTemplate}>
+        Set the template
+      </button>
+    )}
   </div>
 );
 
@@ -36,6 +41,7 @@ NodeButton.propTypes = {
   handleEdit: PropTypes.func.isRequired,
   handleAdd: PropTypes.func.isRequired,
   handleRelate: PropTypes.func.isRequired,
+  handleTemplate: PropTypes.func.isRequired,
 };
 
 export default NodeButton;

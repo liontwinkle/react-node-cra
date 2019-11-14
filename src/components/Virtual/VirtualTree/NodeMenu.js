@@ -15,6 +15,7 @@ import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import NodeButton from './NodeButton';
 import SetLinkDlg from '../../elements/SetLinkDlg';
+import SetTemplateDlg from '../../elements/SetTemplateDlg';
 
 function NodeMenu({
   treeData,
@@ -31,6 +32,7 @@ function NodeMenu({
   removeCategory,
   removeHistory,
   fetchAttributes,
+  propertyField,
   editable,
   client,
   categories,
@@ -144,8 +146,21 @@ function NodeMenu({
         confirmMessage(enqueueSnackbar, 'Error in setting the link.', 'error');
       });
   };
+
+  const handleSetTemplate = (template) => () => {
+    console.log('### TEMPLATE: ', template); // fixme
+    updateCategory(node.item.id, { template })
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
+      });
+  };
+
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [relateDlgOpen, setRelateDlgOpen] = useState(false);
+  const [templateDlgOpen, setTemplateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
 
   const handleDelete = () => {
@@ -166,8 +181,17 @@ function NodeMenu({
     setRelateDlgOpen(true);
     handleClose();
   };
+  const handleTemplate = () => {
+    setTemplateDlgOpen(true);
+    handleClose();
+  };
+
   const handleRelateDlgClose = () => {
     setRelateDlgOpen(false);
+  };
+
+  const handleTemplateDlgClose = () => {
+    setTemplateDlgOpen(false);
   };
 
   return (
@@ -192,6 +216,7 @@ function NodeMenu({
           handleEdit={handleEdit}
           handleAdd={handleAdd}
           handleRelate={handleRelate}
+          handleTemplate={handleTemplate}
           rootNode={node.item.parentId === 'null'}
         />
       </Popover>
@@ -215,6 +240,16 @@ function NodeMenu({
           msg="Please select the linked Node."
         />
       )}
+      {templateDlgOpen && (
+        <SetTemplateDlg
+          handleSetTemplate={handleSetTemplate}
+          handleClose={handleTemplateDlgClose}
+          msg="Please set the template."
+          template={node.item.template || ''}
+          propertyField={propertyField}
+          open={templateDlgOpen}
+        />
+      )}
     </div>
   );
 }
@@ -226,6 +261,7 @@ NodeMenu.propTypes = {
   isFetchAttributes: PropTypes.bool.isRequired,
   node: PropTypes.object.isRequired,
   client: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   treeData: PropTypes.array.isRequired,
@@ -244,6 +280,7 @@ const mapStateToProps = (store) => ({
   isCreating: store.categoriesData.isCreating,
   isFetchAttributes: store.attributesData.isFetchingList,
   isDeleting: store.categoriesData.isDeleting,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

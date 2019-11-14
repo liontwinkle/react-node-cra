@@ -16,6 +16,10 @@ const CategorySchema = new Schema({
     type: String,
     default: 'null',
   },
+  template: {
+    type: String,
+    default: 'null',
+  },
   properties: Object,
   defaultProperties: [{
     key: String,
