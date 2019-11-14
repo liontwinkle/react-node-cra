@@ -32,7 +32,6 @@ function SetTemplateDlg({
   const [newTemplate, setNewTemplate] = useState(template);
 
   const handleChangeTemplate = (value) => {
-    console.log('### DEBUG EVENT: ', value); // fixme
     setNewTemplate(value);
   };
   return (
@@ -67,7 +66,7 @@ function SetTemplateDlg({
         </button>
         <button
           className="mg-button primary"
-          onClick={handleSetTemplate(newTemplate)}
+          onClick={handleSetTemplate({ template: newTemplate })}
         >
           {confirmLabel}
         </button>

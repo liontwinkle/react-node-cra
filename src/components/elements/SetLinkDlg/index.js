@@ -76,7 +76,7 @@ function SetLinkDlg({
         </button>
         <button
           className="mg-button primary"
-          onClick={handleSetLink(newLinkedId)}
+          onClick={handleSetLink({ linkedId: newLinkedId })}
         >
           {confirmLabel}
         </button>

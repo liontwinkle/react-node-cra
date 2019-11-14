@@ -13,9 +13,9 @@ import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import SetLinkDlg from 'components/elements/SetLinkDlg';
+import SetTemplateDlg from 'components/elements/SetTemplateDlg';
 import NodeButton from './NodeButton';
-import SetLinkDlg from '../../elements/SetLinkDlg';
-import SetTemplateDlg from '../../elements/SetTemplateDlg';
 
 function NodeMenu({
   treeData,
@@ -137,19 +137,8 @@ function NodeMenu({
     }
   };
 
-  const handleSetLink = (linkedId) => () => {
-    updateCategory(node.item.id, { linkedId })
-      .then(() => {
-        confirmMessage(enqueueSnackbar, 'Setting the link is okay.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in setting the link.', 'error');
-      });
-  };
-
-  const handleSetTemplate = (template) => () => {
-    console.log('### TEMPLATE: ', template); // fixme
-    updateCategory(node.item.id, { template })
+  const updateCategoryExtraInfomation = (data) => () => {
+    updateCategory(node.item.id, data)
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
       })
@@ -157,10 +146,11 @@ function NodeMenu({
         confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
       });
   };
-
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
-  const [relateDlgOpen, setRelateDlgOpen] = useState(false);
-  const [templateDlgOpen, setTemplateDlgOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState({
+    relate: false,
+    template: false,
+  });
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
 
   const handleDelete = () => {
@@ -179,21 +169,12 @@ function NodeMenu({
     handleClose();
   };
 
-  const handleRelate = () => {
-    setRelateDlgOpen(true);
-    handleClose();
-  };
-  const handleTemplate = () => {
-    setTemplateDlgOpen(true);
-    handleClose();
-  };
-
-  const handleRelateDlgClose = () => {
-    setRelateDlgOpen(false);
-  };
-
-  const handleTemplateDlgClose = () => {
-    setTemplateDlgOpen(false);
+  const handleDialog = (type, value) => () => {
+    const newState = {
+      ...openDialog,
+      [type]: value,
+    };
+    setOpenDialog(newState);
   };
 
   return (
@@ -217,8 +198,8 @@ function NodeMenu({
           handleRemove={handleRemove}
           handleEdit={handleEdit}
           handleAdd={handleAdd}
-          handleRelate={handleRelate}
-          handleTemplate={handleTemplate}
+          handleRelate={handleDialog('relate', true)}
+          handleTemplate={handleDialog('template', true)}
           rootNode={node.item.parentId === 'null'}
         />
       </Popover>
@@ -232,24 +213,24 @@ function NodeMenu({
           handleClose={handleDeleteDlgClose}
         />
       )}
-      {relateDlgOpen && (
+      {openDialog.relate && (
         <SetLinkDlg
-          handleSetLink={handleSetLink}
+          handleSetLink={updateCategoryExtraInfomation}
           rootItems={rootItems}
-          handleClose={handleRelateDlgClose}
-          open={relateDlgOpen}
+          handleClose={handleDialog('relate', false)}
+          open={openDialog.relate}
           linkedId={node.item.linkedId || ''}
           msg="Please select the linked Node."
         />
       )}
-      {templateDlgOpen && (
+      {openDialog.template && (
         <SetTemplateDlg
-          handleSetTemplate={handleSetTemplate}
-          handleClose={handleTemplateDlgClose}
+          handleSetTemplate={updateCategoryExtraInfomation}
+          handleClose={handleDialog('template', false)}
           msg="Please set the template."
           template={node.item.template || ''}
           propertyField={propertyField}
-          open={templateDlgOpen}
+          open={openDialog.template}
         />
       )}
     </div>

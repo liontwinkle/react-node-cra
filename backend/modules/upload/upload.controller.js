@@ -29,7 +29,7 @@ const checkDuplicateSection = (currentSection, newSection) => {
   });
   maxOrder++;
   newSection.forEach((newItem, index) => {
-    if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
+    if (currentSection.findIndex((item) => (item.key === newItem.key)) === -1) {
       compareUpdateSection.push({
         label: newItem.label,
         key: newItem.key,
@@ -60,7 +60,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
   });
   maxOrder++;
   newPropertyFields.forEach((newItem, index) => {
-    if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
+    if (currentPropertyFields.findIndex((item) => (item.key === newItem.key)) === -1) {
       updatePropertyFields.push({
         items: newItem.items,
         key: newItem.key,
@@ -94,7 +94,7 @@ const keyUpload = (clientId, type, data) => {
             }
           }, (err) => {
             if (err) {
-              console.log('### DEBUG ERROR: ', err);
+              console.log(err);
             }
           });
       }
@@ -119,7 +119,7 @@ const removeUnnecessaryData = (data) => {
   const addData = {};
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
-    if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
+    if (removeList.findIndex((removeItem) => (removeItem === keyItem)) === -1) {
       if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object' && keyItem !== 'properties') {
         const key = Object.keys(data[keyItem]);
         if (key.length > 0) {
@@ -141,7 +141,7 @@ const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
     if (type !== 'products') {
-      const duplicateFilter = currentData.find(currentItem =>
+      const duplicateFilter = currentData.find((currentItem) =>
         (currentItem[checkType[type]] === newItem[checkType[type]]));
       if (!duplicateFilter) {
         try {
@@ -211,7 +211,7 @@ const getNewFieldData = (updateData) => {
   let recvProperties = {};
   updateData.forEach((dataItem) => {
     const newProperties = dataItem.properties || {};
-    recvProperties = Object.assign({}, recvProperties, newProperties);
+    recvProperties = { ...recvProperties, ...newProperties };
   });
   const sections = getKeysfromNewData(recvProperties);
   const properties = getPropertiesfromNewData(recvProperties);

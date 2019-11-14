@@ -8,11 +8,12 @@ import { useSnackbar } from 'notistack';
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import { createAttribute, removeAttribute, updateAttribute } from 'redux/actions/attribute';
 import { createHistory, removeHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
+import SetTemplateDlg from 'components/elements/SetTemplateDlg';
 import NodeButton from './NodeButton';
 
 function NodeMenu({
@@ -23,7 +24,9 @@ function NodeMenu({
   history,
   node,
   path,
+  propertyField,
   setTreeData,
+  updateAttribute,
   createAttribute,
   createHistory,
   removeAttribute,
@@ -122,7 +125,18 @@ function NodeMenu({
     }
   };
 
+  const setTemplate = (data) => () => {
+    updateAttribute(node.item.id, data)
+      .then(() => {
+        confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
+      });
+  };
+
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
+  const [templateDlgOpen, setTemplateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
 
   const handleDelete = () => {
@@ -136,6 +150,10 @@ function NodeMenu({
     setSubCategoryNumber(childNum);
     setDeleteDlgOpen(true);
     handleClose();
+  };
+
+  const handleTemplateDlg = (value) => () => {
+    setTemplateDlgOpen(value);
   };
 
   return (
@@ -154,7 +172,13 @@ function NodeMenu({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <NodeButton handleAdd={handleAdd} handleRemove={handleRemove} path={path} handleEdit={handleEdit} />
+        <NodeButton
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          path={path}
+          handleEdit={handleEdit}
+          handleTemplate={handleTemplateDlg(true)}
+        />
       </Popover>
 
       {deleteDlgOpen && (
@@ -164,6 +188,15 @@ function NodeMenu({
           msg="Are you sure you want to delete this attribute?"
           handleDelete={handleDelete}
           handleClose={handleDeleteDlgClose}
+        />
+      )}
+      {templateDlgOpen && (
+        <SetTemplateDlg
+          handleClose={handleTemplateDlg(false)}
+          open={templateDlgOpen}
+          msg="Please set the base template."
+          handleSetTemplate={setTemplate}
+          propertyField={propertyField}
         />
       )}
     </div>
@@ -177,12 +210,14 @@ NodeMenu.propTypes = {
   attributes: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createAttribute: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   removeAttribute: PropTypes.func.isRequired,
   removeHistory: PropTypes.func.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
   checkNameDuplicate: PropTypes.func.isRequired,
 };
 
@@ -191,10 +226,12 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createHistory,
   removeAttribute,
   removeHistory,
+  updateAttribute,
 }, dispatch);
 
 const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
+  propertyField: store.propertyFieldsData.propertyField,
   history: store.historyData.history,
   isUpdating: store.attributesData.isUpdating,
   isCreating: store.attributesData.isCreating,
