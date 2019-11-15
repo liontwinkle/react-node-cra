@@ -32,7 +32,11 @@ function ClientAction(props) {
   });
   const handleOpen = (type) => () => {
     if (!disabled) {
-      setFormState({ open: true, type });
+      const state = {
+        ...formState,
+        [type]: true,
+      };
+      setFormState(state);
     }
   };
   const handleClose = (type) => () => {
