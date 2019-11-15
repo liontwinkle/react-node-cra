@@ -32,7 +32,7 @@ const AddNewRuleBody = ({
       className="mb-3"
       label="Detail"
       placeholder="Select Detail of Rule"
-      value={ruleData.detail}
+      value={ruleData.key}
       items={valueDetails}
       onChange={handleSelectChange('detail')}
     />
@@ -40,7 +40,7 @@ const AddNewRuleBody = ({
       className="mb-3"
       label="Match"
       placeholder="Select matches of Rule"
-      value={ruleData.match}
+      value={ruleData.type}
       items={match}
       onChange={handleSelectChange('match')}
     />
@@ -48,7 +48,7 @@ const AddNewRuleBody = ({
       className="mb-3"
       label="Criteria"
       inline
-      value={ruleData.value}
+      value={ruleData.criteria}
       onChange={handleChange}
     />
     <CustomSelect

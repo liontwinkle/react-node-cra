@@ -122,16 +122,16 @@ function AddNewRule({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
-        item.detail.key === ruleData.detail.key
-        && item.match.key === ruleData.match.key
-        && item.value === ruleData.value
+        item.key.key === ruleData.key.key
+        && item.type.key === ruleData.type.key
+        && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.detail.key},match: ${ruleData.match.key},criteria: ${ruleData.value})`;
+            detail: ${ruleData.key.key},match: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
-        refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
-        criteria: ${ruleData.value})`;
+        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},match: ${ruleData.type.key},
+        criteria: ${ruleData.criteria})`;
         addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
