@@ -74,7 +74,7 @@ function AddNewRule({
     const newRules = [{
       basis: ruleData.basis.key,
       refer: ruleData.refer.key,
-      type: ruleData.type.key,
+      match: ruleData.match.key,
       scope: ruleData.scope.key,
       key: ruleData.key.key,
       criteria: ruleData.criteria,

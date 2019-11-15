@@ -42,6 +42,7 @@ const getAllmatched = (products, type, criteria, basis) => {
   let includeIndex = 0;
   let excludeIndex = 0;
   const rule = RuleEngine[type](criteria);
+  console.log('### DEBUG RULE-All: ', rule); // fixme
 
 
   products.forEach((proItem) => {
@@ -61,6 +62,7 @@ const getAllmatched = (products, type, criteria, basis) => {
 
 const getRuleProducts = (products, field, type, criteria, basis) => {
   const rule = RuleEngine[type](criteria);
+  console.log('### DEBUG RULE-EACH: ', rule); // fixme
   const returnValue = {
     includes: [],
     excludes: [],

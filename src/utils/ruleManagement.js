@@ -14,6 +14,7 @@ const getAllmatched = (products, match, value) => {
   const returnValue = [];
   let index = 0;
   const rule = RuleEngine[match](value);
+  console.log('### DEBUG RULE???: ', rule);// fixme
   products.forEach((proItem) => {
     const values = Object.values(proItem);
     if (values.filter((item) => (rule.test(item))).length > 0) {
@@ -107,8 +108,6 @@ export const getRules = (srcRules, valueDetails) => {
     const ruleTypeObj = ruleType.find((ruleTypeItem) => (ruleTypeItem.key === item.ruleType));
     const matchObj = match.find((matchItem) => (matchItem.key === item.match));
     const keyObject = valueDetails.find((keyItem) => (keyItem.key === item.key));
-    // const otherObj = AnaylsisDetails(item.value, valueDetails);
-    // if (match && otherObj.matchObj && otherObj.valueKey) {
     newRules.push({
       _id: item._id,
       basis: basisObj,
@@ -129,7 +128,6 @@ export const getRules = (srcRules, valueDetails) => {
       scope: scope[0].key,
       ruleType: ruleTypeObj.key,
     });
-    // }
   });
   return {
     newRules,
