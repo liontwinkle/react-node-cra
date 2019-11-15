@@ -32,7 +32,7 @@ const CategorySchema = new Schema({
     scope: Number,
     criteria: String,
     key: String,
-    type: String,
+    match: String,
     ruleType: String,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });

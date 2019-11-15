@@ -35,7 +35,7 @@ function AddNewRule({
   const [ruleData, setRuleData] = useState({
     basis: basis[0],
     refer: refer[0],
-    type: match[0],
+    match: match[0],
     scope: scope[0],
     key: valueDetails[0],
     criteria: '',
@@ -57,7 +57,7 @@ function AddNewRule({
     const newRules = [{
       basis: ruleData.basis.key,
       refer: ruleData.refer.key,
-      type: ruleData.type.key,
+      match: ruleData.match.key,
       scope: ruleData.scope.key,
       key: ruleData.key.key,
       criteria: ruleData.criteria,
@@ -88,19 +88,19 @@ function AddNewRule({
     ruleData.basis
     && ruleData.refer
     && ruleData.scope
-    && ruleData.type
+    && ruleData.match
     && (ruleData.criteria !== '')
   );
 
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
-      console.log('### DEBUG VALUE::', value); // fixme
+      // const value = `[${item.detail.key}${item.match.key}]${item.value}`;
+      // console.log('### DEBUG VALUE::', value); // fixme
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
-        type: item.type.key,
+        match: item.match.key,
         scope: 0,
         key: item.key.key,
         criteria: item.criteria,
@@ -124,14 +124,14 @@ function AddNewRule({
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
         item.key.key === ruleData.key.key
-        && item.type.key === ruleData.type.key
+        && item.match.key === ruleData.match.key
         && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.key.key},match: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
+            detail: ${ruleData.key.key},match: ${ruleData.match.key},criteria: ${ruleData.criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
-        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},match: ${ruleData.type.key},
+        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},match: ${ruleData.match.key},
         criteria: ${ruleData.criteria})`;
         addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);

@@ -39,7 +39,7 @@ function RulesTable({ rules, products, productViewType }) {
               <th>Rule`s Basis</th>
               <th>Rule`s Refer</th>
               <th>Search By Key</th>
-              <th>Rule`s Value</th>
+              <th>Rule`s Type</th>
               <th>Rule`s Criteria</th>
               <th>Rule`s Scope</th>
               <th>Preview Matches</th>
@@ -60,7 +60,7 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <label className="item">
-                    {item.detail.label}
+                    {item.key.label}
                   </label>
                 </td>
                 <td>
@@ -70,7 +70,7 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <label className="item">
-                    {item.value}
+                    {item.criteria}
                   </label>
                 </td>
                 <td>
