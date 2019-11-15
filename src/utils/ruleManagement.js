@@ -58,16 +58,16 @@ const getProducts = (products, field, match, value) => {
 export const filterProducts = (products, rules, key) => {
   const field = rules[key].key.key;
   const match = rules[key].match.key;
-  const { value } = rules[key];
+  const { criteria } = rules[key];
   let filterResult = new Set();
 
   formatProductsData();
   formatDifference();
 
   if (field === '*') {
-    filterResult = getAllmatched(products, match, value);
+    filterResult = getAllmatched(products, match, criteria);
   } else {
-    filterResult = getProducts(products, field, match, value);
+    filterResult = getProducts(products, field, match, criteria);
   }
   AddSets(filterResult, 'union');
   return Array.from(getData().union);

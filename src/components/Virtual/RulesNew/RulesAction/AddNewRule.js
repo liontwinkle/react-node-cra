@@ -11,8 +11,7 @@ import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
-// import { confirmMessage, getPreFilterData, useStyles } from 'utils';
-import { confirmMessage, useStyles } from 'utils';
+import { confirmMessage, getPreFilterData, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
@@ -27,7 +26,7 @@ function AddNewRule({
   valueDetails,
   category,
   rules,
-  // products,
+  products,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -42,12 +41,12 @@ function AddNewRule({
     ruleType: ruleType[0],
   });
 
-  // const [previewValue, setPreviewValue] = useState(0);
+  const [previewValue, setPreviewValue] = useState(0);
 
-  // const getPreviewProducts = (newRules) => {
-  //   const filterProducts = () => getPreFilterData(newRules, products);
-  //   setPreviewValue(filterProducts().length);
-  // };
+  const getPreviewProducts = (newRules) => {
+    const filterProducts = () => getPreFilterData(newRules, products);
+    setPreviewValue(filterProducts().length);
+  };
 
   const handleSelectChange = (field) => (item) => {
     const newClient = {
@@ -63,7 +62,7 @@ function AddNewRule({
       criteria: ruleData.criteria,
     }];
     newRules[0][field] = item.key;
-    // getPreviewProducts(newRules);
+    getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
@@ -72,15 +71,15 @@ function AddNewRule({
       ...ruleData,
       criteria: e.target.value,
     };
-    // const newRules = [{
-    //   basis: ruleData.basis.key,
-    //   refer: ruleData.refer.key,
-    //   type: ruleData.type.key,
-    //   scope: ruleData.scope.key,
-    //   key: ruleData.key.key,
-    //   criteria: ruleData.criteria,
-    // }];
-    // getPreviewProducts(newRules);
+    const newRules = [{
+      basis: ruleData.basis.key,
+      refer: ruleData.refer.key,
+      type: ruleData.type.key,
+      scope: ruleData.scope.key,
+      key: ruleData.key.key,
+      criteria: ruleData.criteria,
+    }];
+    getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
@@ -157,8 +156,8 @@ function AddNewRule({
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
-          // previewNumber={previewValue}
-          previewNumber={0}
+          previewNumber={previewValue}
+          // previewNumber={0}
           handleChange={handleChange}
           valueDetails={valueDetails}
         />
@@ -188,7 +187,7 @@ AddNewRule.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   rules: PropTypes.array.isRequired,
-  // products: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
