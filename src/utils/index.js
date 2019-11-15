@@ -176,14 +176,14 @@ export const setHandler = (context, callback) => {
 export const getPreFilterData = (rules, products) => {
   formatDifference();
   let filterResult = new Set();
-
+  console.log('### DEBUG RULES: ', rules); // fixme
   rules.forEach((item) => {
     const field = item.key;
-    const { type, criteria, basis } = item;
+    const { match, criteria, basis } = item;
     if (field === '*') {
-      filterResult = getAllmatched(products, type, criteria, basis);
+      filterResult = getAllmatched(products, match, criteria, basis);
     } else {
-      filterResult = getRuleProducts(products, field, type, criteria, basis);
+      filterResult = getRuleProducts(products, field, match, criteria, basis);
     }
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');

@@ -56,7 +56,7 @@ const getProducts = (products, field, match, value) => {
 // };
 
 export const filterProducts = (products, rules, key) => {
-  const field = rules[key].detail.key;
+  const field = rules[key].key.key;
   const match = rules[key].match.key;
   const { value } = rules[key];
   let filterResult = new Set();
