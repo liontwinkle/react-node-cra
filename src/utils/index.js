@@ -34,14 +34,14 @@ export const sortByField = (field) => (a, b) => {
   return comparison;
 };
 /** ** UTILS DEFINE **** */
-const getAllmatched = (products, match, value, basis) => {
+const getAllmatched = (products, type, criteria, basis) => {
   const returnValue = {
     includes: [],
     excludes: [],
   };
   let includeIndex = 0;
   let excludeIndex = 0;
-  const rule = RuleEngine[match](value);
+  const rule = RuleEngine[type](criteria);
 
 
   products.forEach((proItem) => {
@@ -59,8 +59,8 @@ const getAllmatched = (products, match, value, basis) => {
   return returnValue;
 };
 
-const getRuleProducts = (products, field, match, value, basis) => {
-  const rule = RuleEngine[match](value);
+const getRuleProducts = (products, field, type, criteria, basis) => {
+  const rule = RuleEngine[type](criteria);
   const returnValue = {
     includes: [],
     excludes: [],
@@ -178,12 +178,12 @@ export const getPreFilterData = (rules, products) => {
   let filterResult = new Set();
 
   rules.forEach((item) => {
-    const field = item.detail;
-    const { match, value, basis } = item;
+    const field = item.key;
+    const { type, criteria, basis } = item;
     if (field === '*') {
-      filterResult = getAllmatched(products, match, value, basis);
+      filterResult = getAllmatched(products, type, criteria, basis);
     } else {
-      filterResult = getRuleProducts(products, field, match, value, basis);
+      filterResult = getRuleProducts(products, field, type, criteria, basis);
     }
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');

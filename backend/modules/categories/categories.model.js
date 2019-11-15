@@ -29,8 +29,10 @@ const CategorySchema = new Schema({
   rules: [{
     basis: String,
     refer: String,
-    value: String,
     scope: Number,
+    criteria: String,
+    key: String,
+    type: String,
     ruleType: String,
   }],
 }, { toJSON: { virtuals: true }, timestamps: true });

@@ -11,7 +11,8 @@ import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
-import { confirmMessage, getPreFilterData, useStyles } from 'utils';
+// import { confirmMessage, getPreFilterData, useStyles } from 'utils';
+import { confirmMessage, useStyles } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
@@ -26,7 +27,7 @@ function AddNewRule({
   valueDetails,
   category,
   rules,
-  products,
+  // products,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,19 +35,19 @@ function AddNewRule({
   const [ruleData, setRuleData] = useState({
     basis: basis[0],
     refer: refer[0],
-    match: match[0],
+    type: match[0],
     scope: scope[0],
-    detail: valueDetails[0],
-    value: '',
+    key: valueDetails[0],
+    criteria: '',
     ruleType: ruleType[0],
   });
 
-  const [previewValue, setPreviewValue] = useState(0);
+  // const [previewValue, setPreviewValue] = useState(0);
 
-  const getPreviewProducts = (newRules) => {
-    const filterProducts = () => getPreFilterData(newRules, products);
-    setPreviewValue(filterProducts().length);
-  };
+  // const getPreviewProducts = (newRules) => {
+  //   const filterProducts = () => getPreFilterData(newRules, products);
+  //   setPreviewValue(filterProducts().length);
+  // };
 
   const handleSelectChange = (field) => (item) => {
     const newClient = {
@@ -56,30 +57,30 @@ function AddNewRule({
     const newRules = [{
       basis: ruleData.basis.key,
       refer: ruleData.refer.key,
-      match: ruleData.match.key,
+      type: ruleData.type.key,
       scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: ruleData.value,
+      key: ruleData.key.key,
+      criteria: ruleData.criteria,
     }];
     newRules[0][field] = item.key;
-    getPreviewProducts(newRules);
+    // getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
   const handleChange = (e) => {
     const newClient = {
       ...ruleData,
-      value: e.target.value,
+      criteria: e.target.value,
     };
-    const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: e.target.value,
-    }];
-    getPreviewProducts(newRules);
+    // const newRules = [{
+    //   basis: ruleData.basis.key,
+    //   refer: ruleData.refer.key,
+    //   type: ruleData.type.key,
+    //   scope: ruleData.scope.key,
+    //   key: ruleData.key.key,
+    //   criteria: ruleData.criteria,
+    // }];
+    // getPreviewProducts(newRules);
     setRuleData(newClient);
   };
 
@@ -87,19 +88,21 @@ function AddNewRule({
     ruleData.basis
     && ruleData.refer
     && ruleData.scope
-    && ruleData.match
-    && (ruleData.value !== '')
+    && ruleData.type
+    && (ruleData.criteria !== '')
   );
 
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
+      // const value = `[${item.detail.key}${item.match.key}]${item.value}`;
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
-        value,
+        type: item.type.key,
         scope: 0,
+        key: item.key.key,
+        criteria: item.criteria,
         ruleType: item.ruleType.key,
       });
     });
@@ -153,7 +156,8 @@ function AddNewRule({
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
-          previewNumber={previewValue}
+          // previewNumber={previewValue}
+          previewNumber={0}
           handleChange={handleChange}
           valueDetails={valueDetails}
         />
@@ -183,7 +187,7 @@ AddNewRule.propTypes = {
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   rules: PropTypes.array.isRequired,
-  products: PropTypes.array.isRequired,
+  // products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,

@@ -2,9 +2,13 @@ import './monkeyPatch';
 
 // Memoize building RegExp instances for rules
 const RULE_CACHE = {
-  ':': {},
-  '::': {},
-  ':=': {},
+  contains_all_words_case_insensitiv: {},
+  contains_all_words_case_sensitive: {},
+  contains_any_whole_words_case_insensitive: {},
+  contains_any_whole_words_case_sensitive: {},
+  exactly: {},
+  contains_any_tokens_case_insensitive: {},
+  contains_any_tokens_case_sensitive: {},
 };
 
 const PRODUCTS_SET = {
@@ -21,20 +25,48 @@ const escapeText = (text) => {
 };
 
 export const RuleEngine = {
-  ':': (ruleValue, ruleType = ':') => {
+  contains_all_words_case_insensitive: (ruleValue, ruleType = 'contains_all_words_case_insensitiv') => {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}`, 'i')
     );
     return RULE_CACHE[ruleType][ruleValue];
   },
-  '::': (ruleValue, ruleType = '::') => {
+  contains_all_words_case_sensitive: (ruleValue, ruleType = 'contains_all_words_case_sensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue] || new RegExp(`\b${escapeText(ruleValue)}\b`, 'i')
     );
 
     return RULE_CACHE[ruleType][ruleValue];
   },
-  ':=': (ruleValue, ruleType = ':=') => {
+  contains_any_whole_words_case_sensitive: (ruleValue, ruleType = 'contains_any_whole_words_case_sensitive') => {
+    RULE_CACHE[ruleType][ruleValue] = (
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
+    );
+
+    return RULE_CACHE[ruleType][ruleValue];
+  },
+  contains_any_whole_words_case_insensitive: (ruleValue, ruleType = 'contains_any_whole_words_case_insensitive') => {
+    RULE_CACHE[ruleType][ruleValue] = (
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
+    );
+
+    return RULE_CACHE[ruleType][ruleValue];
+  },
+  exactly: (ruleValue, ruleType = 'exactly') => {
+    RULE_CACHE[ruleType][ruleValue] = (
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
+    );
+
+    return RULE_CACHE[ruleType][ruleValue];
+  },
+  contains_any_tokens_case_insensitive: (ruleValue, ruleType = 'contains_any_tokens_case_insensitive') => {
+    RULE_CACHE[ruleType][ruleValue] = (
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
+    );
+
+    return RULE_CACHE[ruleType][ruleValue];
+  },
+  contains_any_tokens_case_sensitive: (ruleValue, ruleType = 'contains_any_tokens_case_sensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
     );
