@@ -95,7 +95,8 @@ function AddNewRule({
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      // const value = `[${item.detail.key}${item.match.key}]${item.value}`;
+      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
+      console.log('### DEBUG VALUE::', value); // fixme
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
