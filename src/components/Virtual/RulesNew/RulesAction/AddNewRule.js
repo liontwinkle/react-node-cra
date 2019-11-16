@@ -53,16 +53,17 @@ function AddNewRule({
       [field]: item,
     };
     const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      key: ruleData.key.key,
-      criteria: ruleData.criteria,
+      basis: newClient.basis.key,
+      refer: newClient.refer.key,
+      match: newClient.match.key,
+      scope: newClient.scope.key,
+      key: newClient.key.key,
+      criteria: newClient.criteria,
     }];
-    newRules[0][field] = item.key;
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    setTimeout(() => {
+      getPreviewProducts(newRules);
+    }, 0);
   };
 
   const handleChange = (e) => {
@@ -71,15 +72,17 @@ function AddNewRule({
       criteria: e.target.value,
     };
     const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      key: ruleData.key.key,
-      criteria: ruleData.criteria,
+      basis: newClient.basis.key,
+      refer: newClient.refer.key,
+      match: newClient.match.key,
+      scope: newClient.scope.key,
+      key: newClient.key.key,
+      criteria: newClient.criteria,
     }];
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    setTimeout(() => {
+      getPreviewProducts(newRules);
+    }, 0);
   };
 
   const disabled = !(
