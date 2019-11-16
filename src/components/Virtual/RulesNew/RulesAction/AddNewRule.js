@@ -44,8 +44,7 @@ function AddNewRule({
   const [previewValue, setPreviewValue] = useState(0);
 
   const getPreviewProducts = (newRules) => {
-    const filterProducts = () => getPreFilterData(newRules, products);
-    setPreviewValue(filterProducts().length);
+    setPreviewValue(getPreFilterData(newRules, products).length);
   };
 
   const handleSelectChange = (field) => (item) => {
@@ -94,8 +93,6 @@ function AddNewRule({
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      // const value = `[${item.detail.key}${item.match.key}]${item.value}`;
-      // console.log('### DEBUG VALUE::', value); // fixme
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
@@ -157,7 +154,6 @@ function AddNewRule({
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
           previewNumber={previewValue}
-          // previewNumber={0}
           handleChange={handleChange}
           valueDetails={valueDetails}
         />

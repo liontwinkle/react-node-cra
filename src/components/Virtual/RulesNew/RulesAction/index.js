@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -15,6 +15,14 @@ import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 function RulesAction({
   rules,
   newRules,
@@ -22,19 +30,25 @@ function RulesAction({
   productViewType,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-
+  const prevProps = usePrevious({ rules, products });
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
     preview_products: false,
   });
 
+  const [previewData, setPreviewData] = useState([]);
+  useEffect(() => {
+    if (rules.length > 0 && prevProps.rules !== rules) {
+      setPreviewData(getPreFilterData(rules, products));
+    }
+  }, [rules, prevProps.rules, products]);
   const [previewProducts, setProducts] = useState([]);
-  const filterProducts = () => getPreFilterData(rules, products);
+
   const handleToggle = (field) => () => {
     let displayData = [];
     if (field === 'preview_products') {
-      displayData = filterProducts();
+      displayData = previewData;
     }
     if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
@@ -72,11 +86,11 @@ function RulesAction({
       <div className="divider" />
 
       <Tooltip
-        title={`Preview ${filterProducts().length} Products for All Rules`}
+        title={`Preview ${previewData.length} Products for All Rules`}
         position="left"
         arrow
       >
-        <span onClick={handleToggle('preview_products')}>{filterProducts().length}</span>
+        <span onClick={handleToggle('preview_products')}>{previewData.length}</span>
       </Tooltip>
 
       {open.add_rule && (

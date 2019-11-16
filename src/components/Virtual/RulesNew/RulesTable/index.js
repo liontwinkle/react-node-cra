@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -10,15 +10,35 @@ import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 function RulesTable({ rules, products, productViewType }) {
   const { enqueueSnackbar } = useSnackbar();
-
+  const prevProps = usePrevious({ rules, products, productViewType });
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
+
+  useEffect(() => {
+    if (rules.length > 0 && prevProps.rules !== rules) {
+      const data = previewData;
+      rules.forEach((item, index) => {
+        data[index] = filterProducts(products, rules, index);
+      });
+      setPreviewData(data);
+      console.log('### DEBUG DATA: ', data); // fixme
+    }
+  }, [products, rules, setPreviewData, previewData, prevProps.rules]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
-      const data = filterProducts(products, rules, key);
+      const data = previewData[key];
       if (data.length === 0) {
         enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
       } else {
@@ -80,11 +100,11 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <Tooltip
-                    title={`Preview ${filterProducts(products, rules, i).length} Products for Current Rule`}
+                    title={`Preview ${previewData[i].length} Products for Current Rule`}
                     position="right"
                     arrow
                   >
-                    <span onClick={handleToggle(i)}>{filterProducts(products, rules, i).length}</span>
+                    <span onClick={handleToggle(i)}>{previewData[i].length}</span>
                   </Tooltip>
                 </td>
               </tr>

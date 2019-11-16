@@ -34,14 +34,14 @@ export const sortByField = (field) => (a, b) => {
   return comparison;
 };
 /** ** UTILS DEFINE **** */
-const getAllmatched = (products, type, criteria, basis) => {
+const getAllmatched = (products, match, criteria, basis) => {
   const returnValue = {
     includes: [],
     excludes: [],
   };
   let includeIndex = 0;
   let excludeIndex = 0;
-  const rule = RuleEngine[type](criteria);
+  const rule = RuleEngine[match](criteria);
   products.forEach((proItem) => {
     const values = Object.values(proItem);
     if (values.filter((item) => (rule.test(item))).length > 0) {
