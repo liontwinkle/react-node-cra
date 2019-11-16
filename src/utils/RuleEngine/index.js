@@ -29,7 +29,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `\\b${ruleValue.split('|').sort().map((item) => (`(?=.*${escapeText(item)})`)).join('+')}\\b.*`,
+        `\\b${ruleValue.split('|').sort().map((item) => (`[(?=.*${escapeText(item)})]`)).join('+')}\\b.*`,
         'gi',
       )
     );

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -11,24 +11,16 @@ import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 function RulesTable({ rules, products, productViewType }) {
   const { enqueueSnackbar } = useSnackbar();
-  const prevProps = usePrevious({ rules, products, productViewType });
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
-  const [previewData, setPreviewData] = useState([]);
+  const [previewData, setPreviewData] = useState();
 
   useEffect(() => {
-    if (rules.length > 0 && prevProps.rules !== rules) {
-      const data = previewData;
+    console.log('### DEBUG RULES: ', rules); // fixme
+    if (rules.length > 0) {
+      const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
       });
@@ -51,9 +43,10 @@ function RulesTable({ rules, products, productViewType }) {
     }
   };
 
+  console.log('###?????: ', rules); // fixme
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
-      {(rules.length > 0) && (
+      {(previewData.length > 0) && (
         <table>
           <thead>
             <tr>
