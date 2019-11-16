@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
@@ -42,7 +43,7 @@ function RulesAction({
     if (rules.length > 0 && prevProps.rules !== rules) {
       setPreviewData(getPreFilterData(rules, products));
     }
-  }, [rules, prevProps.rules, products]);
+  }, [rules, products]);
   const [previewProducts, setProducts] = useState([]);
 
   const handleToggle = (field) => () => {

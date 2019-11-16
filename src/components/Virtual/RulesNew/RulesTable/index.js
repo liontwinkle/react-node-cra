@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
@@ -34,7 +35,7 @@ function RulesTable({ rules, products, productViewType }) {
       setPreviewData(data);
       console.log('### DEBUG DATA: ', data); // fixme
     }
-  }, [products, rules, setPreviewData, previewData, prevProps.rules]);
+  }, [products, rules, setPreviewData, previewData]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
