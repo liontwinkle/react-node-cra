@@ -52,6 +52,9 @@ function AddNewRule({
       ...ruleData,
       [field]: item,
     };
+    console.log('#### dEBUG ITEM: ', item);
+    console.log('#### dEBUG Field: ', field);
+    console.log('#### dEBUG newClient: ', newClient);
     const newRules = [{
       basis: newClient.basis.key,
       refer: newClient.refer.key,

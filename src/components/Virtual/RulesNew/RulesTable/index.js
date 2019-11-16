@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -10,31 +11,24 @@ import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 function RulesTable({ rules, products, productViewType }) {
   const { enqueueSnackbar } = useSnackbar();
-  const prevProps = usePrevious({ rules, products, productViewType });
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
   const [previewData, setPreviewData] = useState([]);
+  const [rulesData, setRulesData] = useState([]);
 
   useEffect(() => {
-    if (rules.length > 0 && prevProps.rules !== rules) {
+    if (rules.length > 0 && rulesData !== rules) {
       const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
       });
       setPreviewData(data);
+      setRulesData(rules);
       console.log('### DEBUG DATA: ', data); // fixme
     }
-  }, [products, rules, setPreviewData, previewData, prevProps.rules]);
+  }, [products, rules, setPreviewData, previewData]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
@@ -66,7 +60,7 @@ function RulesTable({ rules, products, productViewType }) {
             </tr>
           </thead>
           <tbody>
-            {rules.map((item, i) => (
+            {rulesData.map((item, i) => (
               <tr key={parseInt(i, 10)}>
                 <td>
                   <label className="item">

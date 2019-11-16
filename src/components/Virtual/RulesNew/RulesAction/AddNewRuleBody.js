@@ -34,7 +34,7 @@ const AddNewRuleBody = ({
       placeholder="Select Detail of Rule"
       value={ruleData.key}
       items={valueDetails}
-      onChange={handleSelectChange('detail')}
+      onChange={handleSelectChange('key')}
     />
     <CustomSelect
       className="mb-3"
