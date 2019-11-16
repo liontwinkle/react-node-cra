@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -11,15 +10,23 @@ import PreviewGrid from '../RulesAction/PreviewGrid';
 
 import './style.scss';
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 function RulesTable({ rules, products, productViewType }) {
   const { enqueueSnackbar } = useSnackbar();
+  const prevProps = usePrevious({ rules, products, productViewType });
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
-  const [previewData, setPreviewData] = useState();
+  const [previewData, setPreviewData] = useState([]);
 
   useEffect(() => {
-    console.log('### DEBUG RULES: ', rules); // fixme
-    if (rules.length > 0) {
+    if (rules.length > 0 && prevProps.rules !== rules) {
       const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
@@ -27,7 +34,7 @@ function RulesTable({ rules, products, productViewType }) {
       setPreviewData(data);
       console.log('### DEBUG DATA: ', data); // fixme
     }
-  }, [products, rules, setPreviewData, previewData]);
+  }, [products, rules, setPreviewData, previewData, prevProps.rules]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
@@ -43,7 +50,6 @@ function RulesTable({ rules, products, productViewType }) {
     }
   };
 
-  console.log('###?????: ', rules); // fixme
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       {(previewData.length > 0) && (
