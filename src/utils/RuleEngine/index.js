@@ -27,7 +27,8 @@ const escapeText = (text) => {
 export const RuleEngine = {
   contains_all_words_case_insensitive: (ruleValue, ruleType = 'contains_all_words_case_insensitiv') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      new RegExp(ruleValue.split('|').map((item) => (`^(?=.*?\\b${escapeText(item)}$\\b)`)).join(''))
+      RULE_CACHE[ruleType][ruleValue]
+      || new RegExp(`${ruleValue.split('|').map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('')}.*$`)
     );
     return RULE_CACHE[ruleType][ruleValue];
   },

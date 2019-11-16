@@ -42,9 +42,6 @@ const getAllmatched = (products, type, criteria, basis) => {
   let includeIndex = 0;
   let excludeIndex = 0;
   const rule = RuleEngine[type](criteria);
-  console.log('### DEBUG RULE-All: ', rule); // fixme
-
-
   products.forEach((proItem) => {
     const values = Object.values(proItem);
     if (values.filter((item) => (rule.test(item))).length > 0) {
@@ -62,7 +59,6 @@ const getAllmatched = (products, type, criteria, basis) => {
 
 const getRuleProducts = (products, field, type, criteria, basis) => {
   const rule = RuleEngine[type](criteria);
-  console.log('### DEBUG RULE-EACH: ', rule); // fixme
   const returnValue = {
     includes: [],
     excludes: [],
@@ -178,7 +174,6 @@ export const setHandler = (context, callback) => {
 export const getPreFilterData = (rules, products) => {
   formatDifference();
   let filterResult = new Set();
-  console.log('### DEBUG RULES: ', rules); // fixme
   rules.forEach((item) => {
     const field = item.key;
     const { match, criteria, basis } = item;
