@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -16,14 +16,6 @@ import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 function RulesAction({
   rules,
   newRules,
@@ -31,17 +23,18 @@ function RulesAction({
   productViewType,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const prevProps = usePrevious({ rules, products });
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
     preview_products: false,
   });
 
+  const [rulesData, setRulesData] = useState([]);
   const [previewData, setPreviewData] = useState([]);
   useEffect(() => {
-    if (rules.length > 0 && prevProps.rules !== rules) {
+    if (rules.length > 0 && rulesData !== rules) {
       setPreviewData(getPreFilterData(rules, products));
+      setRulesData(rules);
     }
   }, [rules, products]);
   const [previewProducts, setProducts] = useState([]);

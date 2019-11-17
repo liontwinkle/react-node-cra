@@ -26,7 +26,6 @@ function RulesTable({ rules, products, productViewType }) {
       });
       setPreviewData(data);
       setRulesData(rules);
-      console.log('### DEBUG DATA: ', data); // fixme
     }
   }, [products, rules, setPreviewData, previewData]);
 

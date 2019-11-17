@@ -14,7 +14,6 @@ const getAllmatched = (products, match, value) => {
   const returnValue = [];
   let index = 0;
   const rule = RuleEngine[match](value);
-  console.log('### DEBUG RULE???: ', rule);// fixme
   products.forEach((proItem) => {
     const values = Object.values(proItem);
     if (values.filter((item) => (rule.test(item))).length > 0) {
