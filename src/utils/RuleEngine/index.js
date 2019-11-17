@@ -29,7 +29,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.`,
+        `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.+`,
         'gi',
       )
     );
@@ -39,7 +39,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `\\b${ruleValue.split('|').sort().map((item) => (`(?=.*${escapeText(item)})`)).join('+')}\\b.*`,
+        `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.+`,
         'g',
       )
     );
@@ -50,19 +50,18 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `\\b${ruleValue.split('|').sort().map((item) => (`[^(?=.*${escapeText(item)})]`)).join('+')}\\b.*`,
-        'gi',
+        `^${ruleValue.split('|').sort().map((item) => (`(\\b${escapeText(item)}\\b)`)).join('|')}.+`,
+        'g',
       )
     );
-
     return RULE_CACHE[ruleType][ruleValue];
   },
   contains_any_whole_words_case_insensitive: (ruleValue, ruleType = 'contains_any_whole_words_case_insensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `\\b${ruleValue.split('|').sort().map((item) => (`[^(?=.*${escapeText(item)})]`)).join('+')}\\b.*`,
-        'g',
+        `^${ruleValue.split('|').sort().map((item) => (`(\\b${escapeText(item)}\\b)`)).join('|')}.+`,
+        'gi',
       )
     );
 
