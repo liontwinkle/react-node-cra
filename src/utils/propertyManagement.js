@@ -347,6 +347,7 @@ export const makeUpdatedData = (properties, fields, sections) => {
 
   return result;
 };
+
 export const getFilterItem = (srcArray, searchkey) => {
   const filtered = [];
   srcArray.forEach((item) => {
@@ -357,34 +358,45 @@ export const getFilterItem = (srcArray, searchkey) => {
   return filtered;
 };
 
+const checkTemplating = (string, propertyFields) => {
+  let invalidData = '';
+  const regex = /\$\w+/g;
+  const result = regex[Symbol.matchAll](string);
+  const matchedArray = Array.from(result, (x) => x[0]);
+  if (matchedArray.length > 0) {
+    matchedArray.forEach((item) => {
+      const keyValue = item.substr(1, item.length - 1);
+      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
+      if (!property) {
+        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
+      }
+    });
+  } else {
+    invalidData = 'The template should include some keys';
+  }
+  return invalidData;
+};
+
 export const checkTemplate = (propertyFields, propertyFieldData) => {
   let invalidData = '';
   if (propertyFieldData.template && propertyFieldData.template !== '') {
-    const string = propertyFieldData.template;
-    const regex = /\$\w+/g;
-    const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, (x) => x[0]);
-    matchedArray.forEach((item) => {
-      const keyValue = item.substr(1, item.length - 1);
-      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
-      if (!property) {
-        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
-      }
-    });
+    invalidData = checkTemplating(propertyFieldData.template, propertyFields);
   }
 
   if (propertyFieldData.default && propertyFieldData.default !== '') {
-    const string = propertyFieldData.default;
-    const regex = /\$\w+/g;
-    const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, (x) => x[0]);
-    matchedArray.forEach((item) => {
-      const keyValue = item.substr(1, item.length - 1);
-      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
-      if (!property) {
-        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
-      }
-    });
+    invalidData = checkTemplating(propertyFieldData.default, propertyFields);
   }
   return invalidData;
+};
+
+export const validateTemplate = (propertyFields, data) => {
+  const errKey = [];
+  const templateData = data.template;
+  const keys = Object.keys(templateData);
+  keys.forEach((keyItem) => {
+    if (checkTemplating(templateData[keyItem], propertyFields) !== '') {
+      errKey.push(keyItem);
+    }
+  });
+  return errKey;
 };

@@ -13,10 +13,10 @@ import { createHistory, removeHistory } from 'redux/actions/history';
 import { CustomConfirmDlg, IconButton } from 'components/elements/index';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
+import { validateTemplate } from 'utils/propertyManagement';
 import SetLinkDlg from 'components/elements/SetLinkDlg';
 import SetTemplateDlg from 'components/elements/SetTemplateDlg';
 import NodeButton from './NodeButton';
-import { checkTemplate } from '../../../utils/propertyManagement';
 
 function NodeMenu({
   treeData,
@@ -139,17 +139,19 @@ function NodeMenu({
   };
 
   const updateCategoryExtraInfomation = (data) => () => {
-    console.log('##### DEBUG TEMPLATE DATA: ', data); // fixme
-    const errList = checkTemplate(propertyField.propertyFields, data);
-    console.log('##### DEBUG TEMPLATE ERROR LIST: ', errList); // fixme
+    const errList = validateTemplate(propertyField.propertyFields, data);
 
-    updateCategory(node.item.id, data)
-      .then(() => {
-        confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
-      });
+    if (errList.length === 0) {
+      updateCategory(node.item.id, data)
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, `The template is invalid in ${errList.join(',')}`, 'error');
+    }
   };
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState({
