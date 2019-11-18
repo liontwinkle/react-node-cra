@@ -1,3 +1,4 @@
+// import React, { useState, useEffect } from 'react';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -30,10 +31,16 @@ function SetTemplateDlg({
   const classes = useStyles();
 
   const [newTemplate, setNewTemplate] = useState(template);
+  // const [stringBasedFields, setStringBasedPropertyFields] = useState([]);
+  // const [propertyField,
+  // useEffect(()=>{
+  //
+  // })
 
   const handleChangeTemplate = (value) => {
     setNewTemplate(value);
   };
+  console.log('#### DEBUG PROPERTY FIELDS: ', propertyField); // fixme
   return (
     <Dialog
       open={open}
@@ -86,7 +93,7 @@ SetTemplateDlg.propTypes = {
 };
 
 SetTemplateDlg.defaultProps = {
-  confirmLabel: 'Set Link',
+  confirmLabel: 'Set Template',
   template: '',
 };
 
