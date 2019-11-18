@@ -45,12 +45,12 @@ const createValuefromtemplate = (template, state, propertyFields) => {
 
 const getStringTypeValue = (property, state, propertyFields, template) => {
   let value = '';
-  let templateFlag = (template !== '' && template !== 'null' && template);
+  let templateFlag = (template[property.key] !== '' && template[property.key] !== 'null' && template);
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
     templateFlag = true;
-  } else if (template && template !== 'null' && template !== '') {
-    value = createValuefromtemplate(template, state, propertyFields);
+  } else if (template[property.key] && template[property.key] !== '') {
+    value = createValuefromtemplate(template[property.key], state, propertyFields);
     templateFlag = true;
   } else if (
     property.default && state.properties[property.key] === undefined) {
@@ -358,12 +358,14 @@ export const getFilterItem = (srcArray, searchkey) => {
   return filtered;
 };
 
-const checkTemplating = (string, propertyFields) => {
+const checkTemplating = (string, propertyFields, type) => {
   let invalidData = '';
   const regex = /\$\w+/g;
   const result = regex[Symbol.matchAll](string);
   const matchedArray = Array.from(result, (x) => x[0]);
-  if (matchedArray.length > 0) {
+  if (type === 'template' && matchedArray.length === 0 && result !== '') {
+    invalidData = 'The template should include some keys';
+  } else {
     matchedArray.forEach((item) => {
       const keyValue = item.substr(1, item.length - 1);
       const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
@@ -371,8 +373,6 @@ const checkTemplating = (string, propertyFields) => {
         invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
       }
     });
-  } else {
-    invalidData = 'The template should include some keys';
   }
   return invalidData;
 };
@@ -380,11 +380,11 @@ const checkTemplating = (string, propertyFields) => {
 export const checkTemplate = (propertyFields, propertyFieldData) => {
   let invalidData = '';
   if (propertyFieldData.template && propertyFieldData.template !== '') {
-    invalidData = checkTemplating(propertyFieldData.template, propertyFields);
+    invalidData = checkTemplating(propertyFieldData.template, propertyFields, 'template');
   }
 
   if (propertyFieldData.default && propertyFieldData.default !== '') {
-    invalidData = checkTemplating(propertyFieldData.default, propertyFields);
+    invalidData = checkTemplating(propertyFieldData.default, propertyFields, 'default');
   }
   return invalidData;
 };
@@ -394,7 +394,7 @@ export const validateTemplate = (propertyFields, data) => {
   const templateData = data.template;
   const keys = Object.keys(templateData);
   keys.forEach((keyItem) => {
-    if (checkTemplating(templateData[keyItem], propertyFields) !== '') {
+    if (checkTemplating(templateData[keyItem], propertyFields, 'template') !== '') {
       errKey.push(keyItem);
     }
   });

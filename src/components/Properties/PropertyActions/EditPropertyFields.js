@@ -231,26 +231,41 @@ function EditPropertyFields({
       const ruleKeyIndex = propertyFields.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         const deletedKey = propertyFields[ruleKeyIndex].key;
-        propertyFields.splice(ruleKeyIndex, 1);
-        if (!isUpdating) {
-          updatePropertyField({ propertyFields })
-            .then(() => {
-              updateDefaultFunc(propertyFields, deletedKey)
-                .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
-                    `Delete the property field (${oldData.label})`,
-                    `Delete the property field (${oldData.label}) by ${objectItem.name}`,
-                    'virtual');
-                  confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
-                })
-                .catch(() => {
-                  confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
-                });
-            })
-            .catch(() => {
-              confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
-            });
+        console.log('#### DEBUG FIELD: ', propertyField); // fixme
+        console.log('#### DEBUG DELETED KEY: ', deletedKey); // fixme
+        const { template } = propertyField;
+        console.log('#### DEBUG TEMPLE: ', template); // fixme
+        let data = {};
+        if (template && template[deletedKey]) {
+          delete template[deletedKey];
+          data = {
+            propertyFields,
+            template,
+          };
+        } else {
+          data = { propertyFields };
         }
+        console.log('#### DEBUG DELETED TEMPLATE: ', data); // fixme
+        propertyFields.splice(ruleKeyIndex, 1);
+        // if (!isUpdating) {
+        //   updatePropertyField({ propertyFields })
+        //     .then(() => {
+        //       updateDefaultFunc(propertyFields, deletedKey)
+        //         .then(() => {
+        //           addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+        //             `Delete the property field (${oldData.label})`,
+        //             `Delete the property field (${oldData.label}) by ${objectItem.name}`,
+        //             'virtual');
+        //           confirmMessage(enqueueSnackbar, 'Property field has been deleted successfully.', 'success');
+        //         })
+        //         .catch(() => {
+        //           confirmMessage(enqueueSnackbar, 'Error in updating property field.', 'error');
+        //         });
+        //     })
+        //     .catch(() => {
+        //       confirmMessage(enqueueSnackbar, 'Error in deleting property field.', 'error');
+        //     });
+        // }
       }
     }, 600);
   });

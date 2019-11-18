@@ -38,7 +38,6 @@ function SetTemplateDlg({
       && propertyField.propertyFields !== recvPropertyField.propertyFields) {
       setRecvPropertyField(propertyField);
       const fieldData = propertyField.propertyFields.length > 0 ? propertyField.propertyFields : [];
-      console.log('### DEBUG STRING BASED DATA: ', fieldData); // fixme
       const stringData = [];
       fieldData.forEach((item) => {
         if (item.propertyType === 'string' || item.propertyType === 'richtext'
@@ -46,7 +45,6 @@ function SetTemplateDlg({
           stringData.push(item);
         }
       });
-      console.log('### DEBUG STRING BASED DATA: ', stringData); // fixme
       setStringBasedPropertyFields(stringData);
     }
   }, [propertyField, recvPropertyField, setStringBasedPropertyFields]);
@@ -59,7 +57,6 @@ function SetTemplateDlg({
     setNewTemplate(newTemplateData);
   };
 
-  console.log('#### DEBUG PROPERTY FIELDS: ', propertyField); // fixme
   return (
     <Dialog
       open={open}
