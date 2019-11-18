@@ -76,14 +76,14 @@ export const RuleEngine = {
   },
   contains_any_tokens_case_insensitive: (ruleValue, ruleType = 'contains_any_tokens_case_insensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}\\w+`, 'gi')
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)} | ${escapeText(ruleValue)}\\w+`, 'gi')
     );
 
     return RULE_CACHE[ruleType][ruleValue];
   },
   contains_any_tokens_case_sensitive: (ruleValue, ruleType = 'contains_any_tokens_case_sensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}\\w+`, 'g')
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)} | ${escapeText(ruleValue)}\\w+`, 'g')
     );
 
     return RULE_CACHE[ruleType][ruleValue];

@@ -47,11 +47,7 @@ function AddNewRule({
     setPreviewValue(getPreFilterData(newRules, products).length);
   };
 
-  const handleSelectChange = (field) => (item) => {
-    const newClient = {
-      ...ruleData,
-      [field]: item,
-    };
+  const searchFunction = (newClient) => {
     const newRules = [{
       basis: newClient.basis.key,
       refer: newClient.refer.key,
@@ -60,29 +56,30 @@ function AddNewRule({
       key: newClient.key.key,
       criteria: newClient.criteria,
     }];
-    setRuleData(newClient);
     setTimeout(() => {
       getPreviewProducts(newRules);
     }, 0);
   };
 
-  const handleChange = (e) => {
+  const handleSelectChange = (field) => (item) => {
     const newClient = {
       ...ruleData,
-      criteria: e.target.value,
+      [field]: item,
     };
-    const newRules = [{
-      basis: newClient.basis.key,
-      refer: newClient.refer.key,
-      match: newClient.match.key,
-      scope: newClient.scope.key,
-      key: newClient.key.key,
-      criteria: newClient.criteria,
-    }];
     setRuleData(newClient);
-    setTimeout(() => {
-      getPreviewProducts(newRules);
-    }, 0);
+    if (field === 'key') {
+      searchFunction(newClient);
+    }
+  };
+
+  const handleChange = (e) => {
+    const criteriaValue = e.target.value;
+    const newClient = {
+      ...ruleData,
+      criteria: criteriaValue,
+    };
+    setRuleData(newClient);
+    searchFunction(newClient);
   };
 
   const disabled = !(
