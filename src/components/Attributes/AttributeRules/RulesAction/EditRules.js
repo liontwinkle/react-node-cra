@@ -33,37 +33,13 @@ function EditRules({
 
   const tableData = {
     columns: [
-      {
-        title: 'Basis',
-        field: 'basis',
-        lookup: getObjectFromArray(basis),
-      },
-      {
-        title: 'Refer',
-        field: 'refer',
-        lookup: getObjectFromArray(refer),
-      },
-      {
-        title: 'Key',
-        field: 'key',
-        lookup: getObjectFromArray(valueDetails),
-      },
-      {
-        title: 'Match',
-        field: 'match',
-        lookup: getObjectFromArray(match),
-      },
+      { title: 'Basis', field: 'basis', lookup: getObjectFromArray(basis) },
+      { title: 'Refer', field: 'refer', lookup: getObjectFromArray(refer) },
+      { title: 'Key', field: 'key', lookup: getObjectFromArray(valueDetails) },
+      { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
       { title: 'Criteria', field: 'criteria' },
-      {
-        title: 'Scope',
-        field: 'scope',
-        lookup: getObjectFromArray(scope),
-      },
-      {
-        title: 'Rule Type',
-        field: 'ruleType',
-        lookup: getObjectFromArray(ruleType),
-      },
+      { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
+      { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(ruleType) },
     ],
     data: rules,
   };

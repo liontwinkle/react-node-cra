@@ -59,6 +59,7 @@ function AddNewRule({
       scope: newClient.scope.key,
       key: newClient.key.key,
       criteria: newClient.criteria,
+      ruleType: newClient.ruleType,
     }];
     setTimeout(() => {
       getPreviewProducts(newRules);
@@ -79,7 +80,7 @@ function AddNewRule({
   const handleChange = (e) => {
     const newClient = {
       ...ruleData,
-      value: e.target.value,
+      criteria: e.target.value,
     };
     setRuleData(newClient);
     searchFunction(newClient);

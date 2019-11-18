@@ -42,7 +42,6 @@ const getAllmatched = (products, match, criteria, basis) => {
   let includeIndex = 0;
   let excludeIndex = 0;
   const rule = RuleEngine[match](criteria);
-  console.log('### DEBUG RULE: ', rule); // fixme
   products.forEach((proItem) => {
     const values = Object.values(proItem);
     if (values.filter((item) => (rule.test(item))).length > 0) {

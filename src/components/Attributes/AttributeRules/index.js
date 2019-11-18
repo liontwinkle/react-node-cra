@@ -61,41 +61,23 @@ class AttributeRules extends Component {
     }
   }
 
-  AnaylsisDetails = (valueStr) => {
-    const partValue = valueStr.split(']');
-    const detailValue = partValue[0].split(':');
-    const detailKey = detailValue[0].replace('[', '');
-    const matchKey = `:${detailValue[1]}`;
-    const valueKey = partValue[1];
-    const detailObj = this.props.valueDetails.find(
-      (valueDetailsItem) => (valueDetailsItem.key === detailKey.replace(' ', '')),
-    );
-    const matchObj = match.find((matchItem) => (matchItem.key === matchKey));
-    return {
-      detailObj,
-      matchObj,
-      valueKey,
-    };
-  };
-
   setRuleArray = (srcList, ruleArray, type = null) => {
     srcList.forEach((item) => {
       const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
       const referObj = refer.find((referItem) => (referItem.key === item.refer));
+      const keyObj = this.props.valueDetails.find((keyItem) => (keyItem.key === item.key));
+      const matchObj = match.find((matchItem) => (matchItem.key === item.match));
       const ruleTypeObj = ruleType.find((ruleTypeObjItem) => (ruleTypeObjItem.key === item.ruleType));
-      const otherObj = this.AnaylsisDetails(item.value);
-      if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
-        ruleArray.push({
-          _id: item._id,
-          basis: (type) ? basisObj.key : basisObj,
-          refer: (type) ? referObj.key : referObj,
-          detail: (type) ? otherObj.detailObj.key : otherObj.detailObj,
-          match: (type) ? otherObj.matchObj.key : otherObj.matchObj,
-          value: (type) ? otherObj.valueKey : otherObj.valueKey,
-          scope: (type) ? scope[0].key : scope[0],
-          ruleType: (type) ? ruleTypeObj.key : ruleTypeObj,
-        });
-      }
+      ruleArray.push({
+        _id: item._id,
+        basis: (type) ? basisObj.key : basisObj,
+        refer: (type) ? referObj.key : referObj,
+        key: (type) ? keyObj.key : keyObj,
+        match: (type) ? matchObj.key : matchObj,
+        criteria: item.criteria,
+        scope: (type) ? scope[0].key : scope[0],
+        ruleType: (type) ? ruleTypeObj.key : ruleTypeObj,
+      });
     });
   };
 
