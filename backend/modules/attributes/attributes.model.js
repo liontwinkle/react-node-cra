@@ -12,10 +12,7 @@ const AttributeSchema = new Schema({
     type: String,
     default: 'null',
   },
-  template: {
-    type: String,
-    default: 'null',
-  },
+  template: Object,
   properties: Object,
   defaultProperties: [{
     key: String,

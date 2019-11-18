@@ -152,6 +152,7 @@ function NodeMenu({
     } else {
       confirmMessage(enqueueSnackbar, `The template is invalid in ${errList.join(',')}`, 'error');
     }
+    handleClose();
   };
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState({

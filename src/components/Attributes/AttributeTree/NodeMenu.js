@@ -195,6 +195,7 @@ function NodeMenu({
           handleClose={handleTemplateDlg(false)}
           open={templateDlgOpen}
           msg="Please set the base template."
+          template={node.item.template || ''}
           handleSetTemplate={setTemplate}
           propertyField={propertyField}
         />
