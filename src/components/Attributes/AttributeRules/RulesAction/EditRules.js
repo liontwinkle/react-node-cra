@@ -44,8 +44,8 @@ function EditRules({
         lookup: getObjectFromArray(refer),
       },
       {
-        title: 'Detail',
-        field: 'detail',
+        title: 'Key',
+        field: 'key',
         lookup: getObjectFromArray(valueDetails),
       },
       {
@@ -53,7 +53,7 @@ function EditRules({
         field: 'match',
         lookup: getObjectFromArray(match),
       },
-      { title: 'Value', field: 'value' },
+      { title: 'Criteria', field: 'criteria' },
       {
         title: 'Scope',
         field: 'scope',
@@ -71,12 +71,13 @@ function EditRules({
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail}${item.match}]${item.value}`;
       updatedData.push({
         _id: item._id,
         basis: item.basis,
         refer: item.refer,
-        value,
+        match: item.match,
+        criteria: item.criteria,
+        key: item.key,
         scope: 0,
         ruleType: item.ruleType,
       });
@@ -101,16 +102,16 @@ function EditRules({
           _id: newData._id,
           basis: newData.basis,
           refer: newData.refer,
-          detail: newData.detail,
-          value: newData.value,
+          key: newData.key,
+          criteria: newData.criteria,
           match: newData.match,
           scope: newData.scope,
           ruleType: newData.ruleType,
         });
         const msgCurrent = `Create New Rule(basis: ${newData.basis.key},refer: ${newData.refer.key},
-            detail: ${newData.detail.key},match: ${newData.match.key},criteria: ${newData.value})`;
+            detail: ${newData.key.key},match: ${newData.match.key},criteria: ${newData.criteria})`;
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${newData.basis.key}, 
-                  refer: ${newData.refer.key},detail: ${newData.detail.key},match: ${newData.match.key},
+                  refer: ${newData.refer.key},detail: ${newData.key.key},match: ${newData.match.key},
                   criteria: ${newData.value})`;
         addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
@@ -129,8 +130,8 @@ function EditRules({
           _id: newData._id,
           basis: newData.basis,
           refer: newData.refer,
-          detail: newData.detail,
-          value: newData.value,
+          key: newData.key,
+          criteria: newData.criteria,
           match: newData.match,
           scope: newData.scope,
           ruleType: newData.ruleType,
@@ -138,10 +139,10 @@ function EditRules({
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const msgCurrent = `Update Rule as (basis: ${newData.basis},refer: ${newData.refer},
-            detail: ${newData.detail},match: ${newData.match},criteria: ${newData.value})`;
+            detail: ${newData.key},match: ${newData.match},criteria: ${newData.criteria})`;
           const msgParent = `Update Rule in Child ${attribute.name} (basis: ${newData.basis}, 
-                  refer: ${newData.refer},detail: ${newData.detail},match: ${newData.match},
-                  criteria: ${newData.value})`;
+                  refer: ${newData.refer},detail: ${newData.key},match: ${newData.match},
+                  criteria: ${newData.criteria})`;
           addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
           saveRules(rules);
         } else {
@@ -159,10 +160,10 @@ function EditRules({
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
-            detail: ${oldData.detail},match: ${oldData.match},criteria: ${oldData.value})`;
+            detail: ${oldData.key},match: ${oldData.match},criteria: ${oldData.criteria})`;
         const msgParent = `Rule is deleted in Child ${attribute.name} (basis: ${oldData.basis}, 
-                  refer: ${oldData.refer},detail: ${oldData.detail},match: ${oldData.match},
-                  criteria: ${oldData.value})`;
+                  refer: ${oldData.refer},detail: ${oldData.key},match: ${oldData.match},
+                  criteria: ${oldData.criteria})`;
         addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }

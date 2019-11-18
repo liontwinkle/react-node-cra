@@ -40,16 +40,29 @@ function AddNewRule({
     refer: refer[0],
     match: match[0],
     scope: scope[0],
-    detail: valueDetails[0],
+    key: valueDetails[0],
+    criteria: '',
     ruleType: ruleType[0],
-    value: '',
   });
 
   const [previewValue, setPreviewValue] = useState(0);
 
   const getPreviewProducts = (newRules) => {
-    const filterProducts = () => getPreFilterData(newRules, products);
-    setPreviewValue(filterProducts().length);
+    setPreviewValue(getPreFilterData(newRules, products).length);
+  };
+
+  const searchFunction = (newClient) => {
+    const newRules = [{
+      basis: newClient.basis.key,
+      refer: newClient.refer.key,
+      match: newClient.match.key,
+      scope: newClient.scope.key,
+      key: newClient.key.key,
+      criteria: newClient.criteria,
+    }];
+    setTimeout(() => {
+      getPreviewProducts(newRules);
+    }, 0);
   };
 
   const handleSelectChange = (field) => (item) => {
@@ -57,18 +70,10 @@ function AddNewRule({
       ...ruleData,
       [field]: item,
     };
-    const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: ruleData.value,
-      ruleType: ruleData.ruleType.key,
-    }];
-    newRules[0][field] = item.key;
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    if (field === 'key') {
+      searchFunction(newClient);
+    }
   };
 
   const handleChange = (e) => {
@@ -76,17 +81,8 @@ function AddNewRule({
       ...ruleData,
       value: e.target.value,
     };
-    const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: e.target.value,
-      ruleType: ruleData.ruleType.key,
-    }];
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    searchFunction(newClient);
   };
 
   const disabled = !(
@@ -94,18 +90,19 @@ function AddNewRule({
     && ruleData.refer
     && ruleData.scope
     && ruleData.match
-    && (ruleData.value !== '')
+    && (ruleData.criteria !== '')
   );
 
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
-        value,
+        match: item.match.key,
         scope: 0,
+        key: item.key.key,
+        criteria: item.criteria,
         ruleType: item.ruleType.key,
       });
     });
@@ -125,16 +122,16 @@ function AddNewRule({
   const handleSubmit = () => {
     if (!isUpdating && !isCreating && !disabled) {
       if (!displayRules.find((item) => (
-        item.detail.key === ruleData.detail.key
+        item.key.key === ruleData.key.key
         && item.match.key === ruleData.match.key
-        && item.value === ruleData.value
+        && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.detail.key},match: ${ruleData.match.key},criteria: ${ruleData.value})`;
+            detail: ${ruleData.key.key},match: ${ruleData.match.key},criteria: ${ruleData.criteria})`;
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${ruleData.basis.key}, 
-                  refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
-                  criteria: ${ruleData.value})`;
+                  refer: ${ruleData.refer.key},detail: ${ruleData.key.key},match: ${ruleData.match.key},
+                  criteria: ${ruleData.criteria})`;
         addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       } else {

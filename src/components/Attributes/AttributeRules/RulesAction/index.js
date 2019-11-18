@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -31,16 +31,21 @@ function RulesAction({
     preview_products: false,
   });
 
-  const [previewProducts, setProducts] = useState([]);
+  const [rulesData, setRulesData] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
+  useEffect(() => {
+    if (displayRules.length > 0 && rulesData !== displayRules) {
+      const recvRules = displayRules || [];
+      setPreviewData(getPreFilterData(recvRules, products));
+      setRulesData(displayRules);
+    }
+  }, [products, rulesData, displayRules]);
 
-  const filterProducts = () => {
-    const recvRules = displayRules || [];
-    return getPreFilterData(recvRules, products);
-  };
+  const [previewProducts, setProducts] = useState([]);
 
   const handleToggle = (field) => () => {
     let displayData = [];
-    if (field === 'preview_products') { displayData = filterProducts(); }
+    if (field === 'preview_products') { displayData = previewData; }
 
     if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
@@ -78,11 +83,11 @@ function RulesAction({
       <div className="divider" />
 
       <Tooltip
-        title={`Preview ${filterProducts().length} Products for All Rules`}
+        title={`Preview ${previewData.length} Products for All Rules`}
         position="left"
         arrow
       >
-        <span onClick={handleToggle('preview_products')}>{filterProducts().length}</span>
+        <span onClick={handleToggle('preview_products')}>{previewData.length}</span>
       </Tooltip>
 
       {open.add_rule && (

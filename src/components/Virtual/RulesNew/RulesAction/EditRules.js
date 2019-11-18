@@ -38,7 +38,7 @@ function EditRules({
       { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
       { title: 'Criteria', field: 'criteria' },
       { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
-      { title: 'rule Type', field: 'ruleType', lookup: getObjectFromArray(ruleType) },
+      { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(ruleType) },
     ],
     data: rules,
   };

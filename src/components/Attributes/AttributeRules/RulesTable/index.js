@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
@@ -15,10 +15,23 @@ function RulesTable({ rules, products, productViewType }) {
 
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
+  const [rulesData, setRulesData] = useState([]);
+
+  useEffect(() => {
+    if (rules.length > 0 && rulesData !== rules) {
+      const data = [];
+      rules.forEach((item, index) => {
+        data[index] = filterProducts(products, rules, index);
+      });
+      setPreviewData(data);
+      setRulesData(rules);
+    }
+  }, [products, rules, setPreviewData, previewData, rulesData]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
-      const data = filterProducts(products, rules, key);
+      const data = previewData[key];
       if (data.length === 0) {
         enqueueSnackbar('No Products match this rule.', {
           variant: 'info',
@@ -35,7 +48,7 @@ function RulesTable({ rules, products, productViewType }) {
 
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
-      {(rules.length > 0) && (
+      {(previewData.length > 0) && (
         <table>
           <thead>
             <tr>
@@ -49,7 +62,7 @@ function RulesTable({ rules, products, productViewType }) {
             </tr>
           </thead>
           <tbody>
-            {rules.map((item, i) => (
+            {rulesData.map((item, i) => (
               <tr key={parseInt(i, 10)}>
                 <td>
                   <label className="item">
@@ -63,7 +76,7 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <label className="item">
-                    {item.detail.label}
+                    {item.key.label}
                   </label>
                 </td>
                 <td>
@@ -73,7 +86,7 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <label className="item">
-                    {item.value}
+                    {item.criteria}
                   </label>
                 </td>
                 <td>
@@ -83,11 +96,11 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <Tooltip
-                    title={`Preview ${filterProducts(products, rules, i).length}Products for Current Rule`}
+                    title={`Preview ${previewData[i].length}Products for Current Rule`}
                     position="right"
                     arrow
                   >
-                    <span onClick={handleToggle(i)}>{filterProducts(products, rules, i).length}</span>
+                    <span onClick={handleToggle(i)}>{previewData[i].length}</span>
                   </Tooltip>
                 </td>
               </tr>

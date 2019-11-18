@@ -55,6 +55,7 @@ function AddNewRule({
       scope: newClient.scope.key,
       key: newClient.key.key,
       criteria: newClient.criteria,
+      ruleType: ruleData.ruleType.key,
     }];
     setTimeout(() => {
       getPreviewProducts(newRules);
