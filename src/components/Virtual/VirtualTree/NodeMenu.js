@@ -16,6 +16,7 @@ import { addNewRuleHistory } from 'utils/ruleManagement';
 import SetLinkDlg from 'components/elements/SetLinkDlg';
 import SetTemplateDlg from 'components/elements/SetTemplateDlg';
 import NodeButton from './NodeButton';
+import { checkTemplate } from '../../../utils/propertyManagement';
 
 function NodeMenu({
   treeData,
@@ -138,6 +139,10 @@ function NodeMenu({
   };
 
   const updateCategoryExtraInfomation = (data) => () => {
+    console.log('##### DEBUG TEMPLATE DATA: ', data); // fixme
+    const errList = checkTemplate(propertyField.propertyFields, data);
+    console.log('##### DEBUG TEMPLATE ERROR LIST: ', errList); // fixme
+
     updateCategory(node.item.id, data)
       .then(() => {
         confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');

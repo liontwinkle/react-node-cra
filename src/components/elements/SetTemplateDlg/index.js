@@ -1,5 +1,5 @@
-// import React, { useState, useEffect } from 'react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+// import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -31,15 +31,34 @@ function SetTemplateDlg({
   const classes = useStyles();
 
   const [newTemplate, setNewTemplate] = useState(template);
-  // const [stringBasedFields, setStringBasedPropertyFields] = useState([]);
-  // const [propertyField,
-  // useEffect(()=>{
-  //
-  // })
+  const [stringBasedFields, setStringBasedPropertyFields] = useState([]);
+  const [recvPropertyField, setRecvPropertyField] = useState({});
+  useEffect(() => {
+    if (propertyField.propertyFields.length > 0
+      && propertyField.propertyFields !== recvPropertyField.propertyFields) {
+      setRecvPropertyField(propertyField);
+      const fieldData = propertyField.propertyFields.length > 0 ? propertyField.propertyFields : [];
+      console.log('### DEBUG STRING BASED DATA: ', fieldData); // fixme
+      const stringData = [];
+      fieldData.forEach((item) => {
+        if (item.propertyType === 'string' || item.propertyType === 'richtext'
+         || item.propertyType === 'text' || item.propertyType === 'monaco') {
+          stringData.push(item);
+        }
+      });
+      console.log('### DEBUG STRING BASED DATA: ', stringData); // fixme
+      setStringBasedPropertyFields(stringData);
+    }
+  }, [propertyField, recvPropertyField, setStringBasedPropertyFields]);
 
-  const handleChangeTemplate = (value) => {
-    setNewTemplate(value);
+  const handleChangeTemplate = (type) => (value) => {
+    const newTemplateData = {
+      ...newTemplate,
+      [type]: value,
+    };
+    setNewTemplate(newTemplateData);
   };
+
   console.log('#### DEBUG PROPERTY FIELDS: ', propertyField); // fixme
   return (
     <Dialog
@@ -53,14 +72,21 @@ function SetTemplateDlg({
 
       <DialogContent className={classes.dialogContent}>
         <span>
-          <CustomSearchFilter
-            className="mb-3"
-            searchItems={propertyField.propertyFields.map((item) => (item.key))}
-            placeholder="Input search filter"
-            label="Template"
-            value={newTemplate}
-            onChange={(e) => handleChangeTemplate(e)}
-          />
+          {
+            stringBasedFields.map(
+              (item) => (
+                <CustomSearchFilter
+                  key={item.key}
+                  className="mb-3"
+                  searchItems={propertyField.propertyFields.map((item) => (item.key))}
+                  placeholder="Input search filter"
+                  label={item.label}
+                  value={newTemplate[item.key]}
+                  onChange={handleChangeTemplate(item.key)}
+                />
+              ),
+            )
+          }
         </span>
       </DialogContent>
 
