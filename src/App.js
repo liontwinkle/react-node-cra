@@ -13,6 +13,7 @@ import Header from './components/Header';
 
 import Home from './containers/Home';
 import NotFound from './containers/NotFound';
+import Preview from './containers/Preview';
 
 const PublicRoute = ({ component: C, props: cProps, ...rest }) => (
   <Route
@@ -44,7 +45,11 @@ const App = (props) => (
         component={Home}
         props={props}
       />
-
+      <PublicRoute
+        path="/preview"
+        props={props}
+        component={Preview}
+      />
       <Route component={NotFound} />
     </Switch>
   </SnackbarProvider>
