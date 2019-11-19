@@ -363,7 +363,7 @@ const checkTemplating = (string, propertyFields, type) => {
   const regex = /\$\w+/g;
   const result = regex[Symbol.matchAll](string);
   const matchedArray = Array.from(result, (x) => x[0]);
-  if (type === 'template' && matchedArray.length === 0 && result !== '') {
+  if (type === 'template' && matchedArray.length === 0 && string !== '') {
     invalidData = 'The template should include some keys';
   } else {
     matchedArray.forEach((item) => {

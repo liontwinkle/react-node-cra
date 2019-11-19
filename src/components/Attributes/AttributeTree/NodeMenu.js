@@ -15,6 +15,7 @@ import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 import SetTemplateDlg from 'components/elements/SetTemplateDlg';
 import NodeButton from './NodeButton';
+import { validateTemplate } from '../../../utils/propertyManagement';
 
 function NodeMenu({
   isCreating,
@@ -125,16 +126,6 @@ function NodeMenu({
     }
   };
 
-  const setTemplate = (data) => () => {
-    updateAttribute(node.item.id, data)
-      .then(() => {
-        confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
-      })
-      .catch(() => {
-        confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
-      });
-  };
-
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
   const [templateDlgOpen, setTemplateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
@@ -154,6 +145,26 @@ function NodeMenu({
 
   const handleTemplateDlg = (value) => () => {
     setTemplateDlgOpen(value);
+    if (!value) {
+      handleClose();
+    }
+  };
+
+  const setTemplate = (data) => () => {
+    const errList = validateTemplate(propertyField.propertyFields, data);
+    if (errList.length === 0) {
+      updateAttribute(node.item.id, data)
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+          handleTemplateDlg(false);
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, `The template is invalid in ${errList.join(',')}`, 'error');
+    }
+    handleClose();
   };
 
   return (
