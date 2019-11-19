@@ -68,7 +68,7 @@ function AddNewRule({
       [field]: item,
     };
     setRuleData(newClient);
-    if (field === 'key') {
+    if (field === 'key' && newClient.criteria && newClient.criteria !== '') {
       searchFunction(newClient);
     }
   };
@@ -80,7 +80,9 @@ function AddNewRule({
       criteria: criteriaValue,
     };
     setRuleData(newClient);
-    searchFunction(newClient);
+    if (newClient.criteria && newClient.criteria !== '') {
+      searchFunction(newClient);
+    }
   };
 
   const disabled = !(

@@ -10,6 +10,7 @@ const AppearCollection = require('../modules/appear/appear.model');
 function checkObject(data) {
   return (typeof data === 'object') && !Array.isArray(data) && (data !== null);
 }
+
 function insertAppear(collection, attributeId, appear) {
   const addAppearData = [];
   appear.forEach((item) => {

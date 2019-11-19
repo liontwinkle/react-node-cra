@@ -45,7 +45,7 @@ const createValuefromtemplate = (template, state, propertyFields) => {
 
 const getStringTypeValue = (property, state, propertyFields, template) => {
   let value = '';
-  let templateFlag = (template[property.key] !== '' && template[property.key] !== 'null' && template);
+  let templateFlag = (template[property.key] && template[property.key] !== '' && template[property.key] !== 'null');
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
     templateFlag = true;

@@ -57,8 +57,8 @@ const getAllmatched = (products, match, criteria, basis) => {
   return returnValue;
 };
 
-const getRuleProducts = (products, field, type, criteria, basis) => {
-  const rule = RuleEngine[type](criteria);
+const getRuleProducts = (products, field, match, criteria, basis) => {
+  const rule = RuleEngine[match](criteria);
   const returnValue = {
     includes: [],
     excludes: [],

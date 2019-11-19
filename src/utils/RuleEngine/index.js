@@ -30,7 +30,7 @@ export const RuleEngine = {
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
         `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.+`,
-        'gi',
+        'ig',
       )
     );
     return RULE_CACHE[ruleType][ruleValue];
@@ -61,7 +61,7 @@ export const RuleEngine = {
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
         `^${ruleValue.split('|').sort().map((item) => (`(\\b${escapeText(item)}\\b)`)).join('|')}.+`,
-        'gi',
+        'ig',
       )
     );
 
@@ -69,21 +69,21 @@ export const RuleEngine = {
   },
   exactly: (ruleValue, ruleType = 'exactly') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`)
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`, 'g')
     );
 
     return RULE_CACHE[ruleType][ruleValue];
   },
   contains_any_tokens_case_insensitive: (ruleValue, ruleType = 'contains_any_tokens_case_insensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)} | ${escapeText(ruleValue)}\\w+`, 'gi')
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}\\w+|${escapeText(ruleValue)}`, 'ig')
     );
 
     return RULE_CACHE[ruleType][ruleValue];
   },
   contains_any_tokens_case_sensitive: (ruleValue, ruleType = 'contains_any_tokens_case_sensitive') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)} | ${escapeText(ruleValue)}\\w+`, 'g')
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`${escapeText(ruleValue)}\\w+|${escapeText(ruleValue)}`, 'g')
     );
 
     return RULE_CACHE[ruleType][ruleValue];
