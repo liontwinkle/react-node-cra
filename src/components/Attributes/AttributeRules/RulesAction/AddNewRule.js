@@ -13,11 +13,12 @@ import {
 import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBody';
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
+
+import { confirmMessage, getPreFilterData, useStyles } from 'utils';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
-import { confirmMessage, getPreFilterData, useStyles } from 'utils';
-import { addNewRuleHistory } from 'utils/ruleManagement';
 
 function AddNewRule({
   open,

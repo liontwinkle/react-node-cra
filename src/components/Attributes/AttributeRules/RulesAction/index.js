@@ -33,6 +33,8 @@ function RulesAction({
 
   const [rulesData, setRulesData] = useState([]);
   const [previewData, setPreviewData] = useState([]);
+  const [previewProducts, setProducts] = useState([]);
+
   useEffect(() => {
     if (displayRules.length > 0 && rulesData !== displayRules) {
       const recvRules = displayRules || [];
@@ -41,7 +43,6 @@ function RulesAction({
     }
   }, [products, rulesData, displayRules]);
 
-  const [previewProducts, setProducts] = useState([]);
 
   const handleToggle = (field) => () => {
     let displayData = [];

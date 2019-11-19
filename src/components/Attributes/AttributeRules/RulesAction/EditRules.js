@@ -9,10 +9,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { confirmMessage, getObjectFromArray } from 'utils';
+import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
   basis, refer, match, scope, tableIcons, ruleType,
 } from 'utils/constants';
-import { addNewRuleHistory } from 'utils/ruleManagement';
+
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
@@ -101,6 +102,7 @@ function EditRules({
 
       const data = JSON.parse(JSON.stringify(oldData));
       const ruleKeyIndex = rules.findIndex((rk) => rk._id === oldData._id);
+
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
           _id: newData._id,

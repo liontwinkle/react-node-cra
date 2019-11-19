@@ -1,9 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
+
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -31,13 +31,14 @@ function RulesAction({
 
   const [rulesData, setRulesData] = useState([]);
   const [previewData, setPreviewData] = useState([]);
+  const [previewProducts, setProducts] = useState([]);
+
   useEffect(() => {
     if (rules.length > 0 && rulesData !== rules) {
       setPreviewData(getPreFilterData(rules, products));
       setRulesData(rules);
     }
-  }, [rules, products]);
-  const [previewProducts, setProducts] = useState([]);
+  }, [rules, products, rulesData]);
 
   const handleToggle = (field) => () => {
     let displayData = [];
