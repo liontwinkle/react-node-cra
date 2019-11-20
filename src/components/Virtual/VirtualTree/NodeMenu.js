@@ -139,12 +139,15 @@ function NodeMenu({
   };
 
   const updateCategoryExtraInfomation = (data) => () => {
-    const errList = validateTemplate(propertyField.propertyFields, data);
+    let errList = [];
+    if (data.template) {
+      errList = validateTemplate(propertyField.propertyFields, data);
+    }
 
     if (errList.length === 0) {
       updateCategory(node.item.id, data)
         .then(() => {
-          confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+          confirmMessage(enqueueSnackbar, 'Updating the Category is okay.', 'success');
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');

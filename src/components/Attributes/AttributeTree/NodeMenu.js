@@ -151,11 +151,14 @@ function NodeMenu({
   };
 
   const setTemplate = (data) => () => {
-    const errList = validateTemplate(propertyField.propertyFields, data);
+    const errList = [];
+    if (data.template) {
+      validateTemplate(propertyField.propertyFields, data);
+    }
     if (errList.length === 0) {
       updateAttribute(node.item.id, data)
         .then(() => {
-          confirmMessage(enqueueSnackbar, 'Setting the template is okay.', 'success');
+          confirmMessage(enqueueSnackbar, 'Updating the Attribute is okay.', 'success');
           handleTemplateDlg(false);
         })
         .catch(() => {
