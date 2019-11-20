@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -8,7 +9,6 @@ import CopyIcon from '@material-ui/icons/CloudUpload';
 import PreviewIcon from '@material-ui/icons/Laptop';
 
 import { IconButton } from 'components/elements';
-// import PreviewSection from 'components/PreviewSection';
 import ClientRemove from './ClientRemove';
 import ClientForm from './ClientForm';
 import ClientImport from './ClientImport';
@@ -102,9 +102,9 @@ function ClientAction(props) {
       {formState.Type && (
         <ClientImport status={formState} handleClose={handleClose('Type')} client={client} type={type} />
       )}
-      {/* {formState.Preview && ( */}
-      {/* <PreviewSection open={formState.Preview} handleClose={handleClose('Preview')} type={type} /> */}
-      {/* )} */}
+      {formState.Preview && (
+        <Redirect to="/preview" />
+      )}
     </>
   );
 }
