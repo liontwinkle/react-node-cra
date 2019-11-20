@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   dialogContent: {
-    overflow: 'unset',
+    overflow: 'auto',
   },
 }));
 

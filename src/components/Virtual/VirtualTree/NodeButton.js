@@ -22,13 +22,15 @@ const NodeButton = ({
     </button>
 
     {rootNode && (
-      <button className="mg-button transparent" onClick={handleRelate}>
-        Link with other
-      </button>
+      <>
+        <button className="mg-button transparent" onClick={handleRelate}>
+          Link with other
+        </button>
+        <button className="mg-button transparent" onClick={handleTemplate}>
+          Set the template
+        </button>
+      </>
     )}
-    <button className="mg-button transparent" onClick={handleTemplate}>
-      Set the template
-    </button>
   </div>
 );
 
