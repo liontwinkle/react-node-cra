@@ -169,6 +169,7 @@ const getKeysfromNewData = (data) => {
       });
     }
   });
+  console.log('####DHERE: ');
   return sections;
 };
 
@@ -232,6 +233,7 @@ exports.upload = (req, res) => {
   collection.find({}, (err, result) => {
     if (!err) {
       const updateData = checkDuplicateData(result, req.body, req.params.type);
+      console.log('#### UPLOAD DATA: ', updateData); // fixme
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
