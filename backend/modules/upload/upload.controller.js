@@ -105,6 +105,14 @@ const keyUpload = (clientId, type, data) => {
 /** Section to save the properties
  *  By Igor
  *  ** */
+
+const checkType = {
+  virtual: 'categoryId',
+  native: 'categoryId',
+  products: '_id',
+  attributes: 'attributeId',
+};
+
 const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
 
 const removeUnnecessaryData = (data) => {
@@ -129,27 +137,47 @@ const removeUnnecessaryData = (data) => {
   return addData;
 };
 
-const checkDuplicateData = (currentData, newData) => {
+// const mergeTwoProperties = (currentProperties, recvProperties) => {
+//
+// };
+
+// const makeNewData = (newItem, currentData) => {
+//   const newItemKeys = Object.keys(newItem);
+//   const newCurrentKeys = Object.keys(currentData);
+//   const updateData = {};
+//   newCurrentKeys.forEach((currentKeyItem) => {
+//     if (newItem[currentKeyItem]) {
+//       if (currentKeyItem === 'rules') {
+//         const newRules = _.merge(currentData.rules, newItem.rules);
+//         currentData.rules = newRules;
+//       } else if (currentKeyItem === 'properties') {
+//         mergeTwoProperties(currentData.properties, newItem.properties);
+//       }
+//     }
+//   });
+// };
+
+const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
+  let duplicateFlag = false;
   newData.forEach((newItem) => {
     newCreateData.push(removeUnnecessaryData(newItem));
-    // if (type !== 'products') {
-    //   newCreateData.push(removeUnnecessaryData(newItem));
-    //   // const duplicateFilter = currentData.find((currentItem) =>
-    //   //   (currentItem[checkType[type]] === newItem[checkType[type]]));
-    //   // if (!duplicateFilter) {
-    //   //   try {
-    //   //     newCreateData.push(removeUnnecessaryData(newItem));
-    //   //   } catch (e) {
-    //   //     console.error(e);
-    //   //   }
-    //   // }
-    // } else {
-    //   newCreateData.push(removeUnnecessaryData(newItem));
-    // }
+    if (type !== 'products') {
+      const duplicateFilter = currentData.find((currentItem) =>
+        (currentItem[checkType[type]] === newItem[checkType[type]]));
+      if (duplicateFilter) {
+        console.log('### DEBUG CURRENT DATA: ', duplicateFilter); // fixme
+        duplicateFlag = true;
+      }
+    } else {
+      newCreateData.push(removeUnnecessaryData(newItem));
+    }
   });
 
-  return newCreateData;
+  return {
+    updateData: newCreateData,
+    duplicateFlag,
+  };
 };
 
 const getKeysfromNewData = (data) => {
@@ -226,7 +254,8 @@ exports.upload = (req, res) => {
   }
   collection.find({}, (err, result) => {
     if (!err) {
-      const updateData = checkDuplicateData(result, req.body);
+      const { updateData, duplicateFlag } = checkDuplicateData(result, req.body, req.params.type);
+      console.log('#### UPLOAD DATA: ', updateData); // fixme
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
@@ -236,9 +265,20 @@ exports.upload = (req, res) => {
           }
           const fieldData = getNewFieldData(updateData);
           keyUpload(req.params.id, req.params.type, fieldData);
-          collection.insertMany(updateData).then(() => {
-            res.status(201).json(updateData[0]);
-          });
+          if (duplicateFlag) {
+            collection.deleteMany({ categoryId: updateData.categoryId })
+              .then(() => {
+                collection.insertMany(updateData).then(() => {
+                  res.status(201).json(updateData[0]);
+                });
+              });
+          } else {
+            collection.insertMany(updateData)
+              .then(() => {
+                res.status(201)
+                  .json(updateData[0]);
+              });
+          }
         } catch (e) {
           handleError(res);
         }
