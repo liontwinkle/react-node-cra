@@ -85,6 +85,10 @@ function SetTemplateDlg({
             )
           }
         </span>
+        <span>
+          {stringBasedFields.length === 0
+          && (<label>There is no any string based properties.</label>)}
+        </span>
       </DialogContent>
 
       <DialogActions className={classes.dialogAction}>
