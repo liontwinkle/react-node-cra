@@ -156,6 +156,7 @@ function AddNewRule({
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
+          category={category}
           previewNumber={previewValue}
           handleChange={handleChange}
           valueDetails={valueDetails}

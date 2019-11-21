@@ -9,7 +9,7 @@ import {
 
 const AddNewRuleBody = ({
   valueDetails, ruleData, previewNumber,
-  handleSelectChange, handleChange,
+  handleSelectChange, handleChange, category,
 }) => (
   <>
     <CustomSelect
@@ -66,21 +66,25 @@ const AddNewRuleBody = ({
       value={previewNumber}
       onChange={() => {}}
     />
-    <CustomSelect
-      className="mb-3"
-      label="Rule Type"
-      inline
-      placeholder="Select Scope of Rule"
-      value={ruleData.ruleType}
-      items={ruleType}
-      onChange={handleSelectChange('ruleType')}
-    />
+    {category.parentId === 'null'
+    && (
+      <CustomSelect
+        className="mb-3"
+        label="Rule Type"
+        inline
+        placeholder="Select Scope of Rule"
+        value={ruleData.ruleType}
+        items={ruleType}
+        onChange={handleSelectChange('ruleType')}
+      />
+    )}
   </>
 );
 
 AddNewRuleBody.propTypes = {
   previewNumber: PropTypes.number.isRequired,
   ruleData: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,

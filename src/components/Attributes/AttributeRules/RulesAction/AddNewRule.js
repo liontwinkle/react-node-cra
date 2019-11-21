@@ -163,6 +163,7 @@ function AddNewRule({
           previewNumber={previewValue}
           handleChange={handleChange}
           valueDetails={valueDetails}
+          category={attribute}
         />
       </DialogContent>
 
