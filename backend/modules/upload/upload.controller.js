@@ -105,14 +105,6 @@ const keyUpload = (clientId, type, data) => {
 /** Section to save the properties
  *  By Igor
  *  ** */
-
-const checkType = {
-  virtual: 'categoryId',
-  native: 'categoryId',
-  products: '_id',
-  attributes: 'attributeId',
-};
-
 const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
 
 const removeUnnecessaryData = (data) => {
@@ -137,22 +129,24 @@ const removeUnnecessaryData = (data) => {
   return addData;
 };
 
-const checkDuplicateData = (currentData, newData, type) => {
+const checkDuplicateData = (currentData, newData) => {
   const newCreateData = [];
   newData.forEach((newItem) => {
-    if (type !== 'products') {
-      const duplicateFilter = currentData.find((currentItem) =>
-        (currentItem[checkType[type]] === newItem[checkType[type]]));
-      if (!duplicateFilter) {
-        try {
-          newCreateData.push(removeUnnecessaryData(newItem));
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    } else {
-      newCreateData.push(removeUnnecessaryData(newItem));
-    }
+    newCreateData.push(removeUnnecessaryData(newItem));
+    // if (type !== 'products') {
+    //   newCreateData.push(removeUnnecessaryData(newItem));
+    //   // const duplicateFilter = currentData.find((currentItem) =>
+    //   //   (currentItem[checkType[type]] === newItem[checkType[type]]));
+    //   // if (!duplicateFilter) {
+    //   //   try {
+    //   //     newCreateData.push(removeUnnecessaryData(newItem));
+    //   //   } catch (e) {
+    //   //     console.error(e);
+    //   //   }
+    //   // }
+    // } else {
+    //   newCreateData.push(removeUnnecessaryData(newItem));
+    // }
   });
 
   return newCreateData;
@@ -232,8 +226,7 @@ exports.upload = (req, res) => {
   }
   collection.find({}, (err, result) => {
     if (!err) {
-      const updateData = checkDuplicateData(result, req.body, req.params.type);
-      console.log('#### UPLOAD DATA: ', updateData); // fixme
+      const updateData = checkDuplicateData(result, req.body);
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
