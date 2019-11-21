@@ -166,11 +166,8 @@ const checkDuplicateData = (currentData, newData, type) => {
       const duplicateFilter = currentData.find((currentItem) =>
         (currentItem[checkType[type]] === newItem[checkType[type]]));
       if (duplicateFilter) {
-        console.log('### DEBUG CURRENT DATA: ', duplicateFilter); // fixme
         duplicateFlag = true;
       }
-    } else {
-      newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
 
@@ -191,7 +188,6 @@ const getKeysfromNewData = (data) => {
       });
     }
   });
-  console.log('####DHERE: ');
   return sections;
 };
 
@@ -255,7 +251,6 @@ exports.upload = (req, res) => {
   collection.find({}, (err, result) => {
     if (!err) {
       const { updateData, duplicateFlag } = checkDuplicateData(result, req.body, req.params.type);
-      console.log('#### UPLOAD DATA: ', updateData); // fixme
       if (updateData.length > 0) {
         try {
           if (req.params.type === 'attributes') {
@@ -266,7 +261,7 @@ exports.upload = (req, res) => {
           const fieldData = getNewFieldData(updateData);
           keyUpload(req.params.id, req.params.type, fieldData);
           if (duplicateFlag) {
-            collection.deleteMany({ categoryId: updateData.categoryId })
+            collection.deleteMany({ categoryId: updateData[0].categoryId })
               .then(() => {
                 collection.insertMany(updateData).then(() => {
                   res.status(201).json(updateData[0]);
