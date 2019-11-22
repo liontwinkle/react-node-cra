@@ -66,14 +66,14 @@ class AttributeRules extends Component {
       const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
       const referObj = refer.find((referItem) => (referItem.key === item.refer));
       const keyObj = this.props.valueDetails.find((keyItem) => (keyItem.key === item.key));
-      const matchObj = match.find((matchItem) => (matchItem.key === item.match));
+      const matchObj = match.find((matchItem) => (matchItem.key === item.type));
       const ruleTypeObj = ruleType.find((ruleTypeObjItem) => (ruleTypeObjItem.key === item.ruleType));
       ruleArray.push({
         _id: item._id,
         basis: (type) ? basisObj.key : basisObj,
         refer: (type) ? referObj.key : referObj,
         key: (type) ? keyObj.key : keyObj,
-        match: (type) ? matchObj.key : matchObj,
+        type: (type) ? matchObj.key : matchObj,
         criteria: item.criteria,
         scope: (type) ? scope[0].key : scope[0],
         ruleType: (type) ? ruleTypeObj.key : ruleTypeObj,

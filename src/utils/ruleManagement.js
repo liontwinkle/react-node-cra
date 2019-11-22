@@ -40,7 +40,7 @@ const getProducts = (products, field, match, value) => {
 };
 export const filterProducts = (products, rules, key) => {
   const field = rules[key].key.key;
-  const match = rules[key].match.key;
+  const match = rules[key].type.key;
   const { criteria } = rules[key];
   let filterResult = new Set();
 
@@ -88,14 +88,14 @@ export const getRules = (srcRules, valueDetails) => {
     const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
     const referObj = refer.find((referItem) => (referItem.key === item.refer));
     const ruleTypeObj = ruleType.find((ruleTypeItem) => (ruleTypeItem.key === item.ruleType));
-    const matchObj = match.find((matchItem) => (matchItem.key === item.match));
+    const matchObj = match.find((matchItem) => (matchItem.key === item.type));
     const keyObject = valueDetails.find((keyItem) => (keyItem.key === item.key));
     newRules.push({
       _id: item._id,
       basis: basisObj,
       refer: referObj,
       key: keyObject,
-      match: matchObj,
+      type: matchObj,
       criteria: item.criteria,
       scope: scope[0],
       ruleType: ruleTypeObj,
@@ -105,7 +105,7 @@ export const getRules = (srcRules, valueDetails) => {
       basis: basisObj.key,
       refer: referObj.key,
       key: keyObject.key,
-      match: matchObj.key,
+      type: matchObj.key,
       criteria: item.criteria,
       scope: scope[0].key,
       ruleType: ruleTypeObj.key,

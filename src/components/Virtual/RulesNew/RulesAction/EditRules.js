@@ -36,7 +36,7 @@ function EditRules({
       { title: 'Basis', field: 'basis', lookup: getObjectFromArray(basis) },
       { title: 'Refer', field: 'refer', lookup: getObjectFromArray(refer) },
       { title: 'Key', field: 'key', lookup: getObjectFromArray(valueDetails) },
-      { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
+      { title: 'Type', field: 'type', lookup: getObjectFromArray(match) },
       { title: 'Criteria', field: 'criteria' },
       { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
       { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(rule) },
@@ -51,7 +51,7 @@ function EditRules({
         _id: item._id,
         basis: item.basis,
         refer: item.refer,
-        match: item.match,
+        type: item.type,
         criteria: item.criteria,
         key: item.key,
         scope: 0,
@@ -76,7 +76,7 @@ function EditRules({
 
       if (!isCreating && !rules.find((item) => (
         item.detail === newData.detail
-        && item.match === newData.match
+        && item.type === newData.type
         && item.value === newData.value
       ))) {
         rules.push({
@@ -85,14 +85,14 @@ function EditRules({
           refer: newData.refer,
           key: newData.key,
           criteria: newData.criteria,
-          match: newData.match,
+          type: newData.type,
           scope: newData.scope,
           ruleType: newData.ruleType,
         });
         const msgCurrent = `Create New Rule(basis: ${newData.basis.key},refer: ${newData.refer.key},
-            detail: ${newData.key.key},match: ${newData.match.key},criteria: ${newData.criteria})`;
+            detail: ${newData.key.key},type: ${newData.type.key},criteria: ${newData.criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${newData.basis.key},
-        refer: ${newData.refer.key},detail: ${newData.key.key},match: ${newData.match.key},
+        refer: ${newData.refer.key},detail: ${newData.key.key},type: ${newData.type.key},
         criteria: ${newData.criteria})`;
         addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
@@ -114,16 +114,16 @@ function EditRules({
           refer: newData.refer,
           key: newData.key,
           criteria: newData.criteria,
-          match: newData.match,
+          type: newData.type,
           scope: newData.scope,
           ruleType: newData.ruleType,
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const msgCurrent = `Update Rule as (basis: ${newData.basis},refer: ${newData.refer},
-            detail: ${newData.key},match: ${newData.match},criteria: ${newData.criteria})`;
+            detail: ${newData.key},type: ${newData.type},criteria: ${newData.criteria})`;
           const msgParent = `Update Rule in Child ${category.name} (basis: ${newData.basis}, 
-                  refer: ${newData.refer},detail: ${newData.key},match: ${newData.match},
+                  refer: ${newData.refer},detail: ${newData.key},type: ${newData.type},
                   criteria: ${newData.criteria})`;
           addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
           saveRules(rules);
@@ -142,9 +142,9 @@ function EditRules({
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
-            detail: ${oldData.key},match: ${oldData.match},criteria: ${oldData.criteria})`;
+            detail: ${oldData.key},type: ${oldData.type},criteria: ${oldData.criteria})`;
         const msgParent = `Rule is deleted in Child ${category.name} (basis: ${oldData.basis}, 
-                  refer: ${oldData.refer},detail: ${oldData.key},match: ${oldData.match},
+                  refer: ${oldData.refer},detail: ${oldData.key},type: ${oldData.type},
                   criteria: ${oldData.criteria})`;
         addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);

@@ -177,12 +177,12 @@ export const getPreFilterData = (rules, products) => {
   let filterResult = new Set();
   rules.forEach((item) => {
     const field = item.key;
-    const { match, criteria, basis } = item;
+    const { type, criteria, basis } = item;
     if (field === '*') {
       // filterResult = getAllmatched(products, match, criteria, basis); todo for large data it works so lazy
-      filterResult = getRuleProducts(products, 'name', match, criteria, basis); // fixme set 'name' as default
+      filterResult = getRuleProducts(products, 'name', type, criteria, basis); // fixme set 'name' as default
     } else {
-      filterResult = getRuleProducts(products, field, match, criteria, basis);
+      filterResult = getRuleProducts(products, field, type, criteria, basis);
     }
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');

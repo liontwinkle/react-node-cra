@@ -40,9 +40,9 @@ const AddNewRuleBody = ({
       className="mb-3"
       label="Match"
       placeholder="Select matches of Rule"
-      value={ruleData.match}
+      value={ruleData.type}
       items={match}
-      onChange={handleSelectChange('match')}
+      onChange={handleSelectChange('type')}
     />
     <CustomInput
       className="mb-3"

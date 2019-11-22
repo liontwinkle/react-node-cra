@@ -23,15 +23,7 @@ const CategorySchema = new Schema({
     default: String,
     template: String,
   }],
-  rules: [{
-    basis: String,
-    refer: String,
-    scope: Number,
-    criteria: String,
-    key: String,
-    match: String,
-    ruleType: String,
-  }],
+  rules: Array,
 }, { toJSON: { virtuals: true }, timestamps: true });
 
 CategorySchema.virtual('id').get(function () {

@@ -34,7 +34,7 @@ function AddNewRule({
   const [ruleData, setRuleData] = useState({
     basis: basis[0],
     refer: refer[0],
-    match: match[0],
+    type: match[0],
     scope: scope[0],
     key: valueDetails[0],
     criteria: '',
@@ -51,7 +51,7 @@ function AddNewRule({
     const newRules = [{
       basis: newClient.basis.key,
       refer: newClient.refer.key,
-      match: newClient.match.key,
+      type: newClient.type.key,
       scope: newClient.scope.key,
       key: newClient.key.key,
       criteria: newClient.criteria,
@@ -89,7 +89,7 @@ function AddNewRule({
     ruleData.basis
     && ruleData.refer
     && ruleData.scope
-    && ruleData.match
+    && ruleData.type
     && (ruleData.criteria !== '')
   );
 
@@ -99,7 +99,7 @@ function AddNewRule({
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
-        match: item.match.key,
+        type: item.type.key,
         scope: 0,
         key: item.key.key,
         criteria: item.criteria,
@@ -123,14 +123,14 @@ function AddNewRule({
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
         item.key.key === ruleData.key.key
-        && item.match.key === ruleData.match.key
+        && item.type.key === ruleData.type.key
         && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.key.key},match: ${ruleData.match.key},criteria: ${ruleData.criteria})`;
+            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
-        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},match: ${ruleData.match.key},
+        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
         criteria: ${ruleData.criteria})`;
         addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
         saveRules(rules);

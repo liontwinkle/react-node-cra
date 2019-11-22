@@ -82,7 +82,7 @@ function RulesTable({ rules, products, productViewType }) {
                 </td>
                 <td>
                   <label className="item">
-                    {item.match.label}
+                    {item.type.label}
                   </label>
                 </td>
                 <td>
