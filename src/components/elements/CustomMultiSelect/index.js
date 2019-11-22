@@ -4,6 +4,17 @@ import Select from 'react-select';
 
 import './style.scss';
 
+const customStyles = {
+  menu: (provided) => ({
+    ...provided,
+    borderBottom: '1px dotted pink',
+    position: 'relative',
+    top: -8,
+    padding: 20,
+    display: 'block !important',
+  }),
+};
+
 function CustomMultiSelect({
   className,
   label,
@@ -16,14 +27,14 @@ function CustomMultiSelect({
   onChange,
 }) {
   return (
-    <div className={`mg-select-container ${className}`}>
+    <div className={`mg-select-container multi ${className}`}>
       {label && !inline && (
         <label className="mg-select-label">
           {label}
         </label>
       )}
 
-      <div className="mg-select-wrapper">
+      <div className="mg-select-wrapper multi">
         {label && inline && (
           <label
             className={`mg-select-label inline ${labelAlignment}`}
@@ -34,9 +45,11 @@ function CustomMultiSelect({
         )}
 
         <Select
+          styles={customStyles}
           className={className}
           options={items}
           value={value}
+          width="200px"
           onChange={onChange}
           isMulti
         />

@@ -9,6 +9,8 @@ import {
 } from '@material-ui/core';
 import { CustomMultiSelect } from '../index';
 
+import './style.scss';
+
 const useStyles = makeStyles((theme) => ({
   dialogAction: {
     margin: theme.spacing(2),
@@ -58,7 +60,7 @@ function SetLinkDlg({
       <DialogContent className={classes.dialogContent}>
         <span>
           <CustomMultiSelect
-            className="mg-select-container"
+            className="mg-multi-select-container"
             label="Related Category"
             inline
             value={newLink}
