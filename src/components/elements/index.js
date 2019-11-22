@@ -4,6 +4,7 @@ export { default as CustomInput } from './CustomInput';
 export { default as CustomSection } from './CustomSection';
 export { default as CustomSelect } from './CustomSelect';
 export { default as CustomSelectWithLabel } from './CustomSelect/CustomSelectWithLabel';
+export { default as CustomMultiSelect } from './CustomMultiSelect';
 export { default as CustomTab } from './CustomTab';
 export { default as CustomToggle } from './CustomToggle';
 export { default as CustomText } from './CustomText';

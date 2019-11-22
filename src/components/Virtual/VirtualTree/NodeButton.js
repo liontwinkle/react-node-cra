@@ -20,16 +20,13 @@ const NodeButton = ({
     <button className="mg-button transparent" onClick={handleRemove}>
       Delete Category
     </button>
-
+    <button className="mg-button transparent" onClick={handleRelate}>
+      Link with other
+    </button>
     {rootNode && (
-      <>
-        <button className="mg-button transparent" onClick={handleRelate}>
-          Link with other
-        </button>
-        <button className="mg-button transparent" onClick={handleTemplate}>
-          Set the template
-        </button>
-      </>
+      <button className="mg-button transparent" onClick={handleTemplate}>
+        Set the template
+      </button>
     )}
   </div>
 );

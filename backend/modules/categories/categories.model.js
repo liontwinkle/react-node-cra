@@ -12,10 +12,10 @@ const CategorySchema = new Schema({
     type: String,
     default: 'null',
   },
-  linkedId: {
-    type: String,
-    default: 'null',
-  },
+  linkedId: [{
+    value: String,
+    label: String,
+  }],
   template: Object,
   properties: Object,
   defaultProperties: [{

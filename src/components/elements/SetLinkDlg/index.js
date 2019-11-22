@@ -7,7 +7,7 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-import { CustomSelectWithLabel } from '../index';
+import { CustomMultiSelect } from '../index';
 
 const useStyles = makeStyles((theme) => ({
   dialogAction: {
@@ -30,20 +30,20 @@ function SetLinkDlg({
   const classes = useStyles();
 
   const [itemList, setItemList] = useState([]);
-  const [newLinkedId, setNewLinkedId] = useState(linkedId);
+  const [newLink, setNewLink] = useState(linkedId);
   useEffect(() => {
     const items = [];
     rootItems.forEach((item) => {
       items.push({
         label: item.name,
-        key: item.id,
+        value: item.id,
       });
     });
     setItemList(items);
   }, [setItemList, rootItems]);
 
   const changeSelect = (e) => {
-    setNewLinkedId(e.key);
+    setNewLink(e);
   };
   return (
     <Dialog
@@ -57,12 +57,13 @@ function SetLinkDlg({
 
       <DialogContent className={classes.dialogContent}>
         <span>
-          <CustomSelectWithLabel
+          <CustomMultiSelect
+            className="mg-select-container"
             label="Related Category"
             inline
-            value={itemList.find(((item) => (item.key === newLinkedId)))}
+            value={newLink}
             items={itemList || []}
-            onChange={(e) => changeSelect(e)}
+            onChange={changeSelect}
           />
         </span>
       </DialogContent>
@@ -76,7 +77,7 @@ function SetLinkDlg({
         </button>
         <button
           className="mg-button primary"
-          onClick={handleSetLink({ linkedId: newLinkedId })}
+          onClick={handleSetLink({ linkedId: newLink })}
         >
           {confirmLabel}
         </button>
@@ -88,7 +89,7 @@ function SetLinkDlg({
 SetLinkDlg.propTypes = {
   open: PropTypes.bool.isRequired,
   msg: PropTypes.string.isRequired,
-  linkedId: PropTypes.string,
+  linkedId: PropTypes.array,
   confirmLabel: PropTypes.string,
   rootItems: PropTypes.array.isRequired,
   handleSetLink: PropTypes.func.isRequired,

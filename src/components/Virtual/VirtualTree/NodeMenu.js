@@ -49,13 +49,14 @@ function NodeMenu({
   const [initFlag, setInitFlag] = useState(false);
   useEffect(() => {
     if (categories.length > 0) {
-      const items = categories.filter((item) => (item.parentId === 'null' && item.categoryId !== node.item.categoryId));
-      const linkedItems = items.map((item) => item.linkedId);
-      let freeLinkItem = items;
-      linkedItems.forEach((item) => {
-        freeLinkItem = freeLinkItem.filter((filterItem) => (filterItem.id !== item));
-      });
-      setRootItems(freeLinkItem);
+      const items = categories.filter((item) => (item.categoryId !== node.item.categoryId));
+      // const linkedItems = items.map((item) => item.linkedId);
+      // let freeLinkItem = items;
+      // linkedItems.forEach((item) => {
+      //   freeLinkItem = items.filter((filterItem) => (filterItem.id !== item.value));
+      // });
+      // setRootItems(freeLinkItem);
+      setRootItems(items);
       setInitFlag(true);
     }
   }, [categories, initFlag, setInitFlag, setRootItems, node]);
