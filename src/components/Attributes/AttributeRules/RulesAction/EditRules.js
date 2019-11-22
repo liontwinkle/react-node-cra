@@ -31,6 +31,7 @@ function EditRules({
   valueDetails,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  const rule = (attribute.parentId === 'null') ? ruleType : new Array(ruleType[0]);
 
   const tableData = {
     columns: [
@@ -40,7 +41,7 @@ function EditRules({
       { title: 'Match', field: 'match', lookup: getObjectFromArray(match) },
       { title: 'Criteria', field: 'criteria' },
       { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
-      { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(ruleType) },
+      { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(rule) },
     ],
     data: rules,
   };

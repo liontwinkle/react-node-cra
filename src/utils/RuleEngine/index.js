@@ -50,7 +50,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(\\b${escapeText(item)}\\b)`)).join('|')}.+`,
+        `${ruleValue.split('|').sort().map((item) => (`(\\b(?:${escapeText(item)})\\b)`)).join('|')}.+`,
         'g',
       )
     );
@@ -60,7 +60,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(\\b${escapeText(item)}\\b)`)).join('|')}.+`,
+        `^${ruleValue.split('|').sort().map((item) => (`(\\b(?:${escapeText(item)})\\b)`)).join('|')}.+`,
         'ig',
       )
     );
