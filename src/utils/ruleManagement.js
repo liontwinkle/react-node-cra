@@ -46,7 +46,6 @@ export const filterProducts = (products, rules, key) => {
 
   formatProductsData();
   formatDifference();
-  console.log('### DEBUG RULE FIELD: ', field); // fixme
   if (field === '*') {
     // filterResult = getAllmatched(products, match, criteria); todo for large data it works so lazy
     filterResult = getProducts(products, 'name', match, criteria); // fixme set 'name' field as default
@@ -121,7 +120,7 @@ export const getRules = (srcRules, valueDetails) => {
 export const unionRules = (ruleA, ruleB) => {
   let ruleBigSet = [];
   let ruleSmallSet = [];
-  if (ruleA.length > ruleB.length) {
+  if (ruleA.length >= ruleB.length) {
     ruleBigSet = ruleA;
     ruleSmallSet = ruleB;
   } else {
@@ -132,7 +131,7 @@ export const unionRules = (ruleA, ruleB) => {
   ruleBigSet.forEach((item) => {
     const index = ruleSmallSet.findIndex((itemSmall) => (
       itemSmall.basis === item.basis
-      && itemSmall.value === item.value
+      && itemSmall.criteria === item.criteria
     ));
     if (index < 0) {
       unionSet.push(item);

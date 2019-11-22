@@ -18,7 +18,7 @@ function RulesTable({ rules, products, productViewType }) {
   const [rulesData, setRulesData] = useState([]);
 
   useEffect(() => {
-    if (rules.length > 0 && rulesData !== rules) {
+    if (rulesData !== rules) {
       const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
@@ -42,7 +42,6 @@ function RulesTable({ rules, products, productViewType }) {
     }
   };
 
-  console.log('### RULES DATA: ', rulesData); // fixme
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       {(previewData.length > 0) && (

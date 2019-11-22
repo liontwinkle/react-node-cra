@@ -109,7 +109,6 @@ class NewRules extends Component {
     let filteredRules = [];
     if (filteredData.length > 0) {
       const defaultRules = filteredData[0].rules.filter((item) => (item.ruleType === 'default'));
-
       const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
       filteredRules = (defaultFlag) ? unionRules(defaultRules, universalRules) : universalRules;
       parentRules = unionRules(parentRules, filteredRules);
@@ -117,13 +116,13 @@ class NewRules extends Component {
         parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parentId, defaultFlag));
       }
     }
-
     return parentRules;
   };
 
   setMap = (category) => {
     const defaultFlag = (this.props.category.rules.length <= 0);
     const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
+
     const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
     const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);

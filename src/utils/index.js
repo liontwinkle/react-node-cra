@@ -178,7 +178,6 @@ export const getPreFilterData = (rules, products) => {
   rules.forEach((item) => {
     const field = item.key;
     const { match, criteria, basis } = item;
-    console.log('### DEBUG PRE FIELD: ', field); // fixme
     if (field === '*') {
       // filterResult = getAllmatched(products, match, criteria, basis); todo for large data it works so lazy
       filterResult = getRuleProducts(products, 'name', match, criteria, basis); // fixme set 'name' as default
