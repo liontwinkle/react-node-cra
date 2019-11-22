@@ -38,9 +38,13 @@ function CustomImageDisplay({
           </label>
         )}
 
-        <div className="mg-display-image">
-          <img src={value} alt="User" />
-          <div className="mg-display-tooltip-section">
+        <div className={`mg-display-image ${value ? '' : 'non-user'}`}>
+          {
+            value && (
+              <img src={value} alt="User" />
+            )
+          }
+          <div className={`mg-display-tooltip-section ${value ? '' : 'non-section'}`}>
             <IconButton className="mg-display-image-edit">
               <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
             </IconButton>

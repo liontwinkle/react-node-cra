@@ -33,6 +33,7 @@
       background-color: black;
       img {
         width: 200px;
+        height: 200px;
         &:hover {
           opacity: 0.6;
         }
@@ -64,6 +65,18 @@
           opacity: 0.6;
         }
       }
+      .non-section {
+        display: flex;
+        background-color: #6d6666;
+        bottom: 80px;
+        left: 150px;
+      }
+    }
+    .non-user {
+      width: 200px;
+      height: 200px;
+      border: 1px dashed #6d6666;
+      background-color: #fff;
     }
     .mg-display-name {
       font-size: 16px;

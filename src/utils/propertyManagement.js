@@ -235,7 +235,7 @@ export const sectionRender = (
             label={p.label}
             inline
             key={p.key}
-            value={image ? image.path : null}
+            value={image.path !== '' ? image.path : null}
             name={image ? image.name : null}
             handleEditImage={() => handleEditImage(p.key)}
           />,
