@@ -46,7 +46,7 @@ export const filterProducts = (products, rules, key) => {
 
   formatProductsData();
   formatDifference();
-
+  console.log('### DEBUG RULE FIELD: ', field); // fixme
   if (field === '*') {
     // filterResult = getAllmatched(products, match, criteria); todo for large data it works so lazy
     filterResult = getProducts(products, 'name', match, criteria); // fixme set 'name' field as default

@@ -42,6 +42,7 @@ function RulesTable({ rules, products, productViewType }) {
     }
   };
 
+  console.log('### RULES DATA: ', rulesData); // fixme
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       {(previewData.length > 0) && (
@@ -51,9 +52,10 @@ function RulesTable({ rules, products, productViewType }) {
               <th>Rule`s Basis</th>
               <th>Rule`s Refer</th>
               <th>Search By Key</th>
-              <th>Rule`s Type</th>
+              <th>Search Method</th>
               <th>Rule`s Criteria</th>
               <th>Rule`s Scope</th>
+              <th>Rule`s Type</th>
               <th>Preview Matches</th>
             </tr>
           </thead>
@@ -88,6 +90,11 @@ function RulesTable({ rules, products, productViewType }) {
                 <td>
                   <label className="item">
                     {item.scope.label}
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    {item.ruleType.label}
                   </label>
                 </td>
                 <td>
