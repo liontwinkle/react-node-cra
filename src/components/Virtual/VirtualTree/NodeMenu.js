@@ -50,12 +50,6 @@ function NodeMenu({
   useEffect(() => {
     if (categories.length > 0) {
       const items = categories.filter((item) => (item.categoryId !== node.item.categoryId));
-      // const linkedItems = items.map((item) => item.linkedId);
-      // let freeLinkItem = items;
-      // linkedItems.forEach((item) => {
-      //   freeLinkItem = items.filter((filterItem) => (filterItem.id !== item.value));
-      // });
-      // setRootItems(freeLinkItem);
       setRootItems(items);
       setInitFlag(true);
     }
