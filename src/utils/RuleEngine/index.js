@@ -29,7 +29,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.+`,
+        `${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.`,
         'ig',
       )
     );
@@ -39,7 +39,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.+`,
+        `${ruleValue.split('|').sort().map((item) => (`(?=.*\\b${escapeText(item)}\\b)`)).join('+')}.`,
         'g',
       )
     );
@@ -50,7 +50,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `${ruleValue.split('|').sort().map((item) => (`(\\b(?:${escapeText(item)})\\b)`)).join('|')}.+`,
+        `\\b${ruleValue.split('|').sort().map((item) => (`(?:${escapeText(item)})`)).join('|')}\\b`,
         'g',
       )
     );
@@ -60,7 +60,7 @@ export const RuleEngine = {
     RULE_CACHE[ruleType][ruleValue] = (
       RULE_CACHE[ruleType][ruleValue]
       || new RegExp(
-        `^${ruleValue.split('|').sort().map((item) => (`(\\b(?:${escapeText(item)})\\b)`)).join('|')}.+`,
+        `\\b${ruleValue.split('|').sort().map((item) => (`(?:${escapeText(item)})`)).join('|')}\\b`,
         'ig',
       )
     );

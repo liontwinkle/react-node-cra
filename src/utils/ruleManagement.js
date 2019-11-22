@@ -10,19 +10,20 @@ import {
   basis, match, refer, scope, ruleType,
 } from './constants';
 
-const getAllmatched = (products, match, value) => {
-  const returnValue = [];
-  let index = 0;
-  const rule = RuleEngine[match](value);
-  products.forEach((proItem) => {
-    const values = Object.values(proItem);
-    if (values.filter((item) => (rule.test(item))).length > 0) {
-      returnValue[index] = proItem;
-      index++;
-    }
-  });
-  return returnValue;
-};
+// todo fix the algorithm or improve the performance
+// const getAllmatched = (products, match, value) => {
+//   const returnValue = [];
+//   let index = 0;
+//   const rule = RuleEngine[match](value);
+//   products.forEach((proItem) => {
+//     const values = Object.values(proItem);
+//     if (values.filter((item) => (rule.test(item))).length > 0) {
+//       returnValue[index] = proItem;
+//       index++;
+//     }
+//   });
+//   return returnValue;
+// };
 
 const getProducts = (products, field, match, value) => {
   const rule = RuleEngine[match](value);
@@ -37,24 +38,6 @@ const getProducts = (products, field, match, value) => {
   });
   return returnValue;
 };
-
-// const AnaylsisDetails = (valueStr, valueDetails) => {
-//   const partValue = valueStr.split(']');
-//   const detailValue = partValue[0].split(':');
-//   const detailKey = detailValue[0].replace('[', '');
-//   const matchKey = `:${detailValue[1]}`;
-//   const valueKey = partValue[1];
-//   const detailObj = valueDetails.find(
-//     (valueDetailsItem) => (valueDetailsItem.key === detailKey.replace(' ', '')),
-//   );
-//   const matchObj = match.find((matchItem) => (matchItem.key === matchKey));
-//   return {
-//     detailObj,
-//     matchObj,
-//     valueKey,
-//   };
-// };
-
 export const filterProducts = (products, rules, key) => {
   const field = rules[key].key.key;
   const match = rules[key].match.key;
@@ -65,7 +48,8 @@ export const filterProducts = (products, rules, key) => {
   formatDifference();
 
   if (field === '*') {
-    filterResult = getAllmatched(products, match, criteria);
+    // filterResult = getAllmatched(products, match, criteria); todo for large data it works so lazy
+    filterResult = getProducts(products, 'name', match, criteria); // fixme set 'name' field as default
   } else {
     filterResult = getProducts(products, field, match, criteria);
   }

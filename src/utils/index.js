@@ -34,28 +34,29 @@ export const sortByField = (field) => (a, b) => {
   return comparison;
 };
 /** ** UTILS DEFINE **** */
-const getAllmatched = (products, match, criteria, basis) => {
-  const returnValue = {
-    includes: [],
-    excludes: [],
-  };
-  let includeIndex = 0;
-  let excludeIndex = 0;
-  const rule = RuleEngine[match](criteria);
-  products.forEach((proItem) => {
-    const values = Object.values(proItem);
-    if (values.filter((item) => (rule.test(item))).length > 0) {
-      if (basis === 'include') {
-        returnValue.includes[includeIndex] = proItem;
-        includeIndex++;
-      } else {
-        returnValue.excludes[excludeIndex] = proItem;
-        excludeIndex++;
-      }
-    }
-  });
-  return returnValue;
-};
+// todo fix the algorithm or improve the performance
+// const getAllmatched = (products, match, criteria, basis) => {
+//   const returnValue = {
+//     includes: [],
+//     excludes: [],
+//   };
+//   let includeIndex = 0;
+//   let excludeIndex = 0;
+//   const rule = RuleEngine[match](criteria);
+//   products.forEach((proItem) => {
+//     const values = Object.values(proItem);
+//     if (values.filter((item) => (rule.test(item))).length > 0) {
+//       if (basis === 'include') {
+//         returnValue.includes[includeIndex] = proItem;
+//         includeIndex++;
+//       } else {
+//         returnValue.excludes[excludeIndex] = proItem;
+//         excludeIndex++;
+//       }
+//     }
+//   });
+//   return returnValue;
+// };
 
 const getRuleProducts = (products, field, match, criteria, basis) => {
   const rule = RuleEngine[match](criteria);
@@ -178,7 +179,8 @@ export const getPreFilterData = (rules, products) => {
     const field = item.key;
     const { match, criteria, basis } = item;
     if (field === '*') {
-      filterResult = getAllmatched(products, match, criteria, basis);
+      // filterResult = getAllmatched(products, match, criteria, basis); todo for large data it works so lazy
+      filterResult = getRuleProducts(products, 'name', match, criteria, basis); // fixme set 'name' as default
     } else {
       filterResult = getRuleProducts(products, field, match, criteria, basis);
     }
