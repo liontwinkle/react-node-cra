@@ -56,6 +56,7 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
       propertyType: currentItem.propertyType,
       section: currentItem.section,
       order: currentItem.order,
+      image: currentItem.image || null,
     });
   });
   maxOrder++;
