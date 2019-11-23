@@ -69,7 +69,7 @@ CustomMultiSelect.propTypes = {
   labelAlignment: PropTypes.string,
   hint: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   items: PropTypes.array.isRequired,
   value: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,

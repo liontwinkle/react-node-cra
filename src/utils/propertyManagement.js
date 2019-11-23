@@ -312,7 +312,11 @@ export const setDefault = (properties, fields) => {
       }
     } else if (item.propertyType === 'array') {
       try {
-        tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+        if (tempProperties[item.key] === '') {
+          tempProperties[item.key] = null;
+        } else {
+          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+        }
       } catch (e) {
         errMsg = `Array input is wrong at the ${item.key} field.`;
       }

@@ -66,7 +66,7 @@ CustomArray.propTypes = {
   hint: PropTypes.string,
   min: PropTypes.number,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,

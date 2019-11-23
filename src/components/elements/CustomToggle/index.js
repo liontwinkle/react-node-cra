@@ -61,7 +61,7 @@ CustomToggle.propTypes = {
   labelOff: PropTypes.string,
   side: PropTypes.string,
   value: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   onToggle: PropTypes.func.isRequired,
 };
 

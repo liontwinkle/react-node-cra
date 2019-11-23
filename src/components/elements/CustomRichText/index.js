@@ -68,7 +68,7 @@ CustomRichText.propTypes = {
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,

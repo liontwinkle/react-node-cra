@@ -72,7 +72,7 @@ CustomImageDisplay.propTypes = {
   hint: PropTypes.string,
   name: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.any,
   handleEditImage: PropTypes.func.isRequired,
 };
