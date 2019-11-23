@@ -22,13 +22,7 @@ const checkException = (keys, dataItem, type) => {
   let passFlag = true;
   validateKey[type].forEach((validateItem) => {
     if (keys.findIndex((item) => (item === validateItem)) === -1) {
-      if (validateItem === 'categoryid' || validateItem === 'attributeid') {
-        if (keys.findIndex((item) => (item === '_id')) === -1) {
-          passFlag = false;
-        }
-      } else {
-        passFlag = false;
-      }
+      passFlag = false;
     }
   });
   return passFlag;
@@ -40,7 +34,7 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
   const parentId = dataItem.parent_id || dataItem.parentid || 'null';
   if (parentId !== 'null' && categories.findIndex((item) => (item.categoryId === parentId)) === -1) {
     if (newData.findIndex((newItem) => (
-      newItem.categoryid === parentId || newItem._id === parentId
+      newItem.categoryid === parentId
     ) === -1)) {
       passFlag = false;
     }
@@ -57,7 +51,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   let groupData = [];
   if (recvGroupId !== 'null' && groupItem.length === 0) {
     if (newData.findIndex((newItem) => (
-      newItem.attributeid === recvGroupId || newItem._id === recvGroupId
+      newItem.attributeid === recvGroupId
     ) === -1)) {
       passFlag = false;
     }
@@ -188,19 +182,19 @@ export const validateData = (type, data, categories, attributes) => {
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
               tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
-                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid || dataItem._id;
+                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid;
               tempData.name = dataItem.name || [];
               tempData.parentId = dataItem.parent_id || 'null';
               tempData.properties = getProperties(dataItem, 'virtual');
             }
           } else if (type === 'attributes') {
-            const validateData = handleExceptionAttribute(data, dataItem, attributes, categories);
-            pushFlag = validateData.passFlag;
+            const validateAttributes = handleExceptionAttribute(data, dataItem, attributes, categories);
+            pushFlag = validateAttributes.passFlag;
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
-              tempData.appear = validateData.returnData || [];
+              tempData.appear = validateAttributes.returnData || [];
               tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
-                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid || dataItem._id;
+                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid;
               tempData.name = dataItem.name || [];
               tempData.groupId = dataItem.groupid || dataItem.group_id || 'null';
               tempData.properties = getProperties(dataItem, 'attributes');
@@ -208,7 +202,7 @@ export const validateData = (type, data, categories, attributes) => {
           } else {
             tempData = JSON.parse(JSON.stringify(dataItem));
           }
-          if (pushFlag) validateData.push(tempData);
+          if (pushFlag) validateData.push(JSON.parse(JSON.stringify(tempData)));
         }
       }
     });

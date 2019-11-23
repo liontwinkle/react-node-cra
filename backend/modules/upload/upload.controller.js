@@ -160,21 +160,21 @@ const removeUnnecessaryData = (data) => {
 
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
-  let duplicateFlag = false;
+  const duplicateId = [];
   newData.forEach((newItem) => {
     newCreateData.push(removeUnnecessaryData(newItem));
     if (type !== 'products') {
-      const duplicateFilter = currentData.find((currentItem) =>
+      const duplicateFilterIndex = currentData.findIndex((currentItem) =>
         (currentItem[checkType[type]] === newItem[checkType[type]]));
-      if (duplicateFilter) {
-        duplicateFlag = true;
+      if (duplicateFilterIndex >= 0) {
+        duplicateId.push(newItem[checkType[type]]);
       }
     }
   });
 
   return {
     updateData: newCreateData,
-    duplicateFlag,
+    duplicateId,
   };
 };
 
@@ -251,18 +251,20 @@ exports.upload = (req, res) => {
   }
   collection.find({}, (err, result) => {
     if (!err) {
-      const { updateData, duplicateFlag } = checkDuplicateData(result, req.body, req.params.type);
+      const { updateData, duplicateId } = checkDuplicateData(result, req.body, req.params.type);
       if (updateData.length > 0) {
+        let idName = 'categoryId';
         try {
           if (req.params.type === 'attributes') {
             uploadAppear(updateData, req.params.clientId);
+            idName = 'attributeId';
           } else if (req.params.type === 'virtual') {
             setAppearForCategory(updateData, req.params.clientId);
           }
           const fieldData = getNewFieldData(updateData);
           keyUpload(req.params.id, req.params.type, fieldData);
-          if (duplicateFlag) {
-            collection.deleteMany({ categoryId: updateData[0].categoryId })
+          if (duplicateId.length > 0) {
+            collection.deleteMany({ $or: duplicateId.map((item) => ({ [idName]: item })) })
               .then(() => {
                 collection.insertMany(updateData).then(() => {
                   res.status(201).json(updateData[0]);
