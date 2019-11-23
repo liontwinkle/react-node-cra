@@ -35,20 +35,9 @@ class AttributeRules extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      fetchingFlag: true,
-    });
-    if (this.props.products.length === 0) {
-      this.props.fetchProducts()
-        .then(() => {
-          this.setMap(this.props.attribute);
-          confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
-          this.setState({ fetchingFlag: false });
-        })
-        .catch(() => {
-          confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
-          this.setState({ fetchingFlag: false });
-        });
+    this.setState({ fetchingFlag: true });
+    if (this.props.products.length === 0 && !this.props.isFetchingList) {
+      this.geProductsData();
     } else {
       this.setMap(this.props.attribute);
       this.setState({ fetchingFlag: false });
@@ -57,9 +46,30 @@ class AttributeRules extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.attribute && (this.props.attribute !== prevProps.attribute)) {
-      this.setMap(this.props.attribute);
+      if (this.props.products.length === 0 && !this.props.isFetchingList) {
+        this.geProductsData();
+      } else {
+        this.setMap(this.props.attribute);
+      }
     }
   }
+
+  geProductsData = () => {
+    this.props.fetchProducts()
+      .then(() => {
+        try {
+          this.setMap(this.props.attribute);
+          confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
+        } catch (e) {
+          confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
+        }
+        this.setState({ fetchingFlag: false });
+      })
+      .catch(() => {
+        confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
+        this.setState({ fetchingFlag: false });
+      });
+  };
 
   setRuleArray = (srcList, ruleArray, type = null) => {
     srcList.forEach((item) => {
@@ -113,7 +123,7 @@ class AttributeRules extends Component {
     });
   };
 
-  onHandleSwtichView = () => {
+  onHandleSwitchView = () => {
     this.setState((prevState) => ({
       productsFlag: !prevState.productsFlag,
     }));
@@ -138,22 +148,39 @@ class AttributeRules extends Component {
             ? (
               <>
                 <div className="mg-rule-content">
-                  <CustomToggle
-                    label="Products Switch"
-                    value={this.state.productsFlag}
-                    onToggle={this.onHandleSwtichView}
-                  />
-                  <PerfectScrollbar>
-                    <RulesTable rules={newRules} />
-                  </PerfectScrollbar>
+                  {
+                    this.props.products.length > 0
+                      ? (
+                        <>
+                          <CustomToggle
+                            label="Products Switch"
+                            value={this.state.productsFlag}
+                            onToggle={this.onHandleSwitchView}
+                          />
+                          <PerfectScrollbar>
+                            <RulesTable rules={newRules} />
+                          </PerfectScrollbar>
+                        </>
+                      )
+                      : (
+                        <label className="products_empty_body">
+                          The Products data is not existed. Please import Data.
+                        </label>
+                      )
+                  }
                 </div>
-                <RulesAction
-                  className="mg-rules-actions"
-                  rules={editRules}
-                  newRules={newEditRules}
-                  matchRules={newRules}
-                  displayRules={displayRules}
-                />
+                {
+                  this.props.products.length > 0
+                  && (
+                    <RulesAction
+                      className="mg-rules-actions"
+                      rules={editRules}
+                      newRules={newEditRules}
+                      matchRules={newRules}
+                      displayRules={displayRules}
+                    />
+                  )
+                }
               </>
             )
             : (
@@ -171,6 +198,7 @@ AttributeRules.propTypes = {
   attribute: PropTypes.object.isRequired,
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  isFetchingList: PropTypes.bool.isRequired,
   products: PropTypes.array.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -182,6 +210,7 @@ const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
   nodes: store.attributesData.nodes,
   valueDetails: store.productsData.data.valueDetails,
+  isFetchingList: store.productsData.isFetchingList,
   products: store.productsData.data.products,
 });
 
