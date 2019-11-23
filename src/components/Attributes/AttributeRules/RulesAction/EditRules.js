@@ -31,7 +31,7 @@ function EditRules({
   valueDetails,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const rule = (attribute.parentId === 'null') ? ruleType : new Array(ruleType[0]);
+  const rule = (attribute.groupId === 'null') ? ruleType : new Array(ruleType[0]);
 
   const tableData = {
     columns: [
