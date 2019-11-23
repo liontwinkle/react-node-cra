@@ -91,6 +91,7 @@ function ClientImport({
     setUploadFlag(true);
     const readData = convertArray(data);
     const sendingData = validateData(type.key, readData, categories, attributes);
+    console.log('#### DEBUG SENDING DATA: ', sendingData); // fixme
     const uploadData = makeUploadData(fileSize, sendingData);
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);

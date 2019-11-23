@@ -2,6 +2,7 @@
 
 import _difference from 'lodash/difference';
 import _union from 'lodash/union';
+import { checkObject } from './index';
 
 /** ** CONSTANT DEFINE **** */
 
@@ -108,6 +109,69 @@ const getProperties = (source) => {
   });
   return data;
 };
+const setTypefrmMatch = (match) => {
+  switch (match) {
+    case '==':
+    case ':=':
+      return 'exactly';
+    case ':':
+      return 'contains_any_tokens_case_insensitive';
+    case '::':
+      return 'contains_any_tokens_case_sensitive';
+    default:
+      return 'exactly';
+  }
+};
+
+const analysisOldRuleValue = (value) => {
+  const partValue = value.split(']');
+  const detailValue = partValue[0].split(':');
+  const key = detailValue[0].replace('[', '').replace('==', '');
+  const matchKey = `:${detailValue[1]}`;
+  const valueKey = partValue[1];
+
+  return {
+    key,
+    type: setTypefrmMatch(matchKey),
+    criteria: valueKey,
+  };
+};
+
+const ruleValidate = (data) => {
+  const validateData = JSON.parse(JSON.stringify(data));
+  data.forEach((dataItem, index) => {
+    const length = (dataItem.rules) ? dataItem.rules.length : 0;
+    if (length > 0) {
+      const tempRule = [];
+      dataItem.rules.forEach((item) => {
+        if (checkObject(item) && item.basis && item.refer) {
+          if (item.value) {
+            const transformData = analysisOldRuleValue(item.value);
+            tempRule.push({
+              basis: item.basis,
+              refer: item.refer,
+              type: transformData.type,
+              key: transformData.key,
+              criteria: transformData.criteria,
+              ruleType: 'normal',
+            });
+          } else {
+            tempRule.push({
+              basis: item.basis,
+              refer: item.refer,
+              type: item.type,
+              key: item.key,
+              criteria: item.criteria,
+              ruleType: 'normal',
+            });
+          }
+        }
+      });
+      validateData[index].rules = JSON.parse(JSON.stringify(tempRule));
+    }
+  });
+  return validateData;
+};
 /** ** EXPORTS DEFINE **** */
 
 export const validateData = (type, data, categories, attributes) => {
@@ -149,7 +213,7 @@ export const validateData = (type, data, categories, attributes) => {
       }
     });
   }
-  return validateData;
+  return ruleValidate(validateData);
 };
 
 export const makeUploadData = (size, sourceData) => {

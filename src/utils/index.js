@@ -430,3 +430,5 @@ export const getMaxValueFromArray = (field = null, source) => {
   });
   return max;
 };
+
+export const checkObject = (data) => !(data === null || typeof data !== 'object' || Array.isArray(data));
