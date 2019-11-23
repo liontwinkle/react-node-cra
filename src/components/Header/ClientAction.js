@@ -71,7 +71,7 @@ function ClientAction(props) {
           <ClientRemove disabled={disabled} />
         </>
       )}
-      {type && (
+      {client && type && (
         <>
           <Tooltip
             title={`Import Data for ${type.label}`}

@@ -24,6 +24,7 @@ function ClientForm({
   status,
   isSaving,
   client,
+  clients,
   createClient,
   updateClient,
   createPropertyField,
@@ -38,18 +39,67 @@ function ClientForm({
     name: isAdd ? '' : client.name,
     code: isAdd ? '' : client.code,
     url: isAdd ? '' : client.url,
+    nameErr: false,
+    codeErr: false,
+    urlErr: false,
   });
+
+  const checkClientName = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.name === value));
+    return (index >= 0);
+  };
+
+  const checkClientCode = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.code === value));
+    return (index >= 0);
+  };
+
+  const checkClientUrl = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.url === value));
+    return (index >= 0);
+  };
+
   const handleChange = (field) => (e) => {
-    const newClient = {
+    const { value } = e.target;
+    let newClient = {
       ...clientData,
-      [field]: e.target.value,
+      [field]: value,
     };
+    if (isAdd) {
+      if (field === 'name') {
+        newClient = {
+          ...newClient,
+          nameErr: checkClientName(value),
+        };
+      } else if (field === 'url') {
+        newClient = {
+          ...newClient,
+          urlErr: checkClientUrl(value),
+        };
+      } else if (field === 'code') {
+        newClient = {
+          ...newClient,
+          codeErr: checkClientCode(value),
+        };
+      }
+    }
     setClientData(newClient);
   };
 
-  const disabled = !(clientData.name && clientData.code && clientData.url);
+  const checkClientDuplicate = (clientData) => {
+    if (isAdd) {
+      return !checkClientName(clientData.name)
+      && !checkClientCode(clientData.code)
+      && !checkClientUrl(clientData.url);
+    }
+    return true;
+  };
+
+  const disabled = !(clientData.name && clientData.code && clientData.url)
+    || clientData.nameErr || clientData.urlErr || clientData.codeErr;
+
   const handleSubmit = () => {
-    if (!isSaving && !disabled) {
+    if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
       const actionClient = isAdd ? createClient : updateClient;
       const actionPropertyField = isAdd ? createPropertyField : updatePropertyField;
 
@@ -88,6 +138,7 @@ function ClientForm({
           inline
           value={clientData.name}
           onChange={handleChange('name')}
+          hint={clientData.nameErr ? 'Name* is duplicated.' : ''}
         />
         <CustomInput
           className="mb-3"
@@ -95,12 +146,14 @@ function ClientForm({
           inline
           value={clientData.code}
           onChange={handleChange('code')}
+          hint={clientData.codeErr ? 'Code* is duplicated.' : ''}
         />
         <CustomInput
           label="URL"
           inline
           value={clientData.url}
           onChange={handleChange('url')}
+          hint={clientData.urlErr ? 'Url* is duplicated.' : ''}
         />
       </DialogContent>
 
@@ -127,6 +180,7 @@ function ClientForm({
 ClientForm.propTypes = {
   status: PropTypes.object.isRequired,
   client: PropTypes.object,
+  clients: PropTypes.array.isRequired,
   isSaving: PropTypes.bool.isRequired,
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
@@ -142,6 +196,7 @@ ClientForm.defaultProps = {
 const mapStateToProps = (store) => ({
   isSaving: store.clientsData.isCreating || store.clientsData.isUpdating,
   client: store.clientsData.client,
+  clients: store.clientsData.clients,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
