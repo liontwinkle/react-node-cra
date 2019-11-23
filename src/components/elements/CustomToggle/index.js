@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
+import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -13,12 +14,14 @@ const CustomToggle = ({
   value,
   onToggle,
   className,
+  inlineWidth,
 }) => (
   <div className={`mg-switch-control ${className}`}>
     {label && (side === 'left') && (
       <label
         htmlFor={id}
         className="mg-switch-label"
+        style={{ minWidth: inlineWidth }}
       >
         {label}
       </label>
@@ -39,6 +42,7 @@ const CustomToggle = ({
       <label
         htmlFor={id}
         className="mg-switch-label right"
+        style={{ minWidth: inlineWidth }}
       >
         {label}
       </label>
@@ -57,6 +61,7 @@ CustomToggle.propTypes = {
   labelOff: PropTypes.string,
   side: PropTypes.string,
   value: PropTypes.bool,
+  inlineWidth: PropTypes.number,
   onToggle: PropTypes.func.isRequired,
 };
 
@@ -68,6 +73,7 @@ CustomToggle.defaultProps = {
   labelOff: '',
   side: 'left',
   value: false,
+  inlineWidth: inlineDefaultWidth,
 };
 
 export default CustomToggle;

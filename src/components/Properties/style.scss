@@ -2,6 +2,7 @@
 
 .mg-properties-container {
   @include full_width_height;
+  width: calc(100% - 10px);
   margin: 0;
   white-space: nowrap;
 
@@ -60,7 +61,7 @@
 
   .mg-property-actions {
     width: 49px;
-    padding: 0.5rem;
+    padding: 10px;
     border-left: 1px solid #ddd;
 
     > * {

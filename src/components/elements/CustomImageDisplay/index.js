@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from 'components/elements';
-
+import { inlineDefaultWidth } from 'utils/constants';
 import './style.scss';
 
 
@@ -83,7 +83,7 @@ CustomImageDisplay.defaultProps = {
   label: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
   hint: '',
   value: '',
   name: '',

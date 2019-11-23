@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -79,7 +80,7 @@ CustomMultiSelect.defaultProps = {
   label: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
   hint: '',
 };
 

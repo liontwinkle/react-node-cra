@@ -165,3 +165,5 @@ export const ruleType = [
   { key: 'universal', label: 'Universal' },
   { key: 'default', label: 'Default' },
 ];
+
+export const inlineDefaultWidth = '20%';

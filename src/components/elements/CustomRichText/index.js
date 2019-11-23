@@ -4,6 +4,7 @@ import FroalaEditorComponent from 'react-froala-wysiwyg';
 import PropTypes from 'prop-types';
 import CodeMirror from 'codemirror/lib/codemirror.js';
 import uuidv4 from 'uuid/v4';
+import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -82,7 +83,7 @@ CustomRichText.defaultProps = {
   value: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
 };
 
 export default CustomRichText;

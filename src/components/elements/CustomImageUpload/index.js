@@ -84,7 +84,7 @@ CustomImageUpload.defaultProps = {
   label: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: '20%',
   hint: '',
   value: '',
   getWrapper: null,
