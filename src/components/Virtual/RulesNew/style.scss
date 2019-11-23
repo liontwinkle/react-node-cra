@@ -30,7 +30,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    .products_empty_body {
+      margin: auto;
+    }
   }
+
   .mg-switch-control {
     justify-content: flex-end;
   }

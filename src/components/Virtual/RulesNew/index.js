@@ -33,33 +33,49 @@ class NewRules extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      fetchingFlag: true,
-    });
+    this.setState({ fetchingFlag: true });
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
-      this.props.fetchProducts()
-        .then(() => {
-          this.setMap(this.props.category);
-          this.FilterProducts();
-          confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
-        })
-        .catch(() => {
-          confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
-        });
+      this.getProducts();
     } else {
-      this.setMap(this.props.category);
-      this.FilterProducts();
+      try {
+        this.setMap(this.props.category);
+        this.FilterProducts();
+      } catch (e) {
+        this.setState({ fetchingFlag: false });
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.category && (this.props.category !== prevProps.category)) {
-      this.setMap(this.props.category);
+      if (this.props.products.length === 0 && !this.props.isFetchingList) {
+        this.getProducts();
+      } else {
+        this.setMap(this.props.category);
+      }
     }
     if (this.props.products.length > 0 && (this.props.products !== prevProps.products)) {
       this.FilterProducts();
     }
   }
+
+  getProducts = () => {
+    this.setState({ fetchingFlag: true });
+    this.props.fetchProducts()
+      .then(() => {
+        if (this.props.products.length > 0) {
+          this.setMap(this.props.category);
+          this.FilterProducts();
+        } else {
+          this.setState({ fetchingFlag: false });
+        }
+        confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
+        this.setState({ fetchingFlag: false });
+      });
+  };
 
   FilterProducts = () => {
     const {
@@ -134,7 +150,7 @@ class NewRules extends Component {
     });
   };
 
-  onHandleSwtichView = () => {
+  onHandleSwitchView = () => {
     this.setState((prevState) => ({
       productsFlag: !prevState.productsFlag,
     }));
@@ -154,16 +170,33 @@ class NewRules extends Component {
             ? (
               <>
                 <div className="mg-rule-content">
-                  <CustomToggle
-                    label="Products Switch"
-                    value={this.state.productsFlag}
-                    onToggle={this.onHandleSwtichView}
-                  />
-                  <PerfectScrollbar>
-                    <RulesTable rules={displayRules} />
-                  </PerfectScrollbar>
+                  {
+                    this.props.products.length > 0
+                      ? (
+                        <>
+                          <CustomToggle
+                            label="Products Switch"
+                            value={this.state.productsFlag}
+                            onToggle={this.onHandleSwitchView}
+                          />
+                          <PerfectScrollbar>
+                            <RulesTable rules={displayRules} />
+                          </PerfectScrollbar>
+                        </>
+                      )
+                      : (
+                        <label className="products_empty_body">
+                          The Products data is not existed. Please import Data.
+                        </label>
+                      )
+                  }
                 </div>
-                <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+                {
+                  this.props.products.length > 0
+                  && (
+                    <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+                  )
+                }
               </>
             )
             : (

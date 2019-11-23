@@ -100,16 +100,16 @@ export const getRules = (srcRules, valueDetails) => {
       scope: scope[0],
       ruleType: ruleTypeObj,
     });
-    editRules.push({
-      _id: item._id,
-      basis: basisObj.key,
-      refer: referObj.key,
-      key: keyObject.key,
-      type: matchObj.key,
-      criteria: item.criteria,
-      scope: scope[0].key,
-      ruleType: ruleTypeObj.key,
-    });
+    // editRules.push({
+    //   _id: item._id,
+    //   basis: basisObj.key,
+    //   refer: referObj.key,
+    //   key: keyObject.key,
+    //   type: matchObj.key,
+    //   criteria: item.criteria,
+    //   scope: scope[0].key,
+    //   ruleType: ruleTypeObj.key,
+    // });
   });
   return {
     newRules,
