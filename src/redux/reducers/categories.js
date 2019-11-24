@@ -1,7 +1,7 @@
 import _findIndex from 'lodash/findIndex';
 
 import {
-  getCategoryTree, changePropertiesData, convertPropertyData, checkObject,
+  getCategoryTree, changePropertiesData, convertPropertyData, checkObject, sortByField,
 } from 'utils';
 import types from '../actionTypes';
 
@@ -43,6 +43,7 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
+      tempDatas.sort(sortByField('name'));
       const fetchSaveData = getCategoryTree(action.payload.categories, state.trees || []);
       return {
         ...state,
