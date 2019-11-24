@@ -7,13 +7,12 @@ import CheckboxTree from 'react-checkbox-tree-enhanced';
 
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { fetchProducts } from 'redux/actions/products';
 import { setHandler } from 'utils';
 import { getNewAppearData, getAllChildData } from 'utils/attributeManagement';
 import Loader from 'components/Loader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContextMenu from './ContextMenu';
 
 import './style.scss';
@@ -154,11 +153,22 @@ function Association({
                 expanded={expanded}
                 onCheck={handleAttributeChange}
                 onExpand={handleExpanded}
-                nativeCheckboxes
-                showNodeIcon={false}
+                showNodeIcon
+                showCheckbox
                 icons={{
-                  expandClose: <AddIcon />,
-                  expandOpen: <RemoveIcon />,
+                  check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
+                  uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
+                  halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
+                  expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon="chevron-right" />,
+                  expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon="chevron-down" />,
+                  expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon={['far', 'plus-square']} />,
+                  collapseAll: <FontAwesomeIcon
+                    className="rct-icon rct-icon-collapse-all"
+                    icon={['far', 'minus-square']}
+                  />,
+                  parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
+                  parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
+                  leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
                 }}
               />
             )

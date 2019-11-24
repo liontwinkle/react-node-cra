@@ -7,12 +7,11 @@ import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 
 import { confirmMessage, hasSubArray } from 'utils';
 import { getAllChildData, getNewAppearData } from 'utils/attributeManagement';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './style.scss';
 
@@ -126,11 +125,21 @@ class AttributeSetting extends Component {
             expanded={this.state.expanded}
             onCheck={this.handleCheck}
             onExpand={this.handleExpand}
-            nativeCheckboxes
-            showNodeIcon={false}
+            showNodeIcon
             icons={{
-              expandClose: <AddIcon />,
-              expandOpen: <RemoveIcon />,
+              check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
+              uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
+              halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
+              expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon={['far', 'plus-square']} />,
+              expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon={['far', 'minus-square']} />,
+              expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon={['far', 'plus-square']} />,
+              collapseAll: <FontAwesomeIcon
+                className="rct-icon rct-icon-collapse-all"
+                icon={['far', 'minus-square']}
+              />,
+              parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
+              parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
+              leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
             }}
           />
         </PerfectScrollbar>

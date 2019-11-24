@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 
+import 'pretty-checkbox/src/pretty-checkbox.scss';
 import 'react-sortable-tree/style.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'react-tippy/dist/tippy.css';
