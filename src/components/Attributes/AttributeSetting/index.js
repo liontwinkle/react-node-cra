@@ -125,7 +125,7 @@ class AttributeSetting extends Component {
             expanded={this.state.expanded}
             onCheck={this.handleCheck}
             onExpand={this.handleExpand}
-            showNodeIcon
+            showNodeIcon={false}
             icons={{
               check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
               uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,

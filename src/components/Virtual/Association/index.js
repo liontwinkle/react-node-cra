@@ -153,14 +153,19 @@ function Association({
                 expanded={expanded}
                 onCheck={handleAttributeChange}
                 onExpand={handleExpanded}
-                showNodeIcon
-                showCheckbox
+                showNodeIcon={false}
                 icons={{
                   check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
                   uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
                   halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
-                  expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon="chevron-right" />,
-                  expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon="chevron-down" />,
+                  expandClose: <FontAwesomeIcon
+                    className="rct-icon rct-icon-expand-close"
+                    icon={['far', 'plus-square']}
+                  />,
+                  expandOpen: <FontAwesomeIcon
+                    className="rct-icon rct-icon-expand-open"
+                    icon={['far', 'minus-square']}
+                  />,
                   expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon={['far', 'plus-square']} />,
                   collapseAll: <FontAwesomeIcon
                     className="rct-icon rct-icon-collapse-all"
