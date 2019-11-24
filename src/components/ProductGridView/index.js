@@ -53,6 +53,7 @@ class ProductGridView extends Component {
     const data = [];
     getData.forEach((item, key) => {
       if (key % MAX_LENGTH_NUM === MAX_LENGTH_NUM - 1) {
+        temp.push(item);
         data.push(temp);
         temp = [];
       } else { temp.push(item); }
@@ -124,6 +125,7 @@ class ProductGridView extends Component {
       height,
       data,
     } = this.state;
+    console.log('### DEBUG DATA: ', data); // fixme
     return (
       <div className="grid-view-container">
         {(!fetchingFlag)
