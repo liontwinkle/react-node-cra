@@ -1,6 +1,8 @@
 import _findIndex from 'lodash/findIndex';
 
-import { getCategoryTree, changePropertiesData, convertPropertyData } from 'utils';
+import {
+  getCategoryTree, changePropertiesData, convertPropertyData, checkObject,
+} from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -102,7 +104,7 @@ export default (state = INITIAL_STATE, action) => {
         keys.forEach((key) => {
           if (Array.isArray(properties[key])) {
             updateData.properties[key] = JSON.stringify(updateData.properties[key]);
-          } else if (properties[key] !== null && typeof properties[key] === 'object') {
+          } else if (checkObject(properties[key])) {
             updateData.properties[key] = JSON.parse(JSON.stringify(updateData.properties[key]));
           }
         });

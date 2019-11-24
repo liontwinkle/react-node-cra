@@ -74,7 +74,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
 };
 
 const checkPropertiesException = (value) => {
-  if (Array.isArray(value) || typeof value !== 'object' || value === null) {
+  if (!checkObject(value)) {
     return value;
   }
   const result = JSON.parse(JSON.stringify(value));
