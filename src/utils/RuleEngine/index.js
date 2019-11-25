@@ -69,7 +69,7 @@ export const RuleEngine = {
   },
   exactly: (ruleValue, ruleType = 'exactly') => {
     RULE_CACHE[ruleType][ruleValue] = (
-      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue)}$`, 'g')
+      RULE_CACHE[ruleType][ruleValue] || new RegExp(`^${escapeText(ruleValue.toString())}$`, 'g')
     );
 
     return RULE_CACHE[ruleType][ruleValue];

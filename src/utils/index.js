@@ -60,13 +60,13 @@ export const sortByField = (field) => (a, b) => {
 
 const getRuleProducts = (products, field, match, criteria, basis) => {
   const rule = RuleEngine[match](criteria);
+  console.log('### PRODUCTS rule: ', rule); // fixme
   const returnValue = {
     includes: [],
     excludes: [],
   };
   let includeIndex = 0;
   let excludeIndex = 0;
-
   products.forEach((productItem) => {
     if (rule.test(productItem[field])) {
       if (basis === 'include') {
@@ -184,6 +184,7 @@ export const getPreFilterData = (rules, products) => {
     } else {
       filterResult = getRuleProducts(products, field, type, criteria, basis);
     }
+    console.log('### DEBUG FILTER RESULT: ', filterResult); // fixme
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');
   });
