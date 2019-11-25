@@ -90,26 +90,28 @@ export const getRules = (srcRules, valueDetails) => {
     const ruleTypeObj = ruleType.find((ruleTypeItem) => (ruleTypeItem.key === item.ruleType));
     const matchObj = match.find((matchItem) => (matchItem.key === item.type));
     const keyObject = valueDetails.find((keyItem) => (keyItem.key === item.key));
-    newRules.push({
-      _id: item._id,
-      basis: basisObj,
-      refer: referObj,
-      key: keyObject,
-      type: matchObj,
-      criteria: item.criteria,
-      scope: scope[0],
-      ruleType: ruleTypeObj,
-    });
-    // editRules.push({
-    //   _id: item._id,
-    //   basis: basisObj.key,
-    //   refer: referObj.key,
-    //   key: keyObject.key,
-    //   type: matchObj.key,
-    //   criteria: item.criteria,
-    //   scope: scope[0].key,
-    //   ruleType: ruleTypeObj.key,
-    // });
+    if (keyObject) {
+      newRules.push({
+        _id: item._id,
+        basis: basisObj,
+        refer: referObj,
+        key: keyObject,
+        type: matchObj,
+        criteria: item.criteria,
+        scope: scope[0],
+        ruleType: ruleTypeObj,
+      });
+      editRules.push({
+        _id: item._id,
+        basis: basisObj.key,
+        refer: referObj.key,
+        key: keyObject.key,
+        type: matchObj.key,
+        criteria: item.criteria,
+        scope: scope[0].key,
+        ruleType: ruleTypeObj.key,
+      });
+    }
   });
   return {
     newRules,

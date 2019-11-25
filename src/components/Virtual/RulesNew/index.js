@@ -143,6 +143,7 @@ class NewRules extends Component {
     const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
     const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
+
     this.setState({
       displayRules: recvAttributeRules.newRules,
       newRules: editAttributeRules.newRules,
