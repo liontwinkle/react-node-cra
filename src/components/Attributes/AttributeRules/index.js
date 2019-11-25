@@ -39,19 +39,26 @@ class AttributeRules extends Component {
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
       this.geProductsData();
     } else {
-      this.setMap(this.props.attribute);
-      this.setState({ fetchingFlag: false });
+      try {
+        this.setMap(this.props.attribute);
+        this.setState({ fetchingFlag: false });
+      } catch (e) {
+        this.setState({ fetchingFlag: false });
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.attribute && (this.props.attribute !== prevProps.attribute)) {
+      console.log('#### DEBUG ATTRIBTUE: ', this.props.attribute); // fixme
       if (this.props.products.length === 0 && !this.props.isFetchingList) {
         this.geProductsData();
       } else {
         this.setMap(this.props.attribute);
       }
     }
+    // if (this.props.products.length > 0 && (this.props.products !== prevProps.products)) {
+    // }
   }
 
   geProductsData = () => {
@@ -95,10 +102,10 @@ class AttributeRules extends Component {
     let currentRules = [];
     const grpRules = this.props.attributes.filter((attributeItem) => (
       attributeItem.attributeId.toString() === attribute.groupId));
-    if (attribute.rules) {
+    if (attribute.rules.length > 0) {
       currentRules = unionRules(currentRules, attribute.rules);
     }
-    let displayRules = currentRules;
+    let displayRules = JSON.parse(JSON.stringify(currentRules));
     const defaultFlag = (attribute.rules.length <= 0);
     if (grpRules.length > 0 && grpRules[0].rules) {
       const defaultRules = grpRules[0].rules.filter((item) => (item.ruleType === 'default'));

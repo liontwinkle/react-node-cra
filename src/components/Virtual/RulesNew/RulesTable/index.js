@@ -18,7 +18,7 @@ function RulesTable({ rules, products, productViewType }) {
   const [rulesData, setRulesData] = useState([]);
 
   useEffect(() => {
-    if (rulesData !== rules) {
+    if (rules && rulesData !== rules) {
       const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
