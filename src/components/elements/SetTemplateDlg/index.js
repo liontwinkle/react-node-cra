@@ -10,6 +10,8 @@ import {
 } from '@material-ui/core';
 import { CustomSearchFilter } from '../index';
 
+import './style.scss';
+
 const useStyles = makeStyles((theme) => ({
   dialogAction: {
     margin: theme.spacing(2),
