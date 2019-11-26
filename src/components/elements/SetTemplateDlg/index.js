@@ -76,7 +76,9 @@ function SetTemplateDlg({
                 <CustomSearchFilter
                   key={`${item.key}-${index.toString()}`}
                   className="mb-3"
-                  searchItems={propertyField.propertyFields.map((item) => (item.key))}
+                  searchItems={stringBasedFields.filter(
+                    (propertyItem) => (propertyItem.key !== item.key),
+                  ).map((mapItem) => (mapItem.key))}
                   placeholder="Input search filter"
                   label={item.label}
                   value={newTemplate[item.key]}
@@ -113,7 +115,7 @@ function SetTemplateDlg({
 SetTemplateDlg.propTypes = {
   open: PropTypes.bool.isRequired,
   msg: PropTypes.string.isRequired,
-  template: PropTypes.string.isRequired,
+  template: PropTypes.object.isRequired,
   confirmLabel: PropTypes.string,
   propertyField: PropTypes.object.isRequired,
   handleSetTemplate: PropTypes.func.isRequired,

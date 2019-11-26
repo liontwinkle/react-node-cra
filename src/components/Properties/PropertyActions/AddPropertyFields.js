@@ -199,7 +199,17 @@ function AddPropertyFields({
         />
         <CustomSearchFilter
           className="mb-3"
-          searchItems={propertyField.propertyFields.map((item) => (item.key))}
+          searchItems={
+            propertyField.propertyFields.filter(
+              (propertyItem) => (
+                propertyItem.propertyType === 'string'
+                || propertyItem.propertyType === 'text'
+                || propertyItem.propertyType === 'monaco'
+                || propertyItem.propertyType === 'richtext'
+                || propertyItem.propertyType === 'urlpath'
+              ),
+            ).map((item) => (item.key))
+          }
           placeholder="Input search filter"
           label="Default"
           value={propertyFieldData.default}
