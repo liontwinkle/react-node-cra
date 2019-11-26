@@ -50,15 +50,12 @@ class AttributeRules extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.attribute && (this.props.attribute !== prevProps.attribute)) {
-      console.log('#### DEBUG ATTRIBTUE: ', this.props.attribute); // fixme
       if (this.props.products.length === 0 && !this.props.isFetchingList) {
         this.geProductsData();
       } else {
         this.setMap(this.props.attribute);
       }
     }
-    // if (this.props.products.length > 0 && (this.props.products !== prevProps.products)) {
-    // }
   }
 
   geProductsData = () => {

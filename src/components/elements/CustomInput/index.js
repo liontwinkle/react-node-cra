@@ -84,7 +84,7 @@ CustomInput.defaultProps = {
   className: '',
   label: '',
   labelAlignment: '',
-  placeholder: '',
+  placeholder: 'Please insert input type...',
   min: undefined,
   inline: false,
   inlineWidth: inlineDefaultWidth,

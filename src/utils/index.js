@@ -34,41 +34,19 @@ export const sortByField = (field) => (a, b) => {
   return comparison;
 };
 /** ** UTILS DEFINE **** */
-// todo fix the algorithm or improve the performance
-// const getAllmatched = (products, match, criteria, basis) => {
-//   const returnValue = {
-//     includes: [],
-//     excludes: [],
-//   };
-//   let includeIndex = 0;
-//   let excludeIndex = 0;
-//   const rule = RuleEngine[match](criteria);
-//   products.forEach((proItem) => {
-//     const values = Object.values(proItem);
-//     if (values.filter((item) => (rule.test(item))).length > 0) {
-//       if (basis === 'include') {
-//         returnValue.includes[includeIndex] = proItem;
-//         includeIndex++;
-//       } else {
-//         returnValue.excludes[excludeIndex] = proItem;
-//         excludeIndex++;
-//       }
-//     }
-//   });
-//   return returnValue;
-// };
-
 const getRuleProducts = (products, field, match, criteria, basis) => {
   const rule = RuleEngine[match](criteria);
-  console.log('### PRODUCTS rule: ', rule); // fixme
   const returnValue = {
     includes: [],
     excludes: [],
   };
   let includeIndex = 0;
   let excludeIndex = 0;
+  let matchedFlag = false;
   products.forEach((productItem) => {
-    if (rule.test(productItem[field])) {
+    matchedFlag = !!((match === 'exactly' && productItem[field] === criteria)
+      || (rule.test(productItem[field])));
+    if (matchedFlag) {
       if (basis === 'include') {
         returnValue.includes[includeIndex] = productItem;
         includeIndex++;
@@ -179,12 +157,10 @@ export const getPreFilterData = (rules, products) => {
     const field = item.key;
     const { type, criteria, basis } = item;
     if (field === '*') {
-      // filterResult = getAllmatched(products, match, criteria, basis); todo for large data it works so lazy
-      filterResult = getRuleProducts(products, 'name', type, criteria, basis); // fixme set 'name' as default
+      filterResult = getRuleProducts(products, 'name', type, criteria, basis);
     } else {
       filterResult = getRuleProducts(products, field, type, criteria, basis);
     }
-    console.log('### DEBUG FILTER RESULT: ', filterResult); // fixme
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');
   });

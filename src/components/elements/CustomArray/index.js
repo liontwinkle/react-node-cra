@@ -80,7 +80,7 @@ CustomArray.defaultProps = {
   className: '',
   label: '',
   labelAlignment: '',
-  placeholder: '',
+  placeholder: 'Please insert array type...',
   min: undefined,
   inline: false,
   inlineWidth: inlineDefaultWidth,

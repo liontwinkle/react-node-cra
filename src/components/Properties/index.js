@@ -37,6 +37,7 @@ class Properties extends Component {
     const { propertyField, objectItem } = this.props;
     const nonSection = (propertyField.propertyFields)
       ? propertyField.propertyFields.filter((item) => item.section === null) : [];
+    console.log(objectItem.properties); // fixme
     this.setState({
       noSectionPropertyFields: nonSection || [],
       properties: objectItem.properties || {},
@@ -48,8 +49,9 @@ class Properties extends Component {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
     if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+      const updatedProperties = objectItem.properties || {};
       this.updateState({
-        properties: objectItem.properties || {},
+        properties: updateProperties(propertyField.propertyFields, updatedProperties),
       });
     }
     if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
@@ -69,7 +71,11 @@ class Properties extends Component {
   }
 
   updateState = (data) => {
-    this.setState(data);
+    console.log('#### Different catching: ', data); // fixme
+    this.setState((prevState) => ({
+      ...prevState,
+      ...data,
+    }));
   };
 
   changeInput = (field) => (e) => {

@@ -123,10 +123,3 @@ export const removePropertyField = () => (dispatch, getState) => {
       throw error;
     });
 };
-//
-// export const setCategory = category => (dispatch) => {
-//   dispatch({
-//     type: types.CATEGORY_SET,
-//     payload: { category },
-//   });
-// };

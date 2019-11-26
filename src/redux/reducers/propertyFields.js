@@ -1,5 +1,3 @@
-// import _ from 'lodash';
-
 import types from '../actionTypes';
 import { sortByOrder } from '../../utils';
 
@@ -96,12 +94,6 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: false,
         errors: action.payload.error,
       };
-      //
-      // case types.CATEGORY_SET:
-      //   return {
-      //     ...state,
-      //     category: action.payload.category,
-      //   };
 
     default:
       return state;

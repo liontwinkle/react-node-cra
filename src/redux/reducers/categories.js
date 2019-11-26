@@ -44,7 +44,7 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       tempDatas.sort(sortByField('name'));
-      const fetchSaveData = getCategoryTree(action.payload.categories, state.trees || []);
+      const fetchSaveData = getCategoryTree(tempDatas, state.trees || []);
       return {
         ...state,
         isFetchingList: false,

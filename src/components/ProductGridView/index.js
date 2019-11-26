@@ -125,7 +125,6 @@ class ProductGridView extends Component {
       height,
       data,
     } = this.state;
-    console.log('### DEBUG DATA: ', data); // fixme
     return (
       <div className="grid-view-container">
         {(!fetchingFlag)

@@ -10,28 +10,15 @@ import {
   basis, match, refer, scope, ruleType,
 } from './constants';
 
-// todo fix the algorithm or improve the performance
-// const getAllmatched = (products, match, value) => {
-//   const returnValue = [];
-//   let index = 0;
-//   const rule = RuleEngine[match](value);
-//   products.forEach((proItem) => {
-//     const values = Object.values(proItem);
-//     if (values.filter((item) => (rule.test(item))).length > 0) {
-//       returnValue[index] = proItem;
-//       index++;
-//     }
-//   });
-//   return returnValue;
-// };
-
 const getProducts = (products, field, match, value) => {
   const rule = RuleEngine[match](value);
   const returnValue = [];
   let index = 0;
-
+  let matchedFlag = false;
   products.forEach((productItem) => {
-    if (rule.test(productItem[field])) {
+    matchedFlag = !!((match === 'exactly' && productItem[field] === value)
+      || (rule.test(productItem[field])));
+    if (matchedFlag) {
       returnValue[index] = productItem;
       index++;
     }
@@ -47,8 +34,7 @@ export const filterProducts = (products, rules, key) => {
   formatProductsData();
   formatDifference();
   if (field === '*') {
-    // filterResult = getAllmatched(products, match, criteria); todo for large data it works so lazy
-    filterResult = getProducts(products, 'name', match, criteria); // fixme set 'name' field as default
+    filterResult = getProducts(products, 'name', match, criteria);
   } else {
     filterResult = getProducts(products, field, match, criteria);
   }
