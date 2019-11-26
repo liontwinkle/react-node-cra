@@ -34,7 +34,7 @@ function RulesAction({
   const [previewProducts, setProducts] = useState([]);
 
   useEffect(() => {
-    if (rules.length > 0 && rulesData !== rules) {
+    if (rules && rulesData !== rules) {
       setPreviewData(getPreFilterData(rules, products));
       setRulesData(rules);
     }

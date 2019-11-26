@@ -36,7 +36,7 @@ function RulesAction({
   const [previewProducts, setProducts] = useState([]);
 
   useEffect(() => {
-    if (displayRules.length > 0 && rulesData !== displayRules) {
+    if (displayRules && rulesData !== displayRules) {
       const recvRules = displayRules || [];
       setPreviewData(getPreFilterData(recvRules, products));
       setRulesData(displayRules);
