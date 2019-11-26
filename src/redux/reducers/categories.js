@@ -77,13 +77,14 @@ export default (state = INITIAL_STATE, action) => {
       }
       const createdCategories = [data, ...categories];
       const updateSaveData = getCategoryTree(createdCategories, state.trees);
+
       return {
         ...state,
         isCreating: false,
         categories: JSON.parse(JSON.stringify(createdCategories.slice(0))),
-        trees: updateSaveData.subTree,
-        associations: updateSaveData.association,
-        category: data,
+        trees: JSON.parse(JSON.stringify(updateSaveData.subTree)),
+        associations: JSON.parse(JSON.stringify(updateSaveData.association)),
+        category: JSON.parse(JSON.stringify(data)),
       };
     case types.CATEGORY_CREATE_FAIL:
       return {

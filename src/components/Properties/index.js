@@ -37,7 +37,6 @@ class Properties extends Component {
     const { propertyField, objectItem } = this.props;
     const nonSection = (propertyField.propertyFields)
       ? propertyField.propertyFields.filter((item) => item.section === null) : [];
-    console.log(objectItem.properties); // fixme
     this.setState({
       noSectionPropertyFields: nonSection || [],
       properties: objectItem.properties || {},
@@ -71,7 +70,6 @@ class Properties extends Component {
   }
 
   updateState = (data) => {
-    console.log('#### Different catching: ', data); // fixme
     this.setState((prevState) => ({
       ...prevState,
       ...data,

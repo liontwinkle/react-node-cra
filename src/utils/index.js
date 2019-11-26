@@ -66,8 +66,17 @@ const getSubTree = (list, parentId, type, originNode) => {
   const sublist = list.filter((item) => item[type] === parentId.toString());
   const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
   if (sublist.length > 0) {
+    console.log('#### DEBUG SUB LIST: ', sublist); // fixme
+    console.log('#### DEBUG NODE: ', originNode); // fixme
+    const createFlag = (originNode
+      && originNode.length > 0
+      && sublist[0][identifier] !== originNode[0].item[identifier]);
+    console.log('#### DEBUG FLAG: ', createFlag); // fixme
+
     sublist.forEach((item, key) => {
-      const subNode = (originNode && originNode.length > 0 && originNode[key]) ? originNode[key] : null;
+      const index = createFlag ? key - 1 : key;
+      const subNode = (originNode && originNode.length > 0 && index >= 0 && originNode[index])
+        ? originNode[index] : null;
       association.push({
         label: item.name,
         value: item[identifier],
