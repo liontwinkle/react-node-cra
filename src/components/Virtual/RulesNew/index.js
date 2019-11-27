@@ -26,7 +26,8 @@ class NewRules extends Component {
     this.state = {
       newRules: [],
       editRules: [],
-      displayRules: [],
+      universalRules: [],
+      otherRules: [],
       fetchingFlag: true,
       productsFlag: false,
     };
@@ -143,9 +144,9 @@ class NewRules extends Component {
     const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
     const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
-
     this.setState({
-      displayRules: recvAttributeRules.newRules,
+      universalRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key === 'universal')),
+      otherRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key !== 'universal')),
       newRules: editAttributeRules.newRules,
       editRules: editAttributeRules.editRules,
     });
@@ -163,7 +164,9 @@ class NewRules extends Component {
   };
 
   render() {
-    const { newRules, editRules, displayRules } = this.state;
+    const {
+      newRules, editRules, universalRules, otherRules,
+    } = this.state;
     return (
       <div className="mg-rules-container d-flex">
         {
@@ -181,7 +184,30 @@ class NewRules extends Component {
                             onToggle={this.onHandleSwitchView}
                           />
                           <PerfectScrollbar>
-                            <RulesTable rules={displayRules} />
+                            <div className="virtual-rule-section">
+                              {
+                                universalRules.length > 0 && (
+                                  <>
+                                    <label className="rule-section-header">
+                                      Universal
+                                    </label>
+                                    <RulesTable rules={universalRules} />
+                                  </>
+                                )
+                              }
+                              {
+                                otherRules.length > 0 && (
+                                  <>
+                                    <div className="virtual-rule-section">
+                                      <label className="rule-section-header">
+                                        Normal / Default
+                                      </label>
+                                      <RulesTable rules={otherRules} />
+                                    </div>
+                                  </>
+                                )
+                              }
+                            </div>
                           </PerfectScrollbar>
                         </>
                       )

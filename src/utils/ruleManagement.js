@@ -119,6 +119,8 @@ export const unionRules = (ruleA, ruleB) => {
   ruleBigSet.forEach((item) => {
     const index = ruleSmallSet.findIndex((itemSmall) => (
       itemSmall.basis === item.basis
+      && item.type === itemSmall.type
+      && item.key === itemSmall.key
       && itemSmall.criteria === item.criteria
     ));
     if (index < 0) {

@@ -27,6 +27,8 @@ class AttributeRules extends Component {
     this.state = {
       newRules: [],
       newEditRules: [],
+      universalRules: [],
+      otherRules: [],
       editRules: [],
       displayRules: [],
       productsFlag: false,
@@ -125,6 +127,8 @@ class AttributeRules extends Component {
       newRules,
       editRules,
       newEditRules,
+      universalRules: newRules.filter((item) => (item.ruleType.key === 'universal')),
+      otherRules: newRules.filter((item) => (item.ruleType.key !== 'universal')),
       displayRules: displayEditRules,
     });
   };
@@ -146,6 +150,8 @@ class AttributeRules extends Component {
       editRules,
       newEditRules,
       displayRules,
+      universalRules,
+      otherRules,
     } = this.state;
     return (
       <div className="mg-rules-container d-flex">
@@ -164,7 +170,30 @@ class AttributeRules extends Component {
                             onToggle={this.onHandleSwitchView}
                           />
                           <PerfectScrollbar>
-                            <RulesTable rules={newRules} />
+                            <div className="virtual-rule-section">
+                              {
+                                universalRules.length > 0 && (
+                                  <>
+                                    <label className="rule-section-header">
+                                      Universal
+                                    </label>
+                                    <RulesTable rules={universalRules} />
+                                  </>
+                                )
+                              }
+                              {
+                                otherRules.length > 0 && (
+                                  <>
+                                    <div className="virtual-rule-section">
+                                      <label className="rule-section-header">
+                                        Normal / Default
+                                      </label>
+                                      <RulesTable rules={otherRules} />
+                                    </div>
+                                  </>
+                                )
+                              }
+                            </div>
                           </PerfectScrollbar>
                         </>
                       )
