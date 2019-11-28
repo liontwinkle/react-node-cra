@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './style.scss';
+
 function CategoryItem() {
   return (
     <div className="category-item-container">

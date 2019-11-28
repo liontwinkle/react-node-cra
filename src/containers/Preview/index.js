@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
-import './style.scss';
 import TopCategory from '../../components/Preview/TopCategory';
-import LeftNavigation from '../../components/Preview/LeftNavigation';
-import ProductBody from '../../components/Preview/ProductBody';
+// import LeftNavigation from '../../components/Preview/LeftNavigation';
+// import ProductBody from '../../components/Preview/ProductBody';
+import CategoryView from '../../components/Preview/CategoryView';
+
+import './style.scss';
 
 class Preview extends Component {
   componentDidMount() {
@@ -24,8 +26,9 @@ class Preview extends Component {
           </span>
         </div>
         <div className="preview_main">
-          <LeftNavigation />
-          <ProductBody />
+          {/* <LeftNavigation /> */}
+          {/* <ProductBody /> */}
+          <CategoryView />
         </div>
       </div>
     );
