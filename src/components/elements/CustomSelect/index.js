@@ -14,7 +14,7 @@ function CustomSelect(props) {
 
   const handleClick = useCallback((event = null) => {
     setAnchorEl(anchorEl ? null : (event && event.currentTarget));
-  });
+  }, [anchorEl]);
 
   const [wrapperRef, setWrapperRef] = useState(null);
   const getWrapperRef = (ref) => {

@@ -1,10 +1,17 @@
 @import "scss/mixin.scss";
 
-.mg-rules-actions {
-  width: fit-content;
-  padding: 0.5rem;
-  border-left: 1px solid #ddd;
+.mg-rule-actions {
+  width: 100% !important
+}
 
+.mg-rules-actions {
+  min-width: 49px;
+  width: fit-content;
+  padding: 10px 10px 10px 3px;
+  border-left: 1px solid #ddd;
+  span {
+    cursor: pointer;
+  }
   > * {
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -18,7 +25,7 @@
   }
 
   .mg-edit-rule-content {
-    width: 100%;
+    width: 100% !important;
   }
 }
 
