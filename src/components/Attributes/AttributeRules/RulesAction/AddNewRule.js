@@ -65,7 +65,7 @@ function AddNewRule({
       [field]: item,
     };
     setRuleData(newClient);
-    if (field === 'key' && newClient.criteria && newClient.criteria !== '') {
+    if (newClient.criteria && newClient.criteria !== '') {
       searchFunction(newClient);
     }
   };
