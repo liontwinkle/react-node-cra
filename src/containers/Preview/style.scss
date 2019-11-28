@@ -8,6 +8,7 @@
     flex-direction: column;
     .preview_route {
       padding: 30px 30px;
+      border-bottom: 1px solid #ddd;
       ul{
         display: flex;
         justify-content: flex-start;

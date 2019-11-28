@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './style.scss';
+import CategoryItem from '../CategoryItem';
 
 class ProductBody extends Component {
   componentDidMount() {
@@ -10,7 +11,7 @@ class ProductBody extends Component {
   render() {
     return (
       <div className="product-body_container">
-        Coming soon...
+        <CategoryItem />
       </div>
     );
   }
