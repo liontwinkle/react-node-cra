@@ -20,7 +20,7 @@ exports.index = (req, res) => {
     .catch(handleError(res));
 };
 
-// Creates a new Category in the DB
+// Creates a new Attribute in the DB
 exports.create = (req, res) => {
   req.attributes
     .find()

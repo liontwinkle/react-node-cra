@@ -4,13 +4,13 @@ const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   name: String,
-  categoryId: {
+  _id: {
     type: Number,
     default: 0,
   },
-  parentId: {
-    type: String,
-    default: 'null',
+  parent_id: {
+    type: Number,
+    default: null,
   },
   linkedId: [{
     value: String,
@@ -24,11 +24,7 @@ const CategorySchema = new Schema({
     template: String,
   }],
   rules: Array,
-}, { toJSON: { virtuals: true }, timestamps: true });
-
-CategorySchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
+}, { timestamps: true });
 
 let Categories = mongoose.model('Categories', CategorySchema);
 

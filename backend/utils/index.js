@@ -107,14 +107,14 @@ function handleCreate(req) {
     if (entity.length > 0) {
       createData.defaultProperties = entity[0].defaultProperties || [];
       entity.forEach((item) => {
-        if (item.categoryId > newId) {
-          newId = item.categoryId;
+        if (item._id > newId) {
+          newId = item._id;
         }
       });
       newId++;
     }
-    if (createData.parentId !== 'null') {
-      collectionAppear.find({ categoryId: parseInt(createData.parentId, 10) })
+    if (createData.parent_id) {
+      collectionAppear.find({ categoryId: createData.parent_id })
         .then((result) => {
           if (result.length > 0) {
             const attributs = result.map((item) => ({
@@ -126,7 +126,7 @@ function handleCreate(req) {
           }
         });
     }
-    createData.categoryId = newId;
+    createData._id = newId;
     return collection.create(createData);
   };
 }
@@ -165,8 +165,8 @@ function handleAttributeCreate(req, res) {
     let newId = 1;
     if (entity.length > 0) {
       entity.forEach((item) => {
-        if (item.attributeId > newId) {
-          newId = item.attributeId;
+        if (item._id > newId) {
+          newId = item._id;
         }
       });
       newId++;
@@ -174,7 +174,7 @@ function handleAttributeCreate(req, res) {
     if (createData.appear) {
       insertAppear(collectionAppear, newId, createData.appear);
     }
-    createData.attributeId = newId;
+    createData._id = newId;
     collectionAttr.create(createData)
       .then((result) => {
         const returnValue = JSON.parse(JSON.stringify(result));

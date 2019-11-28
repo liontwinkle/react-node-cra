@@ -63,26 +63,25 @@ const getSubTree = (list, parentId, type, originNode) => {
   list.sort(sortByField('name'));
   const subTree = [];
   const association = [];
-  const sublist = list.filter((item) => item[type] === parentId.toString());
-  const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
+  const sublist = list.filter((item) => item[type] === parentId);
   if (sublist.length > 0) {
     sublist.forEach((item) => {
       let subNode = null;
       if (originNode && originNode.length) {
-        subNode = originNode.find((nodeItem) => (nodeItem.item[identifier] === item[identifier]));
+        subNode = originNode.find((nodeItem) => (nodeItem.item._id === item._id));
       }
       association.push({
         label: item.name,
-        value: item[identifier],
+        value: item._id,
         appear: item.appear || [],
-        children: getSubTree(list, item[identifier], type).association,
+        children: getSubTree(list, item._id, type).association,
       });
       subTree.push({
         title: item.name,
         editable: false,
         expanded: (subNode) ? subNode.expanded : false,
         item,
-        children: getSubTree(list, item[identifier], type, (subNode) ? subNode.children : null).subTree,
+        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null).subTree,
       });
     });
   }
@@ -172,17 +171,17 @@ export const getPreFilterData = (rules, products) => {
 };
 
 export const getCategoryTree = (categories, originNode) => {
-  const parentId = 'null';
-  const list = makeArrayObject(categories, 'parentId');
+  const parentId = null;
+  const list = makeArrayObject(categories, 'parent_id');
 
-  return getSubTree(list, parentId, 'parentId', originNode);
+  return getSubTree(list, parentId, 'parent_id', originNode);
 };
 
 export const getAttribute = (attributes, originNode) => {
-  const groupId = 'null';
-  const list = makeArrayObject(attributes, 'groupId');
+  const groupId = null;
+  const list = makeArrayObject(attributes, 'group_id');
 
-  return getSubTree(list, groupId, 'groupId', originNode);
+  return getSubTree(list, groupId, 'group_id', originNode);
 };
 
 export const convertPropertyData = (data) => {

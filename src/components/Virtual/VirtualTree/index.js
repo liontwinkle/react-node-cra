@@ -53,11 +53,11 @@ function VirtualSortableTree({
 
   const handleBlur = (node, path) => () => {
     if (node.editable) {
-      const category = _find(categories, { id: node.item.id });
-      const parent = _find(categories, { categoryId: parseInt(node.item.parentId, 10) });
-      const parentId = (parent) ? parent.id : 'null';
+      const category = _find(categories, { _id: node.item._id });
+      const parent = _find(categories, { _id: node.item.parent_id });
+      const parentId = (parent) ? parent._id : 'null';
       if (!isUpdating && !isCreating && category && category.name !== node.title) {
-        updateCategory(node.item.id, { name: node.title })
+        updateCategory(node.item._id, { name: node.title })
           .then(() => {
             addNewRuleHistory(createHistory, category, parentId,
               `Name is changed as ${node.title}`,
@@ -118,13 +118,13 @@ function VirtualSortableTree({
   const handleMoveTree = (data) => {
     const { node, path } = data;
     const currentParentItemName = (data.nextParentNode) ? data.nextParentNode.item.name : 'root';
-    const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item.categoryId.toString() : 'null';
+    const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item._id : null;
 
     if (!isUpdating && !isCreating) {
-      updateCategory(node.item.id, { parentId: currentParentItemId })
+      updateCategory(node.item.id, { parent_id: currentParentItemId })
         .then(() => {
           const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
-          addNewRuleHistory(createHistory, category, node.item.parentId,
+          addNewRuleHistory(createHistory, category, node.item.parent_id,
             msg,
             `Move Child Node ${node.item.name}`,
             'virtual');
@@ -139,7 +139,7 @@ function VirtualSortableTree({
     }
   };
 
-  const isSelected = (node) => (category && category.id) === node.item.id;
+  const isSelected = (node) => (category && category._id) === node.item._id;
   const editable = (clientType.key === 'virtual');
 
   return (

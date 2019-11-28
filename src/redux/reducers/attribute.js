@@ -32,7 +32,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         attributes: recvAttributes,
-        attribute: state.attribute || action.payload.attributes.filter((item) => (item.groupId === 'null'))[0] || null,
+        attribute: state.attribute || action.payload.attributes.filter((item) => (item.group_id))[0] || null,
         associations: fetchedTrees.association,
         nodes: fetchedTrees.subTree,
       };
@@ -74,7 +74,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_UPDATE_SUCCESS:
       const updateData = convertPropertyData(action.payload.data);
-      const attributesIdx = _findIndex(attributes, { id: updateData.id });
+      const attributesIdx = _findIndex(attributes, { _id: updateData._id });
       if (attributesIdx > -1) {
         attributes.splice(attributesIdx, 1, updateData);
       } else {
@@ -103,7 +103,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.ATTRIBUTE_REMOVE_SUCCESS:
-      const index = _findIndex(attributes, { id: action.payload.id });
+      const index = _findIndex(attributes, { _id: action.payload._id });
       if (index > -1) {
         attributes.splice(index, 1);
       }

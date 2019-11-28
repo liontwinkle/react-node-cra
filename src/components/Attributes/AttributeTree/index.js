@@ -57,12 +57,12 @@ function AttributeNode({
 
   const handleBlur = (node, path) => () => {
     if (node.editable) {
-      const attribute = _find(attributes, { id: node.item.id });
-      const group = _find(attributes, { attributeId: parseInt(node.item.groupId, 10) });
-      const groupId = (group) ? group.id : 'null';
+      const attribute = _find(attributes, { _id: node.item._id });
+      const group = _find(attributes, { _id: node.item.group_id });
+      const groupId = (group) ? group._id : null;
       if (attribute && attribute.name !== node.title && !isUpdating && !isCreating) {
-        if (checkNameDuplicate(attributes, node.title, node.item.groupId) === 0) {
-          updateAttribute(node.item.id, { name: node.title })
+        if (checkNameDuplicate(attributes, node.title, node.item.group_id) === 0) {
+          updateAttribute(node.item._id, { name: node.title })
             .then(() => {
               addNewRuleHistory(createHistory, node.item, groupId,
                 `Name is changed as ${node.title}`,
@@ -114,7 +114,7 @@ function AttributeNode({
       }),
     );
   };
-  const isSelected = (node) => (attribute && attribute.id) === node.item.id;
+  const isSelected = (node) => (attribute && attribute._id) === node.item._id;
 
   return (
     <SortableTree

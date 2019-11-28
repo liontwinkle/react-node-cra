@@ -49,7 +49,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: JSON.parse(JSON.stringify(tempDatas)),
-        category: tempDatas.filter((item) => (item.parentId === 'null'))[0] || null,
+        category: tempDatas.filter((item) => (item.parent_id))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };
@@ -112,7 +112,7 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
 
-      const categoryIdx = _findIndex(categories, { id: updateData.id });
+      const categoryIdx = _findIndex(categories, { _id: updateData._id });
       if (categoryIdx > -1) {
         categories.splice(categoryIdx, 1, updateData);
       } else {
@@ -141,7 +141,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CATEGORY_DELETE_SUCCESS:
-      const index = _findIndex(categories, { id: action.payload.id });
+      const index = _findIndex(categories, { _id: action.payload._id });
       if (index > -1) {
         categories.splice(index, 1);
       }

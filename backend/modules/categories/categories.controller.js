@@ -13,7 +13,6 @@ const {
 exports.index = (req, res) => {
   req.category
     .find()
-    .select('-__v')
     .execAsync()
     .then(responseWithResult(res))
     .catch(handleError(res));
