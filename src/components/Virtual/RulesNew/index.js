@@ -139,7 +139,6 @@ class NewRules extends Component {
   setMap = (category) => {
     const defaultFlag = (this.props.category.rules.length <= 0);
     const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
-
     const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
     const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);

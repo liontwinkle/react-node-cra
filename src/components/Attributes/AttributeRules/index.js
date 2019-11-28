@@ -86,7 +86,6 @@ class AttributeRules extends Component {
       const ruleTypeObj = ruleType.find((ruleTypeObjItem) => (ruleTypeObjItem.key === item.ruleType));
       if (keyObj) {
         ruleArray.push({
-          _id: item._id,
           basis: (type) ? basisObj.key : basisObj,
           refer: (type) ? referObj.key : referObj,
           key: (type) ? keyObj.key : keyObj,

@@ -50,7 +50,6 @@ function EditRules({
     const updatedData = [];
     updatedState.forEach((item) => {
       updatedData.push({
-        _id: item._id,
         basis: item.basis,
         refer: item.refer,
         type: item.type,
@@ -73,11 +72,13 @@ function EditRules({
       resolve();
       if (!isCreating && !rules.find((item) => (
         item.detail === newData.detail
+        && item.basis === newData.basis
         && item.type === newData.type
-        && item.value === newData.value
+        && item.key === newData.key
+        && item.ruleType === newData.ruleType
+        && item.criteria === newData.criteria
       ))) {
         rules.push({
-          _id: newData._id,
           basis: newData.basis,
           refer: newData.refer,
           key: newData.key,
@@ -102,11 +103,18 @@ function EditRules({
       resolve();
 
       const data = JSON.parse(JSON.stringify(oldData));
-      const ruleKeyIndex = rules.findIndex((rk) => rk._id === oldData._id);
+      const ruleKeyIndex = rules.findIndex((rk) => (
+        rk.basis === oldData.basis
+        && rk.refer === oldData.refer
+        && rk.key === oldData.key
+        && rk.criteria === oldData.criteria
+        && rk.type === oldData.type
+        && rk.scope === oldData.scope
+        && rk.ruleType === oldData.ruleType
+      ));
 
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1, {
-          _id: newData._id,
           basis: newData.basis,
           refer: newData.refer,
           key: newData.key,
@@ -135,7 +143,15 @@ function EditRules({
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = rules.findIndex((rk) => rk._id === oldData._id);
+      const ruleKeyIndex = rules.findIndex((rk) => (
+        rk.basis === oldData.basis
+        && rk.refer === oldData.refer
+        && rk.key === oldData.key
+        && rk.criteria === oldData.criteria
+        && rk.type === oldData.type
+        && rk.scope === oldData.scope
+        && rk.ruleType === oldData.ruleType
+      ));
       if (!isCreating && ruleKeyIndex > -1) {
         rules.splice(ruleKeyIndex, 1);
         const msgCurrent = `Delete Rule (basis: ${oldData.basis},refer: ${oldData.refer},
