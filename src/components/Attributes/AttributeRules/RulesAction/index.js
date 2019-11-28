@@ -3,6 +3,9 @@ import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
+import _union from 'lodash/union';
+
+
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -19,6 +22,7 @@ function RulesAction({
   rules,
   newRules,
   displayRules,
+  universalRules,
   products,
   productViewType,
   matchRules,
@@ -38,10 +42,10 @@ function RulesAction({
   useEffect(() => {
     if (displayRules && rulesData !== displayRules) {
       const recvRules = displayRules || [];
-      setPreviewData(getPreFilterData(recvRules, products));
+      setPreviewData(getPreFilterData(_union(recvRules, universalRules), products));
       setRulesData(displayRules);
     }
-  }, [products, rulesData, displayRules]);
+  }, [products, rulesData, displayRules, universalRules]);
 
 
   const handleToggle = (field) => () => {
@@ -130,6 +134,7 @@ RulesAction.propTypes = {
   newRules: PropTypes.array.isRequired,
   displayRules: PropTypes.array.isRequired,
   matchRules: PropTypes.array.isRequired,
+  universalRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };

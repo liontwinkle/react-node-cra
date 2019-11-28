@@ -212,6 +212,15 @@ class AttributeRules extends Component {
                       newRules={newEditRules}
                       matchRules={newRules}
                       displayRules={displayRules}
+                      universalRules={universalRules.map((item) => ({
+                        basis: item.basis.key,
+                        refer: item.refer.key,
+                        key: item.key.key,
+                        criteria: item.criteria,
+                        type: item.type.key,
+                        scope: item.scope.key,
+                        ruleType: item.ruleType.key,
+                      }))}
                     />
                   )
                 }

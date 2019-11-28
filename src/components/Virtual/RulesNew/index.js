@@ -220,7 +220,20 @@ class NewRules extends Component {
                 {
                   this.props.products.length > 0
                   && (
-                    <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+                    <RulesAction
+                      className="mg-rules-actions"
+                      rules={editRules}
+                      universalRules={universalRules.map((item) => ({
+                        basis: item.basis.key,
+                        refer: item.refer.key,
+                        key: item.key.key,
+                        criteria: item.criteria,
+                        type: item.type.key,
+                        scope: item.scope.key,
+                        ruleType: item.ruleType.key,
+                      }))}
+                      newRules={newRules}
+                    />
                   )
                 }
               </>
