@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 import Popper from '@material-ui/core/Popper';
 import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-import './style.scss';
+import useEventListener from './use-event-listenr';
 import CustomInput from '../CustomInput';
+import './style.scss';
 
 function CustomSelect(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event = null) => {
-    console.log('### EVENT: ', event); // fixme
+  const handleClick = useCallback((event = null) => {
     setAnchorEl(anchorEl ? null : (event && event.currentTarget));
-  };
+  });
 
   const [wrapperRef, setWrapperRef] = useState(null);
   const getWrapperRef = (ref) => {
@@ -31,15 +30,27 @@ function CustomSelect(props) {
   const [editable, setEditable] = useState(false);
   const [searchedItems, setSearchedItems] = useState([]);
 
-  const handleClickOutside = (event) => {
-    if (
-      anchorEl
-      && popperRef && popperRef.contains && !popperRef.contains(event.target)
+  const handleClickOutside = useCallback(
+    (event) => {
+      if (
+        popperRef && popperRef.contains && !popperRef.contains(event.target)
       && wrapperRef && wrapperRef.contains && !wrapperRef.contains(event.target)
-    ) {
-      handleClick();
-    }
-  };
+      ) {
+        const { value, items, placeholder } = props;
+
+        let current;
+        const isValueString = typeof value === 'string';
+        if (isValueString) {
+          current = items.find((item) => item.key === value);
+        } else {
+          current = value;
+        }
+        setCurrentValue((current && current.label) || placeholder);
+        setSearchedItems(items);
+        handleClick();
+      }
+    }, [handleClick, popperRef, props, wrapperRef],
+  );
 
   useEffect(() => {
     const { value, items } = props;
@@ -58,14 +69,11 @@ function CustomSelect(props) {
     if (!editable) {
       setSearchedItems(items);
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [props, handleClickOutside, currentValue, editable]);
+  }, [props, currentValue, editable]);
+
+  useEventListener('mousedown', handleClickOutside);
 
   const handleInput = (event) => {
-    console.log('### DEBUG LABEL: ', event.target.value); // fixme
     const inputVal = event.target.value;
     setEditable(true);
     let searchResult = [];
@@ -79,12 +87,9 @@ function CustomSelect(props) {
     }
     setSearchedItems(searchResult);
     setCurrentValue(inputVal);
-    console.log($('button.mg-select-current').data());
-    handleClick($('button.mg-select-current').get(0));
   };
 
   const changeValue = (value) => () => {
-    console.log('### DEBUG VAL: ', value); // fixme
     if (!props.disabled) {
       setEditable(false);
       props.onChange(value);
