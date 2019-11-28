@@ -105,3 +105,14 @@
     width: 100% !important;
   }
 }
+
+.add-property-fields {
+  .mg-upload-control .mg-upload-wrapper {
+    width: 50%;
+  }
+  .mg-select-wrapper {
+    label {
+      min-width: 220px !important;
+    }
+  }
+}

@@ -182,7 +182,7 @@ function AddPropertyFields({
         Add Property Fields
       </DialogTitle>
 
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent className={`${classes.dialogContent} add-property-fields`}>
         <CustomInput
           className="mb-3"
           label="Key"

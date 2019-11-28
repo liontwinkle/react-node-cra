@@ -11,8 +11,8 @@ import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
-import { confirmMessage, getPreFilterData, useStyles } from 'utils';
-import { addNewRuleHistory } from 'utils/ruleManagement';
+import { confirmMessage, useStyles } from 'utils';
+import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import AddNewRuleBody from './AddNewRuleBody';
@@ -44,19 +44,11 @@ function AddNewRule({
   const [previewValue, setPreviewValue] = useState(0);
 
   const getPreviewProducts = (newRules) => {
-    setPreviewValue(getPreFilterData(newRules, products).length);
+    setPreviewValue(filterProducts(products, newRules, 0).length);
   };
 
   const searchFunction = (newClient) => {
-    const newRules = [{
-      basis: newClient.basis.key,
-      refer: newClient.refer.key,
-      type: newClient.type.key,
-      scope: newClient.scope.key,
-      key: newClient.key.key,
-      criteria: newClient.criteria,
-      ruleType: ruleData.ruleType.key,
-    }];
+    const newRules = [newClient];
     setTimeout(() => {
       getPreviewProducts(newRules);
     }, 0);

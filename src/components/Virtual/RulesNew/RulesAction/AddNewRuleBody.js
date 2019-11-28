@@ -61,7 +61,7 @@ const AddNewRuleBody = ({
     />
     <CustomInput
       className="mb-3"
-      label="Preview Number"
+      label="Matching SKUs"
       inline
       value={previewNumber}
       onChange={() => {}}

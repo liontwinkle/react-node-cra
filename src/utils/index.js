@@ -43,12 +43,10 @@ const getRuleProducts = (products, field, match, criteria, basis) => {
   let includeIndex = 0;
   let excludeIndex = 0;
   let matchedFlag = false;
-  const testCheck = [];
   products.forEach((productItem) => {
     matchedFlag = !!((match === 'exactly' && productItem[field] === criteria)
       || (rule.test(productItem[field])));
     if (matchedFlag) {
-      testCheck.push(productItem);
       if (basis === 'include') {
         returnValue.includes[includeIndex] = productItem;
         includeIndex++;
@@ -56,13 +54,6 @@ const getRuleProducts = (products, field, match, criteria, basis) => {
         returnValue.excludes[excludeIndex] = productItem;
         excludeIndex++;
       }
-    }
-  });
-  testCheck.forEach((testItem, index) => {
-    if (!rule.test(testItem[field])) {
-      console.log('### REGEX PASSED: ', testItem[field]);
-      console.log('### REGEX INDEX: ', index);
-      console.log('### REGEX LENGTH: ', testItem[field].length);
     }
   });
   return returnValue;
