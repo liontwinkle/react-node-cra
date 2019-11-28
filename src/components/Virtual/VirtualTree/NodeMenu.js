@@ -234,7 +234,7 @@ function NodeMenu({
           handleSetTemplate={updateCategoryExtraInfomation}
           handleClose={handleDialog('template', false)}
           msg="Please set the template."
-          template={node.item.template || ''}
+          template={node.item.template || {}}
           propertyField={propertyField}
           open={openDialog.template}
         />

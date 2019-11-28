@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 import Popper from '@material-ui/core/Popper';
 import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import './style.scss';
+import CustomInput from '../CustomInput';
 
 function CustomSelect(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event = null) => {
+    console.log('### EVENT: ', event); // fixme
     setAnchorEl(anchorEl ? null : (event && event.currentTarget));
   };
 
@@ -24,6 +27,10 @@ function CustomSelect(props) {
     setPopperRef(ref);
   };
 
+  const [currentValue, setCurrentValue] = useState(props.placeholder);
+  const [editable, setEditable] = useState(false);
+  const [searchedItems, setSearchedItems] = useState([]);
+
   const handleClickOutside = (event) => {
     if (
       anchorEl
@@ -35,15 +42,51 @@ function CustomSelect(props) {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    const { value, items } = props;
 
+    let current;
+    const isValueString = typeof value === 'string';
+    if (isValueString) {
+      current = items.find((item) => item.key === value);
+    } else {
+      current = value;
+    }
+    if (current && current !== currentValue && !editable) {
+      setCurrentValue(current.label);
+    }
+
+    if (!editable) {
+      setSearchedItems(items);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  });
+  }, [props, handleClickOutside, currentValue, editable]);
+
+  const handleInput = (event) => {
+    console.log('### DEBUG LABEL: ', event.target.value); // fixme
+    const inputVal = event.target.value;
+    setEditable(true);
+    let searchResult = [];
+    props.items.forEach((item) => {
+      if (item.label.includes(inputVal)) {
+        searchResult.push(item);
+      }
+    });
+    if (!inputVal) {
+      searchResult = props.items;
+    }
+    setSearchedItems(searchResult);
+    setCurrentValue(inputVal);
+    console.log($('button.mg-select-current').data());
+    handleClick($('button.mg-select-current').get(0));
+  };
 
   const changeValue = (value) => () => {
+    console.log('### DEBUG VAL: ', value); // fixme
     if (!props.disabled) {
+      setEditable(false);
       props.onChange(value);
       handleClick();
     }
@@ -51,18 +94,10 @@ function CustomSelect(props) {
 
   const {
     className,
-    placeholder,
     value,
     items,
   } = props;
 
-  let current;
-  const isValueString = typeof value === 'string';
-  if (isValueString) {
-    current = items.find((item) => item.key === value);
-  } else {
-    current = value;
-  }
 
   const isOpened = Boolean(anchorEl);
   const id = isOpened ? 'mg-popper' : undefined;
@@ -86,8 +121,12 @@ function CustomSelect(props) {
         variant="outlined"
         onClick={handleClick}
       >
-        {(current && current.label) || placeholder}
-
+        <CustomInput
+          className="mg-select-input-section"
+          value={currentValue}
+          onChange={handleInput}
+          type="text"
+        />
         <ArrowDropDownIcon />
       </Button>
 
@@ -108,11 +147,11 @@ function CustomSelect(props) {
               minScrollbarLength: 50,
             }}
           >
-            {items.map((item) => (
+            {searchedItems.map((item) => (
               <li
                 key={item.key}
-                className={`mg-select-item${(current && current.key) === item.key ? ' active' : ''}`}
-                onClick={changeValue(isValueString ? item.key : item)}
+                className={`mg-select-item${(currentValue && currentValue.key) === item.key ? ' active' : ''}`}
+                onClick={changeValue((typeof value === 'string') ? item.key : item)}
               >
                 {item.label}
               </li>

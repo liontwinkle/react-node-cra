@@ -115,7 +115,7 @@ function SetTemplateDlg({
 SetTemplateDlg.propTypes = {
   open: PropTypes.bool.isRequired,
   msg: PropTypes.string.isRequired,
-  template: PropTypes.object.isRequired,
+  template: PropTypes.object,
   confirmLabel: PropTypes.string,
   propertyField: PropTypes.object.isRequired,
   handleSetTemplate: PropTypes.func.isRequired,
@@ -124,6 +124,7 @@ SetTemplateDlg.propTypes = {
 
 SetTemplateDlg.defaultProps = {
   confirmLabel: 'Set Template',
+  template: {},
 };
 
 export default SetTemplateDlg;
