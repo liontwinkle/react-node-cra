@@ -17,7 +17,7 @@ function DetailTable({
   useEffect(() => {
     if (historyStr !== '') {
       const item = (type === 'virtual') ? category : attribute;
-      const parentId = item ? item.id : 'null';
+      const parentId = item ? item._id : null;
       const displayHistory = history.filter((historyItem) => (historyItem.itemId === parentId));
       setData(displayHistory.map((c) => ({
         action: c.label,

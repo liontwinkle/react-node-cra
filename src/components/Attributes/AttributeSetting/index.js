@@ -48,10 +48,10 @@ class AttributeSetting extends Component {
   };
 
   updateList = (target) => {
-    const targetCategory = this.props.categories.filter((item) => (item.categoryId === target.value));
+    const targetCategory = this.props.categories.filter((item) => (item._id === target.value));
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
     const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
-    willCheckedCategory.push(targetCategory[0].categoryId);
+    willCheckedCategory.push(targetCategory[0]._id);
     return _union(willCheckedCategory, allChildData);
   };
 
@@ -75,13 +75,13 @@ class AttributeSetting extends Component {
     let returnId = null;
     const { attributes, attribute } = this.props;
     const unCheckedSibling = attributes.find((item) => (
-      item.groupId === attribute.groupId
-      && item.attributeId !== attribute.attributeId
+      item.group_id === attribute.group_id
+      && item._id !== attribute._id
       && !hasSubArray(item.appear, updateAppear)));
-    if (!unCheckedSibling && attribute.groupId !== 'null') {
-      returnId = attributes.find((item) => (item.attributeId === parseInt(attribute.groupId, 10))).id;
+    if (!unCheckedSibling && attribute.group_id) {
+      returnId = attributes.find((item) => (item._id === attribute.group_id))._id;
     } else {
-      returnId = attribute.id;
+      returnId = attribute._id;
     }
     return returnId;
   };
@@ -97,7 +97,7 @@ class AttributeSetting extends Component {
         updateData = _union(updateAppear, this.state.categoryList);
         this.setState({ categoryList: updateData, checked });
       } else {
-        updateAttributeId = this.props.attribute.id;
+        updateAttributeId = this.props.attribute._id;
         updateData = _difference(this.state.categoryList, updateAppear);
         this.setState({ categoryList: updateData, checked });
       }

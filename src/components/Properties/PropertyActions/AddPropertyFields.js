@@ -134,14 +134,15 @@ function AddPropertyFields({
           propertyType: savedPropertyFieldData.propertyType.key,
           section: savedPropertyFieldData.section && savedPropertyFieldData.section.key,
         });
-        const updateDefaultFunc = (objectItem.parentId !== undefined)
+        const updateDefaultFunc = (objectItem.parent_id !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
+        const parentId = (objectItem.parent_id !== undefined) ? objectItem.parent_id : objectItem.group_id;
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField({ propertyFields })
             .then(() => {
               updateDefaultFunc(propertyFields)
                 .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
+                  addNewRuleHistory(createHistory, objectItem, parentId,
                     `Create Property(${savedPropertyFieldData.propertyType.key})`,
                     `Create Property(${savedPropertyFieldData.propertyType.key}) by ${objectItem.name}`,
                     'virtual');

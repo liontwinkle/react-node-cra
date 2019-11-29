@@ -31,7 +31,7 @@ function EditRules({
   valueDetails,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const rule = (attribute.groupId === 'null') ? ruleType : new Array(ruleType[0]);
+  const rule = (attribute.group_id === null) ? ruleType : new Array(ruleType[0]);
 
   const tableData = {
     columns: [
@@ -61,7 +61,7 @@ function EditRules({
     });
 
     if (!isUpdating) {
-      updateAttribute(attribute.id, { rules: updatedData })
+      updateAttribute(attribute._id, { rules: updatedData })
         .then(() => { confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success'); })
         .catch(() => { confirmMessage(enqueueSnackbar, 'Error in updating new rules.', 'error'); });
     }
@@ -92,7 +92,7 @@ function EditRules({
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${newData.basis.key}, 
                   refer: ${newData.refer.key},detail: ${newData.key.key},type: ${newData.type.key},
                   criteria: ${newData.value})`;
-        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.group_id, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);
@@ -130,7 +130,7 @@ function EditRules({
           const msgParent = `Update Rule in Child ${attribute.name} (basis: ${newData.basis}, 
                   refer: ${newData.refer},detail: ${newData.key},type: ${newData.type},
                   criteria: ${newData.criteria})`;
-          addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+          addNewRuleHistory(createHistory, attribute, attribute.group_id, msgCurrent, msgParent, 'attributes');
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -159,7 +159,7 @@ function EditRules({
         const msgParent = `Rule is deleted in Child ${attribute.name} (basis: ${oldData.basis}, 
                   refer: ${oldData.refer},detail: ${oldData.key},type: ${oldData.type},
                   criteria: ${oldData.criteria})`;
-        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.group_id, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       }
     }, 600);

@@ -104,7 +104,7 @@ function AddNewRule({
     });
 
     if (!isUpdating) {
-      updateAttribute(attribute.id, { rules: updatedData })
+      updateAttribute(attribute._id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
@@ -128,7 +128,7 @@ function AddNewRule({
         const msgParent = `Add New Rule in Child ${attribute.name} (basis: ${ruleData.basis.key}, 
                   refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
                   criteria: ${ruleData.criteria})`;
-        addNewRuleHistory(createHistory, attribute, attribute.groupId, msgCurrent, msgParent, 'attributes');
+        addNewRuleHistory(createHistory, attribute, attribute.group_id, msgCurrent, msgParent, 'attributes');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');
