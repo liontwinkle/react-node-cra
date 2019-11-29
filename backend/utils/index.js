@@ -573,10 +573,10 @@ function removeChildren(req, id) {
             }
           });
         result.forEach((item) => {
-          collectionAppear.find({ _id: item._id })
+          collectionAppear.find({ categoryId: item._id })
             .then((result) => {
               if (result.length > 0) {
-                collectionAppear.deleteMany({ _id: item._id })
+                collectionAppear.deleteMany({ categoryId: item._id })
                   .then(() => {});
               }
             });
@@ -587,10 +587,10 @@ function removeChildren(req, id) {
 }
 
 function removeAttribute(req, id) {
-  req.attributes.find({ groupId: id })
+  req.attributes.find({ group_id: id })
     .then((result) => {
       req.attributes
-        .deleteMany({ groupId: id }, (err, result) => {
+        .deleteMany({ group_id: id }, (err, result) => {
           if (!result) {
             console.log(err);
           }
@@ -601,7 +601,7 @@ function removeAttribute(req, id) {
         });
       } else {
         req.attributes
-          .deleteOne({ groupId: id }, (err, result) => {
+          .deleteOne({ group_id: id }, (err, result) => {
             if (!result) {
               console.log(err);
             }
