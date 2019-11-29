@@ -32,7 +32,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         attributes: recvAttributes,
-        attribute: state.attribute || action.payload.attributes.filter((item) => (item.group_id))[0] || null,
+        attribute: state.attribute || action.payload.attributes.filter((item) => (item.group_id === null))[0] || null,
         associations: fetchedTrees.association,
         nodes: fetchedTrees.subTree,
       };

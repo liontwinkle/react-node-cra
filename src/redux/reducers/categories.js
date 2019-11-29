@@ -49,7 +49,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isFetchingList: false,
         categories: JSON.parse(JSON.stringify(tempDatas)),
-        category: tempDatas.filter((item) => (item.parent_id))[0] || null,
+        category: tempDatas.filter((item) => (item.parent_id === null))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };

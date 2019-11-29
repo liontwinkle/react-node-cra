@@ -14,7 +14,11 @@ const AttributeSchema = new Schema({
   },
   template: Object,
   properties: Object,
-  defaultProperties: Array,
+  defaultProperties: [{
+    key: String,
+    default: String,
+    template: String,
+  }],
   rules: Array,
 }, { timestamps: true });
 

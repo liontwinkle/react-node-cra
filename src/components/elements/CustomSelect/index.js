@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import useEventListener from './use-event-listenr';
-import CustomInput from '../CustomInput';
+
 import './style.scss';
 
 function CustomSelect(props) {
@@ -126,7 +126,7 @@ function CustomSelect(props) {
         variant="outlined"
         onClick={handleClick}
       >
-        <CustomInput
+        <input
           className="mg-select-input-section"
           value={currentValue}
           onChange={handleInput}
