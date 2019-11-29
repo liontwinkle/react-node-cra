@@ -87,18 +87,18 @@ function NodeMenu({
   };
 
   const deleteItem = () => {
-    const removeId = node.item.id;
+    const removeId = node.item._id;
     if (!isDeleting) {
       removeAttribute(removeId)
         .then(() => {
-          const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item.id));
+          const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item._id));
           if (deleteHistory.length > 0) {
             removeHistory(removeId)
               .then(() => {
-                if (node.item.groupId !== 'null') {
+                if (node.item.group_id !== null) {
                   createHistory({
                     label: `Delete Child Node ${node.item.name}`,
-                    itemId: node.item.groupId,
+                    itemId: node.item.group_id,
                     type: 'attributes',
                   });
                 }
