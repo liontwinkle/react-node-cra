@@ -108,10 +108,10 @@ const keyUpload = (clientId, type, data) => {
  *  ** */
 
 const checkType = {
-  virtual: 'categoryId',
-  native: 'categoryId',
+  virtual: '_id',
+  native: '_id',
   products: '_id',
-  attributes: 'attributeId',
+  attributes: '_id',
 };
 
 const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
@@ -253,11 +253,11 @@ exports.upload = (req, res) => {
     if (!err) {
       const { updateData, duplicateId } = checkDuplicateData(result, req.body, req.params.type);
       if (updateData.length > 0) {
-        let idName = 'categoryId';
+        let idName = '_id';
         try {
           if (req.params.type === 'attributes') {
             uploadAppear(updateData, req.params.clientId);
-            idName = 'attributeId';
+            idName = '_id';
           } else if (req.params.type === 'virtual') {
             setAppearForCategory(updateData, req.params.clientId);
           }

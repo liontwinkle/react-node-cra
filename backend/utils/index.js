@@ -134,13 +134,13 @@ function handleCreate(req) {
 function setAppearForCategory(data, client) {
   const collectionAppear = AppearCollection(`${client}_appears`);
   data.forEach((item) => {
-    if (item.parentId !== 'null') {
-      collectionAppear.find({ categoryId: parseInt(item.parentId, 10) })
+    if (item.parent_id !== null) {
+      collectionAppear.find({ categoryId: item.parent_id })
         .then((result) => {
           if (result.length > 0) {
             const attributs = result.map((attributeItem) => ({
-              attributeId: attributeItem.attributeId,
-              categoryId: item.categoryId,
+              attributeId: attributeItem._id,
+              categoryId: item._id,
             }));
             collectionAppear.insertMany(attributs)
               .then(() => {});
@@ -194,7 +194,7 @@ function handleAttributeFetch(req, res) {
           entity.forEach((entityItem, index) => {
             if (result.length > 0) {
               attributeData[index].appear = result.filter(((appearItem) =>
-                (appearItem.attributeId === entityItem.attributeId)
+                (appearItem.attributeId === entityItem._id)
               ))
                 .map((item) => (item.categoryId));
             } else {
@@ -228,7 +228,7 @@ function removeDeletedProperty(data, deleteKey, collection) {
         }
       });
 
-      collection.updateMany({ categoryId: resultItem.categoryId }, {
+      collection.updateMany({ _id: resultItem._id }, {
         $set: {
           properties: resultItem.properties
         }
@@ -360,7 +360,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
             if (!updateProperties[keyItem][subKeyItem].imageData) {
               updatedNewProperties.properties[keyItem][subKeyItem].path = updateFile(clientId,
                 type, updateProperties[keyItem][subKeyItem].path,
-                originData.categoryId);
+                originData._id);
             } else {
               const originUrl = (originProperties[keyItem]
                 && originProperties[keyItem][subKeyItem])
@@ -368,7 +368,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
               updatedNewProperties.properties[keyItem][subKeyItem] = createFile(clientId,
                 type,
                 updateProperties[keyItem][subKeyItem],
-                subKeyItem, originData.categoryId, originUrl);
+                subKeyItem, originData._id, originUrl);
             }
           }
         }
@@ -376,12 +376,12 @@ function prepareImageProperties(originData, updates, clientId, type) {
     } else if (updateProperties[keyItem] && updateProperties[keyItem].path) {
       if (!updateProperties[keyItem].imageData) {
         updatedNewProperties.properties[keyItem].path = updateFile(clientId,
-          type, updates[keyItem].path, originData.categoryId);
+          type, updates[keyItem].path, originData._id);
       } else {
         updatedNewProperties.properties[keyItem] = createFile(clientId,
           type,
           updateProperties[keyItem],
-          keyItem, originData.categoryId);
+          keyItem, originData._id);
       }
     }
   });
@@ -433,18 +433,18 @@ function getAppear(appearArray) {
 function checkOffForAttribute(oldData, req, collection, entity) {
   const diff = _.difference(oldData, req.body.appear);
   collection.find({
-    attributeId: parseInt(entity.groupId, 10)
+    attributeId: entity.group_id
   }, { categoryId: 1, _id: 0 })
     .then((result) => {
       if (result.length > 0) {
         const deletedAppear = _.difference(getAppear(result), diff);
         if (deletedAppear.length > 0) {
-          collection.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+          collection.deleteMany({ attributeId: entity.group_id })
             .then(() => {
-              insertAppear(collection, parseInt(entity.groupId, 10), deletedAppear);
+              insertAppear(collection, entity.group_id, deletedAppear);
             });
         } else {
-          collection.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+          collection.deleteMany({ attributeId: entity.group_id })
             .then(() => {});
         }
       }
@@ -452,18 +452,18 @@ function checkOffForAttribute(oldData, req, collection, entity) {
 }
 
 function updateChildAttributesAppear(req, entity, collection, oldData) {
-  req.attributes.find({ groupId: entity.attributeId })
+  req.attributes.find({ group_id: entity._id })
     .then((results) => {
       results.forEach((resItem) => {
         collection.find({
-          attributeId: resItem.attributeId
+          attributeId: resItem._id
         }, { categoryId: 1, _id: 0 })
           .then((result) => {
             const newAppear = _.union(req.body.appear,
               _.difference(getAppear(result), oldData));
-            collection.deleteMany({ attributeId: resItem.attributeId })
+            collection.deleteMany({ attributeId: resItem._id })
               .then(() => {
-                insertAppear(collection, resItem.attributeId, newAppear);
+                insertAppear(collection, resItem._id, newAppear);
               });
           });
       });
@@ -473,16 +473,16 @@ function updateChildAttributesAppear(req, entity, collection, oldData) {
 function updateAttributesAppear(req, res, result, collection, entity, returnValue) {
   if (req.body.appear) {
     if (result.length <= 0) {
-      insertAppear(collection, entity.attributeId, req.body.appear);
+      insertAppear(collection, entity._id, req.body.appear);
       entity.saveAsync()
         .then(() => {
           returnValue.appear = req.body.appear;
           res.status(201).json(returnValue);
         });
     } else {
-      collection.deleteMany({ attributeId: entity.attributeId })
+      collection.deleteMany({ attributeId: entity._id })
         .then(() => {
-          insertAppear(collection, entity.attributeId, req.body.appear);
+          insertAppear(collection, entity._id, req.body.appear);
           entity.saveAsync()
             .then(() => {
               returnValue.appear = req.body.appear;
@@ -505,10 +505,10 @@ function saveAttributeUpdates(req, res) {
 
     /** *** Management of the group check status***** */
     if (req.body.appear) {
-      collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
+      collectionAppear.find({ attributeId: entity._id }, { categoryId: 1, _id: 0 })
         .then((result) => {
           const old = getAppear(result);
-          if (!req.body.checked && entity.groupId !== 'null') {
+          if (!req.body.checked && entity.group_id !== null) {
             checkOffForAttribute(old, req, collectionAppear, entity);
           }
           updateChildAttributesAppear(req, entity, collectionAppear, old);
@@ -524,7 +524,7 @@ function saveAttributeUpdates(req, res) {
     _.assign(entity, data);
     const returnValue = JSON.parse(JSON.stringify(entity));
 
-    collectionAppear.find({ attributeId: entity.attributeId })
+    collectionAppear.find({ attributeId: entity._id })
       .then((result) => {
         updateAttributesAppear(req, res, result, collectionAppear, entity, returnValue);
       });
@@ -535,7 +535,7 @@ function uploadAppear(data, client) {
   const collectionAppear = AppearCollection(`${client}_appears`);
   data.forEach((dataItem) => {
     if (dataItem.appear) {
-      insertAppear(collectionAppear, dataItem.attributeId, dataItem.appear);
+      insertAppear(collectionAppear, dataItem._id, dataItem.appear);
     }
   });
 }

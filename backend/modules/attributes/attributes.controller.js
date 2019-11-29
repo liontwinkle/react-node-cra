@@ -66,7 +66,7 @@ exports.updateDefault = (req, res) => {
                   if (resultItem.properties[deleteKey]) {
                     delete resultItem.properties[deleteKey];
 
-                    req.attributes.updateMany({ attributeId: resultItem.attributeId }, {
+                    req.attributes.updateMany({ _id: resultItem._id }, {
                       $set: {
                         properties: resultItem.properties
                       }

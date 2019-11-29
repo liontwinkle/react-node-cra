@@ -59,7 +59,7 @@ function EditRules({
     });
 
     if (!isUpdating) {
-      updateCategory(category.id, { rules: updatedData })
+      updateCategory(category._id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success Updating the Rules.', 'success');
         })
@@ -94,7 +94,7 @@ function EditRules({
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${newData.basis.key},
         refer: ${newData.refer.key},detail: ${newData.key.key},type: ${newData.type.key},
         criteria: ${newData.criteria})`;
-        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       }
     },
@@ -132,7 +132,7 @@ function EditRules({
           const msgParent = `Update Rule in Child ${category.name} (basis: ${newData.basis},
                   refer: ${newData.refer},detail: ${newData.key},type: ${newData.type},
                   criteria: ${newData.criteria})`;
-          addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+          addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
           saveRules(rules);
         } else {
           confirmMessage(enqueueSnackbar, 'There is no any update.', 'info');
@@ -161,7 +161,7 @@ function EditRules({
         const msgParent = `Rule is deleted in Child ${category.name} (basis: ${oldData.basis}, 
                   refer: ${oldData.refer},detail: ${oldData.key},type: ${oldData.type},
                   criteria: ${oldData.criteria})`;
-        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       }
     }, 600);
