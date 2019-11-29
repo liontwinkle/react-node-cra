@@ -121,7 +121,7 @@ function VirtualSortableTree({
     const currentParentItemId = (data.nextParentNode) ? data.nextParentNode.item._id : null;
 
     if (!isUpdating && !isCreating) {
-      updateCategory(node.item.id, { parent_id: currentParentItemId })
+      updateCategory(node.item._id, { parent_id: currentParentItemId })
         .then(() => {
           const msg = currentParentItemId !== 0 ? `Be a Child of ${currentParentItemName}` : 'Be a root\'s child';
           addNewRuleHistory(createHistory, category, node.item.parent_id,

@@ -46,7 +46,7 @@ function NodeMenu({
   const handleClose = () => { setAnchorEl(null); };
 
   const handleEdit = () => {
-    if (checkNameDuplicate(attributes, node.item.name, node.item.groupId) < 2) {
+    if (checkNameDuplicate(attributes, node.item.name, node.item.group_id) < 2) {
       setTreeData(
         changeNodeAtPath({
           treeData,
@@ -67,12 +67,12 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (!isCreating && checkNameDuplicate(attributes, '', node.item.attributeId.toString()) === 0) {
-      createAttribute({ name: '', groupId: node.item.attributeId.toString(), appear: node.item.appear })
+    if (!isCreating && checkNameDuplicate(attributes, '', node.item._id) === 0) {
+      createAttribute({ name: '', group_id: node.item._id, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,
-            attribute, node.item.id,
+            attribute, node.item._id,
             'Create Node', 'Add Child Node- New Attribute', 'attributes',
           );
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');

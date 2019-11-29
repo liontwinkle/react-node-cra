@@ -543,10 +543,10 @@ function removeCategoryEntity(req, res) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   return (entity) => {
     if (entity) {
-      collectionAppear.find({ categoryId: entity.categoryId })
+      collectionAppear.find({ _id: entity._id })
         .then((result) => {
           if (result.length > 0) {
-            collectionAppear.deleteMany({ categoryId: entity.categoryId })
+            collectionAppear.deleteMany({ _id: entity._id })
               .then(() => {});
           }
         });
@@ -563,20 +563,20 @@ function removeEntity(res) {
 
 function removeChildren(req, id) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
-  req.category.find({ parentId: id })
+  req.category.find({ parent_id: id })
     .then((result) => {
       if (result.length > 0) {
         req.category
-          .deleteMany({ parentId: id }, (err, result) => {
+          .deleteMany({ parent_id: id }, (err, result) => {
             if (!result) {
               console.log(err);
             }
           });
         result.forEach((item) => {
-          collectionAppear.find({ categoryId: item.categoryId })
+          collectionAppear.find({ _id: item._id })
             .then((result) => {
               if (result.length > 0) {
-                collectionAppear.deleteMany({ categoryId: item.categoryId })
+                collectionAppear.deleteMany({ _id: item._id })
                   .then(() => {});
               }
             });

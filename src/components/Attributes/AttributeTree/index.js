@@ -9,6 +9,7 @@ import _find from 'lodash/find';
 import { updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey } from 'utils';
+
 import { checkNameDuplicate } from 'utils/attributeManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import NodeMenu from './NodeMenu';
