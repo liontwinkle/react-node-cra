@@ -66,8 +66,8 @@ const AddNewRuleBody = ({
       value={previewNumber}
       onChange={() => {}}
     />
-    {((category.parentId && category.parentId === 'null')
-      || (category.groupId && category.groupId === 'null'))
+    {((category.parent_id && category.parent_id === null)
+      || (category.group_id && category.group_id === null))
     && (
       <CustomSelect
         className="mb-3"

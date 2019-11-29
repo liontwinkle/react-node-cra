@@ -38,8 +38,9 @@ function EditPropertyFields({
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
   const sections = {};
-  const updateDefaultFunc = (objectItem.parentId !== undefined)
+  const updateDefaultFunc = (objectItem.parent_id !== undefined)
     ? updateDefaultOnCategory : updateDefaultOnAttriute;
+  const parentId = (objectItem.group_id) ? objectItem.group_id : objectItem.parent_id;
   propertyField.sections.forEach((section) => {
     sections[section.key] = section.label;
   });
@@ -69,7 +70,7 @@ function EditPropertyFields({
             .then(() => {
               updateDefaultFunc(propertyFields)
                 .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                  addNewRuleHistory(createHistory, objectItem, parentId,
                     `Create Property(${newData.propertyType})`,
                     `Create Property(${newData.propertyType}) by ${objectItem.name}`,
                     'virtual');
@@ -109,7 +110,7 @@ function EditPropertyFields({
         .then(() => {
           updateDefaultFunc(data)
             .then(() => {
-              addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+              addNewRuleHistory(createHistory, objectItem, parentId,
                 `Update the Property field(${newData.label} ${newData.propertyType})`,
                 `Update the Property field(${newData.label} ${newData.propertyType}) by ${objectItem.name}`,
                 'virtual');
@@ -237,7 +238,7 @@ function EditPropertyFields({
             .then(() => {
               updateDefaultFunc(propertyFields, deletedKey)
                 .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, objectItem.groupId,
+                  addNewRuleHistory(createHistory, objectItem, parentId,
                     `Delete the property field (${oldData.label})`,
                     `Delete the property field (${oldData.label}) by ${objectItem.name}`,
                     'virtual');

@@ -26,7 +26,7 @@ function AttributeTree({
   const { enqueueSnackbar } = useSnackbar();
 
   const addRootCategory = () => {
-    const filterGroup = attributes.filter((attrItem) => (attrItem.groupId === 'null' && attrItem.name === ''));
+    const filterGroup = attributes.filter((attrItem) => (attrItem.group_id === null && attrItem.name === ''));
     const flag = (filterGroup.length === 0);
     if (flag && !isCreating) {
       createAttribute({ name: '' })

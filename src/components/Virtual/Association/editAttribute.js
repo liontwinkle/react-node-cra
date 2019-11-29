@@ -40,10 +40,10 @@ function EditAttribute({
 
   const disabled = !(attributeName === attribute.name || attribute === '' || !isUpdating);
   const handleSubmit = () => {
-    if (!checkNameDuplicate(attributes, attributeName, attribute.groupId) && !disabled) {
+    if (!checkNameDuplicate(attributes, attributeName, attribute.group_id) && !disabled) {
       updateAttribute(attribute._id, { name: attributeName })
         .then(() => {
-          addNewRuleHistory(createHistory, attribute, attribute.groupId,
+          addNewRuleHistory(createHistory, attribute, attribute.group_id,
             `Name is changed as ${attributeName}`,
             `The Child ${attribute.name} Name is changed as ${attributeName}`,
             'attributes');

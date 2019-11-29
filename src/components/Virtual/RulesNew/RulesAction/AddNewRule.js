@@ -100,7 +100,7 @@ function AddNewRule({
     });
 
     if (!isUpdating) {
-      updateCategory(category.id, { rules: updatedData })
+      updateCategory(category._id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
@@ -124,7 +124,7 @@ function AddNewRule({
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
         refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
         criteria: ${ruleData.criteria})`;
-        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');

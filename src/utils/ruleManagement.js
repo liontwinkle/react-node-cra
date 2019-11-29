@@ -49,7 +49,7 @@ export const addNewRuleHistory = (createHistory, Item, groupId, msgCurrent, msgP
     type,
   })
     .then(() => {
-      if (groupId !== 'null') {
+      if (groupId !== null) {
         createHistory({
           label: msgParent,
           itemId: groupId,
@@ -78,7 +78,6 @@ export const getRules = (srcRules, valueDetails) => {
     const keyObject = valueDetails.find((keyItem) => (keyItem.key === item.key));
     if (keyObject) {
       newRules.push({
-        _id: item._id,
         basis: basisObj,
         refer: referObj,
         key: keyObject,
@@ -88,7 +87,6 @@ export const getRules = (srcRules, valueDetails) => {
         ruleType: ruleTypeObj,
       });
       editRules.push({
-        _id: item._id,
         basis: basisObj.key,
         refer: referObj.key,
         key: keyObject.key,

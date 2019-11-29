@@ -9,9 +9,9 @@ import { checkObject } from './index';
 const LIMIT_SIZE = 100 * 1024 * 1024;
 
 const validateKey = {
-  virtual: ['categoryid', 'name'],
-  attributes: ['attributeid', 'name'],
-  native: ['parentId', 'name'],
+  virtual: ['_id', 'name'],
+  attributes: ['_id', 'name'],
+  native: ['_id', 'name'],
   products: [],
 };
 
@@ -31,8 +31,8 @@ const checkException = (keys, dataItem, type) => {
 
 const handleExceptionVirtual = (newData, dataItem, categories) => {
   let passFlag = true;
-  const parentId = dataItem.parent_id || dataItem.parentid || 'null';
-  if (parentId !== 'null' && categories.findIndex((item) => (item.categoryId === parentId)) === -1) {
+  const parentId = dataItem.parent_id || dataItem.parentid || null;
+  if (parentId !== null && categories.findIndex((item) => (item._id === parentId)) === -1) {
     if (newData.findIndex((newItem) => (
       newItem.categoryid === parentId
     ) === -1)) {
@@ -46,10 +46,10 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   let passFlag = true;
   const deletedData = [];
   const recvGroupId = dataItem.groupid || dataItem.group_id || 'null';
-  const groupIds = attributes.filter(((attributeItem) => (attributeItem.groupId === 'null')));
-  const groupItem = groupIds.filter((item) => (item.attributeId === recvGroupId));
+  const groupIds = attributes.filter(((attributeItem) => (attributeItem.group_id === null)));
+  const groupItem = groupIds.filter((item) => (item._id === recvGroupId));
   let groupData = [];
-  if (recvGroupId !== 'null' && groupItem.length === 0) {
+  if (recvGroupId !== null && groupItem.length === 0) {
     if (newData.findIndex((newItem) => (
       newItem.attributeid === recvGroupId
     ) === -1)) {
@@ -61,7 +61,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {
-      if (categories.findIndex((categoryItem) => categoryItem.categoryId === appearItem) === -1) {
+      if (categories.findIndex((categoryItem) => categoryItem._id === appearItem) === -1) {
         deletedData.push(appearItem);
       }
     });
@@ -181,10 +181,10 @@ export const validateData = (type, data, categories, attributes) => {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
-              tempData.categoryId = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
+              tempData._id = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
                 ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid;
               tempData.name = dataItem.name || [];
-              tempData.parentId = dataItem.parent_id || 'null';
+              tempData.parent_id = dataItem.parent_id || null;
               tempData.properties = getProperties(dataItem, 'virtual');
             }
           } else if (type === 'attributes') {
@@ -193,10 +193,10 @@ export const validateData = (type, data, categories, attributes) => {
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
               tempData.appear = validateAttributes.returnData || [];
-              tempData.attributeId = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
+              tempData._id = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
                 ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid;
               tempData.name = dataItem.name || [];
-              tempData.groupId = dataItem.groupid || dataItem.group_id || 'null';
+              tempData.group_id = dataItem.groupid || dataItem.group_id || null;
               tempData.properties = getProperties(dataItem, 'attributes');
             }
           } else {

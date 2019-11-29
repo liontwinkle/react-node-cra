@@ -85,9 +85,10 @@ function PropertyActions({
       if (!isObjectUpdating && !isHistoryCreating) {
         if (!isEqual(objectItem.properties, saveData.tempProperties)) {
           const updatedData = makeUpdatedData(saveData.tempProperties, fields, sections);
-          updateObject(objectItem.id, { properties: updatedData })
+          const parenId = (objectItem.group_id) ? objectItem.group_id : objectItem.parent_id;
+          updateObject(objectItem._id, { properties: updatedData })
             .then(() => {
-              addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
+              addNewRuleHistory(createHistory, objectItem, parenId,
                 'Update Properties',
                 `The properties of the Child ${objectItem.name} is updated.`,
                 'virtual');

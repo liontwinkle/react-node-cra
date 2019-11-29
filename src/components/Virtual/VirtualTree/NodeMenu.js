@@ -111,7 +111,7 @@ function NodeMenu({
               if (deleteHistory.length > 0) {
                 removeHistory(node.item._id)
                   .then(() => {
-                    if (node.item.parent_id !== 'null') {
+                    if (node.item.parent_id !== null) {
                       createHistory({
                         label: `Delete Child Node ${node.item.name}`,
                         itemId: node.item.parent_id,

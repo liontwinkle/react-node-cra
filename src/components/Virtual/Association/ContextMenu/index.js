@@ -41,9 +41,9 @@ function ContextMenu({
   }, [displayData, displayEdit, handleClose, info.positionX, info.positionY]);
   const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
-    if (attribute.groupId === 'null') {
+    if (attribute.group_id === null) {
       filterAttribute = attributes.filter((attributeItem) => (
-        attributeItem.groupId === attribute.attributeId.toString()));
+        attributeItem.group_id === attribute._id));
       filterAttribute.push(attribute);
     } else {
       filterAttribute.push(attribute);

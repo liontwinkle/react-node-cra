@@ -30,7 +30,7 @@ function EditRules({
   valueDetails,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const rule = (category.parentId === 'null') ? ruleType : new Array(ruleType[0]);
+  const rule = (category.parent_id === null) ? ruleType : new Array(ruleType[0]);
   const tableData = {
     columns: [
       { title: 'Basis', field: 'basis', lookup: getObjectFromArray(basis) },

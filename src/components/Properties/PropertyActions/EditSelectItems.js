@@ -115,7 +115,7 @@ function EditPropertyFields({
         if (!isUpdating) {
           updatePropertyField({ propertyFields })
             .then(() => {
-              updateObject(objectItem.id, { properties })
+              updateObject(objectItem._id, { properties })
                 .then(() => {
                   confirmMessage(enqueueSnackbar, 'Selected item has been deleted successfully.', 'success');
                 })

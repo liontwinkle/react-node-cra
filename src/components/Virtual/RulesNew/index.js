@@ -88,19 +88,19 @@ class NewRules extends Component {
 
     let filterProduct = [];
     let attributeList = attributes.filter((Item) => (
-      !!Item.appear.find((appearItem) => (appearItem === category.categoryId))));
+      !!Item.appear.find((appearItem) => (appearItem === category._id))));
     let filterAttribute = attributeList;
 
     if (attributeList.length > 0) {
-      const groups = attributeList.filter((item) => (!item.groupId));
+      const groups = attributeList.filter((item) => (!item.group_id));
       attributeList = _difference(attributeList, groups);
       groups.forEach((groupItem) => {
         const childrenList = attributeList.filter((childItem) => (
-          childItem.groupId === groupItem.attributeId.toString()));
+          childItem.group_id === groupItem._id));
         attributeList = _difference(attributeList, childrenList);
       });
       attributeList.forEach((childListItem) => {
-        const groupChild = attributes.filter((item) => (item.attributeId.toString() === childListItem.groupId));
+        const groupChild = attributes.filter((item) => (item._id === childListItem.group_id));
         filterAttribute = _union(filterAttribute, groupChild);
       });
       const srcAttributeRules = setUnionRules(filterAttribute);
@@ -121,7 +121,7 @@ class NewRules extends Component {
     const { categories } = this.props;
     let parentRules = [];
     const filteredData = categories.filter((categoryItem) => (
-      categoryItem.categoryId.toString() === parentId
+      categoryItem._id === parentId
     ));
     let filteredRules = [];
     if (filteredData.length > 0) {
@@ -129,8 +129,8 @@ class NewRules extends Component {
       const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
       filteredRules = (defaultFlag) ? unionRules(defaultRules, universalRules) : universalRules;
       parentRules = unionRules(parentRules, filteredRules);
-      if (filteredData[0].parentId !== 'null') {
-        parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parentId, defaultFlag));
+      if (filteredData[0].parent_id !== null) {
+        parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parent_id, defaultFlag));
       }
     }
     return parentRules;
@@ -138,7 +138,7 @@ class NewRules extends Component {
 
   setMap = (category) => {
     const defaultFlag = (this.props.category.rules.length <= 0);
-    const parentRules = this.getParentRules(this.props.category.parentId, defaultFlag);
+    const parentRules = this.getParentRules(this.props.category.parent_id, defaultFlag);
     const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
     const displayRules = unionRules(recvNewRules, parentRules);
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
