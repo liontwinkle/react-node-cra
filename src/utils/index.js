@@ -10,7 +10,7 @@ const makeArrayObject = (array, idName) => {
   const list = JSON.parse(JSON.stringify(array)) || [];
   list.forEach((item, index) => {
     if (item[idName] === '') {
-      list[index][idName] = 'null';
+      list[index][idName] = null;
     }
   });
   return list;

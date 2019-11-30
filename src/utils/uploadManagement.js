@@ -45,7 +45,7 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
   const deletedData = [];
-  const recvGroupId = dataItem.groupid || dataItem.group_id || 'null';
+  const recvGroupId = dataItem.groupid || dataItem.group_id || null;
   const groupIds = attributes.filter(((attributeItem) => (attributeItem.group_id === null)));
   const groupItem = groupIds.filter((item) => (item._id === recvGroupId));
   let groupData = [];
@@ -57,7 +57,7 @@ const handleExceptionAttribute = (newData, dataItem, attributes, categories) => 
     }
   } else {
     const appearData = (groupItem.length > 0) ? groupItem[0].appear : [];
-    groupData = (recvGroupId === 'null') ? [] : appearData;
+    groupData = (recvGroupId === null) ? [] : appearData;
   }
   if (dataItem.appear) {
     dataItem.appear.forEach((appearItem) => {
@@ -182,7 +182,7 @@ export const validateData = (type, data, categories, attributes) => {
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
               tempData._id = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
-                ? parseInt(dataItem.categoryid, 10) : dataItem.categoryid;
+                ? dataItem.categoryid : dataItem.categoryid;
               tempData.name = dataItem.name || [];
               tempData.parent_id = dataItem.parent_id || null;
               tempData.properties = getProperties(dataItem, 'virtual');
@@ -194,7 +194,7 @@ export const validateData = (type, data, categories, attributes) => {
               tempData.rules = dataItem.rules || [];
               tempData.appear = validateAttributes.returnData || [];
               tempData._id = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
-                ? parseInt(dataItem.attributeid, 10) : dataItem.attributeid;
+                ? dataItem.attributeid : dataItem.attributeid;
               tempData.name = dataItem.name || [];
               tempData.group_id = dataItem.groupid || dataItem.group_id || null;
               tempData.properties = getProperties(dataItem, 'attributes');

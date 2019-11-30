@@ -543,10 +543,10 @@ function removeCategoryEntity(req, res) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   return (entity) => {
     if (entity) {
-      collectionAppear.find({ _id: entity._id })
+      collectionAppear.find({ categoryId: entity._id })
         .then((result) => {
           if (result.length > 0) {
-            collectionAppear.deleteMany({ _id: entity._id })
+            collectionAppear.deleteMany({ categoryId: entity._id })
               .then(() => {});
           }
         });

@@ -124,7 +124,7 @@ function Association({
       }
 
       if (checkGrp) {
-        const groupAdd = attributes.filter((attrItem) => (attrItem._id.toString() === targetAppear.group_id))[0];
+        const groupAdd = attributes.filter((attrItem) => (attrItem._id === targetAppear.group_id))[0];
         const groupAddAppear = groupAdd.appear;
         groupAddAppear.push(category._id);
         const updateItemId = attributes.find((item) => (item._id === targetAppear.group_id))._id;

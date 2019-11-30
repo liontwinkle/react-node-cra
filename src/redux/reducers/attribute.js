@@ -1,5 +1,7 @@
 import _findIndex from 'lodash/findIndex';
-import { changePropertiesData, convertPropertyData, getAttribute } from 'utils';
+import {
+  changePropertiesData, convertPropertyData, getAttribute, sortByField,
+} from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -26,13 +28,14 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_FETCH_SUCCESS:
       const recvAttributes = changePropertiesData(action.payload.attributes);
-      const fetchedTrees = getAttribute(recvAttributes.sort(), state.nodes);
+      recvAttributes.sort(sortByField('name'));
+      const fetchedTrees = getAttribute(recvAttributes, state.nodes);
 
       return {
         ...state,
         isFetchingList: false,
         attributes: recvAttributes,
-        attribute: state.attribute || action.payload.attributes.filter((item) => (item.group_id === null))[0] || null,
+        attribute: state.attribute || recvAttributes.filter((item) => (item.group_id === null))[0] || null,
         associations: fetchedTrees.association,
         nodes: fetchedTrees.subTree,
       };

@@ -45,7 +45,7 @@ export const filterProducts = (products, rules, key) => {
 export const addNewRuleHistory = (createHistory, Item, groupId, msgCurrent, msgParent, type) => {
   createHistory({
     label: msgCurrent,
-    itemId: Item.id,
+    itemId: Item._id,
     type,
   })
     .then(() => {
