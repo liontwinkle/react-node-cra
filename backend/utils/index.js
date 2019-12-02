@@ -402,15 +402,6 @@ function saveCategoriesUpdates(req) {
   };
 }
 
-function saveUpdates(updates) {
-  return (entity) => {
-    if (updates) {
-      _.assign(entity, updates);
-    }
-    return entity.saveAsync();
-  };
-}
-
 function savePropertiesUpdates(updates) {
   return (entity) => {
     if (updates) {
@@ -622,6 +613,24 @@ function createCollection(body) {
     db.createCollection(item, () => {
     });
   });
+}
+
+function saveUpdates(collection, updates) {
+  return (entity) => {
+    if (updates) {
+      const updateCode = (entity.code !== updates.code);
+      if (updateCode) {
+        return collection.insertMany(updates).then((err, result) => {
+          console.log(result);
+          createCollection(updates);
+          entity.active = false;
+          return entity.saveAsync();
+        });
+      }
+      _.assign(entity, updates);
+      return entity.saveAsync();
+    }
+  };
 }
 
 module.exports = {

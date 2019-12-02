@@ -49,7 +49,7 @@ exports.update = (req, res) => {
   Clients
     .findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(saveUpdates(Clients, req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
