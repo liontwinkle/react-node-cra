@@ -58,7 +58,7 @@ const getStringTypeValue = (property, state, propertyFields, template) => {
   } else {
     value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
   }
-  if (property.propertyType === 'urlpath') {
+  if (property.propertyType === 'urlpath' && value) {
     value = value.replace('_', '-');
     value = value.replace(' ', '-');
   }
@@ -156,6 +156,7 @@ export const sectionRender = (
           value = (typeof state.properties[p.key] === 'string')
             ? (state.properties[p.key] === 'true') : state.properties[p.key];
         }
+        value = (typeof value === 'number') ? (value >= 1) : value;
         res.push(
           <CustomToggle
             label={p.label}

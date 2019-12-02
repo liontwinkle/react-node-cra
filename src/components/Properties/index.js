@@ -36,25 +36,27 @@ class Properties extends Component {
 
   componentDidMount() {
     const { propertyField, objectItem } = this.props;
-    const nonSection = (propertyField.propertyFields)
-      ? propertyField.propertyFields.filter((item) => item.section === null) : [];
-    this.setState({
-      noSectionPropertyFields: nonSection || [],
-      properties: objectItem.properties || {},
-      sections: propertyField.sections || [],
-    });
+    if (propertyField) {
+      const nonSection = (propertyField.propertyFields)
+        ? propertyField.propertyFields.filter((item) => item.section === null) : [];
+      this.setState({
+        noSectionPropertyFields: nonSection || [],
+        properties: objectItem.properties || {},
+        sections: propertyField.sections || [],
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
-    if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+    if (propertyField && !isEqual(objectItem.properties, prevProps.objectItem.properties)) {
       const updatedProperties = objectItem.properties || {};
       this.updateState({
         properties: updateProperties(propertyField.propertyFields, updatedProperties),
       });
     }
-    if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
+    if (propertyField && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nonSection = propertyField.propertyFields.filter((item) => item.section === null);
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
@@ -63,7 +65,7 @@ class Properties extends Component {
       });
     }
 
-    if (!isEqual(propertyField.sections, prevProps.propertyField.sections)) {
+    if (propertyField && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });
@@ -160,7 +162,8 @@ class Properties extends Component {
       noSectionPropertyFields,
     } = this.state;
 
-    const { propertyFields } = this.props.propertyField;
+    const propertyFields = this.props.propertyField !== null ? this.props.propertyField.propertyFields : [];
+
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">

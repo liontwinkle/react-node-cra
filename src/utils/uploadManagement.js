@@ -44,8 +44,15 @@ const handleExceptionVirtual = (newData, dataItem, categories) => {
 
 const handleExceptionAttribute = (newData, dataItem, attributes, categories) => {
   let passFlag = true;
-  const deletedData = [];
   const recvGroupId = dataItem.groupid || dataItem.group_id || null;
+  if (attributes.length === 0) {
+    passFlag = (recvGroupId === 'null' || recvGroupId === null);
+    return {
+      passFlag,
+      returnData: [],
+    };
+  }
+  const deletedData = [];
   const groupIds = attributes.filter(((attributeItem) => (attributeItem.group_id === null)));
   const groupItem = groupIds.filter((item) => (item._id === recvGroupId));
   let groupData = [];
@@ -167,7 +174,18 @@ const ruleValidate = (data) => {
   return validateData;
 };
 /** ** EXPORTS DEFINE **** */
-
+const validateId = (item, type) => {
+  let id = 0;
+  if (typeof item._id !== 'object' || item._id === null) {
+    id = item._id;
+  } else {
+    id = (item[`${type}_id`]) || item[`${type}id`];
+  }
+  if (typeof id === 'string') {
+    id = parseInt(id, 10);
+  }
+  return id;
+};
 export const validateData = (type, data, categories, attributes) => {
   const validateData = [];
   let tempData = {};
@@ -181,10 +199,10 @@ export const validateData = (type, data, categories, attributes) => {
             pushFlag = handleExceptionVirtual(data, dataItem, categories);
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
-              tempData._id = (dataItem.categoryid && typeof dataItem.categoryid === 'string')
-                ? dataItem.categoryid : dataItem.categoryid;
+              tempData._id = validateId(dataItem, 'category');
               tempData.name = dataItem.name || [];
               tempData.parent_id = dataItem.parent_id || null;
+              tempData.parent_id = (tempData.parent_id === 'null') ? tempData.parent_id = null : tempData.parent_id;
               tempData.properties = getProperties(dataItem, 'virtual');
             }
           } else if (type === 'attributes') {
@@ -193,10 +211,10 @@ export const validateData = (type, data, categories, attributes) => {
             if (pushFlag) {
               tempData.rules = dataItem.rules || [];
               tempData.appear = validateAttributes.returnData || [];
-              tempData._id = (dataItem.attributeid && typeof dataItem.attributeid === 'string')
-                ? dataItem.attributeid : dataItem.attributeid;
+              tempData._id = validateId(dataItem, 'attribute');
               tempData.name = dataItem.name || [];
               tempData.group_id = dataItem.groupid || dataItem.group_id || null;
+              tempData.group_id = (tempData.group_id === 'null') ? tempData.group_id = null : tempData.group_id;
               tempData.properties = getProperties(dataItem, 'attributes');
             }
           } else {

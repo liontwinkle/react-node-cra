@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
-import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -76,7 +75,7 @@ CustomText.defaultProps = {
   labelAlignment: '',
   placeholder: '',
   inline: false,
-  inlineWidth: inlineDefaultWidth,
+  inlineWidth: '220px',
   hint: '',
   value: '',
 };

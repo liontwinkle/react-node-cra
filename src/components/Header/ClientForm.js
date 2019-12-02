@@ -36,9 +36,9 @@ function ClientForm({
 
   const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
-    name: isAdd ? '' : client.name,
-    code: isAdd ? '' : client.code,
-    url: isAdd ? '' : client.url,
+    name: isAdd === 'Add' ? '' : client.name,
+    code: isAdd === 'Add' ? '' : client.code,
+    url: isAdd === 'Add' ? '' : client.url,
     nameErr: false,
     codeErr: false,
     urlErr: false,
@@ -65,7 +65,7 @@ function ClientForm({
       ...clientData,
       [field]: value,
     };
-    if (isAdd) {
+    if (isAdd === 'Add') {
       if (field === 'name') {
         newClient = {
           ...newClient,
@@ -87,7 +87,7 @@ function ClientForm({
   };
 
   const checkClientDuplicate = (clientData) => {
-    if (isAdd) {
+    if (isAdd === 'Add') {
       return !checkClientName(clientData.name)
       && !checkClientCode(clientData.code)
       && !checkClientUrl(clientData.url);
@@ -100,15 +100,15 @@ function ClientForm({
 
   const handleSubmit = () => {
     if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
-      const actionClient = isAdd ? createClient : updateClient;
-      const actionPropertyField = isAdd ? createPropertyField : updatePropertyField;
+      const actionClient = (isAdd === 'Add') ? createClient : updateClient;
+      const actionPropertyField = (isAdd === 'Add') ? createPropertyField : updatePropertyField;
 
       actionClient(clientData)
         .then(() => {
           actionPropertyField(clientData)
             .then(() => {
               confirmMessage(enqueueSnackbar,
-                `The client has been ${isAdd ? 'created' : 'updated'} successfully.`, 'success');
+                `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
               handleClose();
             })
             .catch(() => {
