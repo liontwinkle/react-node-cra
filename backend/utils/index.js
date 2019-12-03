@@ -402,11 +402,49 @@ function saveCategoriesUpdates(req) {
   };
 }
 
+function getDiffSection(oldsection, newSection) {
+  let newKey = '';
+  let originalKey = '';
+  newSection.forEach((newItem) => {
+    const duplicateId = oldsection.findIndex((oldItem) => (
+      (oldItem.key === newItem.key) && (oldItem.label === newItem.label)
+    ));
+    if (duplicateId < 0) {
+      newKey = newItem.key;
+      const updatedSection = oldsection.find((oldItem) => (oldItem._id === newItem._id));
+      if (updatedSection) {
+        originalKey = updatedSection.key;
+      }
+    }
+  });
+  return {
+    newKey,
+    originalKey,
+  };
+}
+
+function setNewKey(propertyFields, newKey, originalKey) {
+  const newPropertyFields = JSON.parse(JSON.stringify(propertyFields));
+  propertyFields.forEach((item, index) => {
+    if (item.section === originalKey) {
+      newPropertyFields[index].section = newKey;
+    }
+  });
+  return newPropertyFields;
+}
 function savePropertiesUpdates(updates) {
   return (entity) => {
     if (updates) {
       const originData = JSON.parse(JSON.stringify(entity));
       let data = updates;
+      if (updates.sections) {
+        const oldSections = JSON.parse(JSON.stringify(entity.sections));
+        const newSections = JSON.parse(JSON.stringify(updates.sections));
+        const { newKey, originalKey } = getDiffSection(oldSections, newSections);
+        if (newKey !== originalKey) {
+          entity.propertyFields = setNewKey(entity.propertyFields, newKey, originalKey);
+        }
+      }
       if (updates.propertyFields) {
         removeImageUploaded(originData.propertyFields, updates.propertyFields);
         data = uploadImageProperties(updates, entity.clientId, entity.type);
