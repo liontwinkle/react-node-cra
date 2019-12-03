@@ -38,10 +38,10 @@ function ClientForm({
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (client === null) {
+    if (client === null && !status.Add) {
       handleClose();
     }
-  }, [client, handleClose]);
+  }, [client, handleClose, status.Add]);
   const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
     name: isAdd === 'Add' ? '' : ((client && client.name) || ''),
