@@ -86,7 +86,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isDeleting: false,
-        propertyField: null,
+        propertyField: {
+          id: '',
+          sections: [],
+          propertyFields: [],
+        },
       };
     case types.PROPERTY_FIELD_DELETE_FAIL:
       return {

@@ -29,9 +29,10 @@ function ClientForm({
   clients,
   createClient,
   updateClient,
-  fetchClients,
-  setClient,
+  // fetchClients,
+  // setClient,
   createPropertyField,
+  updatePropertyField,
   handleClose,
 }) {
   const classes = useStyles();
@@ -109,33 +110,18 @@ function ClientForm({
   const handleSubmit = () => {
     if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
       const actionClient = (isAdd === 'Add') ? createClient : updateClient;
+      const actionPropertyField = (isAdd === 'Add') ? createPropertyField : updatePropertyField;
       actionClient(clientData)
         .then(() => {
-          if (isAdd === 'Add') {
-            createPropertyField(clientData)
-              .then(() => {
-                confirmMessage(enqueueSnackbar,
-                  `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
-                handleClose();
-              })
-              .catch(() => {
-                confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
-              });
-          } else {
-            fetchClients()
-              .then(() => {
-                createPropertyField(clientData)
-                  .then(() => {
-                    setClient(null);
-                    confirmMessage(enqueueSnackbar,
-                      `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
-                    handleClose();
-                  })
-                  .catch(() => {
-                    confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
-                  });
-              });
-          }
+          actionPropertyField(clientData)
+            .then(() => {
+              confirmMessage(enqueueSnackbar,
+                `The client has been ${isAdd ? 'created' : 'updated'} successfully.`, 'success');
+              handleClose();
+            })
+            .catch(() => {
+              confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
+            });
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
@@ -206,10 +192,11 @@ ClientForm.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
-  fetchClients: PropTypes.func.isRequired,
-  setClient: PropTypes.func.isRequired,
+  // fetchClients: PropTypes.func.isRequired,
+  // setClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createPropertyField: PropTypes.func.isRequired,
+  updatePropertyField: PropTypes.func.isRequired,
 };
 
 ClientForm.defaultProps = {

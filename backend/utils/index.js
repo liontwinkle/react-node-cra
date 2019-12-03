@@ -547,11 +547,6 @@ function removeCategoryEntity(req, res) {
   };
 }
 
-function removeEntity(res) {
-  return (entity) => entity && entity.removeAsync()
-    .then(respondWith(res, 204));
-}
-
 function removeChildren(req, id) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   req.category.find({ parent_id: id })
@@ -620,11 +615,11 @@ function saveUpdates(collection, updates) {
     if (updates) {
       const updateCode = (entity.code !== updates.code);
       if (updateCode) {
-        return collection.insertMany(updates).then((err, result) => {
-          console.log(result);
-          createCollection(updates);
-          entity.active = false;
-          return entity.saveAsync();
+        const collection = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
+        collection.forEach((item) => {
+          if (db.collection(`${entity.code}_${item}`)) {
+            db.collection(`${entity.code}_${item}`).rename(`${updates.code}_${item}`);
+          }
         });
       }
       _.assign(entity, updates);
@@ -632,6 +627,22 @@ function saveUpdates(collection, updates) {
     }
   };
 }
+
+function removeEntity(res) {
+  return (entity) => {
+    if (entity) {
+      const collection = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
+      collection.forEach((item) => {
+        if (db.collection(`${entity.code}_${item}`)) {
+          db.collection(`${entity.code}_${item}`).drop(() => {});
+        }
+      });
+      entity.removeAsync()
+        .then(respondWith(res, 204));
+    }
+  };
+}
+
 
 module.exports = {
   handleError,
