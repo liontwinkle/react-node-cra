@@ -50,7 +50,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCreating: false,
-        propertyField: action.payload.data,
+        // propertyField: action.payload.data,
       };
     case types.PROPERTY_FIELD_CREATE_FAIL:
       return {
