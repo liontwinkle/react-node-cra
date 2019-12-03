@@ -27,7 +27,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CLIENTS_GET_SUCCESS:
       const recvData = action.payload.clients;
-      console.log('### DEBUG RECV DATA: ', recvData); // fixme
       const getClients = [];
       recvData.forEach((item) => {
         if (item.active) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -30,18 +30,23 @@ function ClientForm({
   createClient,
   updateClient,
   fetchClients,
-  // setClient,
+  setClient,
   createPropertyField,
   handleClose,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
+  useEffect(() => {
+    if (client === null) {
+      handleClose();
+    }
+  }, [client, handleClose]);
   const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
-    name: isAdd === 'Add' ? '' : client.name,
-    code: isAdd === 'Add' ? '' : client.code,
-    url: isAdd === 'Add' ? '' : client.url,
+    name: isAdd === 'Add' ? '' : ((client && client.name) || ''),
+    code: isAdd === 'Add' ? '' : ((client && client.code) || ''),
+    url: isAdd === 'Add' ? '' : ((client && client.url) || ''),
     nameErr: false,
     codeErr: false,
     urlErr: false,
@@ -119,17 +124,12 @@ function ClientForm({
           } else {
             fetchClients()
               .then(() => {
-                console.log('#### DEBUG ', clients);
                 createPropertyField(clientData)
                   .then(() => {
-                    // const settingData = clients.filter((item) => (item.code === clientData.code));
-                    // console.log(settingData);
-                    // setClient(settingData)
-                    //   .then(() => {
+                    setClient(null);
                     confirmMessage(enqueueSnackbar,
                       `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
                     handleClose();
-                    // });
                   })
                   .catch(() => {
                     confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
@@ -207,7 +207,7 @@ ClientForm.propTypes = {
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
   fetchClients: PropTypes.func.isRequired,
-  // setClient: PropTypes.func.isRequired,
+  setClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createPropertyField: PropTypes.func.isRequired,
 };

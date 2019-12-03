@@ -34,7 +34,6 @@ export const createPropertyField = (clientData) => (dispatch, getState) => {
 
   const { clients } = getState().clientsData;
   const client = clients.filter((item) => (item.name === clientData.name));
-  console.log('### DEBUG CLIENT: ', client); // fixme
   const type = ['virtual', 'native', 'products', 'attributes'];
   const propertyFields = [];
   type.forEach((item) => {
