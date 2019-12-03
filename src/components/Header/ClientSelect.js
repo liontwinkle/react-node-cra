@@ -79,11 +79,11 @@ function ClientSelect({
   };
   const handleChangeClient = (item) => {
     const newClient = _find(clients, { id: item.key });
+    setProducts([]);
+    updateNodeData([]);
+    updateTreeData([]);
     if (newClient) {
       setClient(newClient);
-      setProducts([]);
-      updateNodeData([]);
-      updateTreeData([]);
       actionChangeType(defaultType, newClient);
     }
   };

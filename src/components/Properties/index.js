@@ -50,13 +50,14 @@ class Properties extends Component {
   componentDidUpdate(prevProps) {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
-    if (propertyField && !isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+    if (propertyField.propertyFields && !isEqual(objectItem.properties, prevProps.objectItem.properties)) {
       const updatedProperties = objectItem.properties || {};
       this.updateState({
         properties: updateProperties(propertyField.propertyFields, updatedProperties),
       });
     }
-    if (propertyField && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
+    if (propertyField.propertyFields
+      && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nonSection = propertyField.propertyFields.filter((item) => item.section === null);
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
@@ -65,7 +66,7 @@ class Properties extends Component {
       });
     }
 
-    if (propertyField && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
+    if (propertyField.sections && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });
@@ -143,11 +144,14 @@ class Properties extends Component {
   renderSectionFields = (section) => {
     const { propertyFields } = this.props.propertyField;
     const template = this.props.objectItem.template || '';
-    return sectionRender(
-      propertyFields, template, this.state, section,
-      this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
-    );
+    if (propertyFields) {
+      return sectionRender(
+        propertyFields, template, this.state, section,
+        this.changeInput, this.changeSelect, this.changeArrayInput,
+        this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
+      );
+    }
+    return null;
   };
 
   render() {
@@ -209,15 +213,19 @@ class Properties extends Component {
             />
           )}
         </div>
-        <PropertyActions
-          properties={properties}
-          fields={propertyFields}
-          uploadImage={this.state.uploadImage}
-          sections={sections}
-          isObjectUpdating={this.props.isObjectUpdating}
-          updateObject={this.props.updateObject}
-          objectItem={this.props.objectItem}
-        />
+        {
+          propertyFields && (
+            <PropertyActions
+              properties={properties}
+              fields={propertyFields}
+              uploadImage={this.state.uploadImage}
+              sections={sections}
+              isObjectUpdating={this.props.isObjectUpdating}
+              updateObject={this.props.updateObject}
+              objectItem={this.props.objectItem}
+            />
+          )
+        }
       </div>
     );
   }
