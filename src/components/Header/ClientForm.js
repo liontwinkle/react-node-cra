@@ -11,7 +11,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { createClient, updateClient } from 'redux/actions/clients';
+import {
+  createClient, updateClient, fetchClients, setClient,
+} from 'redux/actions/clients';
 import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
@@ -27,8 +29,9 @@ function ClientForm({
   clients,
   createClient,
   updateClient,
+  fetchClients,
+  // setClient,
   createPropertyField,
-  updatePropertyField,
   handleClose,
 }) {
   const classes = useStyles();
@@ -101,19 +104,38 @@ function ClientForm({
   const handleSubmit = () => {
     if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
       const actionClient = (isAdd === 'Add') ? createClient : updateClient;
-      const actionPropertyField = (isAdd === 'Add') ? createPropertyField : updatePropertyField;
-
       actionClient(clientData)
         .then(() => {
-          actionPropertyField(clientData)
-            .then(() => {
-              confirmMessage(enqueueSnackbar,
-                `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
-              handleClose();
-            })
-            .catch(() => {
-              confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
-            });
+          if (isAdd === 'Add') {
+            createPropertyField(clientData)
+              .then(() => {
+                confirmMessage(enqueueSnackbar,
+                  `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
+                handleClose();
+              })
+              .catch(() => {
+                confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
+              });
+          } else {
+            fetchClients()
+              .then(() => {
+                console.log('#### DEBUG ', clients);
+                createPropertyField(clientData)
+                  .then(() => {
+                    // const settingData = clients.filter((item) => (item.code === clientData.code));
+                    // console.log(settingData);
+                    // setClient(settingData)
+                    //   .then(() => {
+                    confirmMessage(enqueueSnackbar,
+                      `The client has been ${(isAdd === 'Add') ? 'created' : 'updated'} successfully.`, 'success');
+                    handleClose();
+                    // });
+                  })
+                  .catch(() => {
+                    confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
+                  });
+              });
+          }
         })
         .catch(() => {
           confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
@@ -184,9 +206,10 @@ ClientForm.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
+  fetchClients: PropTypes.func.isRequired,
+  // setClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createPropertyField: PropTypes.func.isRequired,
-  updatePropertyField: PropTypes.func.isRequired,
 };
 
 ClientForm.defaultProps = {
@@ -202,6 +225,8 @@ const mapStateToProps = (store) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createClient,
   updateClient,
+  fetchClients,
+  setClient,
   createPropertyField,
   updatePropertyField,
 }, dispatch);

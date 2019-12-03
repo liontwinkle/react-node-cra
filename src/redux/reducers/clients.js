@@ -26,10 +26,18 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.CLIENTS_GET_SUCCESS:
+      const recvData = action.payload.clients;
+      console.log('### DEBUG RECV DATA: ', recvData); // fixme
+      const getClients = [];
+      recvData.forEach((item) => {
+        if (item.active) {
+          getClients.push(item);
+        }
+      });
       return {
         ...state,
         isFetchingList: false,
-        clients: action.payload.clients,
+        clients: getClients,
       };
     case types.CLIENTS_GET_FAIL:
       return {
@@ -63,17 +71,9 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CLIENT_UPDATE_SUCCESS:
-      const clientIdx = _findIndex(clients, { id: action.payload.data.id });
-      if (clientIdx > -1) {
-        clients.splice(clientIdx, 1, action.payload.data);
-      } else {
-        clients.push(action.payload.data);
-      }
       return {
         ...state,
         isUpdating: false,
-        clients: clients.slice(0),
-        client: action.payload.data,
       };
     case types.CLIENT_UPDATE_FAIL:
       return {
