@@ -184,6 +184,7 @@ function NodeMenu({
       [type]: value,
     };
     setOpenDialog(newState);
+    handleClose();
   };
 
   return (
