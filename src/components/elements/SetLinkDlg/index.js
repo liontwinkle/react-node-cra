@@ -38,7 +38,7 @@ function SetLinkDlg({
     rootItems.forEach((item) => {
       items.push({
         label: item.name,
-        value: item.id,
+        value: item._id,
       });
     });
     setItemList(items);
