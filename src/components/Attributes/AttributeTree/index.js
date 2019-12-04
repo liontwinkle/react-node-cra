@@ -61,7 +61,7 @@ function AttributeNode({
       const attribute = _find(attributes, { _id: node.item._id });
       const group = _find(attributes, { _id: node.item.group_id });
       const groupId = (group) ? group._id : null;
-      if (attribute && attribute.name !== node.title && !isUpdating && !isCreating) {
+      if (!isUpdating && !isCreating && attribute && attribute.name !== node.title) {
         if (checkNameDuplicate(attributes, node.title, node.item.group_id) === 0) {
           updateAttribute(node.item._id, { name: node.title })
             .then(() => {

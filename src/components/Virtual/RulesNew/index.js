@@ -256,9 +256,9 @@ NewRules.propTypes = {
   category: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
+  products: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
-  products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setPrefilterData: PropTypes.func.isRequired,
@@ -269,11 +269,11 @@ NewRules.propTypes = {
 const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
   categories: store.categoriesData.categories,
+  productViewType: store.clientsData.productViewType,
   products: store.productsData.data.products,
   valueDetails: store.productsData.data.valueDetails,
   isFetchingList: store.productsData.isFetchingList,
   attributes: store.attributesData.attributes,
-  productViewType: store.clientsData.productViewType,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

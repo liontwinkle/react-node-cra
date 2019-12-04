@@ -90,16 +90,6 @@ class Properties extends Component {
     }));
   };
 
-  changeArrayInput = (field) => (e) => {
-    e.persist();
-    this.setState((prevState) => ({
-      properties: {
-        ...prevState.properties,
-        [field]: e.target.value,
-      },
-    }));
-  };
-
   changeSelect = (field) => (value) => {
     this.setState((prevState) => ({
       properties: {
@@ -151,8 +141,8 @@ class Properties extends Component {
     if (propertyFields) {
       return sectionRender(
         propertyFields, template, this.state, section,
-        this.changeInput, this.changeSelect, this.changeArrayInput,
-        this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
+        this.changeInput, this.changeSelect, this.handleSelItemToggle,
+        this.handleEditImage, this.toggleSwitch, this.changeMonaco,
       );
     }
     return null;

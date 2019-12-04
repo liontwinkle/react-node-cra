@@ -97,7 +97,7 @@ export const updateProperties = (propertyFields, properties) => {
 
 export const sectionRender = (
   propertyFields, template, state, section,
-  changeInput, changeSelect, changeArrayInput,
+  changeInput, changeSelect,
   handleSelItemToggle, handleEditImage, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
@@ -199,7 +199,7 @@ export const sectionRender = (
             label={p.label}
             inline
             value={value}
-            onChange={changeArrayInput(p.key)}
+            onChange={changeInput(p.key)}
             key={p.key}
           />,
         );

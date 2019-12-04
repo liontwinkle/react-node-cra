@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
@@ -14,8 +14,8 @@ import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
 import SetTemplateDlg from 'components/elements/SetTemplateDlg';
+import { validateTemplate } from 'utils/propertyManagement';
 import NodeButton from './NodeButton';
-import { validateTemplate } from '../../../utils/propertyManagement';
 
 function NodeMenu({
   isCreating,
