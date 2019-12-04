@@ -43,6 +43,15 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   return string;
 };
 
+export const getRootParent = (Items, currentItem, type) => {
+  let rootParent = {};
+  if (!currentItem[type]) {
+    rootParent = currentItem;
+    return rootParent;
+  }
+  const parentItem = Items.find((node) => (node._id === currentItem[type]));
+  return getRootParent(Items, parentItem, type);
+};
 const getStringTypeValue = (property, state, propertyFields, template) => {
   let value = '';
   let templateFlag = (template[property.key] && template[property.key] !== '' && template[property.key] !== 'null');

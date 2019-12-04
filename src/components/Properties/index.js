@@ -7,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils';
-import { updateProperties, sectionRender } from 'utils/propertyManagement';
+import { updateProperties, sectionRender, getRootParent } from 'utils/propertyManagement';
 import { CustomSection } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
@@ -142,8 +142,12 @@ class Properties extends Component {
   };
 
   renderSectionFields = (section) => {
+    const { objectItem, attributes, categories } = this.props;
     const { propertyFields } = this.props.propertyField;
-    const template = this.props.objectItem.template || '';
+    const items = (objectItem.group_id) ? attributes : categories;
+    const type = (objectItem.group_id) ? 'group_id' : 'parent_id';
+    const rootParent = getRootParent(items, objectItem, type);
+    const template = rootParent.template || {};
     if (propertyFields) {
       return sectionRender(
         propertyFields, template, this.state, section,
@@ -236,11 +240,15 @@ Properties.propTypes = {
   propertyField: PropTypes.object.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
   updateObject: PropTypes.func.isRequired,
+  categories: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
+  categories: store.categoriesData.categories,
+  attributes: store.attributesData.attributes,
 });
 
 export default connect(
