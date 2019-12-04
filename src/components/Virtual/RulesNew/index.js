@@ -34,7 +34,10 @@ class NewRules extends Component {
   }
 
   componentDidMount() {
-    this.setState({ fetchingFlag: true });
+    this.setState({
+      fetchingFlag: true,
+      productsFlag: this.props.productViewType.key === 'grid',
+    });
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
       this.getProducts();
     } else {
@@ -256,6 +259,7 @@ NewRules.propTypes = {
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
+  productViewType: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -269,6 +273,7 @@ const mapStateToProps = (store) => ({
   valueDetails: store.productsData.data.valueDetails,
   isFetchingList: store.productsData.isFetchingList,
   attributes: store.attributesData.attributes,
+  productViewType: store.clientsData.productViewType,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
