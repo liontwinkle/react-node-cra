@@ -405,15 +405,17 @@ function saveCategoriesUpdates(req) {
 function getDiffSection(oldsection, newSection) {
   let newKey = '';
   let originalKey = '';
-  newSection.forEach((newItem) => {
-    const duplicateId = oldsection.findIndex((oldItem) => (
+  oldsection.forEach((oldItem) => {
+    const duplicateId = newSection.findIndex((newItem) => (
       (oldItem.key === newItem.key) && (oldItem.label === newItem.label)
     ));
     if (duplicateId < 0) {
-      newKey = newItem.key;
-      const updatedSection = oldsection.find((oldItem) => (oldItem._id === newItem._id));
+      originalKey = oldItem.key;
+      const updatedSection = newSection.find((newItem) => (newItem._id === oldItem._id));
       if (updatedSection) {
-        originalKey = updatedSection.key;
+        newKey = updatedSection.key;
+      } else {
+        newKey = null;
       }
     }
   });
