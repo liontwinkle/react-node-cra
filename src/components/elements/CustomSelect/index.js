@@ -3,6 +3,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import Popper from '@material-ui/core/Popper';
 import Button from '@material-ui/core/Button';
+
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import useEventListener from './use-event-listenr';
@@ -12,8 +13,12 @@ import './style.scss';
 function CustomSelect(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = useCallback((event = null) => {
-    setAnchorEl(anchorEl ? null : (event && event.currentTarget));
+  const handleClick = useCallback((target = null) => (event = null) => {
+    if (target === null) {
+      setAnchorEl(anchorEl ? null : (event && event.currentTarget));
+    } else {
+      setAnchorEl(target);
+    }
   }, [anchorEl]);
 
   const [wrapperRef, setWrapperRef] = useState(null);
@@ -47,7 +52,7 @@ function CustomSelect(props) {
         }
         setCurrentValue((current && current.label) || placeholder);
         setSearchedItems(items);
-        handleClick();
+        handleClick(null)();
       }
     }, [handleClick, popperRef, props, wrapperRef],
   );
@@ -87,20 +92,21 @@ function CustomSelect(props) {
     }
     setSearchedItems(searchResult);
     setCurrentValue(inputVal);
+    const target = event.currentTarget.parentNode.parentNode;
+    handleClick(target)();
   };
 
   const changeValue = (value) => () => {
     if (!props.disabled) {
       setEditable(false);
       props.onChange(value);
-      handleClick();
+      handleClick(null)();
     }
   };
 
   const {
     className,
     value,
-    items,
   } = props;
 
 
@@ -108,7 +114,7 @@ function CustomSelect(props) {
   const id = isOpened ? 'mg-popper' : undefined;
 
   const maxHeight = 400;
-  const height = Math.min(maxHeight, items.length * 30 + 1);
+  const height = Math.min(maxHeight, searchedItems.length * 30 + 1);
 
   let width = 0;
   if (wrapperRef) {
@@ -124,7 +130,7 @@ function CustomSelect(props) {
         className={`mg-select-current${isOpened ? ' active' : ''}`}
         aria-describedby={id}
         variant="outlined"
-        onClick={handleClick}
+        onClick={handleClick(null)}
       >
         <input
           className="mg-select-input-section"
