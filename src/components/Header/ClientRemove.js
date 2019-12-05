@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Tooltip } from 'react-tippy';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,

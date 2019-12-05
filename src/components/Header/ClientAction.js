@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import CopyIcon from '@material-ui/icons/CloudUpload';

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withSnackbar } from 'notistack';
 
 import { fetchProducts } from 'redux/actions/products';

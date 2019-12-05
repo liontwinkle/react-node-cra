@@ -167,3 +167,9 @@ export const ruleType = [
 ];
 
 export const inlineDefaultWidth = '20%';
+
+export const detailTableColumns = [
+  { title: 'Action', field: 'action' },
+  { title: 'Created Date', field: 'createdAt' },
+  { title: 'Updated Date', field: 'updatedAt' },
+];

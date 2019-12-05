@@ -5,16 +5,16 @@ import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 import _union from 'lodash/union';
 
-
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { getPreFilterData } from 'utils';
 import { IconButton } from 'components/elements';
 import PreviewProducts from 'components/shared/Rules/RulesTable/PreviewProducts';
 import PreviewGrid from 'components/shared/Rules/RulesTable/PreviewGrid';
+import { getPreFilterData } from 'utils';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
+
 
 import './style.scss';
 

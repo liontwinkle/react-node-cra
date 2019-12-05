@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { updateProductsField, setSizeSet } from 'redux/actions/productsFields';
 import { CustomInput, CustomSection } from 'components/elements';
 import ShowFields from 'components/ProductDetail/ShowFields';

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import MaterialTable from 'material-table';
 
+import { tableIcons, detailTableColumns } from 'utils/constants';
 import { convertDateFormat } from 'utils';
-import { tableIcons } from 'utils/constants';
 
 import './style.scss';
 
@@ -27,13 +27,6 @@ function DetailTable({
     }
   }, [attribute, category, history, type, historyStr]);
 
-
-  const columns = [
-    { title: 'Action', field: 'action' },
-    { title: 'Created Date', field: 'createdAt' },
-    { title: 'Updated Date', field: 'updatedAt' },
-  ];
-
   return (
     <div className="mg-detail-table">
       <PerfectScrollbar
@@ -41,7 +34,7 @@ function DetailTable({
       >
         <MaterialTable
           icons={tableIcons}
-          columns={columns}
+          columns={detailTableColumns}
           data={data}
           options={{
             actionsColumnIndex: -1,
