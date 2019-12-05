@@ -411,3 +411,13 @@ export const getMaxValueFromArray = (field = null, source) => {
 };
 
 export const checkObject = (data) => !(data === null || typeof data !== 'object' || Array.isArray(data));
+
+export const getRootCategories = (categories, field) => {
+  const roots = [];
+  categories.forEach((item) => {
+    if (item[field] === null) {
+      roots.push(item);
+    }
+  });
+  return roots;
+};
