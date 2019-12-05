@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 
 import Popover from '@material-ui/core/Popover';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import { createAttribute, removeAttribute } from 'redux/actions/attribute';
+import { createAttribute, removeAttribute, updateAttribute } from 'redux/actions/attribute';
 import { createHistory, removeHistory } from 'redux/actions/history';
 import { confirmMessage, getNodeKey, getSubItems } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { CustomConfirmDlg, IconButton } from 'components/elements';
+import SetTemplateDlg from 'components/elements/SetTemplateDlg';
+import { validateTemplate } from 'utils/propertyManagement';
 import NodeButton from './NodeButton';
 
 function NodeMenu({
@@ -23,7 +25,9 @@ function NodeMenu({
   history,
   node,
   path,
+  propertyField,
   setTreeData,
+  updateAttribute,
   createAttribute,
   createHistory,
   removeAttribute,
@@ -42,7 +46,7 @@ function NodeMenu({
   const handleClose = () => { setAnchorEl(null); };
 
   const handleEdit = () => {
-    if (checkNameDuplicate(attributes, node.item.name, node.item.groupId) < 2) {
+    if (checkNameDuplicate(attributes, node.item.name, node.item.group_id) < 2) {
       setTreeData(
         changeNodeAtPath({
           treeData,
@@ -63,12 +67,12 @@ function NodeMenu({
   const open = Boolean(anchorEl);
 
   const handleAdd = () => {
-    if (!isCreating && checkNameDuplicate(attributes, '', node.item.attributeId.toString()) === 0) {
-      createAttribute({ name: '', groupId: node.item.attributeId.toString(), appear: node.item.appear })
+    if (!isCreating && checkNameDuplicate(attributes, '', node.item._id) === 0) {
+      createAttribute({ name: '', group_id: node.item._id, appear: node.item.appear })
         .then((attribute) => {
           addNewRuleHistory(
             createHistory,
-            attribute, node.item.id,
+            attribute, node.item._id,
             'Create Node', 'Add Child Node- New Attribute', 'attributes',
           );
           confirmMessage(enqueueSnackbar, 'New Attribute has been created successfully.', 'success');
@@ -83,18 +87,18 @@ function NodeMenu({
   };
 
   const deleteItem = () => {
-    const removeId = node.item.id;
+    const removeId = node.item._id;
     if (!isDeleting) {
       removeAttribute(removeId)
         .then(() => {
-          const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item.id));
+          const deleteHistory = history.filter((historyItem) => (historyItem.itemId === node.item._id));
           if (deleteHistory.length > 0) {
             removeHistory(removeId)
               .then(() => {
-                if (node.item.groupId !== 'null') {
+                if (node.item.group_id !== null) {
                   createHistory({
                     label: `Delete Child Node ${node.item.name}`,
-                    itemId: node.item.groupId,
+                    itemId: node.item.group_id,
                     type: 'attributes',
                   });
                 }
@@ -123,6 +127,7 @@ function NodeMenu({
   };
 
   const [deleteDlgOpen, setDeleteDlgOpen] = useState(null);
+  const [templateDlgOpen, setTemplateDlgOpen] = useState(false);
   const [subCategoryNumber, setSubCategoryNumber] = useState(null);
 
   const handleDelete = () => {
@@ -135,6 +140,33 @@ function NodeMenu({
     const childNum = getSubItems(node);
     setSubCategoryNumber(childNum);
     setDeleteDlgOpen(true);
+    handleClose();
+  };
+
+  const handleTemplateDlg = (value) => () => {
+    setTemplateDlgOpen(value);
+    if (!value) {
+      handleClose();
+    }
+  };
+
+  const setTemplate = (data) => () => {
+    let errList = [];
+    if (data.template) {
+      errList = validateTemplate(propertyField.propertyFields, data);
+    }
+    if (errList.length === 0) {
+      updateAttribute(node.item._id, data)
+        .then(() => {
+          confirmMessage(enqueueSnackbar, 'Updating the Attribute is okay.', 'success');
+          handleTemplateDlg(false);
+        })
+        .catch(() => {
+          confirmMessage(enqueueSnackbar, 'Error in setting the template.', 'error');
+        });
+    } else {
+      confirmMessage(enqueueSnackbar, `The template is invalid in ${errList.join(',')}`, 'error');
+    }
     handleClose();
   };
 
@@ -154,7 +186,13 @@ function NodeMenu({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <NodeButton handleAdd={handleAdd} handleRemove={handleRemove} path={path} handleEdit={handleEdit} />
+        <NodeButton
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          path={path}
+          handleEdit={handleEdit}
+          handleTemplate={handleTemplateDlg(true)}
+        />
       </Popover>
 
       {deleteDlgOpen && (
@@ -164,6 +202,16 @@ function NodeMenu({
           msg="Are you sure you want to delete this attribute?"
           handleDelete={handleDelete}
           handleClose={handleDeleteDlgClose}
+        />
+      )}
+      {templateDlgOpen && (
+        <SetTemplateDlg
+          handleClose={handleTemplateDlg(false)}
+          open={templateDlgOpen}
+          msg="Please set the base template."
+          template={node.item.template || {}}
+          handleSetTemplate={setTemplate}
+          propertyField={propertyField}
         />
       )}
     </div>
@@ -177,12 +225,14 @@ NodeMenu.propTypes = {
   attributes: PropTypes.array.isRequired,
   history: PropTypes.array.isRequired,
   node: PropTypes.object.isRequired,
+  propertyField: PropTypes.object.isRequired,
   path: PropTypes.array.isRequired,
   setTreeData: PropTypes.func.isRequired,
   createAttribute: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
   removeAttribute: PropTypes.func.isRequired,
   removeHistory: PropTypes.func.isRequired,
+  updateAttribute: PropTypes.func.isRequired,
   checkNameDuplicate: PropTypes.func.isRequired,
 };
 
@@ -191,10 +241,12 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createHistory,
   removeAttribute,
   removeHistory,
+  updateAttribute,
 }, dispatch);
 
 const mapStateToProps = (store) => ({
   attributes: store.attributesData.attributes,
+  propertyField: store.propertyFieldsData.propertyField,
   history: store.historyData.history,
   isUpdating: store.attributesData.isUpdating,
   isCreating: store.attributesData.isCreating,

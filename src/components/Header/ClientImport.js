@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -92,6 +92,7 @@ function ClientImport({
     const readData = convertArray(data);
     const sendingData = validateData(type.key, readData, categories, attributes);
     const uploadData = makeUploadData(fileSize, sendingData);
+
     if (readData.length > 0 && sendingData.length > 0) {
       uploading(uploadData);
     } else {
@@ -155,7 +156,7 @@ function ClientImport({
 
   return (
     <Dialog
-      open={status.open}
+      open={status.Type}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >

@@ -53,6 +53,7 @@ class ProductGridView extends Component {
     const data = [];
     getData.forEach((item, key) => {
       if (key % MAX_LENGTH_NUM === MAX_LENGTH_NUM - 1) {
+        temp.push(item);
         data.push(temp);
         temp = [];
       } else { temp.push(item); }
@@ -141,7 +142,10 @@ class ProductGridView extends Component {
             </div>
           ) : (
             <div className="table-loader">
-              <Loader size="small" color="dark" />
+              <Loader
+                size="small"
+                color="dark"
+              />
             </div>
           )}
         {viewDetailFlag && (

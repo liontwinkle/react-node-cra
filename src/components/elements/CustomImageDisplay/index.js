@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from 'components/elements';
-
 import './style.scss';
 
 
@@ -38,9 +37,13 @@ function CustomImageDisplay({
           </label>
         )}
 
-        <div className="mg-display-image">
-          <img src={value} alt="User" />
-          <div className="mg-display-tooltip-section">
+        <div className={`mg-display-image ${value ? '' : 'non-user'}`}>
+          {
+            value && (
+              <img src={value} alt="User" />
+            )
+          }
+          <div className={`mg-display-tooltip-section ${value ? '' : 'non-section'}`}>
             <IconButton className="mg-display-image-edit">
               <EditIcon style={{ fontSize: 20 }} onClick={handleEditImage} />
             </IconButton>
@@ -68,7 +71,7 @@ CustomImageDisplay.propTypes = {
   hint: PropTypes.string,
   name: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.any,
   handleEditImage: PropTypes.func.isRequired,
 };
@@ -79,7 +82,7 @@ CustomImageDisplay.defaultProps = {
   label: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: '220px',
   hint: '',
   value: '',
   name: '',

@@ -118,18 +118,35 @@ export const refer = [
 
 export const match = [
   {
-    label: 'Exact(text)',
-    key: ':=',
+    label: 'Contains all words case insensitive',
+    key: 'contains_all_words_case_insensitive',
   },
   {
-    label: 'Contains(text)',
-    key: ':',
+    label: 'Contains all words case sensitive',
+    key: 'contains_all_words_case_sensitive',
   },
   {
-    label: 'Literal(text)',
-    key: '::',
+    label: 'Contains any whole words case insensitive',
+    key: 'contains_any_whole_words_case_insensitive',
+  },
+  {
+    label: 'Contains any whole words case sensitive',
+    key: 'contains_any_whole_words_case_sensitive',
+  },
+  {
+    label: 'Exactly',
+    key: 'exactly',
+  },
+  {
+    label: 'Contains any tokens case insensitive',
+    key: 'contains_any_tokens_case_insensitive',
+  },
+  {
+    label: 'Contains any tokens case sensitive',
+    key: 'contains_any_tokens_case_sensitive',
   },
 ];
+
 
 export const scope = [
   {
@@ -141,4 +158,18 @@ export const scope = [
 export const productViewTypes = [
   { key: 'data', label: 'Product Table' },
   { key: 'grid', label: 'Product Image' },
+];
+
+export const ruleType = [
+  { key: 'normal', label: 'Normal' },
+  { key: 'universal', label: 'Universal' },
+  { key: 'default', label: 'Default' },
+];
+
+export const inlineDefaultWidth = '20%';
+
+export const detailTableColumns = [
+  { title: 'Action', field: 'action' },
+  { title: 'Created Date', field: 'createdAt' },
+  { title: 'Updated Date', field: 'updatedAt' },
 ];

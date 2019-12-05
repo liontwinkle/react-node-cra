@@ -7,67 +7,36 @@ import {
   RuleEngine,
 } from './RuleEngine';
 import {
-  basis, match, refer, scope,
+  basis, match, refer, scope, ruleType,
 } from './constants';
-
-const getAllmatched = (products, match, value) => {
-  const returnValue = [];
-  let index = 0;
-  const rule = RuleEngine[match](value);
-  products.forEach((proItem) => {
-    const values = Object.values(proItem);
-    if (values.filter((item) => (rule.test(item))).length > 0) {
-      returnValue[index] = proItem;
-      index++;
-    }
-  });
-  return returnValue;
-};
 
 const getProducts = (products, field, match, value) => {
   const rule = RuleEngine[match](value);
   const returnValue = [];
   let index = 0;
-
+  let matchedFlag = false;
   products.forEach((productItem) => {
-    if (rule.test(productItem[field])) {
+    matchedFlag = !!((match === 'exactly' && productItem[field] === value)
+      || (rule.test(productItem[field])));
+    if (matchedFlag) {
       returnValue[index] = productItem;
       index++;
     }
   });
   return returnValue;
 };
-
-const AnaylsisDetails = (valueStr, valueDetails) => {
-  const partValue = valueStr.split(']');
-  const detailValue = partValue[0].split(':');
-  const detailKey = detailValue[0].replace('[', '');
-  const matchKey = `:${detailValue[1]}`;
-  const valueKey = partValue[1];
-  const detailObj = valueDetails.find(
-    (valueDetailsItem) => (valueDetailsItem.key === detailKey.replace(' ', '')),
-  );
-  const matchObj = match.find((matchItem) => (matchItem.key === matchKey));
-  return {
-    detailObj,
-    matchObj,
-    valueKey,
-  };
-};
-
 export const filterProducts = (products, rules, key) => {
-  const field = rules[key].detail.key;
-  const match = rules[key].match.key;
-  const { value } = rules[key];
+  const field = rules[key].key.key;
+  const match = rules[key].type.key;
+  const { criteria } = rules[key];
   let filterResult = new Set();
 
   formatProductsData();
   formatDifference();
-
   if (field === '*') {
-    filterResult = getAllmatched(products, match, value);
+    filterResult = getProducts(products, 'name', match, criteria);
   } else {
-    filterResult = getProducts(products, field, match, value);
+    filterResult = getProducts(products, field, match, criteria);
   }
   AddSets(filterResult, 'union');
   return Array.from(getData().union);
@@ -76,11 +45,11 @@ export const filterProducts = (products, rules, key) => {
 export const addNewRuleHistory = (createHistory, Item, groupId, msgCurrent, msgParent, type) => {
   createHistory({
     label: msgCurrent,
-    itemId: Item.id,
+    itemId: Item._id,
     type,
   })
     .then(() => {
-      if (groupId !== 'null') {
+      if (groupId !== null) {
         createHistory({
           label: msgParent,
           itemId: groupId,
@@ -104,25 +73,27 @@ export const getRules = (srcRules, valueDetails) => {
   srcRules.forEach((item) => {
     const basisObj = basis.find((basisItem) => (basisItem.key === item.basis));
     const referObj = refer.find((referItem) => (referItem.key === item.refer));
-    const otherObj = AnaylsisDetails(item.value, valueDetails);
-    if (otherObj.detailObj && otherObj.matchObj && otherObj.valueKey) {
+    const ruleTypeObj = ruleType.find((ruleTypeItem) => (ruleTypeItem.key === item.ruleType));
+    const matchObj = match.find((matchItem) => (matchItem.key === item.type));
+    const keyObject = valueDetails.find((keyItem) => (keyItem.key === item.key));
+    if (keyObject) {
       newRules.push({
-        _id: item._id,
         basis: basisObj,
         refer: referObj,
-        detail: otherObj.detailObj,
-        match: otherObj.matchObj,
-        value: otherObj.valueKey,
+        key: keyObject,
+        type: matchObj,
+        criteria: item.criteria,
         scope: scope[0],
+        ruleType: ruleTypeObj,
       });
       editRules.push({
-        _id: item._id,
         basis: basisObj.key,
         refer: referObj.key,
-        detail: otherObj.detailObj.key,
-        match: otherObj.matchObj.key,
-        value: otherObj.valueKey,
+        key: keyObject.key,
+        type: matchObj.key,
+        criteria: item.criteria,
         scope: scope[0].key,
+        ruleType: ruleTypeObj.key,
       });
     }
   });
@@ -130,4 +101,29 @@ export const getRules = (srcRules, valueDetails) => {
     newRules,
     editRules,
   };
+};
+
+export const unionRules = (ruleA, ruleB) => {
+  let ruleBigSet = [];
+  let ruleSmallSet = [];
+  if (ruleA.length >= ruleB.length) {
+    ruleBigSet = ruleA;
+    ruleSmallSet = ruleB;
+  } else {
+    ruleBigSet = ruleB;
+    ruleSmallSet = ruleA;
+  }
+  const unionSet = [];
+  ruleBigSet.forEach((item) => {
+    const index = ruleSmallSet.findIndex((itemSmall) => (
+      itemSmall.basis === item.basis
+      && item.type === itemSmall.type
+      && item.key === itemSmall.key
+      && itemSmall.criteria === item.criteria
+    ));
+    if (index < 0) {
+      unionSet.push(item);
+    }
+  });
+  return _union(unionSet, ruleSmallSet);
 };

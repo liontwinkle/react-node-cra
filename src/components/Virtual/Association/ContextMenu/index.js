@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import _intersection from 'lodash/intersection';
 import { setUnionRules, getRules } from 'utils/ruleManagement';
 import { confirmMessage, getPreFilterData } from 'utils';
-import PreviewProducts from 'components/Virtual/RulesNew/RulesAction/PreviewProducts';
+import PreviewProducts from 'components/shared/Rules/RulesTable/PreviewProducts';
 import EditAttribute from '../editAttribute';
 
 import './style.scss';
@@ -41,9 +41,9 @@ function ContextMenu({
   }, [displayData, displayEdit, handleClose, info.positionX, info.positionY]);
   const getAttributeProducts = useCallback(() => {
     let filterAttribute = [];
-    if (attribute.groupId === 'null') {
+    if (attribute.group_id === null) {
       filterAttribute = attributes.filter((attributeItem) => (
-        attributeItem.groupId === attribute.attributeId.toString()));
+        attributeItem.group_id === attribute._id));
       filterAttribute.push(attribute);
     } else {
       filterAttribute.push(attribute);

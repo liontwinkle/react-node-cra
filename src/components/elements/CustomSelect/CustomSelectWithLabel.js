@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { inlineDefaultWidth } from 'utils/constants';
 import CustomSelect from '.';
 
 import './style.scss';
@@ -56,7 +57,7 @@ CustomSelectWithLabel.propTypes = {
   placeholder: PropTypes.string,
   hint: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.object,
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -68,7 +69,7 @@ CustomSelectWithLabel.defaultProps = {
   labelAlignment: '',
   placeholder: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
   hint: '',
   value: null,
 };

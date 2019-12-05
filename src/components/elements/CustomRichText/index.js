@@ -67,7 +67,7 @@ CustomRichText.propTypes = {
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -82,7 +82,7 @@ CustomRichText.defaultProps = {
   value: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: '220px',
 };
 
 export default CustomRichText;

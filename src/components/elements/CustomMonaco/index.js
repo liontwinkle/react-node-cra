@@ -2,6 +2,7 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
+import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -54,7 +55,7 @@ CustomMonaco.propTypes = {
   label: PropTypes.string,
   labelAlignment: PropTypes.string,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -70,6 +71,6 @@ CustomMonaco.defaultProps = {
   value: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
 };
 export default CustomMonaco;

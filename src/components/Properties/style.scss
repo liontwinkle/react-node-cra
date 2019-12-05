@@ -2,6 +2,7 @@
 
 .mg-properties-container {
   @include full_width_height;
+  width: calc(100% - 10px);
   margin: 0;
   white-space: nowrap;
 
@@ -60,7 +61,7 @@
 
   .mg-property-actions {
     width: 49px;
-    padding: 0.5rem;
+    padding: 10px;
     border-left: 1px solid #ddd;
 
     > * {
@@ -97,4 +98,21 @@
 
 .mg-edit-properties-content.field {
   width: 90vw !important;
+}
+
+.MuiDialog-container {
+  .mg-select-container {
+    width: 100% !important;
+  }
+}
+
+.add-property-fields {
+  .mg-upload-control .mg-upload-wrapper {
+    width: 50%;
+  }
+  .mg-select-wrapper {
+    label {
+      min-width: 220px !important;
+    }
+  }
 }

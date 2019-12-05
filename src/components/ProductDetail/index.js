@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Tooltip } from 'react-tippy';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import SaveIcon from '@material-ui/icons/Save';
+
 
 import { confirmMessage } from 'utils';
 import { updateProducts, setProducts } from 'redux/actions/products';
 import { updateProductsField, setImageKey } from 'redux/actions/productsFields';
-import { CustomInput, CustomSection, IconButton } from 'components/elements';
+import { CustomSection } from 'components/elements';
 import DisplaySetting from './DisplaySetting';
 import ExportDataSection from './ExportDataSection';
 import ShowFields from './ShowFields';
 
 import './style.scss';
+import SetImageKey from './setImageKey';
 
 function ProductsDataDetail({
   headers,
@@ -199,24 +199,11 @@ function ProductsDataDetail({
               />
             </CustomSection>
             <CustomSection title="Setting the ImageKey" key="image_key">
-              <div className="set_imageKey">
-                <CustomInput
-                  className="mb-3"
-                  label="Image Key"
-                  inline
-                  value={imageKeySet}
-                  onChange={handleImageKeyChange}
-                />
-                <Tooltip
-                  title="Preview Products for Current Rule"
-                  position="right"
-                  arrow
-                >
-                  <IconButton>
-                    <SaveIcon style={{ fontSize: 20 }} onClick={handleSaveImageKey} />
-                  </IconButton>
-                </Tooltip>
-              </div>
+              <SetImageKey
+                imageKeySet={imageKeySet}
+                handleImageKeyChange={handleImageKeyChange}
+                handleSaveImageKey={handleSaveImageKey}
+              />
             </CustomSection>
             <CustomSection title="Visible Product Keys" key="show_setting">
               <ShowFields

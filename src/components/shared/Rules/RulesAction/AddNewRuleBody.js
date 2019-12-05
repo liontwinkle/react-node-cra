@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
 import {
-  basis, match, refer, scope,
+  basis, match, refer, scope, ruleType,
 } from 'utils/constants';
 
 const AddNewRuleBody = ({
   valueDetails, ruleData, previewNumber,
-  handleSelectChange, handleChange,
+  handleSelectChange, handleChange, category,
 }) => (
   <>
     <CustomSelect
@@ -32,23 +31,23 @@ const AddNewRuleBody = ({
       className="mb-3"
       label="Detail"
       placeholder="Select Detail of Rule"
-      value={ruleData.detail}
+      value={ruleData.key}
       items={valueDetails}
-      onChange={handleSelectChange('detail')}
+      onChange={handleSelectChange('key')}
     />
     <CustomSelect
       className="mb-3"
       label="Match"
       placeholder="Select matches of Rule"
-      value={ruleData.match}
+      value={ruleData.type}
       items={match}
-      onChange={handleSelectChange('match')}
+      onChange={handleSelectChange('type')}
     />
     <CustomInput
       className="mb-3"
       label="Criteria"
       inline
-      value={ruleData.value}
+      value={ruleData.criteria}
       onChange={handleChange}
     />
     <CustomSelect
@@ -61,17 +60,31 @@ const AddNewRuleBody = ({
     />
     <CustomInput
       className="mb-3"
-      label="Preview Number"
+      label="Matching SKUs"
       inline
       value={previewNumber}
       onChange={() => {}}
     />
+    {((category.parent_id !== undefined && category.parent_id === null)
+      || (category.group_id !== undefined && category.group_id === null))
+    && (
+      <CustomSelect
+        className="mb-3"
+        label="Rule Type"
+        inline
+        placeholder="Select Scope of Rule"
+        value={ruleData.ruleType}
+        items={ruleType}
+        onChange={handleSelectChange('ruleType')}
+      />
+    )}
   </>
 );
 
 AddNewRuleBody.propTypes = {
   previewNumber: PropTypes.number.isRequired,
   ruleData: PropTypes.object.isRequired,
+  category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,

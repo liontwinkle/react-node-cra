@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Tooltip } from 'react-tippy';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -18,6 +18,9 @@ import { IconButton } from 'components/elements';
 import { removeClient } from 'redux/actions/clients';
 import { removePropertyField } from 'redux/actions/propertyFields';
 import { removeProductsField } from 'redux/actions/productsFields';
+import { setProducts } from 'redux/actions/products';
+import { updateNodeData } from 'redux/actions/attribute';
+import { updateTreeData } from 'redux/actions/categories';
 import { confirmMessage } from 'utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +37,9 @@ function ClientRemove({
   removeClient,
   removePropertyField,
   removeProductsField,
+  updateTreeData,
+  updateNodeData,
+  setProducts,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,6 +59,9 @@ function ClientRemove({
             .then(() => {
               removeClient(client.id)
                 .then(() => {
+                  setProducts([]);
+                  updateNodeData([]);
+                  updateTreeData([]);
                   confirmMessage(enqueueSnackbar, 'The client has been deleted successfully.', 'success');
                 })
                 .catch(() => {
@@ -123,6 +132,9 @@ ClientRemove.propTypes = {
   removeClient: PropTypes.func.isRequired,
   removePropertyField: PropTypes.func.isRequired,
   removeProductsField: PropTypes.func.isRequired,
+  updateTreeData: PropTypes.func.isRequired,
+  updateNodeData: PropTypes.func.isRequired,
+  setProducts: PropTypes.func.isRequired,
 };
 
 ClientRemove.defaultProps = {
@@ -139,6 +151,9 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   removeClient,
   removePropertyField,
   removeProductsField,
+  setProducts,
+  updateNodeData,
+  updateTreeData,
 }, dispatch);
 
 export default connect(

@@ -10,7 +10,7 @@ const makeArrayObject = (array, idName) => {
   const list = JSON.parse(JSON.stringify(array)) || [];
   list.forEach((item, index) => {
     if (item[idName] === '') {
-      list[index][idName] = 'null';
+      list[index][idName] = null;
     }
   });
   return list;
@@ -34,42 +34,19 @@ export const sortByField = (field) => (a, b) => {
   return comparison;
 };
 /** ** UTILS DEFINE **** */
-const getAllmatched = (products, match, value, basis) => {
+const getRuleProducts = (products, field, match, criteria, basis) => {
+  const rule = RuleEngine[match](criteria);
   const returnValue = {
     includes: [],
     excludes: [],
   };
   let includeIndex = 0;
   let excludeIndex = 0;
-  const rule = RuleEngine[match](value);
-
-
-  products.forEach((proItem) => {
-    const values = Object.values(proItem);
-    if (values.filter((item) => (rule.test(item))).length > 0) {
-      if (basis === 'include') {
-        returnValue.includes[includeIndex] = proItem;
-        includeIndex++;
-      } else {
-        returnValue.excludes[excludeIndex] = proItem;
-        excludeIndex++;
-      }
-    }
-  });
-  return returnValue;
-};
-
-const getRuleProducts = (products, field, match, value, basis) => {
-  const rule = RuleEngine[match](value);
-  const returnValue = {
-    includes: [],
-    excludes: [],
-  };
-  let includeIndex = 0;
-  let excludeIndex = 0;
-
+  let matchedFlag = false;
   products.forEach((productItem) => {
-    if (rule.test(productItem[field])) {
+    matchedFlag = !!((match === 'exactly' && productItem[field] === criteria)
+      || (rule.test(productItem[field])));
+    if (matchedFlag) {
       if (basis === 'include') {
         returnValue.includes[includeIndex] = productItem;
         includeIndex++;
@@ -86,23 +63,25 @@ const getSubTree = (list, parentId, type, originNode) => {
   list.sort(sortByField('name'));
   const subTree = [];
   const association = [];
-  const sublist = list.filter((item) => item[type] === parentId.toString());
-  const identifier = (type === 'parentId') ? 'categoryId' : 'attributeId';
+  const sublist = list.filter((item) => item[type] === parentId);
   if (sublist.length > 0) {
-    sublist.forEach((item, key) => {
-      const subNode = (originNode && originNode.length > 0 && originNode[key]) ? originNode[key] : null;
+    sublist.forEach((item) => {
+      let subNode = null;
+      if (originNode && originNode.length) {
+        subNode = originNode.find((nodeItem) => (nodeItem.item._id === item._id));
+      }
       association.push({
         label: item.name,
-        value: item[identifier],
+        value: item._id,
         appear: item.appear || [],
-        children: getSubTree(list, item[identifier], type).association,
+        children: getSubTree(list, item._id, type).association,
       });
       subTree.push({
         title: item.name,
         editable: false,
         expanded: (subNode) ? subNode.expanded : false,
         item,
-        children: getSubTree(list, item[identifier], type, (subNode) ? subNode.children : null).subTree,
+        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null).subTree,
       });
     });
   }
@@ -176,14 +155,13 @@ export const setHandler = (context, callback) => {
 export const getPreFilterData = (rules, products) => {
   formatDifference();
   let filterResult = new Set();
-
   rules.forEach((item) => {
-    const field = item.detail;
-    const { match, value, basis } = item;
+    const field = item.key;
+    const { type, criteria, basis } = item;
     if (field === '*') {
-      filterResult = getAllmatched(products, match, value, basis);
+      filterResult = getRuleProducts(products, 'name', type, criteria, basis);
     } else {
-      filterResult = getRuleProducts(products, field, match, value, basis);
+      filterResult = getRuleProducts(products, field, type, criteria, basis);
     }
     AddSets(filterResult.includes, 'includes');
     AddSets(filterResult.excludes, 'excludes');
@@ -193,17 +171,17 @@ export const getPreFilterData = (rules, products) => {
 };
 
 export const getCategoryTree = (categories, originNode) => {
-  const parentId = 'null';
-  const list = makeArrayObject(categories, 'parentId');
+  const parentId = null;
+  const list = makeArrayObject(categories, 'parent_id');
 
-  return getSubTree(list, parentId, 'parentId', originNode);
+  return getSubTree(list, parentId, 'parent_id', originNode);
 };
 
 export const getAttribute = (attributes, originNode) => {
-  const groupId = 'null';
-  const list = makeArrayObject(attributes, 'groupId');
+  const groupId = null;
+  const list = makeArrayObject(attributes, 'group_id');
 
-  return getSubTree(list, groupId, 'groupId', originNode);
+  return getSubTree(list, groupId, 'group_id', originNode);
 };
 
 export const convertPropertyData = (data) => {
@@ -430,4 +408,16 @@ export const getMaxValueFromArray = (field = null, source) => {
     }
   });
   return max;
+};
+
+export const checkObject = (data) => !(data === null || typeof data !== 'object' || Array.isArray(data));
+
+export const getRootCategories = (categories, field) => {
+  const roots = [];
+  categories.forEach((item) => {
+    if (item[field] === null) {
+      roots.push(item);
+    }
+  });
+  return roots;
 };

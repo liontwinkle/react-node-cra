@@ -4,31 +4,23 @@ const { Schema } = mongoose;
 
 const AttributeSchema = new Schema({
   name: String,
-  attributeId: {
+  _id: {
     type: Number,
     default: 0
   },
-  groupId: {
-    type: String,
-    default: 'null',
+  group_id: {
+    type: Number,
+    default: null,
   },
+  template: Object,
   properties: Object,
   defaultProperties: [{
     key: String,
     default: String,
     template: String,
   }],
-  rules: [{
-    basis: String,
-    refer: String,
-    value: String,
-    scope: Number
-  }],
-}, { toJSON: { virtuals: true }, timestamps: true });
-
-AttributeSchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
+  rules: Array,
+}, { timestamps: true });
 
 let Attributes = mongoose.model('Attributes', AttributeSchema);
 

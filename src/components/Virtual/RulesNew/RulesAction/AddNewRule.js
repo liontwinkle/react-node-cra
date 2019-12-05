@@ -8,14 +8,14 @@ import {
 } from '@material-ui/core';
 
 import {
-  basis, refer, match, scope,
+  basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
-import { confirmMessage, getPreFilterData, useStyles } from 'utils';
-import { addNewRuleHistory } from 'utils/ruleManagement';
+import { confirmMessage, useStyles } from 'utils';
+import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
-import AddNewRuleBody from './AddNewRuleBody';
+import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 
 function AddNewRule({
   open,
@@ -34,17 +34,24 @@ function AddNewRule({
   const [ruleData, setRuleData] = useState({
     basis: basis[0],
     refer: refer[0],
-    match: match[0],
+    type: match[0],
     scope: scope[0],
-    detail: valueDetails[0],
-    value: '',
+    key: valueDetails[0],
+    criteria: '',
+    ruleType: ruleType[0],
   });
 
   const [previewValue, setPreviewValue] = useState(0);
 
   const getPreviewProducts = (newRules) => {
-    const filterProducts = () => getPreFilterData(newRules, products);
-    setPreviewValue(filterProducts().length);
+    setPreviewValue(filterProducts(products, newRules, 0).length);
+  };
+
+  const searchFunction = (newClient) => {
+    const newRules = [newClient];
+    setTimeout(() => {
+      getPreviewProducts(newRules);
+    }, 0);
   };
 
   const handleSelectChange = (field) => (item) => {
@@ -52,58 +59,48 @@ function AddNewRule({
       ...ruleData,
       [field]: item,
     };
-    const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: ruleData.value,
-    }];
-    newRules[0][field] = item.key;
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    if (newClient.criteria && newClient.criteria !== '') {
+      searchFunction(newClient);
+    }
   };
 
   const handleChange = (e) => {
+    const criteriaValue = e.target.value;
     const newClient = {
       ...ruleData,
-      value: e.target.value,
+      criteria: criteriaValue,
     };
-    const newRules = [{
-      basis: ruleData.basis.key,
-      refer: ruleData.refer.key,
-      match: ruleData.match.key,
-      scope: ruleData.scope.key,
-      detail: ruleData.detail.key,
-      value: e.target.value,
-    }];
-    getPreviewProducts(newRules);
     setRuleData(newClient);
+    if (newClient.criteria && newClient.criteria !== '') {
+      searchFunction(newClient);
+    }
   };
 
   const disabled = !(
     ruleData.basis
     && ruleData.refer
     && ruleData.scope
-    && ruleData.match
-    && (ruleData.value !== '')
+    && ruleData.type
+    && (ruleData.criteria !== '')
   );
 
   const saveRules = (updatedState) => {
     const updatedData = [];
     updatedState.forEach((item) => {
-      const value = `[${item.detail.key}${item.match.key}]${item.value}`;
       updatedData.push({
         basis: item.basis.key,
         refer: item.refer.key,
-        value,
+        type: item.type.key,
         scope: 0,
+        key: item.key.key,
+        criteria: item.criteria,
+        ruleType: item.ruleType.key,
       });
     });
 
     if (!isUpdating) {
-      updateCategory(category.id, { rules: updatedData })
+      updateCategory(category._id, { rules: updatedData })
         .then(() => {
           confirmMessage(enqueueSnackbar, 'Success creating the Rule.', 'success');
           handleClose();
@@ -117,17 +114,17 @@ function AddNewRule({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
-        item.detail.key === ruleData.detail.key
-        && item.match.key === ruleData.match.key
-        && item.value === ruleData.value
+        item.key.key === ruleData.key.key
+        && item.type.key === ruleData.type.key
+        && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.detail.key},match: ${ruleData.match.key},criteria: ${ruleData.value})`;
+            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
-        refer: ${ruleData.refer.key},detail: ${ruleData.detail.key},match: ${ruleData.match.key},
-        criteria: ${ruleData.value})`;
-        addNewRuleHistory(createHistory, category, category.parentId, msgCurrent, msgParent, 'virtual');
+        refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
+        criteria: ${ruleData.criteria})`;
+        addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
         confirmMessage(enqueueSnackbar, 'The search key is duplicated.', 'error');
@@ -151,6 +148,7 @@ function AddNewRule({
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
+          category={category}
           previewNumber={previewValue}
           handleChange={handleChange}
           valueDetails={valueDetails}
@@ -190,7 +188,7 @@ AddNewRule.propTypes = {
 };
 
 const mapStateToProps = (store) => ({
-  products: store.categoriesData.preProducts,
+  products: store.productsData.data.products,
   category: store.categoriesData.category,
   isUpdating: store.categoriesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,

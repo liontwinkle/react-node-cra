@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import CheckboxTree from 'react-checkbox-tree-enhanced';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { withSnackbar } from 'notistack';
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 
 import { confirmMessage, hasSubArray } from 'utils';
 import { getAllChildData, getNewAppearData } from 'utils/attributeManagement';
 import { fetchAttributes, updateAttribute } from 'redux/actions/attribute';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './style.scss';
 
@@ -49,10 +48,10 @@ class AttributeSetting extends Component {
   };
 
   updateList = (target) => {
-    const targetCategory = this.props.categories.filter((item) => (item.categoryId === target.value));
+    const targetCategory = this.props.categories.filter((item) => (item._id === target.value));
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
     const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
-    willCheckedCategory.push(targetCategory[0].categoryId);
+    willCheckedCategory.push(targetCategory[0]._id);
     return _union(willCheckedCategory, allChildData);
   };
 
@@ -76,13 +75,13 @@ class AttributeSetting extends Component {
     let returnId = null;
     const { attributes, attribute } = this.props;
     const unCheckedSibling = attributes.find((item) => (
-      item.groupId === attribute.groupId
-      && item.attributeId !== attribute.attributeId
+      item.group_id === attribute.group_id
+      && item._id !== attribute._id
       && !hasSubArray(item.appear, updateAppear)));
-    if (!unCheckedSibling && attribute.groupId !== 'null') {
-      returnId = attributes.find((item) => (item.attributeId === parseInt(attribute.groupId, 10))).id;
+    if (!unCheckedSibling && attribute.group_id) {
+      returnId = attributes.find((item) => (item._id === attribute.group_id))._id;
     } else {
-      returnId = attribute.id;
+      returnId = attribute._id;
     }
     return returnId;
   };
@@ -98,7 +97,7 @@ class AttributeSetting extends Component {
         updateData = _union(updateAppear, this.state.categoryList);
         this.setState({ categoryList: updateData, checked });
       } else {
-        updateAttributeId = this.props.attribute.id;
+        updateAttributeId = this.props.attribute._id;
         updateData = _difference(this.state.categoryList, updateAppear);
         this.setState({ categoryList: updateData, checked });
       }
@@ -126,11 +125,21 @@ class AttributeSetting extends Component {
             expanded={this.state.expanded}
             onCheck={this.handleCheck}
             onExpand={this.handleExpand}
-            nativeCheckboxes
             showNodeIcon={false}
             icons={{
-              expandClose: <AddIcon />,
-              expandOpen: <RemoveIcon />,
+              check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
+              uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
+              halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
+              expandClose: <FontAwesomeIcon className="rct-icon rct-icon-expand-close" icon={['far', 'plus-square']} />,
+              expandOpen: <FontAwesomeIcon className="rct-icon rct-icon-expand-open" icon={['far', 'minus-square']} />,
+              expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon={['far', 'plus-square']} />,
+              collapseAll: <FontAwesomeIcon
+                className="rct-icon rct-icon-collapse-all"
+                icon={['far', 'minus-square']}
+              />,
+              parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
+              parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
+              leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
             }}
           />
         </PerfectScrollbar>

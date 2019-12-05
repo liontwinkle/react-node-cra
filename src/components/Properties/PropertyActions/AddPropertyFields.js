@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 
 import { useSnackbar } from 'notistack';
 import isEqual from 'lodash/isEqual';
@@ -134,14 +134,15 @@ function AddPropertyFields({
           propertyType: savedPropertyFieldData.propertyType.key,
           section: savedPropertyFieldData.section && savedPropertyFieldData.section.key,
         });
-        const updateDefaultFunc = (objectItem.parentId !== undefined)
+        const updateDefaultFunc = (objectItem.parent_id !== undefined)
           ? updateDefaultOnCategory : updateDefaultOnAttriute;
+        const parentId = (objectItem.parent_id !== undefined) ? objectItem.parent_id : objectItem.group_id;
         if (!isEqual(propertyField.propertyFields, propertyFields)) {
           updatePropertyField({ propertyFields })
             .then(() => {
               updateDefaultFunc(propertyFields)
                 .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, objectItem.parentId,
+                  addNewRuleHistory(createHistory, objectItem, parentId,
                     `Create Property(${savedPropertyFieldData.propertyType.key})`,
                     `Create Property(${savedPropertyFieldData.propertyType.key}) by ${objectItem.name}`,
                     'virtual');
@@ -182,7 +183,7 @@ function AddPropertyFields({
         Add Property Fields
       </DialogTitle>
 
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent className={`${classes.dialogContent} add-property-fields`}>
         <CustomInput
           className="mb-3"
           label="Key"
@@ -199,7 +200,17 @@ function AddPropertyFields({
         />
         <CustomSearchFilter
           className="mb-3"
-          searchItems={propertyField.propertyFields.map((item) => (item.key))}
+          searchItems={
+            propertyField.propertyFields.filter(
+              (propertyItem) => (
+                propertyItem.propertyType === 'string'
+                || propertyItem.propertyType === 'text'
+                || propertyItem.propertyType === 'monaco'
+                || propertyItem.propertyType === 'richtext'
+                || propertyItem.propertyType === 'urlpath'
+              ),
+            ).map((item) => (item.key))
+          }
           placeholder="Input search filter"
           label="Default"
           value={propertyFieldData.default}

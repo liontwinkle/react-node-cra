@@ -11,11 +11,11 @@ import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { setProductViewType } from 'redux/actions/clients';
 import { confirmMessage, getPreFilterData } from 'utils';
-import { setUnionRules, getRules } from 'utils/ruleManagement';
+import { setUnionRules, getRules, unionRules } from 'utils/ruleManagement';
 import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
 import { CustomToggle } from 'components/elements';
-import RulesTable from './RulesTable/index';
+import RulesTable from 'components/shared/Rules/RulesTable';
 import RulesAction from './RulesAction/index';
 
 import './style.scss';
@@ -26,6 +26,8 @@ class NewRules extends Component {
     this.state = {
       newRules: [],
       editRules: [],
+      universalRules: [],
+      otherRules: [],
       fetchingFlag: true,
       productsFlag: false,
     };
@@ -34,31 +36,50 @@ class NewRules extends Component {
   componentDidMount() {
     this.setState({
       fetchingFlag: true,
+      productsFlag: this.props.productViewType.key === 'grid',
     });
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
-      this.props.fetchProducts()
-        .then(() => {
-          this.setMap(this.props.category);
-          this.FilterProducts();
-          confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
-        })
-        .catch(() => {
-          confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
-        });
+      this.getProducts();
     } else {
-      this.setMap(this.props.category);
-      this.FilterProducts();
+      try {
+        this.setMap(this.props.category);
+        this.FilterProducts();
+      } catch (e) {
+        this.setState({ fetchingFlag: false });
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.category && (this.props.category !== prevProps.category)) {
-      this.setMap(this.props.category);
+      if (this.props.products.length === 0 && !this.props.isFetchingList) {
+        this.getProducts();
+      } else {
+        this.setMap(this.props.category);
+      }
     }
     if (this.props.products.length > 0 && (this.props.products !== prevProps.products)) {
       this.FilterProducts();
     }
   }
+
+  getProducts = () => {
+    this.setState({ fetchingFlag: true });
+    this.props.fetchProducts()
+      .then(() => {
+        if (this.props.products.length > 0) {
+          this.setMap(this.props.category);
+          this.FilterProducts();
+        } else {
+          this.setState({ fetchingFlag: false });
+        }
+        confirmMessage(this.props.enqueueSnackbar, 'Success to collect the Rule keys.', 'success');
+      })
+      .catch(() => {
+        confirmMessage(this.props.enqueueSnackbar, 'Error to collect the Rule Keys.', 'error');
+        this.setState({ fetchingFlag: false });
+      });
+  };
 
   FilterProducts = () => {
     const {
@@ -70,19 +91,19 @@ class NewRules extends Component {
 
     let filterProduct = [];
     let attributeList = attributes.filter((Item) => (
-      !!Item.appear.find((appearItem) => (appearItem === category.categoryId))));
+      !!Item.appear.find((appearItem) => (appearItem === category._id))));
     let filterAttribute = attributeList;
 
     if (attributeList.length > 0) {
-      const groups = attributeList.filter((item) => (!item.groupId));
+      const groups = attributeList.filter((item) => (!item.group_id));
       attributeList = _difference(attributeList, groups);
       groups.forEach((groupItem) => {
         const childrenList = attributeList.filter((childItem) => (
-          childItem.groupId === groupItem.attributeId.toString()));
+          childItem.group_id === groupItem._id));
         attributeList = _difference(attributeList, childrenList);
       });
       attributeList.forEach((childListItem) => {
-        const groupChild = attributes.filter((item) => (item.attributeId.toString() === childListItem.groupId));
+        const groupChild = attributes.filter((item) => (item._id === childListItem.group_id));
         filterAttribute = _union(filterAttribute, groupChild);
       });
       const srcAttributeRules = setUnionRules(filterAttribute);
@@ -99,16 +120,41 @@ class NewRules extends Component {
     });
   };
 
+  getParentRules = (parentId, defaultFlag) => {
+    const { categories } = this.props;
+    let parentRules = [];
+    const filteredData = categories.filter((categoryItem) => (
+      categoryItem._id === parentId
+    ));
+    let filteredRules = [];
+    if (filteredData.length > 0) {
+      const defaultRules = filteredData[0].rules.filter((item) => (item.ruleType === 'default'));
+      const universalRules = filteredData[0].rules.filter((item) => (item.ruleType === 'universal'));
+      filteredRules = (defaultFlag) ? unionRules(defaultRules, universalRules) : universalRules;
+      parentRules = unionRules(parentRules, filteredRules);
+      if (filteredData[0].parent_id !== null) {
+        parentRules = unionRules(parentRules, this.getParentRules(filteredData[0].parent_id, defaultFlag));
+      }
+    }
+    return parentRules;
+  };
+
   setMap = (category) => {
-    const recvNewRules = category.rules || [];
-    const attributeRules = getRules(recvNewRules, this.props.valueDetails);
+    const defaultFlag = (this.props.category.rules.length <= 0);
+    const parentRules = this.getParentRules(this.props.category.parent_id, defaultFlag);
+    const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
+    const displayRules = unionRules(recvNewRules, parentRules);
+    const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
+    const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
     this.setState({
-      newRules: attributeRules.newRules,
-      editRules: attributeRules.editRules,
+      universalRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key === 'universal')),
+      otherRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key !== 'universal')),
+      newRules: editAttributeRules.newRules,
+      editRules: editAttributeRules.editRules,
     });
   };
 
-  onHandleSwtichView = () => {
+  onHandleSwitchView = () => {
     this.setState((prevState) => ({
       productsFlag: !prevState.productsFlag,
     }));
@@ -120,7 +166,9 @@ class NewRules extends Component {
   };
 
   render() {
-    const { newRules, editRules } = this.state;
+    const {
+      newRules, editRules, universalRules, otherRules,
+    } = this.state;
     return (
       <div className="mg-rules-container d-flex">
         {
@@ -128,16 +176,69 @@ class NewRules extends Component {
             ? (
               <>
                 <div className="mg-rule-content">
-                  <CustomToggle
-                    label="Products Switch"
-                    value={this.state.productsFlag}
-                    onToggle={this.onHandleSwtichView}
-                  />
-                  <PerfectScrollbar>
-                    <RulesTable rules={newRules} />
-                  </PerfectScrollbar>
+                  {
+                    this.props.products.length > 0
+                      ? (
+                        <>
+                          <CustomToggle
+                            label="Products Switch"
+                            value={this.state.productsFlag}
+                            onToggle={this.onHandleSwitchView}
+                          />
+                          <PerfectScrollbar>
+                            <div className="virtual-rule-section">
+                              {
+                                universalRules.length > 0 && (
+                                  <>
+                                    <label className="rule-section-header">
+                                      Universal
+                                    </label>
+                                    <RulesTable rules={universalRules} />
+                                  </>
+                                )
+                              }
+                              {
+                                otherRules.length > 0 && (
+                                  <>
+                                    <div className="virtual-rule-section">
+                                      <label className="rule-section-header">
+                                        Normal / Default
+                                      </label>
+                                      <RulesTable rules={otherRules} />
+                                    </div>
+                                  </>
+                                )
+                              }
+                            </div>
+                          </PerfectScrollbar>
+                        </>
+                      )
+                      : (
+                        <label className="products_empty_body">
+                          The Products data is not existed. Please import Data.
+                        </label>
+                      )
+                  }
                 </div>
-                <RulesAction className="mg-rules-actions" rules={editRules} newRules={newRules} />
+                {
+                  this.props.products.length > 0
+                  && (
+                    <RulesAction
+                      className="mg-rules-actions"
+                      rules={editRules}
+                      universalRules={universalRules.map((item) => ({
+                        basis: item.basis.key,
+                        refer: item.refer.key,
+                        key: item.key.key,
+                        criteria: item.criteria,
+                        type: item.type.key,
+                        scope: item.scope.key,
+                        ruleType: item.ruleType.key,
+                      }))}
+                      newRules={newRules}
+                    />
+                  )
+                }
               </>
             )
             : (
@@ -153,10 +254,12 @@ class NewRules extends Component {
 
 NewRules.propTypes = {
   category: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   isFetchingList: PropTypes.bool.isRequired,
+  products: PropTypes.array.isRequired,
   attributes: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
-  products: PropTypes.array.isRequired,
+  productViewType: PropTypes.object.isRequired,
   fetchProducts: PropTypes.func.isRequired,
   setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
@@ -165,6 +268,8 @@ NewRules.propTypes = {
 
 const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
+  categories: store.categoriesData.categories,
+  productViewType: store.clientsData.productViewType,
   products: store.productsData.data.products,
   valueDetails: store.productsData.data.valueDetails,
   isFetchingList: store.productsData.isFetchingList,

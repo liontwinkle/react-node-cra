@@ -10,6 +10,7 @@ const AppearCollection = require('../modules/appear/appear.model');
 function checkObject(data) {
   return (typeof data === 'object') && !Array.isArray(data) && (data !== null);
 }
+
 function insertAppear(collection, attributeId, appear) {
   const addAppearData = [];
   appear.forEach((item) => {
@@ -106,14 +107,14 @@ function handleCreate(req) {
     if (entity.length > 0) {
       createData.defaultProperties = entity[0].defaultProperties || [];
       entity.forEach((item) => {
-        if (item.categoryId > newId) {
-          newId = item.categoryId;
+        if (item._id > newId) {
+          newId = item._id;
         }
       });
       newId++;
     }
-    if (createData.parentId !== 'null') {
-      collectionAppear.find({ categoryId: parseInt(createData.parentId, 10) })
+    if (createData.parent_id) {
+      collectionAppear.find({ categoryId: createData.parent_id })
         .then((result) => {
           if (result.length > 0) {
             const attributs = result.map((item) => ({
@@ -125,7 +126,7 @@ function handleCreate(req) {
           }
         });
     }
-    createData.categoryId = newId;
+    createData._id = newId;
     return collection.create(createData);
   };
 }
@@ -133,13 +134,13 @@ function handleCreate(req) {
 function setAppearForCategory(data, client) {
   const collectionAppear = AppearCollection(`${client}_appears`);
   data.forEach((item) => {
-    if (item.parentId !== 'null') {
-      collectionAppear.find({ categoryId: parseInt(item.parentId, 10) })
+    if (item.parent_id !== null) {
+      collectionAppear.find({ categoryId: item.parent_id })
         .then((result) => {
           if (result.length > 0) {
             const attributs = result.map((attributeItem) => ({
-              attributeId: attributeItem.attributeId,
-              categoryId: item.categoryId,
+              attributeId: attributeItem._id,
+              categoryId: item._id,
             }));
             collectionAppear.insertMany(attributs)
               .then(() => {});
@@ -164,8 +165,8 @@ function handleAttributeCreate(req, res) {
     let newId = 1;
     if (entity.length > 0) {
       entity.forEach((item) => {
-        if (item.attributeId > newId) {
-          newId = item.attributeId;
+        if (item._id > newId) {
+          newId = item._id;
         }
       });
       newId++;
@@ -173,7 +174,7 @@ function handleAttributeCreate(req, res) {
     if (createData.appear) {
       insertAppear(collectionAppear, newId, createData.appear);
     }
-    createData.attributeId = newId;
+    createData._id = newId;
     collectionAttr.create(createData)
       .then((result) => {
         const returnValue = JSON.parse(JSON.stringify(result));
@@ -193,7 +194,7 @@ function handleAttributeFetch(req, res) {
           entity.forEach((entityItem, index) => {
             if (result.length > 0) {
               attributeData[index].appear = result.filter(((appearItem) =>
-                (appearItem.attributeId === entityItem.attributeId)
+                (appearItem.attributeId === entityItem._id)
               ))
                 .map((item) => (item.categoryId));
             } else {
@@ -227,7 +228,7 @@ function removeDeletedProperty(data, deleteKey, collection) {
         }
       });
 
-      collection.updateMany({ categoryId: resultItem.categoryId }, {
+      collection.updateMany({ _id: resultItem._id }, {
         $set: {
           properties: resultItem.properties
         }
@@ -359,7 +360,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
             if (!updateProperties[keyItem][subKeyItem].imageData) {
               updatedNewProperties.properties[keyItem][subKeyItem].path = updateFile(clientId,
                 type, updateProperties[keyItem][subKeyItem].path,
-                originData.categoryId);
+                originData._id);
             } else {
               const originUrl = (originProperties[keyItem]
                 && originProperties[keyItem][subKeyItem])
@@ -367,7 +368,7 @@ function prepareImageProperties(originData, updates, clientId, type) {
               updatedNewProperties.properties[keyItem][subKeyItem] = createFile(clientId,
                 type,
                 updateProperties[keyItem][subKeyItem],
-                subKeyItem, originData.categoryId, originUrl);
+                subKeyItem, originData._id, originUrl);
             }
           }
         }
@@ -375,12 +376,12 @@ function prepareImageProperties(originData, updates, clientId, type) {
     } else if (updateProperties[keyItem] && updateProperties[keyItem].path) {
       if (!updateProperties[keyItem].imageData) {
         updatedNewProperties.properties[keyItem].path = updateFile(clientId,
-          type, updates[keyItem].path, originData.categoryId);
+          type, updates[keyItem].path, originData._id);
       } else {
         updatedNewProperties.properties[keyItem] = createFile(clientId,
           type,
           updateProperties[keyItem],
-          keyItem, originData.categoryId);
+          keyItem, originData._id);
       }
     }
   });
@@ -401,20 +402,51 @@ function saveCategoriesUpdates(req) {
   };
 }
 
-function saveUpdates(updates) {
-  return (entity) => {
-    if (updates) {
-      _.assign(entity, updates);
+function getDiffSection(oldsection, newSection) {
+  let newKey = '';
+  let originalKey = '';
+  oldsection.forEach((oldItem) => {
+    const duplicateId = newSection.findIndex((newItem) => (
+      (oldItem.key === newItem.key) && (oldItem.label === newItem.label)
+    ));
+    if (duplicateId < 0) {
+      originalKey = oldItem.key;
+      const updatedSection = newSection.find((newItem) => (newItem._id === oldItem._id));
+      if (updatedSection) {
+        newKey = updatedSection.key;
+      } else {
+        newKey = null;
+      }
     }
-    return entity.saveAsync();
+  });
+  return {
+    newKey,
+    originalKey,
   };
 }
 
+function setNewKey(propertyFields, newKey, originalKey) {
+  const newPropertyFields = JSON.parse(JSON.stringify(propertyFields));
+  propertyFields.forEach((item, index) => {
+    if (item.section === originalKey) {
+      newPropertyFields[index].section = newKey;
+    }
+  });
+  return newPropertyFields;
+}
 function savePropertiesUpdates(updates) {
   return (entity) => {
     if (updates) {
       const originData = JSON.parse(JSON.stringify(entity));
       let data = updates;
+      if (updates.sections) {
+        const oldSections = JSON.parse(JSON.stringify(entity.sections));
+        const newSections = JSON.parse(JSON.stringify(updates.sections));
+        const { newKey, originalKey } = getDiffSection(oldSections, newSections);
+        if (newKey !== originalKey) {
+          entity.propertyFields = setNewKey(entity.propertyFields, newKey, originalKey);
+        }
+      }
       if (updates.propertyFields) {
         removeImageUploaded(originData.propertyFields, updates.propertyFields);
         data = uploadImageProperties(updates, entity.clientId, entity.type);
@@ -432,18 +464,18 @@ function getAppear(appearArray) {
 function checkOffForAttribute(oldData, req, collection, entity) {
   const diff = _.difference(oldData, req.body.appear);
   collection.find({
-    attributeId: parseInt(entity.groupId, 10)
+    attributeId: entity.group_id
   }, { categoryId: 1, _id: 0 })
     .then((result) => {
       if (result.length > 0) {
         const deletedAppear = _.difference(getAppear(result), diff);
         if (deletedAppear.length > 0) {
-          collection.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+          collection.deleteMany({ attributeId: entity.group_id })
             .then(() => {
-              insertAppear(collection, parseInt(entity.groupId, 10), deletedAppear);
+              insertAppear(collection, entity.group_id, deletedAppear);
             });
         } else {
-          collection.deleteMany({ attributeId: parseInt(entity.groupId, 10) })
+          collection.deleteMany({ attributeId: entity.group_id })
             .then(() => {});
         }
       }
@@ -451,18 +483,18 @@ function checkOffForAttribute(oldData, req, collection, entity) {
 }
 
 function updateChildAttributesAppear(req, entity, collection, oldData) {
-  req.attributes.find({ groupId: entity.attributeId })
+  req.attributes.find({ group_id: entity._id })
     .then((results) => {
       results.forEach((resItem) => {
         collection.find({
-          attributeId: resItem.attributeId
+          attributeId: resItem._id
         }, { categoryId: 1, _id: 0 })
           .then((result) => {
             const newAppear = _.union(req.body.appear,
               _.difference(getAppear(result), oldData));
-            collection.deleteMany({ attributeId: resItem.attributeId })
+            collection.deleteMany({ attributeId: resItem._id })
               .then(() => {
-                insertAppear(collection, resItem.attributeId, newAppear);
+                insertAppear(collection, resItem._id, newAppear);
               });
           });
       });
@@ -472,16 +504,16 @@ function updateChildAttributesAppear(req, entity, collection, oldData) {
 function updateAttributesAppear(req, res, result, collection, entity, returnValue) {
   if (req.body.appear) {
     if (result.length <= 0) {
-      insertAppear(collection, entity.attributeId, req.body.appear);
+      insertAppear(collection, entity._id, req.body.appear);
       entity.saveAsync()
         .then(() => {
           returnValue.appear = req.body.appear;
           res.status(201).json(returnValue);
         });
     } else {
-      collection.deleteMany({ attributeId: entity.attributeId })
+      collection.deleteMany({ attributeId: entity._id })
         .then(() => {
-          insertAppear(collection, entity.attributeId, req.body.appear);
+          insertAppear(collection, entity._id, req.body.appear);
           entity.saveAsync()
             .then(() => {
               returnValue.appear = req.body.appear;
@@ -504,10 +536,10 @@ function saveAttributeUpdates(req, res) {
 
     /** *** Management of the group check status***** */
     if (req.body.appear) {
-      collectionAppear.find({ attributeId: entity.attributeId }, { categoryId: 1, _id: 0 })
+      collectionAppear.find({ attributeId: entity._id }, { categoryId: 1, _id: 0 })
         .then((result) => {
           const old = getAppear(result);
-          if (!req.body.checked && entity.groupId !== 'null') {
+          if (!req.body.checked && entity.group_id !== null) {
             checkOffForAttribute(old, req, collectionAppear, entity);
           }
           updateChildAttributesAppear(req, entity, collectionAppear, old);
@@ -523,7 +555,7 @@ function saveAttributeUpdates(req, res) {
     _.assign(entity, data);
     const returnValue = JSON.parse(JSON.stringify(entity));
 
-    collectionAppear.find({ attributeId: entity.attributeId })
+    collectionAppear.find({ attributeId: entity._id })
       .then((result) => {
         updateAttributesAppear(req, res, result, collectionAppear, entity, returnValue);
       });
@@ -534,7 +566,7 @@ function uploadAppear(data, client) {
   const collectionAppear = AppearCollection(`${client}_appears`);
   data.forEach((dataItem) => {
     if (dataItem.appear) {
-      insertAppear(collectionAppear, dataItem.attributeId, dataItem.appear);
+      insertAppear(collectionAppear, dataItem._id, dataItem.appear);
     }
   });
 }
@@ -542,10 +574,10 @@ function removeCategoryEntity(req, res) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
   return (entity) => {
     if (entity) {
-      collectionAppear.find({ categoryId: entity.categoryId })
+      collectionAppear.find({ categoryId: entity._id })
         .then((result) => {
           if (result.length > 0) {
-            collectionAppear.deleteMany({ categoryId: entity.categoryId })
+            collectionAppear.deleteMany({ categoryId: entity._id })
               .then(() => {});
           }
         });
@@ -555,27 +587,22 @@ function removeCategoryEntity(req, res) {
   };
 }
 
-function removeEntity(res) {
-  return (entity) => entity && entity.removeAsync()
-    .then(respondWith(res, 204));
-}
-
 function removeChildren(req, id) {
   const collectionAppear = AppearCollection(`${req.client.code}_appears`);
-  req.category.find({ parentId: id })
+  req.category.find({ parent_id: id })
     .then((result) => {
       if (result.length > 0) {
         req.category
-          .deleteMany({ parentId: id }, (err, result) => {
+          .deleteMany({ parent_id: id }, (err, result) => {
             if (!result) {
               console.log(err);
             }
           });
         result.forEach((item) => {
-          collectionAppear.find({ categoryId: item.categoryId })
+          collectionAppear.find({ categoryId: item._id })
             .then((result) => {
               if (result.length > 0) {
-                collectionAppear.deleteMany({ categoryId: item.categoryId })
+                collectionAppear.deleteMany({ categoryId: item._id })
                   .then(() => {});
               }
             });
@@ -586,10 +613,10 @@ function removeChildren(req, id) {
 }
 
 function removeAttribute(req, id) {
-  req.attributes.find({ groupId: id })
+  req.attributes.find({ group_id: id })
     .then((result) => {
       req.attributes
-        .deleteMany({ groupId: id }, (err, result) => {
+        .deleteMany({ group_id: id }, (err, result) => {
           if (!result) {
             console.log(err);
           }
@@ -600,7 +627,7 @@ function removeAttribute(req, id) {
         });
       } else {
         req.attributes
-          .deleteOne({ groupId: id }, (err, result) => {
+          .deleteOne({ group_id: id }, (err, result) => {
             if (!result) {
               console.log(err);
             }
@@ -622,6 +649,40 @@ function createCollection(body) {
     });
   });
 }
+
+function saveUpdates(collection, updates) {
+  return (entity) => {
+    if (updates) {
+      const updateCode = (entity.code !== updates.code);
+      if (updateCode) {
+        const collection = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
+        collection.forEach((item) => {
+          if (db.collection(`${entity.code}_${item}`)) {
+            db.collection(`${entity.code}_${item}`).rename(`${updates.code}_${item}`);
+          }
+        });
+      }
+      _.assign(entity, updates);
+      return entity.saveAsync();
+    }
+  };
+}
+
+function removeEntity(res) {
+  return (entity) => {
+    if (entity) {
+      const collection = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
+      collection.forEach((item) => {
+        if (db.collection(`${entity.code}_${item}`)) {
+          db.collection(`${entity.code}_${item}`).drop(() => {});
+        }
+      });
+      entity.removeAsync()
+        .then(respondWith(res, 204));
+    }
+  };
+}
+
 
 module.exports = {
   handleError,

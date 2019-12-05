@@ -107,9 +107,9 @@ function CustomSearchFilter({
               minScrollbarLength: 50,
             }}
           >
-            {searched.map((item) => (
+            {searched.map((item, index) => (
               <li
-                key={item}
+                key={index.toString()}
                 className="mg-search-filter-item"
                 onClick={changeValue(item)}
               >

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import _find from 'lodash/find';
 import { useSnackbar } from 'notistack';
 
@@ -79,11 +79,11 @@ function ClientSelect({
   };
   const handleChangeClient = (item) => {
     const newClient = _find(clients, { id: item.key });
+    setProducts([]);
+    updateNodeData([]);
+    updateTreeData([]);
     if (newClient) {
       setClient(newClient);
-      setProducts([]);
-      updateNodeData([]);
-      updateTreeData([]);
       actionChangeType(defaultType, newClient);
     }
   };

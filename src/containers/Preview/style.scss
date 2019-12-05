@@ -1,0 +1,24 @@
+.preview_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .preview_top {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .preview_route {
+      padding: 30px 30px;
+      border-bottom: 1px solid #ddd;
+      ul{
+        display: flex;
+        justify-content: flex-start;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+          margin-right: 30px;
+        }
+      }
+    }
+  }
+}

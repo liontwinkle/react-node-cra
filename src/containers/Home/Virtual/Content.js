@@ -12,7 +12,7 @@ import Properties from 'components/Properties';
 
 const tabs = [
   { value: 'properties', label: 'Properties' },
-  { value: 'attributes', label: 'Attributes' },
+  { value: 'association', label: 'Association' },
   { value: 'rules', label: 'Rules' },
   { value: 'history', label: 'History' },
 ];
@@ -43,7 +43,7 @@ function Content({
             isObjectUpdating={isUpdating}
           />
         )}
-        {tab === 'attributes' && <Association />}
+        {tab === 'association' && <Association />}
         {tab === 'rules' && <NewRules />}
       </div>
     </div>

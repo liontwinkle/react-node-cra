@@ -11,6 +11,7 @@ import {
   CustomToggle,
   IconButton,
 } from 'components/elements';
+
 import CustomMonaco from 'components/elements/CustomMonaco';
 
 import { propertyTypes } from './constants';
@@ -42,11 +43,23 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   return string;
 };
 
-const getStringTypeValue = (property, state, propertyFields) => {
+export const getRootParent = (Items, currentItem, type) => {
+  let rootParent = {};
+  if (!currentItem[type]) {
+    rootParent = currentItem;
+    return rootParent;
+  }
+  const parentItem = Items.find((node) => (node._id === currentItem[type]));
+  return getRootParent(Items, parentItem, type);
+};
+const getStringTypeValue = (property, state, propertyFields, template) => {
   let value = '';
-  let templateFlag = false;
+  let templateFlag = (template[property.key] && template[property.key] !== '' && template[property.key] !== 'null');
   if (property.template && property.template !== '') {
     value = createValuefromtemplate(property.template, state, propertyFields);
+    templateFlag = true;
+  } else if (template[property.key] && template[property.key] !== '') {
+    value = createValuefromtemplate(template[property.key], state, propertyFields);
     templateFlag = true;
   } else if (
     property.default && state.properties[property.key] === undefined) {
@@ -54,7 +67,7 @@ const getStringTypeValue = (property, state, propertyFields) => {
   } else {
     value = createValuefromtemplate(state.properties[property.key], state, propertyFields);
   }
-  if (property.propertyType === 'urlpath') {
+  if (property.propertyType === 'urlpath' && value) {
     value = value.replace('_', '-');
     value = value.replace(' ', '-');
   }
@@ -83,8 +96,8 @@ export const updateProperties = (propertyFields, properties) => {
 };
 
 export const sectionRender = (
-  propertyFields, state, section,
-  changeInput, changeSelect, changeArrayInput,
+  propertyFields, template, state, section,
+  changeInput, changeSelect,
   handleSelItemToggle, handleEditImage, toggleSwitch, changeMonaco,
 ) => {
   const res = [];
@@ -95,7 +108,7 @@ export const sectionRender = (
       || ((section === null) && (p.section === null))
       || ((section === '') && (p.section === ''))) {
       if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
-        const { value, templateFlag } = getStringTypeValue(p, state, fields);
+        const { value, templateFlag } = getStringTypeValue(p, state, fields, template);
         res.push(
           <CustomInput
             label={p.label}
@@ -152,6 +165,7 @@ export const sectionRender = (
           value = (typeof state.properties[p.key] === 'string')
             ? (state.properties[p.key] === 'true') : state.properties[p.key];
         }
+        value = (typeof value === 'number') ? (value >= 1) : value;
         res.push(
           <CustomToggle
             label={p.label}
@@ -161,7 +175,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'text') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           <CustomText
             label={p.label}
@@ -185,12 +199,12 @@ export const sectionRender = (
             label={p.label}
             inline
             value={value}
-            onChange={changeArrayInput(p.key)}
+            onChange={changeInput(p.key)}
             key={p.key}
           />,
         );
       } else if (p.propertyType === 'monaco') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           <CustomMonaco
             label={p.label}
@@ -201,7 +215,7 @@ export const sectionRender = (
           />,
         );
       } else if (p.propertyType === 'richtext') {
-        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields);
+        const { value, templateFlag } = getStringTypeValue(p, state, propertyFields, template);
         res.push(
           templateFlag
             ? (
@@ -231,7 +245,7 @@ export const sectionRender = (
             label={p.label}
             inline
             key={p.key}
-            value={image ? image.path : null}
+            value={image.path !== '' ? image.path : null}
             name={image ? image.name : null}
             handleEditImage={() => handleEditImage(p.key)}
           />,
@@ -308,7 +322,11 @@ export const setDefault = (properties, fields) => {
       }
     } else if (item.propertyType === 'array') {
       try {
-        tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+        if (tempProperties[item.key] === '') {
+          tempProperties[item.key] = null;
+        } else {
+          tempProperties[item.key] = JSON.parse(tempProperties[item.key]);
+        }
       } catch (e) {
         errMsg = `Array input is wrong at the ${item.key} field.`;
       }
@@ -343,6 +361,7 @@ export const makeUpdatedData = (properties, fields, sections) => {
 
   return result;
 };
+
 export const getFilterItem = (srcArray, searchkey) => {
   const filtered = [];
   srcArray.forEach((item) => {
@@ -353,27 +372,14 @@ export const getFilterItem = (srcArray, searchkey) => {
   return filtered;
 };
 
-export const checkTemplate = (propertyFields, propertyFieldData) => {
+const checkTemplating = (string, propertyFields, type) => {
   let invalidData = '';
-  if (propertyFieldData.template && propertyFieldData.template !== '') {
-    const string = propertyFieldData.template;
-    const regex = /\$\w+/g;
-    const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, (x) => x[0]);
-    matchedArray.forEach((item) => {
-      const keyValue = item.substr(1, item.length - 1);
-      const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
-      if (!property) {
-        invalidData = (invalidData === '') ? item : `${invalidData},${item}`;
-      }
-    });
-  }
-
-  if (propertyFieldData.default && propertyFieldData.default !== '') {
-    const string = propertyFieldData.default;
-    const regex = /\$\w+/g;
-    const result = regex[Symbol.matchAll](string);
-    const matchedArray = Array.from(result, (x) => x[0]);
+  const regex = /\$\w+/g;
+  const result = regex[Symbol.matchAll](string);
+  const matchedArray = Array.from(result, (x) => x[0]);
+  if (type === 'template' && matchedArray.length === 0 && string !== '') {
+    invalidData = 'The template should include some keys';
+  } else {
     matchedArray.forEach((item) => {
       const keyValue = item.substr(1, item.length - 1);
       const property = propertyFields.find((propertyItem) => (propertyItem.key === keyValue));
@@ -383,4 +389,28 @@ export const checkTemplate = (propertyFields, propertyFieldData) => {
     });
   }
   return invalidData;
+};
+
+export const checkTemplate = (propertyFields, propertyFieldData) => {
+  let invalidData = '';
+  if (propertyFieldData.template && propertyFieldData.template !== '') {
+    invalidData = checkTemplating(propertyFieldData.template, propertyFields, 'template');
+  }
+
+  if (propertyFieldData.default && propertyFieldData.default !== '') {
+    invalidData = checkTemplating(propertyFieldData.default, propertyFields, 'default');
+  }
+  return invalidData;
+};
+
+export const validateTemplate = (propertyFields, data) => {
+  const errKey = [];
+  const templateData = data.template;
+  const keys = Object.keys(templateData);
+  keys.forEach((keyItem) => {
+    if (checkTemplating(templateData[keyItem], propertyFields, 'template') !== '') {
+      errKey.push(keyItem);
+    }
+  });
+  return errKey;
 };

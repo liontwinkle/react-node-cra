@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
+import _union from 'lodash/union';
+
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { getPreFilterData } from 'utils/index';
 import { IconButton } from 'components/elements/index';
+import PreviewProducts from 'components/shared/Rules/RulesTable/PreviewProducts';
+import PreviewGrid from 'components/shared/Rules/RulesTable/PreviewGrid';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
-import PreviewProducts from './PreviewProducts';
-import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
 function RulesAction({
   rules,
   newRules,
+  universalRules,
   products,
   productViewType,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const [open, setOpen] = useState({
     add_rule: false,
     edit_rules: false,
     preview_products: false,
   });
 
+  const [rulesData, setRulesData] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
   const [previewProducts, setProducts] = useState([]);
-  const filterProducts = () => getPreFilterData(rules, products);
+
+  useEffect(() => {
+    if (rules && rulesData !== rules) {
+      setPreviewData(getPreFilterData(_union(rules, universalRules), products));
+      setRulesData(rules);
+    }
+  }, [universalRules, rules, products, rulesData]);
+
   const handleToggle = (field) => () => {
     let displayData = [];
     if (field === 'preview_products') {
-      displayData = filterProducts();
+      displayData = previewData;
     }
     if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
@@ -72,11 +83,11 @@ function RulesAction({
       <div className="divider" />
 
       <Tooltip
-        title={`Preview ${filterProducts().length} Products for All Rules`}
+        title={`Preview ${previewData.length} Products for All Rules`}
         position="left"
         arrow
       >
-        <span onClick={handleToggle('preview_products')}>{filterProducts().length}</span>
+        <span onClick={handleToggle('preview_products')}>{previewData.length}</span>
       </Tooltip>
 
       {open.add_rule && (
@@ -111,12 +122,13 @@ function RulesAction({
 RulesAction.propTypes = {
   rules: PropTypes.array.isRequired,
   newRules: PropTypes.array.isRequired,
+  universalRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (store) => ({
-  products: store.categoriesData.preProducts,
+  products: store.productsData.data.products,
   productViewType: store.clientsData.productViewType,
 });
 

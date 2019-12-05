@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
-
+import { inlineDefaultWidth } from 'utils/constants';
 import './style.scss';
 
 const CustomArray = ({
@@ -66,7 +66,7 @@ CustomArray.propTypes = {
   hint: PropTypes.string,
   min: PropTypes.number,
   inline: PropTypes.bool,
-  inlineWidth: PropTypes.number,
+  inlineWidth: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -80,10 +80,10 @@ CustomArray.defaultProps = {
   className: '',
   label: '',
   labelAlignment: '',
-  placeholder: '',
+  placeholder: 'Please insert array type...',
   min: undefined,
   inline: false,
-  inlineWidth: 150,
+  inlineWidth: inlineDefaultWidth,
   hint: '',
   value: '',
 };

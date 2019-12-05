@@ -7,13 +7,12 @@ import CheckboxTree from 'react-checkbox-tree-enhanced';
 
 import _union from 'lodash/union';
 import _difference from 'lodash/difference';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import { fetchAttributes, updateAttribute, setAttribute } from 'redux/actions/attribute';
 import { fetchProducts } from 'redux/actions/products';
 import { setHandler } from 'utils';
 import { getNewAppearData, getAllChildData } from 'utils/attributeManagement';
 import Loader from 'components/Loader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContextMenu from './ContextMenu';
 
 import './style.scss';
@@ -57,7 +56,7 @@ function Association({
     event.preventDefault();
     const strId = event.path[2].id.split('-');
     const attributeId = strId[strId.length - 1];
-    const attribute = attributes.find((attributeItem) => (attributeItem.attributeId.toString() === attributeId));
+    const attribute = attributes.find((attributeItem) => (attributeItem._id === attributeId));
     setAttribute(attribute);
     setInfo({
       label: event.target.innerText,
@@ -72,8 +71,8 @@ function Association({
     if (category) {
       const updateChecked = [];
       attributes.forEach((attrItem) => {
-        if (attrItem.appear && attrItem.appear.find((appearItem) => (appearItem === category.categoryId))) {
-          updateChecked.push(attrItem.attributeId);
+        if (attrItem.appear && attrItem.appear.find((appearItem) => (appearItem === category._id))) {
+          updateChecked.push(attrItem._id);
         }
       });
       setChecked(updateChecked);
@@ -99,23 +98,23 @@ function Association({
 
   const handleAttributeChange = (checked, nodeTarget) => {
     if (!isUpdating) {
-      const targetAppear = attributes.filter((attrItem) => (attrItem.attributeId === nodeTarget.value))[0];
+      const targetAppear = attributes.filter((attrItem) => (attrItem._id === nodeTarget.value))[0];
       let checkGrp = false;
       let appearData = [];
       const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
       const allChildData = getAllChildData(categories, category);
-      willCheckedCategory.push(category.categoryId);
+      willCheckedCategory.push(category._id);
       const updateNewAppear = _union(willCheckedCategory, allChildData);
 
       if (nodeTarget.checked) {
         appearData = _union(targetAppear.appear, updateNewAppear);
-        if (targetAppear.groupId !== 'null') {
+        if (targetAppear.group_id !== null) {
           const includeCategoryList = attributes.filter(
             (attrItem) => (!!attrItem.appear.find(
-              ((arrItem) => (arrItem === category.categoryId)),
-            ) && (attrItem.groupId === targetAppear.groupId)),
+              ((arrItem) => (arrItem === category._id)),
+            ) && (attrItem.group_id === targetAppear.group_id)),
           );
-          const groupList = attributes.filter((attrItem) => (attrItem.groupId === targetAppear.groupId));
+          const groupList = attributes.filter((attrItem) => (attrItem.group_id === targetAppear.group_id));
           if (includeCategoryList.length === groupList.length - 1) {
             checkGrp = true;
           }
@@ -125,10 +124,10 @@ function Association({
       }
 
       if (checkGrp) {
-        const groupAdd = attributes.filter((attrItem) => (attrItem.attributeId.toString() === targetAppear.groupId))[0];
+        const groupAdd = attributes.filter((attrItem) => (attrItem._id === targetAppear.group_id))[0];
         const groupAddAppear = groupAdd.appear;
-        groupAddAppear.push(category.categoryId);
-        const updateItemId = attributes.find((item) => (item.attributeId.toString() === targetAppear.groupId))._id;
+        groupAddAppear.push(category._id);
+        const updateItemId = attributes.find((item) => (item._id === targetAppear.group_id))._id;
         updateAttribute(updateItemId, { appear: groupAddAppear })
           .then(() => { fetchAttributes(client.id, 'attributes'); });
       } else {
@@ -154,11 +153,27 @@ function Association({
                 expanded={expanded}
                 onCheck={handleAttributeChange}
                 onExpand={handleExpanded}
-                nativeCheckboxes
                 showNodeIcon={false}
                 icons={{
-                  expandClose: <AddIcon />,
-                  expandOpen: <RemoveIcon />,
+                  check: <FontAwesomeIcon className="rct-icon rct-icon-check" icon="check-square" />,
+                  uncheck: <FontAwesomeIcon className="rct-icon rct-icon-uncheck" icon={['far', 'square']} />,
+                  halfCheck: <FontAwesomeIcon className="rct-icon rct-icon-half-check" icon="check-square" />,
+                  expandClose: <FontAwesomeIcon
+                    className="rct-icon rct-icon-expand-close"
+                    icon={['far', 'plus-square']}
+                  />,
+                  expandOpen: <FontAwesomeIcon
+                    className="rct-icon rct-icon-expand-open"
+                    icon={['far', 'minus-square']}
+                  />,
+                  expandAll: <FontAwesomeIcon className="rct-icon rct-icon-expand-all" icon={['far', 'plus-square']} />,
+                  collapseAll: <FontAwesomeIcon
+                    className="rct-icon rct-icon-collapse-all"
+                    icon={['far', 'minus-square']}
+                  />,
+                  parentClose: <FontAwesomeIcon className="rct-icon rct-icon-parent-close" icon="folder" />,
+                  parentOpen: <FontAwesomeIcon className="rct-icon rct-icon-parent-open" icon="folder-open" />,
+                  leaf: <FontAwesomeIcon className="rct-icon rct-icon-leaf-close" icon="file" />,
                 }}
               />
             )

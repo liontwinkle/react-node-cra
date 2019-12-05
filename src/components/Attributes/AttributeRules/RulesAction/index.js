@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
 import { Tooltip } from 'react-tippy';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
+import _union from 'lodash/union';
+
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { getPreFilterData } from 'utils';
 import { IconButton } from 'components/elements';
+import PreviewProducts from 'components/shared/Rules/RulesTable/PreviewProducts';
+import PreviewGrid from 'components/shared/Rules/RulesTable/PreviewGrid';
+import { getPreFilterData } from 'utils';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
-import PreviewProducts from './PreviewProducts';
-import PreviewGrid from './PreviewGrid';
+
 
 import './style.scss';
 
@@ -19,6 +22,7 @@ function RulesAction({
   rules,
   newRules,
   displayRules,
+  universalRules,
   products,
   productViewType,
   matchRules,
@@ -31,16 +35,22 @@ function RulesAction({
     preview_products: false,
   });
 
+  const [rulesData, setRulesData] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
   const [previewProducts, setProducts] = useState([]);
 
-  const filterProducts = () => {
-    const recvRules = displayRules || [];
-    return getPreFilterData(recvRules, products);
-  };
+  useEffect(() => {
+    if (displayRules && rulesData !== displayRules) {
+      const recvRules = displayRules || [];
+      setPreviewData(getPreFilterData(_union(recvRules, universalRules), products));
+      setRulesData(displayRules);
+    }
+  }, [products, rulesData, displayRules, universalRules]);
+
 
   const handleToggle = (field) => () => {
     let displayData = [];
-    if (field === 'preview_products') { displayData = filterProducts(); }
+    if (field === 'preview_products') { displayData = previewData; }
 
     if (displayData.length === 0 && field === 'preview_products') {
       enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
@@ -78,11 +88,11 @@ function RulesAction({
       <div className="divider" />
 
       <Tooltip
-        title={`Preview ${filterProducts().length} Products for All Rules`}
+        title={`Preview ${previewData.length} Products for All Rules`}
         position="left"
         arrow
       >
-        <span onClick={handleToggle('preview_products')}>{filterProducts().length}</span>
+        <span onClick={handleToggle('preview_products')}>{previewData.length}</span>
       </Tooltip>
 
       {open.add_rule && (
@@ -124,6 +134,7 @@ RulesAction.propTypes = {
   newRules: PropTypes.array.isRequired,
   displayRules: PropTypes.array.isRequired,
   matchRules: PropTypes.array.isRequired,
+  universalRules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
 };

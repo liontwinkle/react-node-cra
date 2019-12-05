@@ -30,8 +30,22 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    .products_empty_body {
+      margin: auto;
+    }
   }
+
   .mg-switch-control {
     justify-content: flex-end;
+  }
+  .virtual-rule-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .rule-section-header {
+      font-size: 30px;
+      line-height: 60px;
+    }
   }
 }

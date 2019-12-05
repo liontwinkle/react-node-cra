@@ -7,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { withSnackbar } from 'notistack';
 
 import { sortByOrder } from 'utils';
-import { updateProperties, sectionRender } from 'utils/propertyManagement';
+import { updateProperties, sectionRender, getRootParent } from 'utils/propertyManagement';
 import { CustomSection } from 'components/elements';
 import PropertyActions from './PropertyActions';
 import AddSelectItems from './PropertyActions/AddSelectItems';
@@ -19,6 +19,7 @@ import './style.scss';
 class Properties extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       properties: {},
       sections: [],
@@ -35,24 +36,28 @@ class Properties extends Component {
 
   componentDidMount() {
     const { propertyField, objectItem } = this.props;
-    const nonSection = (propertyField.propertyFields)
-      ? propertyField.propertyFields.filter((item) => item.section === null) : [];
-    this.setState({
-      noSectionPropertyFields: nonSection || [],
-      properties: objectItem.properties || {},
-      sections: propertyField.sections || [],
-    });
+    if (propertyField) {
+      const nonSection = (propertyField.propertyFields)
+        ? propertyField.propertyFields.filter((item) => item.section === null) : [];
+      this.setState({
+        noSectionPropertyFields: nonSection || [],
+        properties: objectItem.properties || {},
+        sections: propertyField.sections || [],
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {
     const { objectItem, propertyField } = this.props;
     const { properties } = this.state;
-    if (!isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+    if (propertyField.propertyFields && !isEqual(objectItem.properties, prevProps.objectItem.properties)) {
+      const updatedProperties = objectItem.properties || {};
       this.updateState({
-        properties: objectItem.properties || {},
+        properties: updateProperties(propertyField.propertyFields, updatedProperties),
       });
     }
-    if (!isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
+    if (propertyField.propertyFields
+      && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nonSection = propertyField.propertyFields.filter((item) => item.section === null);
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
@@ -61,7 +66,7 @@ class Properties extends Component {
       });
     }
 
-    if (!isEqual(propertyField.sections, prevProps.propertyField.sections)) {
+    if (propertyField.sections && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });
@@ -69,20 +74,13 @@ class Properties extends Component {
   }
 
   updateState = (data) => {
-    this.setState(data);
-  };
-
-  changeInput = (field) => (e) => {
-    e.persist();
     this.setState((prevState) => ({
-      properties: {
-        ...prevState.properties,
-        [field]: e.target.value,
-      },
+      ...prevState,
+      ...data,
     }));
   };
 
-  changeArrayInput = (field) => (e) => {
+  changeInput = (field) => (e) => {
     e.persist();
     this.setState((prevState) => ({
       properties: {
@@ -134,12 +132,20 @@ class Properties extends Component {
   };
 
   renderSectionFields = (section) => {
+    const { objectItem, attributes, categories } = this.props;
     const { propertyFields } = this.props.propertyField;
-    return sectionRender(
-      propertyFields, this.state, section,
-      this.changeInput, this.changeSelect, this.changeArrayInput,
-      this.handleSelItemToggle, this.handleEditImage, this.toggleSwitch, this.changeMonaco,
-    );
+    const items = (objectItem.group_id) ? attributes : categories;
+    const type = (objectItem.group_id) ? 'group_id' : 'parent_id';
+    const rootParent = getRootParent(items, objectItem, type);
+    const template = rootParent.template || {};
+    if (propertyFields) {
+      return sectionRender(
+        propertyFields, template, this.state, section,
+        this.changeInput, this.changeSelect, this.handleSelItemToggle,
+        this.handleEditImage, this.toggleSwitch, this.changeMonaco,
+      );
+    }
+    return null;
   };
 
   render() {
@@ -154,7 +160,8 @@ class Properties extends Component {
       noSectionPropertyFields,
     } = this.state;
 
-    const { propertyFields } = this.props.propertyField;
+    const propertyFields = this.props.propertyField !== null ? this.props.propertyField.propertyFields : [];
+
     return (
       <div className="mg-properties-container d-flex">
         <div className="mg-properties-content">
@@ -200,15 +207,19 @@ class Properties extends Component {
             />
           )}
         </div>
-        <PropertyActions
-          properties={properties}
-          fields={propertyFields}
-          uploadImage={this.state.uploadImage}
-          sections={sections}
-          isObjectUpdating={this.props.isObjectUpdating}
-          updateObject={this.props.updateObject}
-          objectItem={this.props.objectItem}
-        />
+        {
+          propertyFields && (
+            <PropertyActions
+              properties={properties}
+              fields={propertyFields}
+              uploadImage={this.state.uploadImage}
+              sections={sections}
+              isObjectUpdating={this.props.isObjectUpdating}
+              updateObject={this.props.updateObject}
+              objectItem={this.props.objectItem}
+            />
+          )
+        }
       </div>
     );
   }
@@ -219,11 +230,15 @@ Properties.propTypes = {
   propertyField: PropTypes.object.isRequired,
   isObjectUpdating: PropTypes.bool.isRequired,
   updateObject: PropTypes.func.isRequired,
+  categories: PropTypes.array.isRequired,
+  attributes: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (store) => ({
   propertyField: store.propertyFieldsData.propertyField,
   isUpdating: store.propertyFieldsData.isUpdating,
+  categories: store.categoriesData.categories,
+  attributes: store.attributesData.attributes,
 });
 
 export default connect(

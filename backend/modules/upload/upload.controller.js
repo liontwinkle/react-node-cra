@@ -29,7 +29,7 @@ const checkDuplicateSection = (currentSection, newSection) => {
   });
   maxOrder++;
   newSection.forEach((newItem, index) => {
-    if (currentSection.findIndex(item => (item.key === newItem.key)) === -1) {
+    if (currentSection.findIndex((item) => (item.key === newItem.key)) === -1) {
       compareUpdateSection.push({
         label: newItem.label,
         key: newItem.key,
@@ -56,11 +56,12 @@ const checkDuplicateProperties = (currentPropertyFields, newPropertyFields) => {
       propertyType: currentItem.propertyType,
       section: currentItem.section,
       order: currentItem.order,
+      image: currentItem.image || null,
     });
   });
   maxOrder++;
   newPropertyFields.forEach((newItem, index) => {
-    if (currentPropertyFields.findIndex(item => (item.key === newItem.key)) === -1) {
+    if (currentPropertyFields.findIndex((item) => (item.key === newItem.key)) === -1) {
       updatePropertyFields.push({
         items: newItem.items,
         key: newItem.key,
@@ -94,7 +95,7 @@ const keyUpload = (clientId, type, data) => {
             }
           }, (err) => {
             if (err) {
-              console.log('### DEBUG ERROR: ', err);
+              console.log(err);
             }
           });
       }
@@ -107,10 +108,10 @@ const keyUpload = (clientId, type, data) => {
  *  ** */
 
 const checkType = {
-  virtual: 'categoryId',
-  native: 'categoryId',
+  virtual: '_id',
+  native: '_id',
   products: '_id',
-  attributes: 'attributeId',
+  attributes: '_id',
 };
 
 const removeList = ['createdAt', 'updatedAt', '__v', '$oid'];
@@ -119,7 +120,7 @@ const removeUnnecessaryData = (data) => {
   const addData = {};
   const keys = Object.keys(data);
   keys.forEach((keyItem) => {
-    if (removeList.findIndex(removeItem => (removeItem === keyItem)) === -1) {
+    if (removeList.findIndex((removeItem) => (removeItem === keyItem)) === -1) {
       if (data[keyItem] && !Array.isArray(data[keyItem]) && typeof data[keyItem] === 'object' && keyItem !== 'properties') {
         const key = Object.keys(data[keyItem]);
         if (key.length > 0) {
@@ -137,25 +138,44 @@ const removeUnnecessaryData = (data) => {
   return addData;
 };
 
+// const mergeTwoProperties = (currentProperties, recvProperties) => {
+//
+// };
+
+// const makeNewData = (newItem, currentData) => {
+//   const newItemKeys = Object.keys(newItem);
+//   const newCurrentKeys = Object.keys(currentData);
+//   const updateData = {};
+//   newCurrentKeys.forEach((currentKeyItem) => {
+//     if (newItem[currentKeyItem]) {
+//       if (currentKeyItem === 'rules') {
+//         const newRules = _.merge(currentData.rules, newItem.rules);
+//         currentData.rules = newRules;
+//       } else if (currentKeyItem === 'properties') {
+//         mergeTwoProperties(currentData.properties, newItem.properties);
+//       }
+//     }
+//   });
+// };
+
 const checkDuplicateData = (currentData, newData, type) => {
   const newCreateData = [];
+  const duplicateId = [];
   newData.forEach((newItem) => {
+    newCreateData.push(removeUnnecessaryData(newItem));
     if (type !== 'products') {
-      const duplicateFilter = currentData.find(currentItem =>
+      const duplicateFilterIndex = currentData.findIndex((currentItem) =>
         (currentItem[checkType[type]] === newItem[checkType[type]]));
-      if (!duplicateFilter) {
-        try {
-          newCreateData.push(removeUnnecessaryData(newItem));
-        } catch (e) {
-          console.error(e);
-        }
+      if (duplicateFilterIndex >= 0) {
+        duplicateId.push(newItem[checkType[type]]);
       }
-    } else {
-      newCreateData.push(removeUnnecessaryData(newItem));
     }
   });
 
-  return newCreateData;
+  return {
+    updateData: newCreateData,
+    duplicateId,
+  };
 };
 
 const getKeysfromNewData = (data) => {
@@ -211,7 +231,7 @@ const getNewFieldData = (updateData) => {
   let recvProperties = {};
   updateData.forEach((dataItem) => {
     const newProperties = dataItem.properties || {};
-    recvProperties = Object.assign({}, recvProperties, newProperties);
+    recvProperties = { ...recvProperties, ...newProperties };
   });
   const sections = getKeysfromNewData(recvProperties);
   const properties = getPropertiesfromNewData(recvProperties);
@@ -231,19 +251,32 @@ exports.upload = (req, res) => {
   }
   collection.find({}, (err, result) => {
     if (!err) {
-      const updateData = checkDuplicateData(result, req.body, req.params.type);
+      const { updateData, duplicateId } = checkDuplicateData(result, req.body, req.params.type);
       if (updateData.length > 0) {
+        let idName = '_id';
         try {
           if (req.params.type === 'attributes') {
             uploadAppear(updateData, req.params.clientId);
+            idName = '_id';
           } else if (req.params.type === 'virtual') {
             setAppearForCategory(updateData, req.params.clientId);
           }
           const fieldData = getNewFieldData(updateData);
           keyUpload(req.params.id, req.params.type, fieldData);
-          collection.insertMany(updateData).then(() => {
-            res.status(201).json(updateData[0]);
-          });
+          if (duplicateId.length > 0) {
+            collection.deleteMany({ $or: duplicateId.map((item) => ({ [idName]: item })) })
+              .then(() => {
+                collection.insertMany(updateData).then(() => {
+                  res.status(201).json(updateData[0]);
+                });
+              });
+          } else {
+            collection.insertMany(updateData)
+              .then(() => {
+                res.status(201)
+                  .json(updateData[0]);
+              });
+          }
         } catch (e) {
           handleError(res);
         }

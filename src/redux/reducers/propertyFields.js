@@ -1,5 +1,3 @@
-// import _ from 'lodash';
-
 import types from '../actionTypes';
 import { sortByOrder } from '../../utils';
 
@@ -52,7 +50,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCreating: false,
-        propertyField: action.payload.data,
+        // propertyField: action.payload.data,
       };
     case types.PROPERTY_FIELD_CREATE_FAIL:
       return {
@@ -88,7 +86,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isDeleting: false,
-        propertyField: null,
+        propertyField: {
+          id: '',
+          sections: [],
+          propertyFields: [],
+        },
       };
     case types.PROPERTY_FIELD_DELETE_FAIL:
       return {
@@ -96,12 +98,6 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: false,
         errors: action.payload.error,
       };
-      //
-      // case types.CATEGORY_SET:
-      //   return {
-      //     ...state,
-      //     category: action.payload.category,
-      //   };
 
     default:
       return state;

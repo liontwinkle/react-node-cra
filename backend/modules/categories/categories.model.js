@@ -4,31 +4,27 @@ const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   name: String,
-  categoryId: {
+  _id: {
     type: Number,
     default: 0,
   },
-  parentId: {
-    type: String,
-    default: 'null',
+  parent_id: {
+    type: Number,
+    default: null,
   },
+  linkedId: [{
+    value: String,
+    label: String,
+  }],
+  template: Object,
   properties: Object,
   defaultProperties: [{
     key: String,
     default: String,
     template: String,
   }],
-  rules: [{
-    basis: String,
-    refer: String,
-    value: String,
-    scope: Number
-  }],
-}, { toJSON: { virtuals: true }, timestamps: true });
-
-CategorySchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
+  rules: Array,
+}, { timestamps: true });
 
 let Categories = mongoose.model('Categories', CategorySchema);
 

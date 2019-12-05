@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import {
   Dialog,
@@ -11,7 +11,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { createClient, updateClient } from 'redux/actions/clients';
+import {
+  createClient, updateClient, fetchClients, setClient,
+} from 'redux/actions/clients';
 import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
@@ -24,6 +26,7 @@ function ClientForm({
   status,
   isSaving,
   client,
+  clients,
   createClient,
   updateClient,
   createPropertyField,
@@ -33,26 +36,79 @@ function ClientForm({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isAdd = status.type === 'Add';
+  useEffect(() => {
+    if (client === null && !status.Add) {
+      handleClose();
+    }
+  }, [client, handleClose, status.Add]);
+  const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
-    name: isAdd ? '' : client.name,
-    code: isAdd ? '' : client.code,
-    url: isAdd ? '' : client.url,
+    name: isAdd === 'Add' ? '' : ((client && client.name) || ''),
+    code: isAdd === 'Add' ? '' : ((client && client.code) || ''),
+    url: isAdd === 'Add' ? '' : ((client && client.url) || ''),
+    nameErr: false,
+    codeErr: false,
+    urlErr: false,
   });
+
+  const checkClientName = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.name === value));
+    return (index >= 0);
+  };
+
+  const checkClientCode = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.code === value));
+    return (index >= 0);
+  };
+
+  const checkClientUrl = (value) => {
+    const index = clients.findIndex((clientItem) => (clientItem.url === value));
+    return (index >= 0);
+  };
+
   const handleChange = (field) => (e) => {
-    const newClient = {
+    const { value } = e.target;
+    let newClient = {
       ...clientData,
-      [field]: e.target.value,
+      [field]: value,
     };
+    if (isAdd === 'Add') {
+      if (field === 'name') {
+        newClient = {
+          ...newClient,
+          nameErr: checkClientName(value),
+        };
+      } else if (field === 'url') {
+        newClient = {
+          ...newClient,
+          urlErr: checkClientUrl(value),
+        };
+      } else if (field === 'code') {
+        newClient = {
+          ...newClient,
+          codeErr: checkClientCode(value),
+        };
+      }
+    }
     setClientData(newClient);
   };
 
-  const disabled = !(clientData.name && clientData.code && clientData.url);
-  const handleSubmit = () => {
-    if (!isSaving && !disabled) {
-      const actionClient = isAdd ? createClient : updateClient;
-      const actionPropertyField = isAdd ? createPropertyField : updatePropertyField;
+  const checkClientDuplicate = (clientData) => {
+    if (isAdd === 'Add') {
+      return !checkClientName(clientData.name)
+      && !checkClientCode(clientData.code)
+      && !checkClientUrl(clientData.url);
+    }
+    return true;
+  };
 
+  const disabled = !(clientData.name && clientData.code && clientData.url)
+    || clientData.nameErr || clientData.urlErr || clientData.codeErr;
+
+  const handleSubmit = () => {
+    if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
+      const actionClient = (isAdd === 'Add') ? createClient : updateClient;
+      const actionPropertyField = (isAdd === 'Add') ? createPropertyField : updatePropertyField;
       actionClient(clientData)
         .then(() => {
           actionPropertyField(clientData)
@@ -62,23 +118,23 @@ function ClientForm({
               handleClose();
             })
             .catch(() => {
-              confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
+              confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
             });
         })
         .catch(() => {
-          confirmMessage(enqueueSnackbar, `Error in ${status.type.toLowerCase()}ing client.`, 'error');
+          confirmMessage(enqueueSnackbar, `Error in ${isAdd.toLowerCase()}ing client.`, 'error');
         });
     }
   };
 
   return (
     <Dialog
-      open={status.open}
+      open={status.Add || status.Edit}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {`${status.type} Client`}
+        {`${isAdd} Client`}
       </DialogTitle>
 
       <DialogContent>
@@ -88,6 +144,7 @@ function ClientForm({
           inline
           value={clientData.name}
           onChange={handleChange('name')}
+          hint={clientData.nameErr ? 'Name* is duplicated.' : ''}
         />
         <CustomInput
           className="mb-3"
@@ -95,12 +152,14 @@ function ClientForm({
           inline
           value={clientData.code}
           onChange={handleChange('code')}
+          hint={clientData.codeErr ? 'Code* is duplicated.' : ''}
         />
         <CustomInput
           label="URL"
           inline
           value={clientData.url}
           onChange={handleChange('url')}
+          hint={clientData.urlErr ? 'Url* is duplicated.' : ''}
         />
       </DialogContent>
 
@@ -127,9 +186,12 @@ function ClientForm({
 ClientForm.propTypes = {
   status: PropTypes.object.isRequired,
   client: PropTypes.object,
+  clients: PropTypes.array.isRequired,
   isSaving: PropTypes.bool.isRequired,
   createClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
+  // fetchClients: PropTypes.func.isRequired,
+  // setClient: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   createPropertyField: PropTypes.func.isRequired,
   updatePropertyField: PropTypes.func.isRequired,
@@ -142,11 +204,14 @@ ClientForm.defaultProps = {
 const mapStateToProps = (store) => ({
   isSaving: store.clientsData.isCreating || store.clientsData.isUpdating,
   client: store.clientsData.client,
+  clients: store.clientsData.clients,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createClient,
   updateClient,
+  fetchClients,
+  setClient,
   createPropertyField,
   updatePropertyField,
 }, dispatch);

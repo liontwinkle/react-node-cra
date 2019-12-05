@@ -20,7 +20,7 @@ exports.index = (req, res) => {
     .catch(handleError(res));
 };
 
-// Creates a new Category in the DB
+// Creates a new Attribute in the DB
 exports.create = (req, res) => {
   req.attributes
     .find()
@@ -66,7 +66,7 @@ exports.updateDefault = (req, res) => {
                   if (resultItem.properties[deleteKey]) {
                     delete resultItem.properties[deleteKey];
 
-                    req.attributes.updateMany({ attributeId: resultItem.attributeId }, {
+                    req.attributes.updateMany({ _id: resultItem._id }, {
                       $set: {
                         properties: resultItem.properties
                       }

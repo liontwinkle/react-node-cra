@@ -1,6 +1,8 @@
 import _findIndex from 'lodash/findIndex';
 
-import { getCategoryTree, changePropertiesData, convertPropertyData } from 'utils';
+import {
+  getCategoryTree, changePropertiesData, convertPropertyData, checkObject, sortByField,
+} from 'utils';
 import types from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -41,12 +43,13 @@ export default (state = INITIAL_STATE, action) => {
           }
         });
       }
-      const fetchSaveData = getCategoryTree(action.payload.categories, state.trees || []);
+      tempDatas.sort(sortByField('name'));
+      const fetchSaveData = getCategoryTree(tempDatas, state.trees || []);
       return {
         ...state,
         isFetchingList: false,
-        categories: tempDatas,
-        category: tempDatas.filter((item) => (item.parentId === 'null'))[0] || null,
+        categories: JSON.parse(JSON.stringify(tempDatas)),
+        category: tempDatas.filter((item) => (item.parent_id === null))[0] || null,
         trees: fetchSaveData.subTree,
         associations: fetchSaveData.association,
       };
@@ -74,13 +77,14 @@ export default (state = INITIAL_STATE, action) => {
       }
       const createdCategories = [data, ...categories];
       const updateSaveData = getCategoryTree(createdCategories, state.trees);
+
       return {
         ...state,
         isCreating: false,
-        categories: createdCategories.slice(0),
-        trees: updateSaveData.subTree,
-        associations: updateSaveData.association,
-        category: data,
+        categories: JSON.parse(JSON.stringify(createdCategories.slice(0))),
+        trees: JSON.parse(JSON.stringify(updateSaveData.subTree)),
+        associations: JSON.parse(JSON.stringify(updateSaveData.association)),
+        category: JSON.parse(JSON.stringify(data)),
       };
     case types.CATEGORY_CREATE_FAIL:
       return {
@@ -102,13 +106,13 @@ export default (state = INITIAL_STATE, action) => {
         keys.forEach((key) => {
           if (Array.isArray(properties[key])) {
             updateData.properties[key] = JSON.stringify(updateData.properties[key]);
-          } else if (properties[key] !== null && typeof properties[key] === 'object') {
+          } else if (checkObject(properties[key])) {
             updateData.properties[key] = JSON.parse(JSON.stringify(updateData.properties[key]));
           }
         });
       }
 
-      const categoryIdx = _findIndex(categories, { id: updateData.id });
+      const categoryIdx = _findIndex(categories, { _id: updateData._id });
       if (categoryIdx > -1) {
         categories.splice(categoryIdx, 1, updateData);
       } else {
@@ -119,7 +123,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isUpdating: false,
-        categories: categories.slice(0),
+        categories: JSON.parse(JSON.stringify(categories.slice(0))),
         trees: newSaveData.subTree,
         associations: newSaveData.association,
         category: updateData,
@@ -137,7 +141,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CATEGORY_DELETE_SUCCESS:
-      const index = _findIndex(categories, { id: action.payload.id });
+      const index = _findIndex(categories, { _id: action.payload._id });
       if (index > -1) {
         categories.splice(index, 1);
       }
