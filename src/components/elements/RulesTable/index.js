@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 
 import { filterProducts } from 'utils/ruleManagement';
-import PreviewProducts from '../RulesAction/PreviewProducts';
-import PreviewGrid from '../RulesAction/PreviewGrid';
+import PreviewProducts from './PreviewProducts';
+import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 

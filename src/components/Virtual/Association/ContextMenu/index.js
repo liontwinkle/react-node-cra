@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import _intersection from 'lodash/intersection';
 import { setUnionRules, getRules } from 'utils/ruleManagement';
 import { confirmMessage, getPreFilterData } from 'utils';
-import PreviewProducts from 'components/Virtual/RulesNew/RulesAction/PreviewProducts';
+import PreviewProducts from 'components/elements/RulesTable/PreviewProducts';
 import EditAttribute from '../editAttribute';
 
 import './style.scss';

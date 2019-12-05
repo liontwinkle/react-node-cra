@@ -10,10 +10,10 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { getPreFilterData } from 'utils/index';
 import { IconButton } from 'components/elements/index';
+import PreviewProducts from 'components/elements/RulesTable/PreviewProducts';
+import PreviewGrid from 'components/elements/RulesTable/PreviewGrid';
 import AddNewRule from './AddNewRule';
 import EditRules from './EditRules';
-import PreviewProducts from './PreviewProducts';
-import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
