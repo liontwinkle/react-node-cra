@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
-import { Redirect } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import CopyIcon from '@material-ui/icons/CloudUpload';
@@ -28,7 +28,6 @@ function ClientAction(props) {
     Add: false,
     Edit: false,
     Type: false,
-    Preview: false,
   });
   const handleOpen = (type) => () => {
     if (!disabled) {
@@ -82,15 +81,17 @@ function ClientAction(props) {
               <CopyIcon style={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
-          <Tooltip
-            title="Click to Preview."
-            position="bottom"
-            arrow
-          >
-            <IconButton className="mx-2" onClick={handleOpen('Preview')}>
-              <PreviewIcon style={{ fontSize: 20 }} />
-            </IconButton>
-          </Tooltip>
+          <NavLink to="/preview">
+            <Tooltip
+              title="Click to Preview."
+              position="bottom"
+              arrow
+            >
+              <IconButton>
+                <PreviewIcon style={{ fontSize: 20 }} />
+              </IconButton>
+            </Tooltip>
+          </NavLink>
         </>
       )}
       {formState.Add && (
@@ -101,9 +102,6 @@ function ClientAction(props) {
       )}
       {formState.Type && (
         <ClientImport status={formState} handleClose={handleClose('Type')} client={client} type={type} />
-      )}
-      {formState.Preview && (
-        <Redirect to="/preview" />
       )}
     </>
   );

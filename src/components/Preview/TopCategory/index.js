@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { getRootCategories } from 'utils';
+import Loader from 'components/Loader';
 
 import './style.scss';
-import Loader from '../../Loader';
 
 class TopCategory extends Component {
   constructor(props) {
@@ -23,6 +23,16 @@ class TopCategory extends Component {
       headData: getRootCategories(categories, 'parent_id'),
       fetchFlag: true,
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { categories } = this.props;
+    if (categories !== prevProps.categories) {
+      this.updateState({
+        headData: getRootCategories(categories, 'parent_id'),
+        fetchFlag: true,
+      });
+    }
   }
 
   updateState = (data) => {
