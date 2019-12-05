@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 
 import { getRootCategories } from 'utils';
 import Loader from 'components/Loader';
+import { setRootCategory } from 'redux/actions/preview';
 
 import './style.scss';
 
@@ -13,23 +15,27 @@ class TopCategory extends Component {
     super(props);
     this.state = {
       fetchFlag: false,
-      headData: [],
     };
   }
 
   componentDidMount() {
-    const { categories } = this.props;
+    const { categories, setRootCategory } = this.props;
+    const rootData = getRootCategories(categories, 'parent_id');
+    setRootCategory(rootData);
     this.updateState({
-      headData: getRootCategories(categories, 'parent_id'),
       fetchFlag: true,
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { categories } = this.props;
+    const { categories, setRootCategory } = this.props;
     if (categories !== prevProps.categories) {
       this.updateState({
-        headData: getRootCategories(categories, 'parent_id'),
+        fetchFlag: false,
+      });
+      const rootData = getRootCategories(categories, 'parent_id');
+      setRootCategory(rootData);
+      this.updateState({
         fetchFlag: true,
       });
     }
@@ -43,21 +49,22 @@ class TopCategory extends Component {
   };
 
   render() {
-    const { headData, fetchFlag } = this.state;
+    const { fetchFlag } = this.state;
+    const { rootCategories } = this.props;
     return (
       <>
         {
           fetchFlag ? (
             <>
               {
-                headData.length === 0 && (
+                rootCategories.length === 0 && (
                   <Redirect to="/" />
                 )
               }
               <div className="top-category_container">
                 <ul>
                   {
-                    headData.map((item) => (
+                    rootCategories.map((item) => (
                       <li key={item._id}>{item.name}</li>
                     ))
                   }
@@ -75,11 +82,20 @@ class TopCategory extends Component {
 
 TopCategory.propTypes = {
   categories: PropTypes.array.isRequired,
+  rootCategories: PropTypes.array.isRequired,
+  setRootCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({
   categories: store.categoriesData.categories,
+  rootCategories: store.previewData.rootCategories,
 });
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  setRootCategory,
+}, dispatch);
+
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(TopCategory);

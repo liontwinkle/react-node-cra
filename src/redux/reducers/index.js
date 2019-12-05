@@ -9,6 +9,7 @@ import productsFieldsData from './productsFields';
 import attributesData from './attribute';
 import historyData from './history';
 import uploadData from './upload';
+import previewData from './preview';
 
 export default (history) => combineReducers({
   router: connectRouter(history),
@@ -20,4 +21,5 @@ export default (history) => combineReducers({
   attributesData,
   historyData,
   uploadData,
+  previewData,
 });
