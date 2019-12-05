@@ -13,10 +13,6 @@ const ClientsSchema = new Schema({
   },
   language: String,
   geography: String,
-  active: {
-    type: Boolean,
-    default: true,
-  }
 }, { toJSON: { virtuals: true }, timestamps: true });
 
 ClientsSchema.virtual('id').get(function () {
