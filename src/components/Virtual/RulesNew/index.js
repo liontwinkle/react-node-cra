@@ -15,7 +15,7 @@ import { setUnionRules, getRules, unionRules } from 'utils/ruleManagement';
 import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
 import { CustomToggle } from 'components/elements';
-import RulesTable from 'components/elements/RulesTable';
+import RulesTable from 'components/shared/Rules/RulesTable';
 import RulesAction from './RulesAction/index';
 
 import './style.scss';

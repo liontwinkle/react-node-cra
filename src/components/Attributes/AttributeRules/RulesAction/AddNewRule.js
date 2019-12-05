@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-import AddNewRuleBody from 'components/Virtual/RulesNew/RulesAction/AddNewRuleBody';
+import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 

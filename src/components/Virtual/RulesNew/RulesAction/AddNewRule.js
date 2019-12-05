@@ -15,7 +15,7 @@ import { confirmMessage, useStyles } from 'utils';
 import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
-import AddNewRuleBody from './AddNewRuleBody';
+import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 
 function AddNewRule({
   open,

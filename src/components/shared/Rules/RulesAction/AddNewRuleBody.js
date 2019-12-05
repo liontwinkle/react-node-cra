@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './style.scss';
+import '../../../../style.scss';
 import { CustomInput, CustomSelect } from 'components/elements';
 import {
   basis, match, refer, scope, ruleType,

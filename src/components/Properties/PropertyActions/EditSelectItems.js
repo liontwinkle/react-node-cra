@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import MaterialTable from 'material-table';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
 import { confirmMessage, isExist } from 'utils';
-import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditPropertyFields({
@@ -132,34 +129,21 @@ function EditPropertyFields({
   });
 
   return (
-    <Dialog
+    <CustomMaterialTableModal
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Edit Select Items
-      </DialogTitle>
-
-      <DialogContent className="mg-edit-properties-content">
-        <MaterialTable
-          title=""
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          editable={{
-            onRowAdd: handleAdd,
-            onRowUpdate: handleUpdate,
-            onRowDelete: handleDelete,
-          }}
-          options={{
-            actionsColumnIndex: -1,
-            showTitle: false,
-            searchFieldAlignment: 'left',
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+      className="mg-edit-properties-content"
+      title="Edit Select Items"
+      tableData={tableData}
+      handleClose={handleClose}
+      handleAdd={handleAdd}
+      handleUpdate={handleUpdate}
+      handleDelete={handleDelete}
+      options={{
+        actionsColumnIndex: -1,
+        showTitle: false,
+        searchFieldAlignment: 'left',
+      }}
+    />
   );
 }
 

@@ -3,15 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import MaterialTable from 'material-table';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
 import { confirmMessage, getObjectFromArray } from 'utils';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import {
-  basis, refer, match, scope, tableIcons, ruleType,
+  basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
 import { updateAttribute } from 'redux/actions/attribute';
@@ -166,41 +164,22 @@ function EditRules({
   });
 
   return (
-    <Dialog
+    <CustomMaterialTableModal
+      className="mg-edit-rule-content"
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Edit Rules
-      </DialogTitle>
-
-      <DialogContent className="mg-edit-rule-content">
-        <MaterialTable
-          title=""
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          editable={{
-            onRowAdd: handleAdd,
-            onRowUpdate: handleUpdate,
-            onRowDelete: handleDelete,
-          }}
-          options={{
-            actionsColumnIndex: -1,
-            showTitle: false,
-            searchFieldAlignment: 'left',
-          }}
-          localization={{
-            body: {
-              editRow: {
-                deleteText: 'Are you sure you want to delete this rule?',
-              },
-            },
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+      tilte="Edit Rules"
+      handleClose={handleClose}
+      handleAdd={handleAdd}
+      tableData={tableData}
+      handleUpdate={handleUpdate}
+      handleDelete={handleDelete}
+      options={{
+        actionsColumnIndex: -1,
+        showTitle: false,
+        searchFieldAlignment: 'left',
+      }}
+      msg="Are you sure you want to delete this rule?"
+    />
   );
 }
 

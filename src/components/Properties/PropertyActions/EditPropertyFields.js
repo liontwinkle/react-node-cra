@@ -3,14 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import MaterialTable from 'material-table';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { CustomConfirmDlg } from 'components/elements';
+import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 import { isExist, confirmMessage } from 'utils';
-import { tableIcons } from 'utils/constants';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
@@ -257,57 +253,40 @@ function EditPropertyFields({
   });
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Edit Property Fields
-      </DialogTitle>
-
-      <DialogContent className="mg-edit-properties-content field">
-        <MaterialTable
-          title=""
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          editable={{
-            onRowAdd: handleAdd,
-            onRowUpdate: handleUpdate,
-            onRowDelete: handleDelete,
-          }}
-          onOrderChange={onChangeOrder}
-          onChangeRowsPerPage={onChangePageNum}
-          options={{
-            pageSize: pageNum,
-            pageSizeOptions: [10, 20],
-            actionsColumnIndex: -1,
-            showTitle: false,
-            searchFieldAlignment: 'left',
-          }}
-          localization={{
-            body: {
-              editRow: {
-                deleteText: 'Are you sure you want to delete this property?',
-              },
-            },
-          }}
-        />
-      </DialogContent>
+    <>
+      <CustomMaterialTableModal
+        className="mg-edit-properties-content field"
+        handleDelete={handleDelete}
+        title="Edit Property Fields"
+        open={open}
+        tableData={tableData}
+        handleClose={handleClose}
+        handleAdd={handleAdd}
+        handleUpdate={handleUpdate}
+        options={{
+          pageSize: pageNum,
+          pageSizeOptions: [10, 20],
+          actionsColumnIndex: -1,
+          showTitle: false,
+          searchFieldAlignment: 'left',
+        }}
+        onOrderChange={onChangeOrder}
+        onChangeRowsPerPage={onChangePageNum}
+        msg="Are you sure you want to delete this property?"
+      />
       {
         changeType
         && (
           <CustomConfirmDlg
             open={changeType}
-            msg="Do you change the type of the property?"
+            msg="Do you change the type of the property? This is used on the other property as Template."
             confirmLabel="Update"
             handleDelete={handleUpdateType}
             handleClose={confirmDlgClose}
           />
         )
       }
-    </Dialog>
+    </>
   );
 }
 

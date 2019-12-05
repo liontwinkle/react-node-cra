@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import MaterialTable from 'material-table';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
 import { confirmMessage, isExist } from 'utils';
-import { tableIcons } from 'utils/constants';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditSections({
@@ -118,38 +115,26 @@ function EditSections({
   });
 
   return (
-    <Dialog
+    <CustomMaterialTableModal
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Edit Sections
-      </DialogTitle>
-
-      <DialogContent className="mg-edit-properties-content">
-        <MaterialTable
-          title=""
-          icons={tableIcons}
-          columns={tableData.columns}
-          data={tableData.data}
-          editable={{
-            onRowAdd: handleAdd,
-            onRowUpdate: handleUpdate,
-            onRowDelete: handleDelete,
-          }}
-          onOrderChange={onChangeOrder}
-          onChangeRowsPerPage={onChangePageNum}
-          options={{
-            pageSize: pageNum,
-            pageSizeOptions: [10, 20],
-            actionsColumnIndex: -1,
-            showTitle: false,
-            searchFieldAlignment: 'left',
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+      tilte="Edit Sections"
+      tableData={tableData}
+      className="mg-edit-properties-content"
+      handleClose={handleClose}
+      handleAdd={handleAdd}
+      handleUpdate={handleUpdate}
+      handleDelete={handleDelete}
+      options={{
+        pageSize: pageNum,
+        pageSizeOptions: [10, 20],
+        actionsColumnIndex: -1,
+        showTitle: false,
+        searchFieldAlignment: 'left',
+      }}
+      onOrderChange={onChangeOrder}
+      onChangeRowsPerPage={onChangePageNum}
+      msg="Are you sure you want to delete this section?"
+    />
   );
 }
 

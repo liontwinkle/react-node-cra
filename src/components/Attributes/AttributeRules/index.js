@@ -16,7 +16,7 @@ import {
 import { confirmMessage } from 'utils';
 import { unionRules } from 'utils/ruleManagement';
 
-import RulesTable from 'components/elements/RulesTable';
+import RulesTable from 'components/shared/Rules/RulesTable';
 import RulesAction from './RulesAction';
 
 import './style.scss';
