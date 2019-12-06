@@ -187,7 +187,7 @@ export const sectionRender = (
         );
       } else if (p.propertyType === 'array') {
         let value = '';
-        if (state.properties[p.key] === null) {
+        if (state.properties[p.key] === null || state.properties[p.key] === undefined) {
           value = p.default || '';
         } else if (Array.isArray(state.properties[p.key])) {
           value = JSON.stringify(state.properties[p.key]);
