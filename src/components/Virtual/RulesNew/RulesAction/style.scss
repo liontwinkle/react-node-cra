@@ -83,3 +83,9 @@
   overflow: unset;
   overflow-y: unset !important;
 }
+
+.MuiTableCell-alignLeft {
+  width: fit-content;
+  max-width: 200px;
+  word-break: break-all;
+}
