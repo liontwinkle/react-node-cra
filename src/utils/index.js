@@ -44,8 +44,7 @@ const getRuleProducts = (products, field, match, criteria, basis) => {
   let excludeIndex = 0;
   let matchedFlag = false;
   products.forEach((productItem) => {
-    matchedFlag = !!((match === 'exactly' && productItem[field] === criteria)
-      || (rule.test(productItem[field])));
+    matchedFlag = !!(productItem[field].match(rule));
     if (matchedFlag) {
       if (basis === 'include') {
         returnValue.includes[includeIndex] = productItem;
