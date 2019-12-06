@@ -72,19 +72,21 @@ class ProductGridView extends Component {
       topOffset += 100;
       leftOffset += 100;
     } else {
-      topOffset -= 50;
+      topOffset += 50;
       leftOffset -= 150;
     }
     const keys = key.split('-');
-    const index = parseInt(keys[0], 10) * MAX_LENGTH_NUM + parseInt(keys[1], 10);
-    this.setState({
-      detail: this.props.products[index],
+    const col = parseInt(keys[0], 10);
+    const row = parseInt(keys[1], 10);
+    this.setState((prevState) => ({
+      ...prevState,
+      detail: prevState.data[col][row],
       viewDetailFlag: true,
       pointX: leftOffset,
       pointY: topOffset,
       width: this.props.hoverSize.width,
       height: this.props.hoverSize.height,
-    });
+    }));
   };
 
   handleClose = () => {
