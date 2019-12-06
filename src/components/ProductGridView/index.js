@@ -25,6 +25,8 @@ class ProductGridView extends Component {
       pointY: 0,
       width: 0,
       height: 0,
+      rightFlag: false,
+      bottomFlag: false,
       data: [],
     };
   }
@@ -66,8 +68,25 @@ class ProductGridView extends Component {
   displayDetail = (key) => {
     const { top, left } = $(`.grid-item-${key}`)
       .offset();
+    const keys = key.split('-');
+    const col = parseInt(keys[0], 10);
+    const row = parseInt(keys[1], 10);
+
+    const childWidth = this.props.hoverSize.width;
+    const childHeight = this.props.hoverSize.height;
+
+    const rightFlag = ((left + childWidth) > 1500);
+    const bottomFlag = ((top + childHeight) > 1000);
     let topOffset = top;
     let leftOffset = left;
+
+    if (rightFlag) {
+      leftOffset = left - childWidth;
+    }
+    if (bottomFlag) {
+      topOffset = top - childHeight;
+    }
+
     if (this.props.filterProducts.length === 0) {
       topOffset += 100;
       leftOffset += 100;
@@ -75,9 +94,6 @@ class ProductGridView extends Component {
       topOffset += 50;
       leftOffset -= 150;
     }
-    const keys = key.split('-');
-    const col = parseInt(keys[0], 10);
-    const row = parseInt(keys[1], 10);
     this.setState((prevState) => ({
       ...prevState,
       detail: prevState.data[col][row],
@@ -86,6 +102,7 @@ class ProductGridView extends Component {
       pointY: topOffset,
       width: this.props.hoverSize.width,
       height: this.props.hoverSize.height,
+      rightFlag,
     }));
   };
 
@@ -97,6 +114,7 @@ class ProductGridView extends Component {
     columnIndex, key, rowIndex, style,
   }) => (
     <div
+      className="grid-container"
       key={key}
       style={style}
     >

@@ -16,7 +16,7 @@ const getProducts = (products, field, match, value) => {
   let index = 0;
   let matchedFlag = false;
   products.forEach((productItem) => {
-    matchedFlag = !!(productItem[field].match(rule));
+    matchedFlag = !!(productItem[field] && productItem[field].match(rule));
     if (matchedFlag) {
       returnValue[index] = productItem;
       index++;
