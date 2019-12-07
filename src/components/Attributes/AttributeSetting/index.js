@@ -50,7 +50,7 @@ class AttributeSetting extends Component {
   updateList = (target) => {
     const targetCategory = this.props.categories.filter((item) => (item._id === target.value));
     const willCheckedCategory = getNewAppearData(this.props.categories, this.state.categoryList, targetCategory[0]);
-    const allChildData = getAllChildData(this.props.categories, targetCategory[0]);
+    const allChildData = getAllChildData(this.props.categories, targetCategory[0], 'parent_id');
     willCheckedCategory.push(targetCategory[0]._id);
     return _union(willCheckedCategory, allChildData);
   };

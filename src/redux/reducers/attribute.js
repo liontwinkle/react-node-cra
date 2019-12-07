@@ -1,8 +1,9 @@
 import _findIndex from 'lodash/findIndex';
 import {
-  changePropertiesData, convertPropertyData, getAttribute, sortByField,
+  changePropertiesData, convertPropertyData, getAttribute, getCategoryTree, sortByField,
 } from 'utils';
 import types from '../actionTypes';
+import { getAllChildData } from '../../utils/attributeManagement';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -107,13 +108,25 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.ATTRIBUTE_REMOVE_SUCCESS:
       const index = _findIndex(attributes, { _id: action.payload.id });
+      const childData = getAllChildData(attributes, attributes[index], 'group_id');
+      const deletedAttributes = JSON.parse(JSON.stringify(attributes));
       if (index > -1) {
-        attributes.splice(index, 1);
+        deletedAttributes.splice(index, 1);
       }
+      childData.forEach((item) => {
+        const childIndex = _findIndex(deletedAttributes, { _id: item });
+        if (childIndex > -1) {
+          deletedAttributes.splice(childIndex, 1);
+        }
+      });
+      const deletedData = getCategoryTree(deletedAttributes, state.trees);
+
       return {
         ...state,
         isDeleting: false,
-        attributes: attributes.slice(0),
+        nodes: deletedData.subTree,
+        associations: deletedData.association,
+        attributes: deletedAttributes.slice(0),
         attribute: null,
       };
     case types.ATTRIBUTE_REMOVE_FAIL:

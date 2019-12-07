@@ -1,5 +1,5 @@
 import _findIndex from 'lodash/findIndex';
-
+import { getAllChildData } from 'utils/attributeManagement';
 import {
   getCategoryTree, changePropertiesData, convertPropertyData, checkObject, sortByField,
 } from 'utils';
@@ -143,13 +143,24 @@ export default (state = INITIAL_STATE, action) => {
       };
     case types.CATEGORY_DELETE_SUCCESS:
       const index = _findIndex(categories, { _id: action.payload.id });
+      const childData = getAllChildData(categories, categories[index], 'parent_id');
+      const deletedCategories = JSON.parse(JSON.stringify(categories));
       if (index > -1) {
-        categories.splice(index, 1);
+        deletedCategories.splice(index, 1);
       }
+      childData.forEach((item) => {
+        const childIndex = _findIndex(deletedCategories, { _id: item });
+        if (childIndex > -1) {
+          deletedCategories.splice(childIndex, 1);
+        }
+      });
+      const deletedData = getCategoryTree(deletedCategories, state.trees);
       return {
         ...state,
         isDeleting: false,
-        categories: categories.slice(0),
+        categories: deletedCategories.slice(0),
+        trees: deletedData.subTree,
+        associations: deletedData.association,
         category: null,
       };
     case types.CATEGORY_DELETE_FAIL:
