@@ -54,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
     case types.ATTRIBUTE_CREATE_SUCCESS:
       const data = convertPropertyData(action.payload.data);
       const createdAttributes = [data, ...attributes];
-      const updateSaveData = getAttribute(createdAttributes, state.nodes);
+      const updateSaveData = getAttribute(createdAttributes, state.nodes, data.group_id);
       return {
         ...state,
         isCreating: false,

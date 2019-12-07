@@ -76,7 +76,8 @@ export default (state = INITIAL_STATE, action) => {
         });
       }
       const createdCategories = [data, ...categories];
-      const updateSaveData = getCategoryTree(createdCategories, state.trees);
+
+      const updateSaveData = getCategoryTree(createdCategories, state.trees, data.parent_id);
 
       return {
         ...state,
@@ -141,7 +142,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.CATEGORY_DELETE_SUCCESS:
-      const index = _findIndex(categories, { _id: action.payload._id });
+      const index = _findIndex(categories, { _id: action.payload.id });
       if (index > -1) {
         categories.splice(index, 1);
       }

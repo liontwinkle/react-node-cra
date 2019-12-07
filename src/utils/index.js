@@ -58,17 +58,26 @@ const getRuleProducts = (products, field, match, criteria, basis) => {
   return returnValue;
 };
 
-const getSubTree = (list, parentId, type, originNode) => {
+const getSubTree = (list, parentId, type, originNode, newPid) => {
   list.sort(sortByField('name'));
+
   const subTree = [];
   const association = [];
   const sublist = list.filter((item) => item[type] === parentId);
   if (sublist.length > 0) {
     sublist.forEach((item) => {
       let subNode = null;
+      let expandFlag = false;
       if (originNode && originNode.length) {
         subNode = originNode.find((nodeItem) => (nodeItem.item._id === item._id));
       }
+
+      if (newPid !== undefined && item._id === newPid) {
+        expandFlag = true;
+      } else {
+        expandFlag = (subNode) ? subNode.expanded : false;
+      }
+
       association.push({
         label: item.name,
         value: item._id,
@@ -78,9 +87,9 @@ const getSubTree = (list, parentId, type, originNode) => {
       subTree.push({
         title: item.name,
         editable: false,
-        expanded: (subNode) ? subNode.expanded : false,
+        expanded: expandFlag,
         item,
-        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null).subTree,
+        children: getSubTree(list, item._id, type, (subNode) ? subNode.children : null, newPid).subTree,
       });
     });
   }
@@ -169,18 +178,17 @@ export const getPreFilterData = (rules, products) => {
   return Array.from(DiffSets());
 };
 
-export const getCategoryTree = (categories, originNode) => {
+export const getCategoryTree = (categories, originNode, newPid) => {
   const parentId = null;
   const list = makeArrayObject(categories, 'parent_id');
-
-  return getSubTree(list, parentId, 'parent_id', originNode);
+  return getSubTree(list, parentId, 'parent_id', originNode, newPid);
 };
 
-export const getAttribute = (attributes, originNode) => {
+export const getAttribute = (attributes, originNode, newGid) => {
   const groupId = null;
   const list = makeArrayObject(attributes, 'group_id');
 
-  return getSubTree(list, groupId, 'group_id', originNode);
+  return getSubTree(list, groupId, 'group_id', originNode, newGid);
 };
 
 export const convertPropertyData = (data) => {
