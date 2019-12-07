@@ -106,7 +106,7 @@ export default (state = INITIAL_STATE, action) => {
         isDeleting: true,
       };
     case types.ATTRIBUTE_REMOVE_SUCCESS:
-      const index = _findIndex(attributes, { _id: action.payload._id });
+      const index = _findIndex(attributes, { _id: action.payload.id });
       if (index > -1) {
         attributes.splice(index, 1);
       }
