@@ -34,13 +34,13 @@ export const getNewAppearData = (categories, currentLsit, currentCategoryItem) =
   return result;
 };
 
-export const getAllChildData = (categories, currentCategoryItem) => {
+export const getAllChildData = (categories, currentCategoryItem, type) => {
   let result = [];
-  const childArray = categories.filter((item) => (item.parent_id === currentCategoryItem._id));
+  const childArray = categories.filter((item) => (item[type] === currentCategoryItem._id));
   if (childArray.length > 0) {
     childArray.forEach((item) => {
       result.push(item._id);
-      result = [...result, ...getAllChildData(categories, item)];
+      result = [...result, ...getAllChildData(categories, item, type)];
     });
   }
   return result;

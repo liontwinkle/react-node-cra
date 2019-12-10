@@ -27,6 +27,12 @@
 
 .mg-edit-rule-content {
   width: 100% !important;
+
+  .MuiTableCell-alignLeft {
+    width: fit-content;
+    max-width: 300px;
+    word-break: break-all;
+  }
 }
 
 .MuiDialog-root {

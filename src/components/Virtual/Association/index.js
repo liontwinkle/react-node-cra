@@ -102,7 +102,7 @@ function Association({
       let checkGrp = false;
       let appearData = [];
       const willCheckedCategory = getNewAppearData(categories, targetAppear.appear, category);
-      const allChildData = getAllChildData(categories, category);
+      const allChildData = getAllChildData(categories, category, 'parent_id');
       willCheckedCategory.push(category._id);
       const updateNewAppear = _union(willCheckedCategory, allChildData);
 

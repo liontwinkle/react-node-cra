@@ -46,7 +46,7 @@ function RulesTable({ rules, products, productViewType }) {
     <div className="mg-rule-actions d-flex flex-column align-items-center">
       {(previewData.length > 0) && (
         <table>
-          <thead>
+          <thead className="rule-table-thead">
             <tr>
               <th>Rule`s Basis</th>
               <th>Rule`s Refer</th>
@@ -58,7 +58,7 @@ function RulesTable({ rules, products, productViewType }) {
               <th>Preview Matches</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="rule-table-tbody">
             {rulesData.map((item, i) => (
               <tr key={parseInt(i, 10)}>
                 <td>
