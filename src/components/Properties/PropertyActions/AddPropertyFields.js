@@ -31,6 +31,7 @@ function AddPropertyFields({
   updateDefaultOnCategory,
   updateDefaultOnAttriute,
   createHistory,
+  children,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -173,6 +174,7 @@ function AddPropertyFields({
     }
   };
 
+  console.log(children);
   return (
     <Dialog
       open={open}
@@ -293,6 +295,7 @@ function AddPropertyFields({
 }
 
 AddPropertyFields.propTypes = {
+  children: PropTypes.node.isRequired,
   open: PropTypes.bool.isRequired,
   isUpdating: PropTypes.bool.isRequired,
   defaultOrder: PropTypes.number.isRequired,
