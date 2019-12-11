@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
-import CustomModalDialog from '../../elements/CustomModalDialog';
+import CustomModalDialog from 'components/elements/CustomModalDialog';
 
 function AddSelectItems({
   open,

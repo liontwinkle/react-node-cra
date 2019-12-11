@@ -117,7 +117,7 @@ function EditSections({
   return (
     <CustomMaterialTableModal
       open={open}
-      tilte="Edit Sections"
+      title="Edit Sections"
       tableData={tableData}
       className="mg-edit-properties-content"
       handleClose={handleClose}

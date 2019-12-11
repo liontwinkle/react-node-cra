@@ -3,13 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, makeStyles } from '@material-ui/core';
 
 import {
   createClient, updateClient, fetchClients, setClient,
@@ -17,6 +11,7 @@ import {
 import { createPropertyField, updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
 import { confirmMessage } from 'utils';
+import CustomModalDialog from '../elements/CustomModalDialog';
 
 const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -128,40 +123,34 @@ function ClientForm({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      title={`${isAdd} Client`}
+      handleClose={handleClose}
       open={status.Add || status.Edit}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">
-        {`${isAdd} Client`}
-      </DialogTitle>
-
-      <DialogContent>
-        <CustomInput
-          className="mb-3"
-          label="Name"
-          inline
-          value={clientData.name}
-          onChange={handleChange('name')}
-          hint={clientData.nameErr ? 'Name* is duplicated.' : ''}
-        />
-        <CustomInput
-          className="mb-3"
-          label="Code"
-          inline
-          value={clientData.code}
-          onChange={handleChange('code')}
-          hint={clientData.codeErr ? 'Code* is duplicated.' : ''}
-        />
-        <CustomInput
-          label="URL"
-          inline
-          value={clientData.url}
-          onChange={handleChange('url')}
-          hint={clientData.urlErr ? 'Url* is duplicated.' : ''}
-        />
-      </DialogContent>
+      <CustomInput
+        className="mb-3"
+        label="Name"
+        inline
+        value={clientData.name}
+        onChange={handleChange('name')}
+        hint={clientData.nameErr ? 'Name* is duplicated.' : ''}
+      />
+      <CustomInput
+        className="mb-3"
+        label="Code"
+        inline
+        value={clientData.code}
+        onChange={handleChange('code')}
+        hint={clientData.codeErr ? 'Code* is duplicated.' : ''}
+      />
+      <CustomInput
+        label="URL"
+        inline
+        value={clientData.url}
+        onChange={handleChange('url')}
+        hint={clientData.urlErr ? 'Url* is duplicated.' : ''}
+      />
 
       <DialogActions className={classes.dialogAction}>
         <button
@@ -179,7 +168,7 @@ function ClientForm({
           Save
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 

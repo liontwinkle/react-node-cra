@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, makeStyles } from '@material-ui/core';
 import { CustomSearchFilter } from '../index';
+import CustomModalDialog from '../CustomModalDialog';
 
 import './style.scss';
 
@@ -59,41 +54,34 @@ function SetTemplateDlg({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title={msg}
     >
-      <DialogTitle id="form-dialog-title">
-        {msg}
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <span>
-          {
-            stringBasedFields.map(
-              (item, index) => (
-                <CustomSearchFilter
-                  key={`${item.key}-${index.toString()}`}
-                  className="mb-3"
-                  searchItems={stringBasedFields.filter(
-                    (propertyItem) => (propertyItem.key !== item.key),
-                  ).map((mapItem) => (mapItem.key))}
-                  placeholder="Input search filter"
-                  label={item.label}
-                  value={newTemplate[item.key]}
-                  onChange={handleChangeTemplate(item.key)}
-                />
-              ),
-            )
-          }
-        </span>
-        <span>
-          {stringBasedFields.length === 0
+      <span>
+        {
+          stringBasedFields.map(
+            (item, index) => (
+              <CustomSearchFilter
+                key={`${item.key}-${index.toString()}`}
+                className="mb-3"
+                searchItems={stringBasedFields.filter(
+                  (propertyItem) => (propertyItem.key !== item.key),
+                ).map((mapItem) => (mapItem.key))}
+                placeholder="Input search filter"
+                label={item.label}
+                value={newTemplate[item.key]}
+                onChange={handleChangeTemplate(item.key)}
+              />
+            ),
+          )
+        }
+      </span>
+      <span>
+        {stringBasedFields.length === 0
           && (<label>There is no any string based properties.</label>)}
-        </span>
-      </DialogContent>
-
+      </span>
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
@@ -108,7 +96,7 @@ function SetTemplateDlg({
           {confirmLabel}
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 

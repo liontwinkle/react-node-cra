@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, makeStyles } from '@material-ui/core';
+import CustomModalDialog from '../CustomModalDialog';
 
 const useStyles = makeStyles((theme) => ({
   dialogAction: {
@@ -28,20 +23,14 @@ function CustomConfirmDlg({
   const classes = useStyles();
 
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title={msg}
     >
-      <DialogTitle id="form-dialog-title">
-        {msg}
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <span>
-          {(subCategoryNumber > 0) && `This will also delete ${subCategoryNumber} subcategories.`}
-        </span>
-      </DialogContent>
+      <span>
+        {(subCategoryNumber > 0) && `This will also delete ${subCategoryNumber} subcategories.`}
+      </span>
 
       <DialogActions className={classes.dialogAction}>
         <button
@@ -57,7 +46,7 @@ function CustomConfirmDlg({
           {confirmLabel}
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 

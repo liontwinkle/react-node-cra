@@ -3,13 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, makeStyles } from '@material-ui/core';
 import { fileUpload } from 'redux/actions/upload';
 import { fetchCategories } from 'redux/actions/categories';
 import { fetchAttributes } from 'redux/actions/attribute';
@@ -25,6 +19,7 @@ import Loader from '../Loader';
 import UploadDlg from './UploadDlg';
 
 import './style.scss';
+import CustomModalDialog from '../elements/CustomModalDialog';
 
 const useStyles = makeStyles((theme) => ({
   dialogAction: { margin: theme.spacing(2) },
@@ -155,25 +150,20 @@ function ClientImport({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      title={`Import Data to ${type.label} for ${client.name}`}
+      handleClose={handleClose}
       open={status.Type}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">
-        {`Import Data to ${type.label} for ${client.name}`}
-      </DialogTitle>
-
-      <DialogContent>
-        {
-          !uploadFlag ? (
-            <>
-              <UploadDlg
-                onChangeData={onChangeHandle('data')}
-                clientType={type.key}
-              />
-              {
-                type.key !== 'products'
+      {
+        !uploadFlag ? (
+          <>
+            <UploadDlg
+              onChangeData={onChangeHandle('data')}
+              clientType={type.key}
+            />
+            {
+              type.key !== 'products'
                 && (
                   <CustomMonaco
                     label="Edit"
@@ -182,16 +172,14 @@ function ClientImport({
                     onChange={(data) => onEditHandle(data)}
                   />
                 )
-              }
-            </>
-          ) : (
-            <div className="upload_loader">
-              <Loader size="small" color="dark" />
-            </div>
-          )
-        }
-      </DialogContent>
-
+            }
+          </>
+        ) : (
+          <div className="upload_loader">
+            <Loader size="small" color="dark" />
+          </div>
+        )
+      }
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
@@ -213,7 +201,7 @@ function ClientImport({
           )
         }
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 

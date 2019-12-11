@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, makeStyles } from '@material-ui/core';
 import { CustomMultiSelect } from '../index';
+import CustomModalDialog from '../CustomModalDialog';
 
 import './style.scss';
 
@@ -48,28 +43,21 @@ function SetLinkDlg({
     setNewLink(e);
   };
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title={msg}
     >
-      <DialogTitle id="form-dialog-title">
-        {msg}
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <span>
-          <CustomMultiSelect
-            className="mg-multi-select-container"
-            label="Related Category"
-            inline
-            value={newLink}
-            items={itemList || []}
-            onChange={changeSelect}
-          />
-        </span>
-      </DialogContent>
-
+      <span>
+        <CustomMultiSelect
+          className="mg-multi-select-container"
+          label="Related Category"
+          inline
+          value={newLink}
+          items={itemList || []}
+          onChange={changeSelect}
+        />
+      </span>
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
@@ -84,7 +72,7 @@ function SetLinkDlg({
           {confirmLabel}
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 
