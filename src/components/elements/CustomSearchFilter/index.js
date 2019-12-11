@@ -12,6 +12,7 @@ function CustomSearchFilter({
   className,
   placeholder,
   value,
+  inline,
   label,
   disabled,
   searchItems,
@@ -83,7 +84,7 @@ function CustomSearchFilter({
       <CustomInput
         label={label}
         aria-describedby={id}
-        inline
+        inline={inline}
         value={value}
         placeholder={placeholder}
         onChange={handleChange}
@@ -127,6 +128,7 @@ CustomSearchFilter.propTypes = {
   className: PropTypes.string,
   placeholder: PropTypes.string,
   value: PropTypes.string,
+  inline: PropTypes.bool,
   label: PropTypes.string,
   searchItems: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -139,6 +141,7 @@ CustomSearchFilter.defaultProps = {
   value: '',
   label: '',
   disabled: false,
+  inline: true,
 };
 
 export default CustomSearchFilter;
