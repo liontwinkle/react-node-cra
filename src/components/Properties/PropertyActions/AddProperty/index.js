@@ -5,6 +5,7 @@ import CustomModalDialog from 'components/elements/CustomModalDialog';
 import SelectProtoType from './seletProtoType';
 
 import './style.scss';
+import SettingValues from './settingValues';
 
 const SELECT_PROTOTYPE = 0;
 const SETTING_VALUES = 1;
@@ -48,53 +49,7 @@ function AddProperty({
           }
           {
             step === SETTING_VALUES && (
-              <>
-                {
-                  selectedType === 'string' && (
-                    <span> Setting String.</span>
-                  )
-                }
-                {
-                  selectedType === 'select' && (
-                    <span> Setting Select.</span>
-                  )
-                }
-                {
-                  selectedType === 'toggle' && (
-                    <span> Setting toggle.</span>
-                  )
-                }
-                {
-                  selectedType === 'array' && (
-                    <span> Setting array.</span>
-                  )
-                }
-                {
-                  selectedType === 'text' && (
-                    <span> Setting text.</span>
-                  )
-                }
-                {
-                  selectedType === 'richtext' && (
-                    <span> Setting richtext.</span>
-                  )
-                }
-                {
-                  selectedType === 'monaco' && (
-                    <span> Setting monaco.</span>
-                  )
-                }
-                {
-                  selectedType === 'urlpath' && (
-                    <span> Setting urlpath.</span>
-                  )
-                }
-                {
-                  selectedType === 'image' && (
-                    <span> Setting image.</span>
-                  )
-                }
-              </>
+              <SettingValues protoType={selectedType} />
             )
           }
         </div>
