@@ -1,33 +1,48 @@
 import React, { useState } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import './style.scss';
-// import { CustomInput } from '../../../../elements';
+import BasicSetting from './basicSetting';
+import AdvancedSetting from './advancedSetting';
 
-function SettingValues() {
+function SettingValues({
+  protoType,
+  defaultOrder,
+  handleClose,
+  handleSubmit,
+}) {
   const [tab, setTab] = useState('basic');
   const handleTab = (type) => () => {
     setTab(type);
   };
 
-  // const [propertyfieldData, setPropertyFieldData] = useState({
-  //   key: '',
-  //   label: '',
-  //   default: '',
-  //   template: '',
-  //   propertyType: protoType, // { key: 'string', label: 'string' },
-  //   section: null,
-  //   image: {
-  //     name: '',
-  //     path: '',
-  //     type: '',
-  //     imageData: null,
-  //   },
-  //   order: defaultOrder,
-  // });
-  // const handleChange = (type) => () => {
-  //   console.log(type); // fixme
-  // };
+  const [propertyFieldData, setPropertyFieldData] = useState({
+    key: '',
+    label: '',
+    default: null,
+    template: '',
+    propertyType: protoType, // { key: 'string', label: 'string' },
+    section: null,
+    image: {
+      name: '',
+      path: '',
+      type: '',
+      imageData: null,
+    },
+    order: defaultOrder,
+  });
+  const handleChange = (type) => (e) => {
+    const newPropertyFieldData = {
+      ...propertyFieldData,
+      [type]: e.target.value,
+    };
+    setPropertyFieldData(newPropertyFieldData);
+  };
+
+  const handleToggleDefault = (value) => {
+    console.log('### DEBUG SELECT VALUE: ', value);
+  };
+
   return (
     <div className="setting-value-container">
       <div className="setting-value-header">
@@ -44,14 +59,49 @@ function SettingValues() {
           Advanced Setting
         </span>
       </div>
-      <div className="setting-value-body" />
+      <div className="setting-value-body">
+        {
+          tab === 'basic' && (
+            <BasicSetting
+              propertyFieldData={propertyFieldData}
+              handleChange={handleChange}
+            />
+          )
+        }
+        {
+          tab === 'advanced' && (
+            <AdvancedSetting
+              type={propertyFieldData.propertyType.key}
+              propertyFieldData={propertyFieldData}
+              handleChange={handleChange}
+              handleToggleDefault={handleToggleDefault}
+            />
+          )
+        }
+        <div className="add-property-content__action">
+          <button
+            className="mg-button secondary"
+            onClick={handleClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="mg-button primary"
+            onClick={handleSubmit(propertyFieldData)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
 SettingValues.propTypes = {
-  // protoType: PropTypes.string.isRequired,
-  // defaultOrder: PropTypes.number.isRequired,
+  protoType: PropTypes.object.isRequired,
+  defaultOrder: PropTypes.number.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 export default SettingValues;

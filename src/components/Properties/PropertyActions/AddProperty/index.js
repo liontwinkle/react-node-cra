@@ -15,6 +15,7 @@ const SETTING_VALUES_LABEL = 'Add New Property';
 
 function AddProperty({
   open,
+  defaultOrder,
   handleClose,
 }) {
   const [step, setStep] = useState(SELECT_PROTOTYPE);
@@ -23,8 +24,8 @@ function AddProperty({
 
   const [selectedType, setSelectedType] = useState(null);
 
-  const handleSubmit = () => {
-    console.log('Click the submit');
+  const handleSubmit = (data) => () => {
+    console.log('Click the submit: ', data);
   };
 
   const handleSelectType = (type) => () => {
@@ -49,36 +50,23 @@ function AddProperty({
           }
           {
             step === SETTING_VALUES && (
-              <SettingValues protoType={selectedType} />
+              <SettingValues
+                protoType={selectedType}
+                defaultOrder={defaultOrder}
+                handleClose={handleClose}
+                handleSubmit={handleSubmit}
+              />
             )
           }
         </div>
-        {
-          step !== SELECT_PROTOTYPE && (
-            <div className="add-property-content__action">
-              <button
-                className="mg-button secondary"
-                onClick={handleClose}
-              >
-                Cancel
-              </button>
-              <button
-                className="mg-button primary"
-                onClick={handleSubmit}
-              >
-                Save
-              </button>
-            </div>
-          )
-        }
       </div>
-
     </CustomModalDialog>
   );
 }
 
 AddProperty.propTypes = {
   open: PropTypes.bool.isRequired,
+  defaultOrder: PropTypes.number.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
 

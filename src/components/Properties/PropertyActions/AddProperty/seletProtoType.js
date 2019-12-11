@@ -11,7 +11,7 @@ const SelectProtoType = ({
   <div className="select-prototype-container">
     {
       propertyFieldTypes.map((item) => (
-        <div key={item.key} className="select-prototype-item" onClick={handleSelectType(item.key)}>
+        <div key={item.key} className="select-prototype-item" onClick={handleSelectType(item)}>
           <img className="select-prototype-item__img" src={item.src} alt="type icon" />
           <span className="select-prototype-item__title">{item.label}</span>
           <span className="select-prototype-item__detail">{item.description}</span>

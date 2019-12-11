@@ -103,6 +103,7 @@ export const propertyFieldTypes = [
   },
 ];
 
+export const settingBasicValueHint = 'The value of Key field should be unique.';
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
 
 export const tableIcons = {

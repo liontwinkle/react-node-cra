@@ -1,5 +1,6 @@
 .setting-value-container {
-  width: 100%;
+  width: 50vw;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   .setting-value-header {
@@ -30,6 +31,37 @@
         position: absolute;
         top: 22px;
         left: 0;
+      }
+    }
+  }
+  .setting-value-body {
+    margin-top: 20px;
+    width: 100%;
+    .basic-setting-body,
+    .setting-advance-body{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      &__elements {
+        width: 50%;
+        .mg-input-control {
+          .mg-input-wrapper {
+            margin-top: 10px;
+            border-radius: 5px;
+            input {
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+      &__description {
+        width: 40%;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        span {
+          color: #555;
+        }
       }
     }
   }
