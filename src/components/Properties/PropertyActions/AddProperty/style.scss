@@ -1,4 +1,5 @@
 .add-property-fields__container {
+  max-width: 1000px;
   width: 100%;
   display: flex;
   .add-property-content {
@@ -8,7 +9,7 @@
     align-items: center;
     justify-content: center;
     &__body {
-      font-size: 30px;
+      width: 100%;
     }
     &__action {
       width: 100%;
@@ -18,6 +19,40 @@
       button {
         margin-left: 10px;
       }
+    }
+  }
+}
+
+.select-prototype-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .select-prototype-item {
+    width: 45%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &__img {
+      width: 30px;
+      height: 20px;
+    }
+    &__title {
+      margin-left: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    &__detail {
+      font-size: 14px;
+      color: #aaa;
+      margin-left: 10px;
     }
   }
 }

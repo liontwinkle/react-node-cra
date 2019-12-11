@@ -18,6 +18,12 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import { getObjectFromArray } from 'utils';
 import $ from 'jquery';
+import stringIcon from './icons/string.png';
+import toggleIcon from './icons/boolean.png';
+import imageIcon from './icons/image.png';
+import richTextIcon from './icons/richtext.png';
+import textIcon from './icons/text.png';
+import selectIcon from './icons/select.png';
 
 const autoFocusFirst = () => {
   setTimeout(() => {
@@ -65,15 +71,33 @@ export const ruleNumberItems = [
 ];
 
 export const propertyFieldTypes = [
-  { key: 'string', label: 'String' },
-  { key: 'select', label: 'Select' },
-  { key: 'toggle', label: 'Toggle' },
-  { key: 'text', label: 'Text' },
-  { key: 'array', label: 'Array' },
-  { key: 'monaco', label: 'Monaco Edit' },
-  { key: 'richtext', label: 'Rich Text Edit' },
-  { key: 'urlpath', label: 'URL Path' },
-  { key: 'image', label: 'Upload Image' },
+  {
+    key: 'string', label: 'String', src: stringIcon, description: 'Titles, names and paragraph',
+  },
+  {
+    key: 'select', label: 'Select', src: selectIcon, description: 'List of choices',
+  },
+  {
+    key: 'toggle', label: 'Toggle', src: toggleIcon, description: 'True or false',
+  },
+  {
+    key: 'text', label: 'Text', src: textIcon, description: 'Details and descriptions',
+  },
+  {
+    key: 'array', label: 'Array', src: stringIcon, description: 'Array types as String such as["1","2"]',
+  },
+  {
+    key: 'monaco', label: 'Monaco Edit', src: stringIcon, description: 'Text of Code styled',
+  },
+  {
+    key: 'richtext', label: 'Rich Text Edit', src: richTextIcon, description: 'Rich Text',
+  },
+  {
+    key: 'urlpath', label: 'URL Path', src: stringIcon, description: 'The string path with rule',
+  },
+  {
+    key: 'image', label: 'Upload Image', src: imageIcon, description: 'Image upload section',
+  },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
