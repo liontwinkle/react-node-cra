@@ -10,23 +10,7 @@ const PropertyFieldsSchema = new Schema({
     label: String,
     order: Number,
   }],
-  propertyFields: [{
-    key: String,
-    label: String,
-    default: String,
-    propertyType: String,
-    section: String,
-    template: String,
-    items: [{
-      key: String,
-      label: String
-    }],
-    image: {
-      name: String,
-      path: String,
-    },
-    order: Number,
-  }],
+  propertyFields: Array
 }, { toJSON: { virtuals: true }, timestamps: true });
 
 PropertyFieldsSchema.virtual('id').get(function () {
