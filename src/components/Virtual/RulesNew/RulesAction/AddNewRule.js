@@ -145,6 +145,7 @@ function AddNewRule({
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
+`
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}

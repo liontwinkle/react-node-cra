@@ -3,16 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
 
-import { confirmMessage, isExist, useStyles } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
+import CustomModalDialog from '../../elements/CustomModalDialog';
 
 function AddSelectItems({
   open,
@@ -22,7 +17,6 @@ function AddSelectItems({
   selectKey,
   updatePropertyField,
 }) {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const [sectionsData, setSectionsData] = useState({
@@ -72,33 +66,27 @@ function AddSelectItems({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      title="Add Select Items"
+      className="add-selectItems__container"
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">
-        Add Select Items
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <CustomInput
-          className="mb-3"
-          label="Key"
-          inline
-          value={sectionsData.key}
-          onChange={handleChange('key')}
-        />
-        <CustomInput
-          className="mb-3"
-          label="Label"
-          inline
-          value={sectionsData.label}
-          onChange={handleChange('label')}
-        />
-      </DialogContent>
-
-      <DialogActions className={classes.dialogAction}>
+      <CustomInput
+        className="mb-3"
+        label="Key"
+        inline
+        value={sectionsData.key}
+        onChange={handleChange('key')}
+      />
+      <CustomInput
+        className="mb-3"
+        label="Label"
+        inline
+        value={sectionsData.label}
+        onChange={handleChange('label')}
+      />
+      <span className="add-selectItem-action">
         <button
           className="mg-button secondary"
           disabled={isUpdating}
@@ -113,8 +101,8 @@ function AddSelectItems({
         >
           Save
         </button>
-      </DialogActions>
-    </Dialog>
+      </span>
+    </CustomModalDialog>
   );
 }
 
