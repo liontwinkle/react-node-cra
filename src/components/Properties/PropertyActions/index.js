@@ -16,7 +16,8 @@ import { bindActionCreators } from 'redux';
 import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
-import AddPropertyFields from './AddPropertyFields';
+import AddProperty from './AddProperty';
+// import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
 
 function PropertyActions({
@@ -179,8 +180,18 @@ function PropertyActions({
         />
       )}
 
+      {/* {open.add && ( */}
+      {/* <AddPropertyFields */}
+      {/* open={open.add} */}
+      {/* handleClose={handleToggle('add')} */}
+      {/* createHistory={createHistory} */}
+      {/* objectItem={objectItem} */}
+      {/* uploadImage={uploadImage} */}
+      {/* defaultOrder={getMaxValueFromArray('order', fields) + 1} */}
+      {/* /> */}
+      {/* )} */}
       {open.add && (
-        <AddPropertyFields
+        <AddProperty
           open={open.add}
           handleClose={handleToggle('add')}
           createHistory={createHistory}
