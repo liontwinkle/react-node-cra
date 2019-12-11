@@ -22,8 +22,11 @@ function SettingValues({
     label: '',
     default: null,
     template: '',
-    propertyType: protoType, // { key: 'string', label: 'string' },
-    section: null,
+    propertyType: {
+      key: protoType.key,
+      label: protoType.label,
+    }, // { key: 'string', label: 'string' },
+    section: propertyField.sections.length > 0 ? propertyField.sections[0] : null,
     image: {
       name: '',
       path: '',
@@ -78,7 +81,6 @@ function SettingValues({
   };
 
   const handleToggleDefault = (value) => {
-    console.log('### DEBUG SELECT VALUE: ', value);
     const newClient = {
       ...propertyFieldData,
       default: (value.key === 'true'),
@@ -101,6 +103,8 @@ function SettingValues({
     };
     setPropertyFieldData(newClient);
   };
+
+  const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   return (
     <div className="setting-value-container">
@@ -139,7 +143,7 @@ function SettingValues({
               handleChangeSection={handleChangeSection}
               handleChangeFileName={handleChangeFileName}
               handleChangeImage={handleChangeImage}
-              imageFile={imageFile}
+              imageFile={imageFile || ''}
               imageName={imageName}
             />
           )
@@ -153,7 +157,12 @@ function SettingValues({
           </button>
           <button
             className="mg-button primary"
-            onClick={handleSubmit(propertyFieldData)}
+            disabled={disabled}
+            onClick={handleSubmit({
+              propertyFieldData,
+              imageName,
+              imageFile,
+            })}
           >
             Save
           </button>

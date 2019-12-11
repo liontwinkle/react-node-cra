@@ -15,7 +15,7 @@ const DefaultSection = ({
         <CustomSelectWithLabel
           className="mb-3"
           label="Default"
-          value={propertyFieldData.default}
+          value={propertyFieldData.default ? toggleValue[0] : toggleValue[1]}
           items={toggleValue}
           onChange={handleToggleDefault}
         />
@@ -26,7 +26,7 @@ const DefaultSection = ({
               <CustomArray
                 className="mb-3"
                 label="Default"
-                value={propertyFieldData.default}
+                value={propertyFieldData.default || ''}
                 onChange={handleChange('default')}
               />
             )
@@ -38,7 +38,7 @@ const DefaultSection = ({
               <CustomInput
                 className="mb-3"
                 label="Default"
-                value={propertyFieldData.default}
+                value={propertyFieldData.default || ''}
                 onChange={handleChange('default')}
               />
             )
