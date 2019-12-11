@@ -1,0 +1,26 @@
+.MuiDialogTitle-root {
+  padding: 0 !important;
+}
+.modal-title-bar {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ddd;
+  margin-bottom: 25px;
+  &__brand {
+    font-size: 16px;
+    font-weight: 500;
+    color: #5e5e5e;
+  }
+  &__close {
+    cursor: pointer;
+    fill: #555 !important;
+  }
+}
+
+.modal-title {
+  padding: 20px;
+  margin-bottom: 10px;
+}

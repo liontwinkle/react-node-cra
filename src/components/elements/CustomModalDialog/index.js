@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
 
+import { Brand } from 'utils/constants';
+import './style.scss';
 
 const CustomModalDialog = ({
   open,
@@ -18,7 +21,11 @@ const CustomModalDialog = ({
     aria-labelledby="form-dialog-title"
   >
     <DialogTitle id="form-dialog-title">
-      {title}
+      <div className="modal-title-bar">
+        <span className="modal-title-bar__brand">{Brand}</span>
+        <CloseIcon className="modal-title-bar__close" onClick={handleClose} />
+      </div>
+      <span className="modal-title">{title}</span>
     </DialogTitle>
     <DialogContent className={className}>
       {children}

@@ -24,6 +24,8 @@ import imageIcon from './icons/image.png';
 import richTextIcon from './icons/richtext.png';
 import textIcon from './icons/text.png';
 import selectIcon from './icons/select.png';
+import arrayIcon from './icons/array.png';
+import urlIcon from './icons/url.png';
 
 const autoFocusFirst = () => {
   setTimeout(() => {
@@ -31,6 +33,7 @@ const autoFocusFirst = () => {
   });
 };
 
+export const Brand = 'MarketReach GUI';
 export const clientType = [
   { key: 'virtual', label: 'Virtual' },
   { key: 'native', label: 'Native' },
@@ -84,16 +87,16 @@ export const propertyFieldTypes = [
     key: 'text', label: 'Text', src: textIcon, description: 'Details and descriptions',
   },
   {
-    key: 'array', label: 'Array', src: stringIcon, description: 'Array types as String such as["1","2"]',
+    key: 'array', label: 'Array', src: arrayIcon, description: 'Array types as String such as["1","2"]',
   },
   {
-    key: 'monaco', label: 'Monaco Edit', src: stringIcon, description: 'Text of Code styled',
+    key: 'monaco', label: 'Monaco Edit', src: richTextIcon, description: 'Text of Code styled',
   },
   {
     key: 'richtext', label: 'Rich Text Edit', src: richTextIcon, description: 'Rich Text',
   },
   {
-    key: 'urlpath', label: 'URL Path', src: stringIcon, description: 'The string path with rule',
+    key: 'urlpath', label: 'URL Path', src: urlIcon, description: 'The string path with rule',
   },
   {
     key: 'image', label: 'Upload Image', src: imageIcon, description: 'Image upload section',
