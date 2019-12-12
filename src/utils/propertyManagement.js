@@ -261,7 +261,7 @@ export const getTableData = (sections, propertyFields, order) => {
     columns: [
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
-      { title: 'Default', field: 'default', type: 'boolean' },
+      { title: 'Default', field: 'default' },
       {
         title: 'Type',
         field: 'propertyType',
@@ -275,7 +275,10 @@ export const getTableData = (sections, propertyFields, order) => {
         lookup: sections,
       },
     ],
-    data: propertyFields,
+    data: propertyFields.map((item) => ({
+      ...item,
+      default: (typeof item.default === 'boolean' ? item.default.toString() : item.default),
+    })),
   };
   if (order.index >= 0) {
     columnData.columns[order.index].defaultSort = order.direction;

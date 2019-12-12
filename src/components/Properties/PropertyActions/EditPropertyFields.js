@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import { CustomConfirmDlg } from 'components/elements';
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
-import { isExist, confirmMessage } from 'utils';
+import { isExist, confirmMessage, convertString } from 'utils';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
@@ -53,7 +53,7 @@ function EditPropertyFields({
         propertyFields.push({
           key: newData.key,
           label: newData.label,
-          default: newData.default,
+          default: convertString(newData.default),
           template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
@@ -183,24 +183,23 @@ function EditPropertyFields({
       resolve();
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
-      const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
+      const ruleKeyIndex = sendData.findIndex((rk) => rk.key === oldData.key);
       if (ruleKeyIndex > -1) {
         sendData.splice(ruleKeyIndex, 1, {
           key: newData.key,
           label: newData.label,
-          default: newData.default,
+          default: convertString(newData.default),
           template: newData.template,
           propertyType: newData.propertyType,
           section: newData.section,
           order: newData.order,
           items: newData.items,
           image: (newData.image) ? newData.image : {},
-          _id: newData._id,
         });
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const errList = checkTemplate(sendData, newData);
-          if (!isUpdating && isExist(sendData, newData.key) === 2 && errList === '') {
+          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
             setUpdatedProperties(sendData);
             setUpdatedNewData(newData);
             setUpdatedOldData(oldData);
@@ -225,7 +224,7 @@ function EditPropertyFields({
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = propertyFields.findIndex((rk) => rk._id === oldData._id);
+      const ruleKeyIndex = propertyFields.findIndex((rk) => rk.key === oldData.key);
       if (ruleKeyIndex > -1) {
         const deletedKey = propertyFields[ruleKeyIndex].key;
         propertyFields.splice(ruleKeyIndex, 1);

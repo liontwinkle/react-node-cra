@@ -202,6 +202,19 @@ export const convertPropertyData = (data) => {
   source.properties = result;
   return source;
 };
+
+export const convertString = (data) => {
+  let defaultValue = '';
+  if (data === 'false') {
+    defaultValue = false;
+  } else if (data === 'true') {
+    defaultValue = true;
+  } else {
+    defaultValue = data;
+  }
+  return defaultValue;
+};
+
 export const changePropertiesData = (data) => {
   const recvData = JSON.parse(JSON.stringify(data));
   recvData.forEach((recvItem, index) => {

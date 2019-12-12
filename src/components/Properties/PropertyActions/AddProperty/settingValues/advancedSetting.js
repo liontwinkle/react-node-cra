@@ -4,7 +4,6 @@ import DefaultSection from './AdvancedSettingComponent/defaultSection';
 import TemplateSection from './AdvancedSettingComponent/templateSection';
 import { CustomImageUpload, CustomSelectWithLabel } from '../../../../elements';
 import AdvancedDescription from './AdvancedSettingComponent/description';
-// import { propertyFieldTypes } from 'utils/constants';
 
 const toggleValue = [
   { label: 'True', key: 'true' },
