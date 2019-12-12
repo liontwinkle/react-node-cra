@@ -22,6 +22,7 @@ const AdvancedSetting = ({
   handleChangeSection,
   handleChangeFileName,
   handleChangeImage,
+  handleChangeMonaco,
 }) => (
   <div className="setting-advance-body">
     <div className="setting-advance-body__elements">
@@ -31,6 +32,7 @@ const AdvancedSetting = ({
         propertyFieldData={propertyFieldData}
         handleChange={handleChange}
         handleToggleDefault={handleToggleDefault}
+        handleChangeMonaco={handleChangeMonaco}
       />
       <TemplateSection
         propertyField={propertyField}
@@ -75,6 +77,7 @@ AdvancedSetting.propTypes = {
   handleChangeSection: PropTypes.func.isRequired,
   handleChangeFileName: PropTypes.func.isRequired,
   handleChangeImage: PropTypes.func.isRequired,
+  handleChangeMonaco: PropTypes.func.isRequired,
 };
 
 AdvancedSetting.defaultProps = {

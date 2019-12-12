@@ -81,29 +81,36 @@ function SettingValues({
   };
 
   const handleToggleDefault = (value) => {
-    const newClient = {
+    const newData = {
       ...propertyFieldData,
       default: (value.key === 'true'),
     };
-    setPropertyFieldData(newClient);
+    setPropertyFieldData(newData);
   };
 
   const handleChangeTemplate = (value) => {
-    const newClient = {
+    const newData = {
       ...propertyFieldData,
       template: value,
     };
-    setPropertyFieldData(newClient);
+    setPropertyFieldData(newData);
   };
 
   const handleChangeSection = (section) => {
-    const newClient = {
+    const newData = {
       ...propertyFieldData,
       section,
     };
-    setPropertyFieldData(newClient);
+    setPropertyFieldData(newData);
   };
 
+  const handleChangeMonaco = (field) => (newValue) => {
+    const newData = {
+      ...propertyFieldData,
+      [field]: newValue,
+    };
+    setPropertyFieldData(newData);
+  };
   const disabled = !(propertyFieldData.key && propertyFieldData.label && propertyFieldData.propertyType);
 
   return (
@@ -143,6 +150,7 @@ function SettingValues({
               handleChangeSection={handleChangeSection}
               handleChangeFileName={handleChangeFileName}
               handleChangeImage={handleChangeImage}
+              handleChangeMonaco={handleChangeMonaco}
               imageFile={imageFile || ''}
               imageName={imageName}
             />

@@ -160,7 +160,7 @@ export const sectionRender = (
       } else if (p.propertyType === 'toggle') {
         let value = true;
         if (state.properties[p.key] === undefined) {
-          value = (p.default === 'true');
+          value = p.default;
         } else {
           value = (typeof state.properties[p.key] === 'string')
             ? (state.properties[p.key] === 'true') : state.properties[p.key];
