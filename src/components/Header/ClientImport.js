@@ -168,6 +168,7 @@ function ClientImport({
                   <CustomMonaco
                     label="Edit"
                     value={importData}
+                    className="import-data"
                     key="upload"
                     onChange={(data) => onEditHandle(data)}
                   />
