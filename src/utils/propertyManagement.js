@@ -261,7 +261,7 @@ export const getTableData = (sections, propertyFields, order) => {
     columns: [
       { title: 'Key', field: 'key' },
       { title: 'Label', field: 'label' },
-      { title: 'Default', field: 'default' },
+      { title: 'Default', field: 'default', type: 'boolean' },
       {
         title: 'Type',
         field: 'propertyType',
