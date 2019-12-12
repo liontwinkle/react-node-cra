@@ -18,11 +18,7 @@ const CategorySchema = new Schema({
   }],
   template: Object,
   properties: Object,
-  defaultProperties: [{
-    key: String,
-    default: String,
-    template: String,
-  }],
+  defaultProperties: Array,
   rules: Array,
 }, { timestamps: true });
 

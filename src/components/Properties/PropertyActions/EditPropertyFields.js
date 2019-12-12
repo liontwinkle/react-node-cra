@@ -200,7 +200,7 @@ function EditPropertyFields({
         delete data.tableData;
         if (JSON.stringify(newData) !== JSON.stringify(data)) {
           const errList = checkTemplate(sendData, newData);
-          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
+          if (!isUpdating && isExist(sendData, newData.key) === 2 && errList === '') {
             setUpdatedProperties(sendData);
             setUpdatedNewData(newData);
             setUpdatedOldData(oldData);
