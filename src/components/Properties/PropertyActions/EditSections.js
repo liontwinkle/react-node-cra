@@ -6,7 +6,8 @@ import { useSnackbar } from 'notistack';
 
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
-import { confirmMessage, getMaxValueFromArray, isExist } from 'utils';
+import { confirmMessage, isExist } from 'utils';
+import { validateSection } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditSections({
@@ -23,6 +24,7 @@ function EditSections({
   const { enqueueSnackbar } = useSnackbar();
 
   const { sections } = propertyField;
+
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -31,39 +33,16 @@ function EditSections({
     ],
     data: sections,
   };
+
   if (order.index >= 0) {
     tableData.columns[order.index].defaultSort = order.direction;
   }
-
-  const validate = (data) => {
-    let validation = true;
-    let confirmMsg = '';
-    const updateData = JSON.parse(JSON.stringify(data));
-    if (!data.key) {
-      validation = false;
-      confirmMsg = 'The key of section could not set as Empty or Null.';
-    } else if (!data.label) {
-      validation = false;
-      confirmMsg = 'The label of section could not set as Empty or Null.';
-    } else if (!data.order) {
-      const order = parseInt(getMaxValueFromArray('order', sections), 10) + 1;
-      updateData.order = order;
-      confirmMsg = `The Order is set as ${order}.`;
-      confirmMessage(enqueueSnackbar, confirmMsg, 'info');
-    }
-    if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
-
-    return {
-      validation,
-      updateData,
-    };
-  };
 
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      const validateResult = validate(newData);
+      const validateResult = validateSection(newData, sections, enqueueSnackbar);
       const data = validateResult.updateData;
       if (validateResult.validation) {
         if (isExist(sections, newData.key) === 0) {
@@ -95,7 +74,7 @@ function EditSections({
       resolve();
 
       const ruleKeyIndex = sections.findIndex((rk) => rk._id === oldData._id);
-      const validateResult = validate(newData);
+      const validateResult = validateSection(newData, sections, enqueueSnackbar);
       const data = validateResult.updateData;
 
       if (ruleKeyIndex > -1 && validateResult.validation) {

@@ -208,3 +208,10 @@ export const hints = {
   section: 'You can select Section that includes new property.',
   basic: 'The value of Key field should be unique.',
 };
+
+export const warning = {
+  keyIssue: 'The key value could not set as Empty or Null.',
+  labelIssue: 'The label could not set as Empty or Null.',
+  propertyTypeIssue: 'The Type should be selected.',
+  orderInfo: (order) => (`The Order is set as ${order}`),
+};

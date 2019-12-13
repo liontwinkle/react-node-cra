@@ -7,9 +7,12 @@ import { useSnackbar } from 'notistack';
 import { CustomConfirmDlg } from 'components/elements';
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 import {
-  isExist, confirmMessage, convertString, getMaxValueFromArray,
+  isExist, confirmMessage, convertString,
 } from 'utils';
-import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
+import {
+  checkPathValidate, checkTemplate, getTableData, validateProperties, checkUsageOldKey, changeKey,
+} from 'utils/propertyManagement';
+
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
@@ -32,9 +35,10 @@ function EditPropertyFields({
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [changeType, setChangeType] = useState(false);
-  const [updatedProperties, setUpdatedProperties] = useState(null);
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
+  const [updatedProperties, setUpdatedProperties] = useState(null);
+
   const sections = {};
   const updateDefaultFunc = (objectItem.parent_id !== undefined)
     ? updateDefaultOnCategory : updateDefaultOnAttriute;
@@ -46,36 +50,10 @@ function EditPropertyFields({
   const { propertyFields } = propertyField;
   const tableData = getTableData(sections, propertyFields, order);
 
-  const validate = (data) => {
-    let validation = true;
-    const updatedData = JSON.parse(JSON.stringify(data));
-    let confirmMsg = '';
-    if (!data.key) {
-      validation = false;
-      confirmMsg = 'The key of data could not set as Empty or Null.';
-    } else if (!data.label) {
-      validation = false;
-      confirmMsg = 'The label of data could not set as Empty or Null.';
-    } else if (!data.propertyType) {
-      validation = false;
-      confirmMsg = 'The Type of data should be selected.';
-    } else if (!data.order) {
-      const order = parseInt(getMaxValueFromArray('order', propertyFields), 10) + 1;
-      updatedData.order = order;
-      confirmMsg = `The Order is set as ${order}.`;
-      confirmMessage(enqueueSnackbar, confirmMsg, 'info');
-    }
-    if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
-    return {
-      validation,
-      updatedData,
-    };
-  };
-
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-      const validateResult = validate(newData);
+      const validateResult = validateProperties(newData, propertyFields, enqueueSnackbar);
       const data = validateResult.updatedData;
       if (validateResult.validation) {
         const errList = checkTemplate(propertyFields, data);
@@ -104,7 +82,7 @@ function EditPropertyFields({
                     confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
                   })
                   .catch(() => {
-                    confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value .', 'error');
+                    confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value.', 'error');
                   });
               })
               .catch(() => {
@@ -169,50 +147,15 @@ function EditPropertyFields({
     setChangeType(false);
   };
 
-  const checkUsageOldKey = (newData, oldData) => {
-    let result = false;
-    if (newData.propertyType !== oldData.propertyType) {
-      if (
-        newData.propertyType !== 'string'
-        && newData.propertyType !== 'text'
-        && newData.propertyType !== 'monaco'
-        && newData.propertyType !== 'richtext'
-        && newData.propertyType !== 'urlpath'
-      ) {
-        propertyFields.forEach((item) => {
-          const reg = new RegExp(`\\$${oldData.key}`);
-          if (reg.test(item.template)) {
-            result = true;
-          }
-        });
-      }
-    }
-    return result;
-  };
-
-  const changeKey = (newData, oldData, fields) => {
-    const oldKey = oldData.key;
-    const newKey = newData.key;
-    const changedFields = JSON.parse(JSON.stringify(fields));
-    if (oldKey !== newKey) {
-      fields.forEach((item, index) => {
-        const reg = new RegExp(`\\$${oldKey}`);
-        if (item.template) {
-          changedFields[index].template = item.template.replace(reg, `$${newKey}`);
-        }
-      });
-    }
-    return changedFields;
-  };
   const handleUpdate = (newData, oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
-      const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
-      const validateResult = validate(newData);
+      const validateResult = validateProperties(newData, propertyFields, enqueueSnackbar);
       const validateFlag = validateResult.validation;
       const updateData = validateResult.updatedData;
+      const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1 && validateFlag) {
         sendData.splice(ruleKeyIndex, 1, {
           key: updateData.key,
@@ -224,6 +167,7 @@ function EditPropertyFields({
           order: updateData.order,
           items: updateData.items,
           image: (updateData.image) ? updateData.image : {},
+          _id: updateData._id,
         });
         delete data.tableData;
         if (JSON.stringify(updateData) !== JSON.stringify(data)) {
@@ -232,7 +176,7 @@ function EditPropertyFields({
             setUpdatedProperties(sendData);
             setUpdatedNewData(updateData);
             setUpdatedOldData(oldData);
-            if (checkUsageOldKey(updateData, oldData)) {
+            if (checkUsageOldKey(updateData, oldData, propertyFields)) {
               setChangeType(true);
             } else {
               setChangeType(false);

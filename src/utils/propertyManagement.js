@@ -14,8 +14,8 @@ import {
 
 import CustomMonaco from 'components/elements/CustomMonaco';
 
-import { propertyTypes } from './constants';
-import { sortByOrder } from './index';
+import { propertyTypes, warning } from './constants';
+import { confirmMessage, getMaxValueFromArray, sortByOrder } from './index';
 import CustomImageDisplay from '../components/elements/CustomImageDisplay';
 
 /** utils * */
@@ -415,4 +415,90 @@ export const validateTemplate = (propertyFields, data) => {
     }
   });
   return errKey;
+};
+
+export const validateProperties = (data, propertyFields, enqueueSnackbar) => {
+  let validation = true;
+  const updatedData = JSON.parse(JSON.stringify(data));
+  let confirmMsg = '';
+  if (!data.key) {
+    validation = false;
+    confirmMsg = warning.keyIssue;
+  } else if (!data.label) {
+    validation = false;
+    confirmMsg = warning.labelIssue;
+  } else if (!data.propertyType) {
+    validation = false;
+    confirmMsg = warning.propertyTypeIssue;
+  } else if (!data.order) {
+    const order = parseInt(getMaxValueFromArray('order', propertyFields), 10) + 1;
+    updatedData.order = order;
+    confirmMsg = warning.orderInfo(order);
+    confirmMessage(enqueueSnackbar, confirmMsg, 'info');
+  }
+  if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
+  return {
+    validation,
+    updatedData,
+  };
+};
+
+export const validateSection = (data, sections, enqueueSnackbar) => {
+  let validation = true;
+  let confirmMsg = '';
+  const updateData = JSON.parse(JSON.stringify(data));
+  if (!data.key) {
+    validation = false;
+    confirmMsg = warning.keyIssue;
+  } else if (!data.label) {
+    validation = false;
+    confirmMsg = warning.labelIssue;
+  } else if (!data.order) {
+    const order = parseInt(getMaxValueFromArray('order', sections), 10) + 1;
+    updateData.order = order;
+    confirmMsg = warning.orderInfo(order);
+    confirmMessage(enqueueSnackbar, confirmMsg, 'info');
+  }
+  if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
+
+  return {
+    validation,
+    updateData,
+  };
+};
+
+export const checkUsageOldKey = (newData, oldData, propertyFields) => {
+  let result = false;
+  if (newData.propertyType !== oldData.propertyType) {
+    if (
+      newData.propertyType !== 'string'
+      && newData.propertyType !== 'text'
+      && newData.propertyType !== 'monaco'
+      && newData.propertyType !== 'richtext'
+      && newData.propertyType !== 'urlpath'
+    ) {
+      propertyFields.forEach((item) => {
+        const reg = new RegExp(`\\$${oldData.key}`);
+        if (reg.test(item.template)) {
+          result = true;
+        }
+      });
+    }
+  }
+  return result;
+};
+
+export const changeKey = (newData, oldData, fields) => {
+  const oldKey = oldData.key;
+  const newKey = newData.key;
+  const changedFields = JSON.parse(JSON.stringify(fields));
+  if (oldKey !== newKey) {
+    fields.forEach((item, index) => {
+      const reg = new RegExp(`\\$${oldKey}`);
+      if (item.template) {
+        changedFields[index].template = item.template.replace(reg, `$${newKey}`);
+      }
+    });
+  }
+  return changedFields;
 };
