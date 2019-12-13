@@ -30,10 +30,11 @@ class CategoryView extends Component {
 }
 
 CategoryView.propTypes = {
+  // rootCategories: PropTypes.array.isRequired,
   // setRootCategory: PropTypes.func.isRequired,
-  // categories: PropTypes.array.isRequired,
 };
 const mapStateToProps = (store) => ({
+  rootCategories: store.previewData.rootCategories,
   categories: store.categoriesData.categories,
 });
 const mapDispatchToProps = (dispatch) => bindActionCreators({

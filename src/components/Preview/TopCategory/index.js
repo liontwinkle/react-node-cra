@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 
 import { getRootCategories } from 'utils';
 import Loader from 'components/Loader';
-import { setRootCategory } from 'redux/actions/preview';
+import { setRootCategory, setPreviewCategory } from 'redux/actions/preview';
 
 import './style.scss';
 
@@ -48,6 +48,10 @@ class TopCategory extends Component {
     }));
   };
 
+  handleSelect = (item) => () => {
+    this.props.setPreviewCategory(item);
+  };
+
   render() {
     const { fetchFlag } = this.state;
     const { rootCategories } = this.props;
@@ -65,7 +69,7 @@ class TopCategory extends Component {
                 <ul>
                   {
                     rootCategories.map((item) => (
-                      <li key={item._id}>{item.name}</li>
+                      <li key={item._id} onClick={this.handleSelect(item)}>{item.name}</li>
                     ))
                   }
                 </ul>
@@ -84,6 +88,7 @@ TopCategory.propTypes = {
   categories: PropTypes.array.isRequired,
   rootCategories: PropTypes.array.isRequired,
   setRootCategory: PropTypes.func.isRequired,
+  setPreviewCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({
@@ -93,6 +98,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   setRootCategory,
+  setPreviewCategory,
 }, dispatch);
 
 export default connect(

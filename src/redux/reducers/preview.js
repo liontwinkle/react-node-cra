@@ -8,6 +8,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.SET_PREVIEW_CATEGORY:
+      console.log('#### DEBUG PREVIEW DATA: ', action.payload); // fixme
       return {
         ...state,
         selectedCategory: action.payload,
