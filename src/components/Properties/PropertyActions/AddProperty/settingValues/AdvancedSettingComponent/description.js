@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { hints } from 'utils/constants';
+
 const AdvancedDescription = ({ type }) => (
   <>
     {
@@ -14,13 +16,13 @@ const AdvancedDescription = ({ type }) => (
         <>
           <span>
             <b>Default: </b>
-            This is default value of the properties based on String type.
+            {hints.default}
           </span>
           {
             type !== 'array' && type !== 'toggle' && (
               <span>
                 <b>Template: </b>
-              This value is only for String type value. Once type $, you can choose the properties.
+                {hints.template}
               </span>
             )
           }
@@ -31,13 +33,13 @@ const AdvancedDescription = ({ type }) => (
       type === 'image' && (
         <span>
           <b>Image: </b>
-          You can upload your media. The name is empty string default.
+          {hints.image}
         </span>
       )
     }
     <span>
       <b>Section: </b>
-      You can select Section that includes new property.
+      {hints.section}
     </span>
   </>
 );

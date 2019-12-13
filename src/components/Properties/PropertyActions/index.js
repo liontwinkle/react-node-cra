@@ -179,17 +179,6 @@ function PropertyActions({
           onChangePageNum={onChangePageNum('section')}
         />
       )}
-
-      {/* {open.add && ( */}
-      {/* <AddPropertyFields */}
-      {/* open={open.add} */}
-      {/* handleClose={handleToggle('add')} */}
-      {/* createHistory={createHistory} */}
-      {/* objectItem={objectItem} */}
-      {/* uploadImage={uploadImage} */}
-      {/* defaultOrder={getMaxValueFromArray('order', fields) + 1} */}
-      {/* /> */}
-      {/* )} */}
       {open.add && (
         <AddProperty
           open={open.add}
@@ -197,7 +186,7 @@ function PropertyActions({
           createHistory={createHistory}
           objectItem={objectItem}
           uploadImage={uploadImage}
-          defaultOrder={getMaxValueFromArray('order', fields) + 1}
+          defaultOrder={parseInt(getMaxValueFromArray('order', fields), 10) + 1}
         />
       )}
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CustomInput } from 'components/elements';
 
-import { settingBasicValueHint } from 'utils/constants';
+import { hints } from 'utils/constants';
 
 const BasicSetting = ({
   handleChange,
@@ -24,7 +24,7 @@ const BasicSetting = ({
       />
     </div>
     <div className="basic-setting-body__description">
-      <span>{settingBasicValueHint}</span>
+      <span>{hints.basic}</span>
     </div>
   </div>
 );

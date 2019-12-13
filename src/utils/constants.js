@@ -103,7 +103,6 @@ export const propertyFieldTypes = [
   },
 ];
 
-export const settingBasicValueHint = 'The value of Key field should be unique.';
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
 
 export const tableIcons = {
@@ -201,3 +200,11 @@ export const detailTableColumns = [
   { title: 'Created Date', field: 'createdAt' },
   { title: 'Updated Date', field: 'updatedAt' },
 ];
+
+export const hints = {
+  default: 'This is default value of the properties based on String type.',
+  template: 'This value is only for String type value. Once type $, you can choose the properties.',
+  image: 'You can upload your media. The name is empty string default.',
+  section: 'You can select Section that includes new property.',
+  basic: 'The value of Key field should be unique.',
+};
