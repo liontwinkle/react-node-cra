@@ -66,7 +66,7 @@ class Properties extends Component {
       });
     }
 
-    if (propertyField.sections && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
+    if (propertyField.sections && propertyField.sections !== prevProps.propertyField.sections) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });

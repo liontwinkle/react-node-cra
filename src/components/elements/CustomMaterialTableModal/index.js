@@ -69,7 +69,7 @@ CustomMaterialTableModal.propTypes = {
   msg: PropTypes.string,
   className: PropTypes.string,
   options: PropTypes.object.isRequired,
-  tableData: PropTypes.array.isRequired,
+  tableData: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleAdd: PropTypes.func.isRequired,
   handleUpdate: PropTypes.func.isRequired,

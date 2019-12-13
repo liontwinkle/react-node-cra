@@ -3,12 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
 
 import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 import { updateAttribute } from 'redux/actions/attribute';
@@ -19,6 +14,7 @@ import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
+import CustomModalDialog from '../../../elements/CustomModalDialog';
 
 function AddNewRule({
   open,
@@ -139,25 +135,19 @@ function AddNewRule({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title="Add Rule"
     >
-      <DialogTitle id="form-dialog-title">
-        Add Rule
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <AddNewRuleBody
-          handleSelectChange={handleSelectChange}
-          ruleData={ruleData}
-          previewNumber={previewValue}
-          handleChange={handleChange}
-          valueDetails={valueDetails}
-          category={attribute}
-        />
-      </DialogContent>
+      <AddNewRuleBody
+        handleSelectChange={handleSelectChange}
+        ruleData={ruleData}
+        previewNumber={previewValue}
+        handleChange={handleChange}
+        valueDetails={valueDetails}
+        category={attribute}
+      />
 
       <DialogActions className={classes.dialogAction}>
         <button
@@ -175,7 +165,7 @@ function AddNewRule({
           Save
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 
