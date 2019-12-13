@@ -183,7 +183,7 @@ function EditPropertyFields({
       resolve();
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
-      const ruleKeyIndex = sendData.findIndex((rk) => rk.key === oldData.key);
+      const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         sendData.splice(ruleKeyIndex, 1, {
           key: newData.key,
@@ -224,7 +224,7 @@ function EditPropertyFields({
     setTimeout(() => {
       resolve();
 
-      const ruleKeyIndex = propertyFields.findIndex((rk) => rk.key === oldData.key);
+      const ruleKeyIndex = propertyFields.findIndex((rk) => rk._id === oldData._id);
       if (ruleKeyIndex > -1) {
         const deletedKey = propertyFields[ruleKeyIndex].key;
         propertyFields.splice(ruleKeyIndex, 1);
