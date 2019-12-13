@@ -168,9 +168,6 @@ function EditPropertyFields({
     if (oldKey !== newKey) {
       fields.forEach((item, index) => {
         const reg = new RegExp(`\\$${oldKey}`);
-        if (item.default) {
-          changedFields[index].default = item.default.replace(reg, `$${newKey}`);
-        }
         if (item.template) {
           changedFields[index].template = item.template.replace(reg, `$${newKey}`);
         }
