@@ -6,7 +6,9 @@ import { useSnackbar } from 'notistack';
 
 import { CustomConfirmDlg } from 'components/elements';
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
-import { isExist, confirmMessage, convertString } from 'utils';
+import {
+  isExist, confirmMessage, convertString, getMaxValueFromArray,
+} from 'utils';
 import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
@@ -46,38 +48,49 @@ function EditPropertyFields({
 
   const validate = (data) => {
     let validation = true;
+    const updatedData = JSON.parse(JSON.stringify(data));
     let confirmMsg = '';
     if (!data.key) {
       validation = false;
-      confirmMsg = 'The key of data could not set as Empty ot Null.';
+      confirmMsg = 'The key of data could not set as Empty or Null.';
     } else if (!data.label) {
       validation = false;
-      confirmMsg = 'The label of data could not set as Empty ot Null.';
+      confirmMsg = 'The label of data could not set as Empty or Null.';
     } else if (!data.propertyType) {
       validation = false;
       confirmMsg = 'The Type of data should be selected.';
+    } else if (!data.order) {
+      const order = parseInt(getMaxValueFromArray('order', propertyFields), 10) + 1;
+      updatedData.order = order;
+      confirmMsg = `The Order is set as ${order}.`;
+      confirmMessage(enqueueSnackbar, confirmMsg, 'info');
     }
     if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
-    return validation;
+    return {
+      validation,
+      updatedData,
+    };
   };
 
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-      if (validate(newData)) {
-        const errList = checkTemplate(propertyFields, newData);
-        const validatePath = checkPathValidate(propertyFields, newData);
-        if (isExist(propertyFields, newData.key) === 0 && errList === '' && validatePath) {
+      const validateResult = validate(newData);
+      const data = validateResult.updatedData;
+      if (validateResult.validation) {
+        const errList = checkTemplate(propertyFields, data);
+        const validatePath = checkPathValidate(propertyFields, data);
+        if (isExist(propertyFields, data.key) === 0 && errList === '' && validatePath) {
           propertyFields.push({
-            key: newData.key,
-            label: newData.label,
-            default: convertString(newData.default),
-            template: newData.template,
-            propertyType: newData.propertyType,
-            section: newData.section,
-            order: newData.order,
-            items: newData.items,
-            image: (newData.image) ? newData.image : {},
+            key: data.key,
+            label: data.label,
+            default: convertString(data.default),
+            template: data.template,
+            propertyType: data.propertyType,
+            section: data.section,
+            order: data.order,
+            items: data.items,
+            image: (data.image) ? data.image : {},
           });
           if (!isUpdating) {
             updatePropertyField({ propertyFields })
@@ -85,8 +98,8 @@ function EditPropertyFields({
                 updateDefaultFunc(propertyFields)
                   .then(() => {
                     addNewRuleHistory(createHistory, objectItem, parentId,
-                      `Create Property(${newData.propertyType})`,
-                      `Create Property(${newData.propertyType}) by ${objectItem.name}`,
+                      `Create Property(${data.propertyType})`,
+                      `Create Property(${data.propertyType}) by ${objectItem.name}`,
                       'virtual');
                     confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
                   })
@@ -105,7 +118,7 @@ function EditPropertyFields({
           } else if (validatePath) {
             errMsg = 'URL Path is not valid.';
           } else {
-            errMsg = `Error: Another property is using the key (${newData.key}) you specified.
+            errMsg = `Error: Another property is using the key (${data.key}) you specified.
          Please update property key name.`;
           }
           confirmMessage(enqueueSnackbar, errMsg, 'error');
@@ -197,30 +210,33 @@ function EditPropertyFields({
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
       const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
-      if (ruleKeyIndex > -1 && validate(newData)) {
+      const validateResult = validate(newData);
+      const validateFlag = validateResult.validation;
+      const updateData = validateResult.updatedData;
+      if (ruleKeyIndex > -1 && validateFlag) {
         sendData.splice(ruleKeyIndex, 1, {
-          key: newData.key,
-          label: newData.label,
-          default: convertString(newData.default),
-          template: newData.template,
-          propertyType: newData.propertyType,
-          section: newData.section,
-          order: newData.order,
-          items: newData.items,
-          image: (newData.image) ? newData.image : {},
+          key: updateData.key,
+          label: updateData.label,
+          default: convertString(updateData.default),
+          template: updateData.template,
+          propertyType: updateData.propertyType,
+          section: updateData.section,
+          order: updateData.order,
+          items: updateData.items,
+          image: (updateData.image) ? updateData.image : {},
         });
         delete data.tableData;
-        if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          const errList = checkTemplate(sendData, newData);
-          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
+        if (JSON.stringify(updateData) !== JSON.stringify(data)) {
+          const errList = checkTemplate(sendData, updateData);
+          if (!isUpdating && isExist(sendData, updateData.key) === 1 && errList === '') {
             setUpdatedProperties(sendData);
-            setUpdatedNewData(newData);
+            setUpdatedNewData(updateData);
             setUpdatedOldData(oldData);
-            if (checkUsageOldKey(newData, oldData)) {
+            if (checkUsageOldKey(updateData, oldData)) {
               setChangeType(true);
             } else {
               setChangeType(false);
-              updateAction(changeKey(newData, oldData, sendData), newData);
+              updateAction(changeKey(updateData, oldData, sendData), updateData);
             }
           } else {
             const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;

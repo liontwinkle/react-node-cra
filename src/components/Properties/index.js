@@ -59,7 +59,6 @@ class Properties extends Component {
     if (propertyField.propertyFields
       && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
       const nonSection = propertyField.propertyFields.filter((item) => (!item.section));
-      console.log(nonSection); // fixme
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,

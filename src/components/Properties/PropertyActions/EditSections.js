@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
-import { confirmMessage, isExist } from 'utils';
+import { confirmMessage, getMaxValueFromArray, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditSections({
@@ -34,29 +34,58 @@ function EditSections({
   if (order.index >= 0) {
     tableData.columns[order.index].defaultSort = order.direction;
   }
+
+  const validate = (data) => {
+    let validation = true;
+    let confirmMsg = '';
+    const updateData = JSON.parse(JSON.stringify(data));
+    if (!data.key) {
+      validation = false;
+      confirmMsg = 'The key of section could not set as Empty or Null.';
+    } else if (!data.label) {
+      validation = false;
+      confirmMsg = 'The label of section could not set as Empty or Null.';
+    } else if (!data.order) {
+      const order = parseInt(getMaxValueFromArray('order', sections), 10) + 1;
+      updateData.order = order;
+      confirmMsg = `The Order is set as ${order}.`;
+      confirmMessage(enqueueSnackbar, confirmMsg, 'info');
+    }
+    if (!validation) { confirmMessage(enqueueSnackbar, confirmMsg, 'error'); }
+
+    return {
+      validation,
+      updateData,
+    };
+  };
+
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      if (isExist(sections, newData.key) === 0) {
-        sections.push({
-          key: newData.key,
-          label: newData.label,
-          order: newData.order,
-        });
-        if (!isUpdating) {
-          updatePropertyField({ sections })
-            .then(() => {
-              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-            })
-            .catch(() => {
-              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-            });
-        }
-      } else {
-        const errMsg = `Error: Another section is using the key (${newData.key}) you specified.
+      const validateResult = validate(newData);
+      const data = validateResult.updateData;
+      if (validateResult.validation) {
+        if (isExist(sections, newData.key) === 0) {
+          sections.push({
+            key: data.key,
+            label: data.label,
+            order: data.order,
+          });
+          if (!isUpdating) {
+            updatePropertyField({ sections })
+              .then(() => {
+                confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+              })
+              .catch(() => {
+                confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+              });
+          }
+        } else {
+          const errMsg = `Error: Another section is using the key (${data.key}) you specified.
          Please update section key name.`;
-        confirmMessage(enqueueSnackbar, errMsg, 'error');
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
+        }
       }
     }, 600);
   });
@@ -66,12 +95,15 @@ function EditSections({
       resolve();
 
       const ruleKeyIndex = sections.findIndex((rk) => rk._id === oldData._id);
-      if (ruleKeyIndex > -1) {
+      const validateResult = validate(newData);
+      const data = validateResult.updateData;
+
+      if (ruleKeyIndex > -1 && validateResult.validation) {
         sections.splice(ruleKeyIndex, 1, {
-          key: newData.key,
-          label: newData.label,
-          order: newData.order,
-          _id: newData._id,
+          key: data.key,
+          label: data.label,
+          order: data.order,
+          _id: data._id,
         });
         if (!isUpdating) {
           updatePropertyField({ sections })

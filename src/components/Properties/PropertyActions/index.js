@@ -17,7 +17,6 @@ import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
 import AddProperty from './AddProperty';
-// import AddPropertyFields from './AddPropertyFields';
 import EditPropertyFields from './EditPropertyFields';
 
 function PropertyActions({
