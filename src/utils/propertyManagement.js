@@ -105,8 +105,7 @@ export const sectionRender = (
   fields = propertyFields.sort(sortByOrder);
   fields.forEach((p) => {
     if ((section && (p.section === section.key))
-      || ((section === null) && (p.section === null))
-      || ((section === '') && (p.section === ''))) {
+      || ((!section) && (!p.section))) {
       if ((p.propertyType === 'string') || (p.propertyType === 'urlpath')) {
         const { value, templateFlag } = getStringTypeValue(p, state, fields, template);
         res.push(
