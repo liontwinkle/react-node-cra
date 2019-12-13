@@ -75,7 +75,7 @@ CustomText.defaultProps = {
   labelAlignment: '',
   placeholder: '',
   inline: false,
-  inlineWidth: '20%',
+  inlineWidth: '220px',
   hint: '',
   value: '',
 };

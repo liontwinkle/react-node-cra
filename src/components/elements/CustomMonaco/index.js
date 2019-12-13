@@ -2,7 +2,6 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
-import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -71,6 +70,6 @@ CustomMonaco.defaultProps = {
   value: '',
   labelAlignment: '',
   inline: false,
-  inlineWidth: inlineDefaultWidth,
+  inlineWidth: '220px',
 };
 export default CustomMonaco;
