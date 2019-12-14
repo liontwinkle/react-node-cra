@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 
 import { getRootCategories } from 'utils';
 import Loader from 'components/Loader';
-import { setRootCategory, setPreviewCategory } from 'redux/actions/preview';
+import { setRootCategory, setPreviewCategory, setPathUrl } from 'redux/actions/preview';
 
 import './style.scss';
 
@@ -50,6 +50,13 @@ class TopCategory extends Component {
 
   handleSelect = (item) => () => {
     this.props.setPreviewCategory(item);
+    this.props.setPathUrl({
+      name: item.name,
+      id: item._id,
+      subParentId: null,
+      parent_name: null,
+      parent_id: item.parent_id,
+    });
   };
 
   render() {
@@ -87,6 +94,7 @@ class TopCategory extends Component {
 TopCategory.propTypes = {
   categories: PropTypes.array.isRequired,
   rootCategories: PropTypes.array.isRequired,
+  setPathUrl: PropTypes.func.isRequired,
   setRootCategory: PropTypes.func.isRequired,
   setPreviewCategory: PropTypes.func.isRequired,
 };
@@ -99,6 +107,7 @@ const mapStateToProps = (store) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   setRootCategory,
   setPreviewCategory,
+  setPathUrl,
 }, dispatch);
 
 export default connect(

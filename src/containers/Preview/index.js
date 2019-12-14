@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import TopCategory from '../../components/Preview/TopCategory';
 // import LeftNavigation from '../../components/Preview/LeftNavigation';
@@ -13,15 +15,18 @@ class Preview extends Component {
   }
 
   render() {
+    const { urlPath } = this.props;
     return (
       <div className="preview_container">
         <div className="preview_top">
           <TopCategory />
           <span className="preview_route">
             <ul>
-              <li>{`${'Outwear >'}`}</li>
-              <li>{`${'Men >'}`}</li>
-              <li>{`${'Parkas >'}`}</li>
+              {
+                urlPath.map((item) => (
+                  <li key={item.id}>{`${item.name} >`}</li>
+                ))
+              }
             </ul>
           </span>
         </div>
@@ -35,4 +40,14 @@ class Preview extends Component {
   }
 }
 
-export default Preview;
+Preview.propTypes = {
+  urlPath: PropTypes.array.isRequired,
+};
+
+const mapStateToProps = (store) => ({
+  urlPath: store.previewData.urlPath,
+});
+
+export default connect(
+  mapStateToProps,
+)(Preview);

@@ -13,3 +13,10 @@ export const setRootCategory = (data) => (dispatch) => {
     payload: data,
   });
 };
+
+export const setPathUrl = (urlData) => (dispatch) => {
+  dispatch({
+    type: types.SET_URL_PATH_NAV,
+    payload: urlData,
+  });
+};
