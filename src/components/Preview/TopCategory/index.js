@@ -28,7 +28,9 @@ class TopCategory extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { categories, setRootCategory } = this.props;
+    const {
+      categories, setRootCategory, rootCategories, setPreviewCategory, setPathUrl,
+    } = this.props;
     if (categories !== prevProps.categories) {
       this.updateState({
         fetchFlag: false,
@@ -37,6 +39,16 @@ class TopCategory extends Component {
       setRootCategory(rootData);
       this.updateState({
         fetchFlag: true,
+      });
+    }
+    if (prevProps.rootCategories !== rootCategories) {
+      setPreviewCategory(rootCategories[0]);
+      setPathUrl({
+        name: rootCategories[0].name,
+        id: rootCategories[0]._id,
+        subParentId: null,
+        parent_name: null,
+        parent_id: rootCategories[0].parent_id,
       });
     }
   }
