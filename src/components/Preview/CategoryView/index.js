@@ -31,11 +31,10 @@ class CategoryView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { categories, selectedCategory } = this.props;
-    if (prevProps.selectedCategory !== this.props.selectedCategory) {
+    const { categories, subCategories } = this.props;
+    if (prevProps.subCategories !== subCategories) {
       const filterData = [];
-      const willViewCategories = categories.filter((item) => (item.parent_id === selectedCategory._id));
-      willViewCategories.forEach((item) => {
+      subCategories.forEach((item) => {
         filterData.push({
           title: item.name,
           subParentId: item.parent_id,
@@ -72,6 +71,7 @@ class CategoryView extends Component {
 CategoryView.propTypes = {
   // rootCategories: PropTypes.array.isRequired,
   // setRootCategory: PropTypes.func.isRequired,
+  subCategories: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   selectedCategory: PropTypes.object.isRequired,
 };
