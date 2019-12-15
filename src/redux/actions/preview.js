@@ -20,3 +20,10 @@ export const setPathUrl = (urlData) => (dispatch) => {
     payload: urlData,
   });
 };
+
+export const movePointedPath = (id) => (dispatch) => {
+  dispatch({
+    type: types.MOVE_POINTED_PATH,
+    payload: id,
+  });
+};

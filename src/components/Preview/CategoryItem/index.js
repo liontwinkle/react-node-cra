@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { setPathUrl } from 'redux/actions/preview';
+import { setPathUrl, setPreviewCategory } from 'redux/actions/preview';
 
 import './style.scss';
 
@@ -12,8 +12,10 @@ function CategoryItem({
   childs,
   setPathUrl,
   subParentId,
+  setPreviewCategory,
 }) {
   const handleClick = (item) => () => {
+    setPreviewCategory(item);
     setPathUrl({
       name: item.name,
       id: item._id,
@@ -50,11 +52,14 @@ CategoryItem.propTypes = {
   subParentId: PropTypes.number.isRequired,
   childs: PropTypes.array.isRequired,
   setPathUrl: PropTypes.func.isRequired,
+  setPreviewCategory: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   setPathUrl,
+  setPreviewCategory,
 }, dispatch);
+
 
 export default connect(
   null,

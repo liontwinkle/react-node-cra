@@ -42,7 +42,6 @@ const createValuefromtemplate = (template, state, propertyFields) => {
   });
   return string;
 };
-
 export const getRootParent = (Items, currentItem, type) => {
   let rootParent = {};
   if (!currentItem[type]) {

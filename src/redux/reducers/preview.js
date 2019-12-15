@@ -44,6 +44,19 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         urlPath: urlPathData,
       };
+    case types.MOVE_POINTED_PATH:
+      const currentId = action.payload;
+      let currentPathData = JSON.parse(JSON.stringify(state.urlPath));
+      const index = currentPathData.findIndex((item) => (item.id === currentId));
+      if (index < 0) {
+        currentPathData = [];
+      } else {
+        currentPathData.splice(index + 1, currentPathData.length - index);
+      }
+      return {
+        ...state,
+        urlPath: currentPathData,
+      };
     default:
       return state;
   }

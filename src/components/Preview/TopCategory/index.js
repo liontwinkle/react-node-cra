@@ -41,7 +41,7 @@ class TopCategory extends Component {
         fetchFlag: true,
       });
     }
-    if (prevProps.rootCategories !== rootCategories) {
+    if (prevProps.rootCategories !== rootCategories && rootCategories.length > 0) {
       setPreviewCategory(rootCategories[0]);
       setPathUrl({
         name: rootCategories[0].name,
