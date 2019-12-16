@@ -650,7 +650,7 @@ function createCollection(body) {
   });
 }
 
-function saveUpdates(collection, updates) {
+function saveUpdates(collection, updates, id) {
   return (entity) => {
     if (updates) {
       const updateCode = (entity.code !== updates.code);
@@ -663,7 +663,8 @@ function saveUpdates(collection, updates) {
         });
       }
       _.assign(entity, updates);
-      return entity.saveAsync();
+      return collection.insertMany(entity)
+        .then(() => collection.remove({ _id: id }));
     }
   };
 }

@@ -38,6 +38,7 @@ function ClientForm({
   }, [client, handleClose, status.Add]);
   const isAdd = (status.Add === true) ? 'Add' : 'Edit';
   const [clientData, setClientData] = useState({
+    _id: isAdd === 'Add' ? '' : ((client && client._id) || ''),
     name: isAdd === 'Add' ? '' : ((client && client.name) || ''),
     code: isAdd === 'Add' ? '' : ((client && client.code) || ''),
     url: isAdd === 'Add' ? '' : ((client && client.url) || ''),
@@ -46,42 +47,34 @@ function ClientForm({
     urlErr: false,
   });
 
-  const checkClientName = (value) => {
-    const index = clients.findIndex((clientItem) => (clientItem.name === value));
+  const checkValidate = (value, type, originValue, field) => {
+    const index = (type === 'isAdd')
+      ? clients.findIndex((clientItem) => (clientItem[field] === value))
+      : clients.findIndex((clientItem) => (clientItem[field] === value && clientItem[field] !== originValue));
     return (index >= 0);
   };
-
-  const checkClientCode = (value) => {
-    const index = clients.findIndex((clientItem) => (clientItem.code === value));
-    return (index >= 0);
-  };
-
-  const checkClientUrl = (value) => {
-    const index = clients.findIndex((clientItem) => (clientItem.url === value));
-    return (index >= 0);
-  };
-
   const handleChange = (field) => (e) => {
     const { value } = e.target;
     let newClient = {
       ...clientData,
       [field]: value,
     };
-    if (isAdd === 'Add') {
+    if (isAdd === 'Add' || isAdd === 'Edit') {
       if (field === 'name') {
         newClient = {
           ...newClient,
-          nameErr: checkClientName(value),
+          nameErr: checkValidate(value, isAdd, client.name, 'name'),
         };
       } else if (field === 'url') {
         newClient = {
           ...newClient,
-          urlErr: checkClientUrl(value),
+          urlErr: checkValidate(value, isAdd, client.url, 'url'),
         };
       } else if (field === 'code') {
         newClient = {
           ...newClient,
-          codeErr: checkClientCode(value),
+          _id: newClient.code,
+          codeErr: checkValidate(value, isAdd, client.code, 'code'),
         };
       }
     }
@@ -90,9 +83,9 @@ function ClientForm({
 
   const checkClientDuplicate = (clientData) => {
     if (isAdd === 'Add') {
-      return !checkClientName(clientData.name)
-      && !checkClientCode(clientData.code)
-      && !checkClientUrl(clientData.url);
+      return !checkValidate(clientData.name, isAdd, client.name, 'name')
+      && !checkValidate(clientData.code, isAdd, client.code, 'code')
+      && !checkValidate(clientData.url, isAdd, client.url, 'url');
     }
     return true;
   };
