@@ -65,12 +65,14 @@ export const updateClient = (updatedData) => (dispatch, getState) => {
   });
 
   const { id } = getState().clientsData.client;
-  console.log('### DEBUG: ', updatedData); // fixme
   return clientService.update(id, updatedData)
     .then((data) => {
       dispatch({
         type: types.CLIENT_UPDATE_SUCCESS,
-        payload: { data },
+        payload: {
+          data,
+          id,
+        },
       });
 
       return 'success';

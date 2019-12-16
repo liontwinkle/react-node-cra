@@ -63,17 +63,17 @@ export default (state = INITIAL_STATE, action) => {
         isUpdating: true,
       };
     case types.CLIENT_UPDATE_SUCCESS:
-      const clientIdx = _findIndex(clients, { id: action.payload.data.id });
+      const clientIdx = _findIndex(clients, { _id: action.payload.id });
       if (clientIdx > -1) {
-        clients.splice(clientIdx, 1, action.payload.data);
+        clients.splice(clientIdx, 1, action.payload.data[0]);
       } else {
-        clients.push(action.payload.data);
+        clients.push(action.payload.data[0]);
       }
       return {
         ...state,
         isUpdating: false,
         clients: clients.slice(0),
-        client: action.payload.data,
+        client: action.payload.data[0],
       };
     case types.CLIENT_UPDATE_FAIL:
       return {

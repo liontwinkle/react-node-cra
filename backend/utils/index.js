@@ -6,6 +6,7 @@ const fs = require('fs');
 const base64ToImage = require('base64-to-image');
 
 const AppearCollection = require('../modules/appear/appear.model');
+const ProductsField = require('../modules/products-fields/products-fields.model');
 
 function checkObject(data) {
   return (typeof data === 'object') && !Array.isArray(data) && (data !== null);
@@ -434,7 +435,7 @@ function setNewKey(propertyFields, newKey, originalKey) {
   });
   return newPropertyFields;
 }
-function savePropertiesUpdates(updates) {
+function savePropertiesUpdates(collection, updates) {
   return (entity) => {
     if (updates) {
       const originData = JSON.parse(JSON.stringify(entity));
@@ -450,6 +451,13 @@ function savePropertiesUpdates(updates) {
       if (updates.propertyFields) {
         removeImageUploaded(originData.propertyFields, updates.propertyFields);
         data = uploadImageProperties(updates, entity.clientId, entity.type);
+      }
+
+      if (updates.clientId) {
+        return collection.updateMany({
+          clientId: entity.clientId
+        }, { clientId: updates.clientId })
+          .then(() => (_.assign(entity, data)));
       }
       _.assign(entity, data);
     }
@@ -655,16 +663,22 @@ function saveUpdates(collection, updates, id) {
     if (updates) {
       const updateCode = (entity.code !== updates.code);
       if (updateCode) {
-        const collection = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
-        collection.forEach((item) => {
-          if (db.collection(`${entity.code}_${item}`)) {
-            db.collection(`${entity.code}_${item}`).rename(`${updates.code}_${item}`);
-          }
-        });
+        return ProductsField.updateMany({ clientId: entity.code }, { clientId: updates.code })
+          .then(() => {
+            const newCollectName = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
+            newCollectName.forEach((item) => {
+              if (db.collection(`${entity.code}_${item}`)) {
+                db.collection(`${entity.code}_${item}`).rename(`${updates.code}_${item}`);
+              }
+            });
+            _.assign(entity, updates);
+            return collection.deleteMany({ _id: id })
+              .then(() => collection.insertMany(entity));
+          });
       }
       _.assign(entity, updates);
-      return collection.insertMany(entity)
-        .then(() => collection.remove({ _id: id }));
+      return collection.remove({ _id: id })
+        .then(() => collection.insertMany(entity));
     }
   };
 }

@@ -47,7 +47,8 @@ function ClientForm({
     urlErr: false,
   });
 
-  const checkValidate = (value, type, originValue, field) => {
+  const checkValidate = (value, type, field) => {
+    const originValue = client ? client[field] : '';
     const index = (type === 'isAdd')
       ? clients.findIndex((clientItem) => (clientItem[field] === value))
       : clients.findIndex((clientItem) => (clientItem[field] === value && clientItem[field] !== originValue));
@@ -63,18 +64,18 @@ function ClientForm({
       if (field === 'name') {
         newClient = {
           ...newClient,
-          nameErr: checkValidate(value, isAdd, client.name, 'name'),
+          nameErr: checkValidate(value, isAdd, 'name'),
         };
       } else if (field === 'url') {
         newClient = {
           ...newClient,
-          urlErr: checkValidate(value, isAdd, client.url, 'url'),
+          urlErr: checkValidate(value, isAdd, 'url'),
         };
       } else if (field === 'code') {
         newClient = {
           ...newClient,
           _id: newClient.code,
-          codeErr: checkValidate(value, isAdd, client.code, 'code'),
+          codeErr: checkValidate(value, isAdd, 'code'),
         };
       }
     }
@@ -83,9 +84,9 @@ function ClientForm({
 
   const checkClientDuplicate = (clientData) => {
     if (isAdd === 'Add') {
-      return !checkValidate(clientData.name, isAdd, client.name, 'name')
-      && !checkValidate(clientData.code, isAdd, client.code, 'code')
-      && !checkValidate(clientData.url, isAdd, client.url, 'url');
+      return !checkValidate(clientData.name, isAdd, 'name')
+      && !checkValidate(clientData.code, isAdd, 'code')
+      && !checkValidate(clientData.url, isAdd, 'url');
     }
     return true;
   };
@@ -97,9 +98,10 @@ function ClientForm({
     if (!isSaving && !disabled && checkClientDuplicate(clientData)) {
       const actionClient = (isAdd === 'Add') ? createClient : updateClient;
       const actionPropertyField = (isAdd === 'Add') ? createPropertyField : updatePropertyField;
-      actionClient(clientData)
+      const sendData = JSON.parse(JSON.stringify(clientData));
+      actionClient(sendData)
         .then(() => {
-          actionPropertyField(clientData)
+          actionPropertyField(sendData)
             .then(() => {
               confirmMessage(enqueueSnackbar,
                 `The client has been ${isAdd ? 'created' : 'updated'} successfully.`, 'success');

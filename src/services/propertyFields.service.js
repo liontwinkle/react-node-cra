@@ -15,7 +15,9 @@ const create = (propertyField) => httpService
   .catch((err) => Promise.reject(err.response));
 
 const update = (clientId, type, id, updatedData) => httpService
-  .put(`${basePropertyFiledsRoute}/${id}`, updatedData)
+  .put(`${basePropertyFiledsRoute}/${id}`, {
+    clientId: updatedData._id,
+  })
   .then(({ data }) => data)
   .catch((err) => Promise.reject(err.response));
 
