@@ -22,6 +22,8 @@ class CategoryView extends Component {
     willViewCategories.forEach((item) => {
       data.push({
         title: item.name,
+        _id: item._id,
+        subParentId: item.parent_id,
         childs: categories.filter((categoryItem) => (categoryItem.parent_id === item._id)),
       });
     });
@@ -36,6 +38,7 @@ class CategoryView extends Component {
       const filterData = [];
       subCategories.forEach((item) => {
         filterData.push({
+          _id: item._id,
           title: item.name,
           subParentId: item.parent_id,
           childs: categories.filter((categoryItem) => (categoryItem.parent_id === item._id)),
@@ -60,7 +63,13 @@ class CategoryView extends Component {
       <div className="category-view_container">
         {
           filterData.map((item) => (
-            <CategoryItem key={item.title} subParentId={item.subParentId} title={item.title} childs={item.childs} />
+            <CategoryItem
+              key={item._id}
+              subParentId={item.subParentId}
+              title={item.title}
+              headId={item._id}
+              childs={item.childs}
+            />
           ))
         }
       </div>
