@@ -21,9 +21,27 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   subPanel: {
+    border: 'none',
+    boxShadow: 'none',
     '& > .MuiExpansionPanelSummary-root': {
       borderBottom: '1px solid #ddd',
     },
+  },
+  subAttribute: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& > .MuiExpansionPanelDetails-root': {
+      padding: '8px 24px 8px',
+    },
+    '& > p': {
+      cursor: 'pointer',
+      '&:hover': {
+        color: '#ddd',
+      },
+    },
+  },
+  active: {
+    color: 'blue',
   },
 }));
 
@@ -58,28 +76,28 @@ function CustomAccordion() {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Expansion Panel 2</Typography>
+              <Typography>Size</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                sit amet blandit leo lobortis eget.
-              </Typography>
+            <ExpansionPanelDetails className={classes.subAttribute}>
+              <Typography className={classes.active}>1x</Typography>
+              <Typography>2x</Typography>
+              <Typography>3x</Typography>
+              <Typography>4x</Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel>
+          <ExpansionPanel className={classes.subPanel}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Expansion Panel 3</Typography>
+              <Typography>Color</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                sit amet blandit leo lobortis eget.
-              </Typography>
+            <ExpansionPanelDetails className={classes.subAttribute}>
+              <Typography>Black</Typography>
+              <Typography>White</Typography>
+              <Typography>Blue</Typography>
+              <Typography>Green</Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </ExpansionPanelDetails>
