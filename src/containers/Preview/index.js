@@ -78,10 +78,10 @@ class Preview extends Component {
                 <CategoryView subCategories={subCategories} />
                 {
                   lastChildNode && subCategories.length === 0 && (
-                    <>
+                    <div className="preview_main__body">
                       <LeftNavigation />
                       <ProductBody />
-                    </>
+                    </div>
                   )
                 }
               </div>

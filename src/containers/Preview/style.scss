@@ -22,4 +22,10 @@
       }
     }
   }
+  .preview_main {
+    &__body {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }

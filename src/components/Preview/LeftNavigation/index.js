@@ -8,6 +8,7 @@ import { getPreFilterData } from 'utils';
 import _union from 'lodash/union';
 import { fetchProducts } from 'redux/actions/products';
 import Loader from 'components/Loader';
+import CustomAccordion from './CustomAccordion';
 
 import './style.scss';
 
@@ -82,9 +83,14 @@ class LeftNavigation extends Component {
           fetchingFlag ? (
             <Loader size="small" color="dark" />
           ) : (
-            <div className="left-navigation-container__header">
-              <h1>{title}</h1>
-              <label>{`${products.length} items`}</label>
+            <div className="left-navigation-body">
+              <div className="left-navigation-body__header">
+                <h1>{title}</h1>
+                <label>{`${products.length} items`}</label>
+              </div>
+              <div className="left-navigation-body__body">
+                <CustomAccordion />
+              </div>
             </div>
           )
         }

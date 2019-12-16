@@ -1,14 +1,19 @@
 .left-navigation-container {
+  width: 30%;
   padding: 0 20px;
-  &__header {
+  .left-navigation-body {
     display: flex;
-    align-items: flex-end;
-    h1 {
-      margin: 0;
-    }
-    label {
-      margin: 0 0 0 10px;
-      padding: 0;
+    flex-direction: column;
+    &__header {
+      display: flex;
+      align-items: flex-end;
+      h1 {
+        margin: 0;
+      }
+      label {
+        margin: 0 0 0 10px;
+        padding: 0;
+      }
     }
   }
 }
