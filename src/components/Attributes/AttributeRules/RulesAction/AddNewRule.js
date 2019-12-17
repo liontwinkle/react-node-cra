@@ -10,11 +10,12 @@ import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
 import { confirmMessage, useStyles } from 'utils';
-import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
+import { addNewRuleHistory, filterProducts, getUniqueValues } from 'utils/ruleManagement';
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
-import CustomModalDialog from '../../../elements/CustomModalDialog';
+import CustomModalDialog from 'components/elements/CustomModalDialog';
+import RulesAvailableValues from '../../../shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,
@@ -134,38 +135,65 @@ function AddNewRule({
     }
   };
 
-  return (
-    <CustomModalDialog
-      handleClose={handleClose}
-      open={open}
-      title="Add Rule"
-    >
-      <AddNewRuleBody
-        handleSelectChange={handleSelectChange}
-        ruleData={ruleData}
-        previewNumber={previewValue}
-        handleChange={handleChange}
-        valueDetails={valueDetails}
-        category={attribute}
-      />
+  const [showAvailableValues, setShowAvailableValues] = useState(false);
+  const [availableValues, setAvailableValues] = useState([]);
 
-      <DialogActions className={classes.dialogAction}>
-        <button
-          className="mg-button secondary"
-          disabled={isUpdating}
-          onClick={handleClose}
-        >
+  const getAvailableData = () => {
+    const validData = getUniqueValues(products, ruleData.key.key);
+    setAvailableValues(validData);
+    setShowAvailableValues(true);
+  };
+
+  const handleAvailableClose = () => {
+    setShowAvailableValues(!showAvailableValues);
+  };
+
+  return (
+    <>
+      <CustomModalDialog
+        handleClose={handleClose}
+        open={open}
+        title="Add Rule"
+      >
+        <AddNewRuleBody
+          handleSelectChange={handleSelectChange}
+          ruleData={ruleData}
+          previewNumber={previewValue}
+          handleChange={handleChange}
+          valueDetails={valueDetails}
+          category={attribute}
+          getAvailableData={getAvailableData}
+        />
+
+        <DialogActions className={classes.dialogAction}>
+          <button
+            className="mg-button secondary"
+            disabled={isUpdating}
+            onClick={handleClose}
+          >
           Cancel
-        </button>
-        <button
-          className="mg-button primary"
-          disabled={isUpdating}
-          onClick={handleSubmit}
-        >
+          </button>
+          <button
+            className="mg-button primary"
+            disabled={isUpdating}
+            onClick={handleSubmit}
+          >
           Save
-        </button>
-      </DialogActions>
-    </CustomModalDialog>
+          </button>
+        </DialogActions>
+      </CustomModalDialog>
+      {
+        showAvailableValues
+        && (
+          <RulesAvailableValues
+            handleClose={handleAvailableClose}
+            open={showAvailableValues}
+            tableData={availableValues}
+            showKey={ruleData.key.label}
+          />
+        )
+      }
+    </>
   );
 }
 
