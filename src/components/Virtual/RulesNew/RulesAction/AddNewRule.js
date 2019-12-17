@@ -15,6 +15,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 import CustomModalDialog from 'components/elements/CustomModalDialog';
+import RulesAvailableValues from '../../../shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,
@@ -183,13 +184,10 @@ function AddNewRule({
       {
         showAvailableValues
           && (
-            <CustomModalDialog
+            <RulesAvailableValues
               handleClose={handleAvailableClose}
               open={showAvailableValues}
-              title="Show Unique Values"
-            >
-              <span>Modal</span>
-            </CustomModalDialog>
+            />
           )
 
       }
