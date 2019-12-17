@@ -6,9 +6,12 @@ import {
   basis, match, refer, scope, ruleType,
 } from 'utils/constants';
 
+import './style.scss';
+
 const AddNewRuleBody = ({
   valueDetails, ruleData, previewNumber,
   handleSelectChange, handleChange, category,
+  getAvailableData,
 }) => (
   <>
     <CustomSelect
@@ -35,6 +38,11 @@ const AddNewRuleBody = ({
       items={valueDetails}
       onChange={handleSelectChange('key')}
     />
+    {ruleData.key && (
+      <span className="rule-preview-value">
+        <label onClick={getAvailableData}>Click here to view available Values.</label>
+      </span>
+    )}
     <CustomSelect
       className="mb-3"
       label="Match"
@@ -88,6 +96,7 @@ AddNewRuleBody.propTypes = {
   valueDetails: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
+  getAvailableData: PropTypes.func.isRequired,
 };
 
 export default AddNewRuleBody;

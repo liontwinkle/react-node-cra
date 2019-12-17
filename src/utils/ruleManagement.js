@@ -126,3 +126,9 @@ export const unionRules = (ruleA, ruleB) => {
   });
   return _union(unionSet, ruleSmallSet);
 };
+
+const distinct = (value, index, self) => self.indexOf(value) === index;
+export const getUniqueValues = (products, key) => {
+  const availableData = products.map((productItem) => (productItem[key]));
+  return availableData.filter(distinct);
+};

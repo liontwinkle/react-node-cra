@@ -101,14 +101,21 @@ const getSubTree = (list, parentId, type, originNode, newPid) => {
 };
 
 const getRulesKey = (keys) => {
-  const ruleKeys = [
-    {
-      label: 'All',
-      key: '*',
-    },
-  ];
+  // const ruleKeys = [
+  //   {
+  //     label: 'All',
+  //     key: '*',
+  //   },
+  // ];
+  // keys.forEach((keyItem, key) => {
+  //   ruleKeys[key + 1] = {
+  //     label: keyItem,
+  //     key: keyItem,
+  //   };
+  // });
+  const ruleKeys = [];
   keys.forEach((keyItem, key) => {
-    ruleKeys[key + 1] = {
+    ruleKeys[key] = {
       label: keyItem,
       key: keyItem,
     };
