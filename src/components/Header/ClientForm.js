@@ -101,7 +101,7 @@ function ClientForm({
       const sendData = JSON.parse(JSON.stringify(clientData));
       actionClient(sendData)
         .then(() => {
-          actionPropertyField(sendData)
+          actionPropertyField({ clientId: sendData.code })
             .then(() => {
               confirmMessage(enqueueSnackbar,
                 `The client has been ${isAdd ? 'created' : 'updated'} successfully.`, 'success');

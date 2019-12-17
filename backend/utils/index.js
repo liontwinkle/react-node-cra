@@ -668,7 +668,7 @@ function saveUpdates(collection, updates, id) {
             const newCollectName = ['attributes', 'histories', 'natives', 'products', 'virtuals', 'appears'];
             newCollectName.forEach((item) => {
               if (db.collection(`${entity.code}_${item}`)) {
-                db.collection(`${entity.code}_${item}`).rename(`${updates.code}_${item}`);
+                db.collection(`${entity.code}_${item}`).rename(`${updates.code.toLowerCase()}_${item}`);
               }
             });
             _.assign(entity, updates);

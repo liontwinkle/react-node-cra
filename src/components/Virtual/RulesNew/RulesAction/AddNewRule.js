@@ -15,7 +15,7 @@ import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 import CustomModalDialog from 'components/elements/CustomModalDialog';
-import RulesAvailableValues from '../../../shared/Rules/RulesAvailableValues';
+import RulesAvailableValues from 'components/shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,

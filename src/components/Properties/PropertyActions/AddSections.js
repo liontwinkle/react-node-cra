@@ -38,10 +38,8 @@ function AddSections({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { sections } = propertyField;
-
       if (isExist(sections, sectionsData.key) === 0) {
         sections.push(sectionsData);
-
         if (!isUpdating) {
           updatePropertyField({ sections })
             .then(() => {

@@ -14,8 +14,9 @@ import { addNewRuleHistory, filterProducts, getUniqueValues } from 'utils/ruleMa
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
+
 import CustomModalDialog from 'components/elements/CustomModalDialog';
-import RulesAvailableValues from '../../../shared/Rules/RulesAvailableValues';
+import RulesAvailableValues from 'components/shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,

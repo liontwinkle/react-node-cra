@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CustomInput, CustomSelect } from 'components/elements';
+import { CustomInput, CustomMultiSelect, CustomSelect } from 'components/elements';
 import {
   basis, match, refer, scope, ruleType,
 } from 'utils/constants';
@@ -51,13 +51,26 @@ const AddNewRuleBody = ({
       items={match}
       onChange={handleSelectChange('type')}
     />
-    <CustomInput
-      className="mb-3"
-      label="Criteria"
-      inline
-      value={ruleData.criteria}
-      onChange={handleChange}
-    />
+    {
+      ruleData.ruleType.key === 'normal' ? (
+        <CustomInput
+          className="mb-3"
+          label="Criteria"
+          inline
+          value={ruleData.criteria}
+          onChange={handleChange}
+        />
+      ) : (
+        <CustomMultiSelect
+          className="mb-3 multi-select"
+          label="Criteria"
+          inline
+          value=""
+          items={[]}
+          onChange={() => {}}
+        />
+      )
+    }
     <CustomSelect
       className="mb-3"
       label="Scope"

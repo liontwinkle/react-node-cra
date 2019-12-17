@@ -14,6 +14,15 @@ const customStyles = {
     padding: 20,
     display: 'block !important',
   }),
+  input: (styles) => ({
+    ...styles,
+    fontSize: '14px',
+  }),
+  placeholder: (styles) => ({
+    ...styles,
+    fontSize: '14px',
+    fontWeight: 'normal',
+  }),
 };
 
 function CustomMultiSelect({
