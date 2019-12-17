@@ -24,6 +24,7 @@ function AddNewRule({
   updateCategory,
   createHistory,
   valueDetails,
+  propertyField,
   category,
   rules,
   products,
@@ -159,6 +160,10 @@ function AddNewRule({
           ruleData={ruleData}
           category={category}
           previewNumber={previewValue}
+          propertyFields={propertyField.propertyFields.map((item) => ({
+            label: item.label,
+            value: item.key,
+          }))}
           handleChange={handleChange}
           valueDetails={valueDetails}
           getAvailableData={getAvailableData}
@@ -202,6 +207,7 @@ AddNewRule.propTypes = {
   rules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  propertyField: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
@@ -213,6 +219,7 @@ const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
   isUpdating: store.categoriesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

@@ -9,7 +9,7 @@ import {
 import './style.scss';
 
 const AddNewRuleBody = ({
-  valueDetails, ruleData, previewNumber,
+  valueDetails, ruleData, previewNumber, propertyFields,
   handleSelectChange, handleChange, category,
   getAvailableData,
 }) => (
@@ -66,7 +66,7 @@ const AddNewRuleBody = ({
           label="Criteria"
           inline
           value=""
-          items={[]}
+          items={propertyFields}
           onChange={() => {}}
         />
       )
@@ -107,6 +107,7 @@ AddNewRuleBody.propTypes = {
   ruleData: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  propertyFields: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
   getAvailableData: PropTypes.func.isRequired,
