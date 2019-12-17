@@ -144,7 +144,6 @@ function AddNewRule({
   };
 
   const handleAvailableClose = () => {
-    console.log(availableValues); // fixme
     setShowAvailableValues(!showAvailableValues);
   };
 
@@ -187,6 +186,8 @@ function AddNewRule({
             <RulesAvailableValues
               handleClose={handleAvailableClose}
               open={showAvailableValues}
+              tableData={availableValues}
+              showKey={ruleData.key.label}
             />
           )
 

@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import { Brand } from 'utils/constants';
 import './style.scss';
@@ -27,9 +28,18 @@ const CustomModalDialog = ({
       </div>
       <span className="modal-title">{title}</span>
     </DialogTitle>
-    <DialogContent className={className}>
-      {children}
-    </DialogContent>
+    <PerfectScrollbar>
+
+      <DialogContent
+        className={className}
+        style={{
+          minHeight: '200px',
+          minWidth: '400px',
+        }}
+      >
+        {children}
+      </DialogContent>
+    </PerfectScrollbar>
   </Dialog>
 );
 
