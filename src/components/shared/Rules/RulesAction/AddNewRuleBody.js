@@ -11,7 +11,7 @@ import './style.scss';
 const AddNewRuleBody = ({
   valueDetails, ruleData, previewNumber, propertyFields,
   handleSelectChange, handleChange, category,
-  getAvailableData,
+  getAvailableData, handleDefaultCriteriaChoose, defaultCriteria,
 }) => (
   <>
     <CustomSelect
@@ -65,9 +65,9 @@ const AddNewRuleBody = ({
           className="mb-3 multi-select"
           label="Criteria"
           inline
-          value=""
+          value={defaultCriteria}
           items={propertyFields}
-          onChange={() => {}}
+          onChange={handleDefaultCriteriaChoose}
         />
       )
     }
@@ -108,8 +108,10 @@ AddNewRuleBody.propTypes = {
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
   propertyFields: PropTypes.array.isRequired,
+  defaultCriteria: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
+  handleDefaultCriteriaChoose: PropTypes.func.isRequired,
   getAvailableData: PropTypes.func.isRequired,
 };
 

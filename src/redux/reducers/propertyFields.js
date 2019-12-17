@@ -1,5 +1,5 @@
+import { sortByOrder } from 'utils';
 import types from '../actionTypes';
-import { sortByOrder } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,

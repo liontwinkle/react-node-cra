@@ -148,6 +148,12 @@ function AddNewRule({
     setShowAvailableValues(!showAvailableValues);
   };
 
+  const [defaultCriteria, setDefaultCriteria] = useState([]);
+  const handleDefaultCriteriaChoose = (value) => {
+    console.log(value);
+    setDefaultCriteria(value);
+  };
+
   return (
     <>
       <CustomModalDialog
@@ -167,6 +173,8 @@ function AddNewRule({
           handleChange={handleChange}
           valueDetails={valueDetails}
           getAvailableData={getAvailableData}
+          handleDefaultCriteriaChoose={handleDefaultCriteriaChoose}
+          defaultCriteria={defaultCriteria}
         />
         <DialogActions className={classes.dialogAction}>
           <button
