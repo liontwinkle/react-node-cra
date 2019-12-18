@@ -132,3 +132,17 @@ export const getUniqueValues = (products, key) => {
   const availableData = products.map((productItem) => (productItem[key]));
   return availableData.filter(distinct);
 };
+
+export const convertRuleasTypes = (rules, keyAvail) => {
+  const newRules = JSON.parse(JSON.stringify(rules));
+  rules.forEach((item, index) => {
+    if (keyAvail) {
+      if (item.ruleType !== 'normal') {
+        newRules[index].criteria = item.criteria.slice(1);
+      }
+    } else if (item.ruleType.key !== 'normal') {
+      newRules[index].criteria = item.criteria.slice(1);
+    }
+  });
+  return newRules;
+};

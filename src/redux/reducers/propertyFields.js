@@ -23,7 +23,6 @@ export default (state = INITIAL_STATE, action) => {
         isFetchingList: true,
       };
     case types.PROPERTY_FIELD_GET_SUCCESS:
-      console.log(action.payload.propertyField); // fixme
       let data = action.payload.propertyField[0];
       if (data !== undefined) {
         data.sections = data.sections.sort(sortByOrder);

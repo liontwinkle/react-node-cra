@@ -159,7 +159,6 @@ function AddNewRule({
   };
 
   const handleDefaultCriteriaChoose = (value) => {
-    console.log(value); // fixme
     updateCriteria(value);
     setDefaultCriteria(value);
   };
