@@ -113,7 +113,6 @@ class NewRules extends Component {
     } else {
       filterProduct = products;
     }
-
     setPrefilterData(filterProduct);
     this.setState({
       fetchingFlag: false,

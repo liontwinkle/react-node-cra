@@ -23,7 +23,7 @@ const RulesAvailableValues = ({
       <tbody>
         {
           tableData.map((item, index) => (
-            <tr>
+            <tr key={item}>
               <td>{parseInt(index + 1, 10)}</td>
               <td>{item}</td>
             </tr>

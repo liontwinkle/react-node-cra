@@ -41,6 +41,7 @@ function AddNewRule({
     criteria: '',
     ruleType: ruleType[0],
   });
+  const [defaultCriteria, setDefaultCriteria] = useState(propertyField.propertyFields[0]);
 
   const [previewValue, setPreviewValue] = useState(0);
 
@@ -83,7 +84,7 @@ function AddNewRule({
     && ruleData.refer
     && ruleData.scope
     && ruleData.type
-    && (ruleData.criteria !== '')
+    && (ruleData.criteria !== '' || ruleData.criteria.length > 0)
   );
 
   const saveRules = (updatedState) => {
@@ -112,6 +113,12 @@ function AddNewRule({
     }
   };
 
+  const updateCriteria = (data) => {
+    const sendData = JSON.parse(JSON.stringify(ruleData));
+    sendData.criteria = `:${data.key}`;
+    setRuleData(sendData);
+  };
+
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
@@ -120,11 +127,14 @@ function AddNewRule({
         && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
+        const criteria = (typeof ruleData.criteria === 'string')
+          ? ruleData.criteria
+          : ruleData.toString();
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
+            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
         refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
-        criteria: ${ruleData.criteria})`;
+        criteria: ${criteria})`;
         addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
@@ -148,9 +158,9 @@ function AddNewRule({
     setShowAvailableValues(!showAvailableValues);
   };
 
-  const [defaultCriteria, setDefaultCriteria] = useState([]);
   const handleDefaultCriteriaChoose = (value) => {
-    console.log(value);
+    console.log(value); // fixme
+    updateCriteria(value);
     setDefaultCriteria(value);
   };
 
@@ -166,10 +176,7 @@ function AddNewRule({
           ruleData={ruleData}
           category={category}
           previewNumber={previewValue}
-          propertyFields={propertyField.propertyFields.map((item) => ({
-            label: item.label,
-            value: item.key,
-          }))}
+          propertyFields={propertyField.propertyFields}
           handleChange={handleChange}
           valueDetails={valueDetails}
           getAvailableData={getAvailableData}

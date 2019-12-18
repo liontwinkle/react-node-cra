@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CustomInput, CustomMultiSelect, CustomSelect } from 'components/elements';
+import { CustomInput, CustomSelect } from 'components/elements';
 import {
   basis, match, refer, scope, ruleType,
 } from 'utils/constants';
@@ -61,10 +61,10 @@ const AddNewRuleBody = ({
           onChange={handleChange}
         />
       ) : (
-        <CustomMultiSelect
-          className="mb-3 multi-select"
+        <CustomSelect
+          className="mb-3"
           label="Criteria"
-          inline
+          placeholder="Select property field for Criteria"
           value={defaultCriteria}
           items={propertyFields}
           onChange={handleDefaultCriteriaChoose}
@@ -108,7 +108,7 @@ AddNewRuleBody.propTypes = {
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
   propertyFields: PropTypes.array.isRequired,
-  defaultCriteria: PropTypes.array.isRequired,
+  defaultCriteria: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
   handleDefaultCriteriaChoose: PropTypes.func.isRequired,
