@@ -38,7 +38,7 @@ class Properties extends Component {
     const { propertyField, objectItem } = this.props;
     if (propertyField) {
       const nonSection = (propertyField.propertyFields)
-        ? propertyField.propertyFields.filter((item) => item.section === null) : [];
+        ? propertyField.propertyFields.filter((item) => (!item.section)) : [];
       this.setState({
         noSectionPropertyFields: nonSection || [],
         properties: objectItem.properties || {},
@@ -58,7 +58,7 @@ class Properties extends Component {
     }
     if (propertyField.propertyFields
       && !isEqual(propertyField.propertyFields, prevProps.propertyField.propertyFields)) {
-      const nonSection = propertyField.propertyFields.filter((item) => item.section === null);
+      const nonSection = propertyField.propertyFields.filter((item) => (!item.section));
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
         noSectionPropertyFields: nonSection,
@@ -66,7 +66,7 @@ class Properties extends Component {
       });
     }
 
-    if (propertyField.sections && !isEqual(propertyField.sections, prevProps.propertyField.sections)) {
+    if (propertyField.sections && propertyField.sections !== prevProps.propertyField.sections) {
       this.updateState({
         sections: propertyField.sections.sort(sortByOrder) || [],
       });

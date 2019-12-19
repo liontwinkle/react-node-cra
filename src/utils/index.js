@@ -101,14 +101,21 @@ const getSubTree = (list, parentId, type, originNode, newPid) => {
 };
 
 const getRulesKey = (keys) => {
-  const ruleKeys = [
-    {
-      label: 'All',
-      key: '*',
-    },
-  ];
+  // const ruleKeys = [
+  //   {
+  //     label: 'All',
+  //     key: '*',
+  //   },
+  // ];
+  // keys.forEach((keyItem, key) => {
+  //   ruleKeys[key + 1] = {
+  //     label: keyItem,
+  //     key: keyItem,
+  //   };
+  // });
+  const ruleKeys = [];
   keys.forEach((keyItem, key) => {
-    ruleKeys[key + 1] = {
+    ruleKeys[key] = {
       label: keyItem,
       key: keyItem,
     };
@@ -202,6 +209,19 @@ export const convertPropertyData = (data) => {
   source.properties = result;
   return source;
 };
+
+export const convertString = (data) => {
+  let defaultValue = '';
+  if (data === 'false') {
+    defaultValue = false;
+  } else if (data === 'true') {
+    defaultValue = true;
+  } else {
+    defaultValue = data;
+  }
+  return defaultValue;
+};
+
 export const changePropertiesData = (data) => {
   const recvData = JSON.parse(JSON.stringify(data));
   recvData.forEach((recvItem, index) => {

@@ -16,9 +16,16 @@
         margin: 0;
         padding: 0;
         li {
+          cursor: pointer;
           margin-right: 30px;
         }
       }
+    }
+  }
+  .preview_main {
+    &__body {
+      display: flex;
+      justify-content: space-between;
     }
   }
 }

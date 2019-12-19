@@ -6,9 +6,12 @@ import {
   basis, match, refer, scope, ruleType,
 } from 'utils/constants';
 
+import './style.scss';
+
 const AddNewRuleBody = ({
-  valueDetails, ruleData, previewNumber,
+  valueDetails, ruleData, previewNumber, propertyFields,
   handleSelectChange, handleChange, category,
+  getAvailableData, handleDefaultCriteriaChoose, defaultCriteria,
 }) => (
   <>
     <CustomSelect
@@ -35,6 +38,11 @@ const AddNewRuleBody = ({
       items={valueDetails}
       onChange={handleSelectChange('key')}
     />
+    {ruleData.key && (
+      <span className="rule-preview-value">
+        <label onClick={getAvailableData}>Click here to view available Values.</label>
+      </span>
+    )}
     <CustomSelect
       className="mb-3"
       label="Match"
@@ -43,13 +51,26 @@ const AddNewRuleBody = ({
       items={match}
       onChange={handleSelectChange('type')}
     />
-    <CustomInput
-      className="mb-3"
-      label="Criteria"
-      inline
-      value={ruleData.criteria}
-      onChange={handleChange}
-    />
+    {
+      ruleData.ruleType.key === 'normal' ? (
+        <CustomInput
+          className="mb-3"
+          label="Criteria"
+          inline
+          value={ruleData.criteria}
+          onChange={handleChange}
+        />
+      ) : (
+        <CustomSelect
+          className="mb-3"
+          label="Criteria"
+          placeholder="Select property field for Criteria"
+          value={defaultCriteria}
+          items={propertyFields}
+          onChange={handleDefaultCriteriaChoose}
+        />
+      )
+    }
     <CustomSelect
       className="mb-3"
       label="Scope"
@@ -86,8 +107,12 @@ AddNewRuleBody.propTypes = {
   ruleData: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  propertyFields: PropTypes.array.isRequired,
+  defaultCriteria: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSelectChange: PropTypes.func.isRequired,
+  handleDefaultCriteriaChoose: PropTypes.func.isRequired,
+  getAvailableData: PropTypes.func.isRequired,
 };
 
 export default AddNewRuleBody;

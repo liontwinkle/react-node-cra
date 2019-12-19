@@ -3,22 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
 
 import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
 import { updateAttribute } from 'redux/actions/attribute';
 import { createHistory } from 'redux/actions/history';
 
 import { confirmMessage, useStyles } from 'utils';
-import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
+import { addNewRuleHistory, filterProducts, getUniqueValues } from 'utils/ruleManagement';
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
+
+import CustomModalDialog from 'components/elements/CustomModalDialog';
+import RulesAvailableValues from 'components/shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,
@@ -138,17 +136,26 @@ function AddNewRule({
     }
   };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Add Rule
-      </DialogTitle>
+  const [showAvailableValues, setShowAvailableValues] = useState(false);
+  const [availableValues, setAvailableValues] = useState([]);
 
-      <DialogContent className={classes.dialogContent}>
+  const getAvailableData = () => {
+    const validData = getUniqueValues(products, ruleData.key.key);
+    setAvailableValues(validData);
+    setShowAvailableValues(true);
+  };
+
+  const handleAvailableClose = () => {
+    setShowAvailableValues(!showAvailableValues);
+  };
+
+  return (
+    <>
+      <CustomModalDialog
+        handleClose={handleClose}
+        open={open}
+        title="Add Rule"
+      >
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
@@ -156,26 +163,38 @@ function AddNewRule({
           handleChange={handleChange}
           valueDetails={valueDetails}
           category={attribute}
+          getAvailableData={getAvailableData}
         />
-      </DialogContent>
 
-      <DialogActions className={classes.dialogAction}>
-        <button
-          className="mg-button secondary"
-          disabled={isUpdating}
-          onClick={handleClose}
-        >
+        <DialogActions className={classes.dialogAction}>
+          <button
+            className="mg-button secondary"
+            disabled={isUpdating}
+            onClick={handleClose}
+          >
           Cancel
-        </button>
-        <button
-          className="mg-button primary"
-          disabled={isUpdating}
-          onClick={handleSubmit}
-        >
+          </button>
+          <button
+            className="mg-button primary"
+            disabled={isUpdating}
+            onClick={handleSubmit}
+          >
           Save
-        </button>
-      </DialogActions>
-    </Dialog>
+          </button>
+        </DialogActions>
+      </CustomModalDialog>
+      {
+        showAvailableValues
+        && (
+          <RulesAvailableValues
+            handleClose={handleAvailableClose}
+            open={showAvailableValues}
+            tableData={availableValues}
+            showKey={ruleData.key.label}
+          />
+        )
+      }
+    </>
   );
 }
 

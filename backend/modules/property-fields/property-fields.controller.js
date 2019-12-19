@@ -49,7 +49,7 @@ exports.update = (req, res) => {
   PropertyFields
     .findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
-    .then(savePropertiesUpdates(req.body))
+    .then(savePropertiesUpdates(PropertyFields, req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

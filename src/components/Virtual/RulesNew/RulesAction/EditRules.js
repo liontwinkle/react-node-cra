@@ -35,7 +35,7 @@ function EditRules({
       { title: 'Refer', field: 'refer', lookup: getObjectFromArray(refer) },
       { title: 'Key', field: 'key', lookup: getObjectFromArray(valueDetails) },
       { title: 'Type', field: 'type', lookup: getObjectFromArray(match) },
-      { title: 'Criteria', field: 'criteria' },
+      { title: 'Criteria', field: 'criteria', editable: 'never' },
       { title: 'Scope', field: 'scope', lookup: getObjectFromArray(scope) },
       { title: 'Rule Type', field: 'ruleType', lookup: getObjectFromArray(rule) },
     ],

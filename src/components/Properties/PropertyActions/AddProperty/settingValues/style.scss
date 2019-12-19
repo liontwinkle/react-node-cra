@@ -1,0 +1,76 @@
+.setting-value-container {
+  width: 50vw;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  .setting-value-header {
+    width: 100%;
+    border-bottom: 1px #ddd solid;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+
+    &__tabItem {
+      font-size: 12px;
+      color: #555;
+      width: 150px;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    &__tabItem.active {
+      color: blue;
+      font-weight: bold;
+      &:after{
+        content: '';
+        height: 2px;
+        width: 150px;
+        background-color: blue;
+        position: absolute;
+        top: 22px;
+        left: 0;
+      }
+    }
+  }
+  .setting-value-body {
+    margin-top: 20px;
+    width: 100%;
+    .basic-setting-body,
+    .setting-advance-body{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      &__elements {
+        width: 50%;
+        .mg-input-control {
+          .mg-input-wrapper {
+            margin-top: 10px;
+            border-radius: 5px;
+            input {
+              border-radius: 5px;
+            }
+          }
+        }
+        .mg-search-filter {
+          height: auto;
+        }
+      }
+      &__description {
+        width: 40%;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        span {
+          color: #555;
+        }
+      }
+    }
+    .setting-advance-body__description {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+  }
+}

@@ -69,7 +69,10 @@ export const updateClient = (updatedData) => (dispatch, getState) => {
     .then((data) => {
       dispatch({
         type: types.CLIENT_UPDATE_SUCCESS,
-        payload: { data },
+        payload: {
+          data,
+          id,
+        },
       });
 
       return 'success';

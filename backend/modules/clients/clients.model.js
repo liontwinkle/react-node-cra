@@ -4,6 +4,7 @@ const validators = require('mongoose-validators');
 const { Schema } = mongoose;
 
 const ClientsSchema = new Schema({
+  _id: { type: String, required: true },
   name: { type: String, required: true },
   code: { type: String, required: true },
   url: {
@@ -15,8 +16,5 @@ const ClientsSchema = new Schema({
   geography: String,
 }, { toJSON: { virtuals: true }, timestamps: true });
 
-ClientsSchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
 
 module.exports = mongoose.model('Clients', ClientsSchema);

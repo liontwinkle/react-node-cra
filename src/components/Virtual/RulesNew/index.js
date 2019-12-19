@@ -11,7 +11,9 @@ import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { setProductViewType } from 'redux/actions/clients';
 import { confirmMessage, getPreFilterData } from 'utils';
-import { setUnionRules, getRules, unionRules } from 'utils/ruleManagement';
+import {
+  setUnionRules, getRules, unionRules, convertRuleasTypes,
+} from 'utils/ruleManagement';
 import { productViewTypes } from 'utils/constants';
 import Loader from 'components/Loader/index';
 import { CustomToggle } from 'components/elements';
@@ -113,7 +115,6 @@ class NewRules extends Component {
     } else {
       filterProduct = products;
     }
-
     setPrefilterData(filterProduct);
     this.setState({
       fetchingFlag: false,
@@ -144,13 +145,20 @@ class NewRules extends Component {
     const parentRules = this.getParentRules(this.props.category.parent_id, defaultFlag);
     const recvNewRules = JSON.parse(JSON.stringify(category.rules)) || [];
     const displayRules = unionRules(recvNewRules, parentRules);
+
     const editAttributeRules = getRules(recvNewRules, this.props.valueDetails);
-    const recvAttributeRules = getRules(displayRules, this.props.valueDetails);
+    const recvAttributeRules = getRules(convertRuleasTypes(displayRules, true), this.props.valueDetails);
+
+    const universalRules = recvAttributeRules.newRules.filter((item) => (item.ruleType.key === 'universal'));
+    const otherRules = recvAttributeRules.newRules.filter((item) => (item.ruleType.key !== 'universal'));
+    const { newRules } = editAttributeRules;
+    const { editRules } = editAttributeRules;
+
     this.setState({
-      universalRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key === 'universal')),
-      otherRules: recvAttributeRules.newRules.filter((item) => (item.ruleType.key !== 'universal')),
-      newRules: editAttributeRules.newRules,
-      editRules: editAttributeRules.editRules,
+      universalRules,
+      otherRules,
+      newRules,
+      editRules,
     });
   };
 
@@ -163,6 +171,27 @@ class NewRules extends Component {
     } else {
       this.props.setProductViewType(productViewTypes[1]);
     }
+  };
+
+  getLabelCriteria = (rules) => {
+    const { properties, defaultProperties } = this.props.category;
+    const newRules = JSON.parse(JSON.stringify(rules));
+    rules.forEach((item, index) => {
+      let newCriteria = item.criteria;
+      if (item.ruleType.key !== 'normal') {
+        const property = properties[item.criteria];
+        const defaultProperty = defaultProperties.find((defaultItem) => (defaultItem.key === item.criteria));
+        if (property && property !== '') {
+          newCriteria = property;
+        } else if (defaultProperty && defaultProperty.default && defaultProperty.template !== '') {
+          newCriteria = defaultProperty.default || defaultProperty.template;
+        } else {
+          newCriteria = '';
+        }
+      }
+      newRules[index].criteria = newCriteria;
+    });
+    return newRules;
   };
 
   render() {
@@ -193,7 +222,7 @@ class NewRules extends Component {
                                     <label className="rule-section-header">
                                       Universal
                                     </label>
-                                    <RulesTable rules={universalRules} />
+                                    <RulesTable rules={this.getLabelCriteria(universalRules)} />
                                   </>
                                 )
                               }
@@ -204,7 +233,7 @@ class NewRules extends Component {
                                       <label className="rule-section-header">
                                         Normal / Default
                                       </label>
-                                      <RulesTable rules={otherRules} />
+                                      <RulesTable rules={this.getLabelCriteria(otherRules)} />
                                     </div>
                                   </>
                                 )

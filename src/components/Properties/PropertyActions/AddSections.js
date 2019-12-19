@@ -3,16 +3,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
 
-import { confirmMessage, isExist, useStyles } from 'utils';
+import { confirmMessage, isExist } from 'utils';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { CustomInput } from 'components/elements';
+import CustomModalDialog from 'components/elements/CustomModalDialog';
 
 function AddSections({
   open,
@@ -22,7 +17,6 @@ function AddSections({
   handleClose,
   updatePropertyField,
 }) {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const [sectionsData, setSectionsData] = useState({
@@ -44,10 +38,8 @@ function AddSections({
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       const { sections } = propertyField;
-
       if (isExist(sections, sectionsData.key) === 0) {
         sections.push(sectionsData);
-
         if (!isUpdating) {
           updatePropertyField({ sections })
             .then(() => {
@@ -67,16 +59,13 @@ function AddSections({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title="Add Section"
+      className="add-section-container"
     >
-      <DialogTitle id="form-dialog-title">
-        Add Sections
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
+      <>
         <CustomInput
           className="mb-3"
           label="Key"
@@ -100,9 +89,8 @@ function AddSections({
           value={sectionsData.order}
           onChange={handleChange('order')}
         />
-      </DialogContent>
-
-      <DialogActions className={classes.dialogAction}>
+      </>
+      <span className="add-section-action">
         <button
           className="mg-button secondary"
           disabled={isUpdating}
@@ -117,8 +105,8 @@ function AddSections({
         >
           Save
         </button>
-      </DialogActions>
-    </Dialog>
+      </span>
+    </CustomModalDialog>
   );
 }
 

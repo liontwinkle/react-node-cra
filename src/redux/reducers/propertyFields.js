@@ -1,5 +1,5 @@
+import { sortByOrder } from 'utils';
 import types from '../actionTypes';
-import { sortByOrder } from '../../utils';
 
 const INITIAL_STATE = {
   isFetchingList: false,
@@ -68,7 +68,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isUpdating: false,
-        propertyField: action.payload.data,
+        propertyField: JSON.parse(JSON.stringify(action.payload.data)),
       };
     case types.PROPERTY_FIELD_UPDATE_FAIL:
       return {

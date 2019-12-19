@@ -13,7 +13,9 @@ const PropertyFieldsSchema = new Schema({
   propertyFields: [{
     key: String,
     label: String,
-    default: String,
+    default: {
+      type: Schema.Types.Mixed,
+    },
     propertyType: String,
     section: String,
     template: String,
@@ -26,7 +28,7 @@ const PropertyFieldsSchema = new Schema({
       path: String,
     },
     order: Number,
-  }],
+  }]
 }, { toJSON: { virtuals: true }, timestamps: true });
 
 PropertyFieldsSchema.virtual('id').get(function () {

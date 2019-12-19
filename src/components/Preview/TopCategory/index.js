@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 
 import { getRootCategories } from 'utils';
 import Loader from 'components/Loader';
-import { setRootCategory } from 'redux/actions/preview';
+import { setRootCategory, setPreviewCategory, setPathUrl } from 'redux/actions/preview';
 
 import './style.scss';
 
@@ -28,7 +28,9 @@ class TopCategory extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { categories, setRootCategory } = this.props;
+    const {
+      categories, setRootCategory, rootCategories, setPreviewCategory, setPathUrl,
+    } = this.props;
     if (categories !== prevProps.categories) {
       this.updateState({
         fetchFlag: false,
@@ -39,6 +41,16 @@ class TopCategory extends Component {
         fetchFlag: true,
       });
     }
+    if (prevProps.rootCategories !== rootCategories && rootCategories.length > 0) {
+      setPreviewCategory(rootCategories[0]);
+      setPathUrl({
+        name: rootCategories[0].name,
+        id: rootCategories[0]._id,
+        subParentId: null,
+        parent_name: null,
+        parent_id: rootCategories[0].parent_id,
+      });
+    }
   }
 
   updateState = (data) => {
@@ -46,6 +58,17 @@ class TopCategory extends Component {
       ...prevState,
       ...data,
     }));
+  };
+
+  handleSelect = (item) => () => {
+    this.props.setPreviewCategory(item);
+    this.props.setPathUrl({
+      name: item.name,
+      id: item._id,
+      subParentId: null,
+      parent_name: null,
+      parent_id: item.parent_id,
+    });
   };
 
   render() {
@@ -65,7 +88,7 @@ class TopCategory extends Component {
                 <ul>
                   {
                     rootCategories.map((item) => (
-                      <li key={item._id}>{item.name}</li>
+                      <li key={item._id} onClick={this.handleSelect(item)}>{item.name}</li>
                     ))
                   }
                 </ul>
@@ -83,7 +106,9 @@ class TopCategory extends Component {
 TopCategory.propTypes = {
   categories: PropTypes.array.isRequired,
   rootCategories: PropTypes.array.isRequired,
+  setPathUrl: PropTypes.func.isRequired,
   setRootCategory: PropTypes.func.isRequired,
+  setPreviewCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({
@@ -93,6 +118,8 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   setRootCategory,
+  setPreviewCategory,
+  setPathUrl,
 }, dispatch);
 
 export default connect(

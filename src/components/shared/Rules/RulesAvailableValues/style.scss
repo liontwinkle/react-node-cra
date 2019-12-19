@@ -1,0 +1,15 @@
+.rule-available-list {
+  width: 100%;
+  thead {
+    background-color: #333;
+    th {
+      color: white;
+    }
+  }
+  tbody {
+    max-height: 800px;
+    tr {
+      text-align: center;
+    }
+  }
+}

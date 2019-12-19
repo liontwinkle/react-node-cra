@@ -10,7 +10,9 @@ import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
-function RulesTable({ rules, products, productViewType }) {
+function RulesTable({
+  rules, products, productViewType,
+}) {
   const { enqueueSnackbar } = useSnackbar();
   const [preViewState, setPreViewState] = useState(false);
   const [previewProducts, setProducts] = useState([]);

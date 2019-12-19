@@ -16,7 +16,7 @@ import { bindActionCreators } from 'redux';
 import { createHistory } from 'redux/actions/history';
 import AddSections from './AddSections';
 import EditSections from './EditSections';
-import AddPropertyFields from './AddPropertyFields';
+import AddProperty from './AddProperty';
 import EditPropertyFields from './EditPropertyFields';
 
 function PropertyActions({
@@ -178,15 +178,14 @@ function PropertyActions({
           onChangePageNum={onChangePageNum('section')}
         />
       )}
-
       {open.add && (
-        <AddPropertyFields
+        <AddProperty
           open={open.add}
           handleClose={handleToggle('add')}
           createHistory={createHistory}
           objectItem={objectItem}
           uploadImage={uploadImage}
-          defaultOrder={getMaxValueFromArray('order', fields) + 1}
+          defaultOrder={parseInt(getMaxValueFromArray('order', fields), 10) + 1}
         />
       )}
 

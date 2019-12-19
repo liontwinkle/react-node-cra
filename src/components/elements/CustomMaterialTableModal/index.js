@@ -3,8 +3,12 @@ import MaterialTable from 'material-table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { tableIcons } from 'utils/constants';
+import { Brand, tableIcons } from 'utils/constants';
 import PropTypes from 'prop-types';
+
+import CloseIcon from '@material-ui/icons/Close';
+
+import '../CustomModalDialog/style.scss';
 
 const CustomMaterialTableModal = ({
   open,
@@ -26,7 +30,11 @@ const CustomMaterialTableModal = ({
     aria-labelledby="form-dialog-title"
   >
     <DialogTitle id="form-dialog-title">
-      {title}
+      <div className="modal-title-bar">
+        <span className="modal-title-bar__brand">{Brand}</span>
+        <CloseIcon className="modal-title-bar__close" onClick={handleClose} />
+      </div>
+      <span className="modal-title">{title}</span>
     </DialogTitle>
 
     <DialogContent className={className}>
@@ -61,7 +69,7 @@ CustomMaterialTableModal.propTypes = {
   msg: PropTypes.string,
   className: PropTypes.string,
   options: PropTypes.object.isRequired,
-  tableData: PropTypes.array.isRequired,
+  tableData: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleAdd: PropTypes.func.isRequired,
   handleUpdate: PropTypes.func.isRequired,

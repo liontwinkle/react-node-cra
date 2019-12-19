@@ -4,14 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tooltip } from 'react-tippy';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogActions, DialogContentText, makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from 'components/elements';
 
@@ -22,6 +15,7 @@ import { setProducts } from 'redux/actions/products';
 import { updateNodeData } from 'redux/actions/attribute';
 import { updateTreeData } from 'redux/actions/categories';
 import { confirmMessage } from 'utils';
+import CustomModalDialog from '../elements/CustomModalDialog';
 
 const useStyles = makeStyles((theme) => ({
   dialogAction: {
@@ -90,19 +84,14 @@ function ClientRemove({
         </IconButton>
       </Tooltip>
 
-      <Dialog
+      <CustomModalDialog
+        title="Delete Client"
+        handleClose={handleOpen}
         open={open}
-        onClose={handleOpen}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete Client</DialogTitle>
-
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this client?
-          </DialogContentText>
-        </DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete this client?
+        </DialogContentText>
 
         <DialogActions className={classes.dialogAction}>
           <button
@@ -120,7 +109,7 @@ function ClientRemove({
             Remove
           </button>
         </DialogActions>
-      </Dialog>
+      </CustomModalDialog>
     </>
   );
 }

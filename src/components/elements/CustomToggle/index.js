@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
-import { inlineDefaultWidth } from 'utils/constants';
 
 import './style.scss';
 
@@ -73,7 +72,7 @@ CustomToggle.defaultProps = {
   labelOff: '',
   side: 'left',
   value: false,
-  inlineWidth: inlineDefaultWidth,
+  inlineWidth: '220px',
 };
 
 export default CustomToggle;

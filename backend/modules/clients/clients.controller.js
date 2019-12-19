@@ -42,14 +42,10 @@ exports.show = (req, res) => {
 
 // Updates an existing Client in the DB
 exports.update = (req, res) => {
-  if (req.body._id) {
-    delete req.body._id;
-  }
-
   Clients
     .findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(Clients, req.body))
+    .then(saveUpdates(Clients, req.body, req.params.id))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };

@@ -6,8 +6,13 @@ import { useSnackbar } from 'notistack';
 
 import { CustomConfirmDlg } from 'components/elements';
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
-import { isExist, confirmMessage } from 'utils';
-import { checkPathValidate, checkTemplate, getTableData } from 'utils/propertyManagement';
+import {
+  isExist, confirmMessage, convertString,
+} from 'utils';
+import {
+  checkPathValidate, checkTemplate, getTableData, validateProperties, checkUsageOldKey, changeKey,
+} from 'utils/propertyManagement';
+
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 import { updateDefaultOnCategory } from 'redux/actions/categories';
@@ -30,9 +35,10 @@ function EditPropertyFields({
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [changeType, setChangeType] = useState(false);
-  const [updatedProperties, setUpdatedProperties] = useState(null);
   const [updatedNewData, setUpdatedNewData] = useState(null);
   const [updatedOldData, setUpdatedOldData] = useState(null);
+  const [updatedProperties, setUpdatedProperties] = useState(null);
+
   const sections = {};
   const updateDefaultFunc = (objectItem.parent_id !== undefined)
     ? updateDefaultOnCategory : updateDefaultOnAttriute;
@@ -47,50 +53,54 @@ function EditPropertyFields({
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
-      const errList = checkTemplate(propertyFields, newData);
-      const validatePath = checkPathValidate(propertyFields, newData);
-      if (isExist(propertyFields, newData.key) === 0 && errList === '' && validatePath) {
-        propertyFields.push({
-          key: newData.key,
-          label: newData.label,
-          default: newData.default,
-          template: newData.template,
-          propertyType: newData.propertyType,
-          section: newData.section,
-          order: newData.order,
-          items: newData.items,
-          image: (newData.image) ? newData.image : {},
-        });
-        if (!isUpdating) {
-          updatePropertyField({ propertyFields })
-            .then(() => {
-              updateDefaultFunc(propertyFields)
-                .then(() => {
-                  addNewRuleHistory(createHistory, objectItem, parentId,
-                    `Create Property(${newData.propertyType})`,
-                    `Create Property(${newData.propertyType}) by ${objectItem.name}`,
-                    'virtual');
-                  confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-                })
-                .catch(() => {
-                  confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value .', 'error');
-                });
-            })
-            .catch(() => {
-              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-            });
-        }
-      } else {
-        let errMsg = '';
-        if (errList !== '') {
-          errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
-        } else if (validatePath) {
-          errMsg = 'URL Path is not valid.';
+      const validateResult = validateProperties(newData, propertyFields, enqueueSnackbar);
+      const data = validateResult.updatedData;
+      if (validateResult.validation) {
+        const errList = checkTemplate(propertyFields, data);
+        const validatePath = checkPathValidate(propertyFields, data);
+        if (isExist(propertyFields, data.key) === 0 && errList === '' && validatePath) {
+          propertyFields.push({
+            key: data.key,
+            label: data.label,
+            default: convertString(data.default),
+            template: data.template,
+            propertyType: data.propertyType,
+            section: data.section,
+            order: data.order,
+            items: data.items,
+            image: (data.image) ? data.image : {},
+          });
+          if (!isUpdating) {
+            updatePropertyField({ propertyFields })
+              .then(() => {
+                updateDefaultFunc(propertyFields)
+                  .then(() => {
+                    addNewRuleHistory(createHistory, objectItem, parentId,
+                      `Create Property(${data.propertyType})`,
+                      `Create Property(${data.propertyType}) by ${objectItem.name}`,
+                      'virtual');
+                    confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+                  })
+                  .catch(() => {
+                    confirmMessage(enqueueSnackbar, 'Error in updating the Properties default value.', 'error');
+                  });
+              })
+              .catch(() => {
+                confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+              });
+          }
         } else {
-          errMsg = `Error: Another property is using the key (${newData.key}) you specified.
+          let errMsg = '';
+          if (errList !== '') {
+            errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;
+          } else if (validatePath) {
+            errMsg = 'URL Path is not valid.';
+          } else {
+            errMsg = `Error: Another property is using the key (${data.key}) you specified.
          Please update property key name.`;
+          }
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
         }
-        confirmMessage(enqueueSnackbar, errMsg, 'error');
       }
     }, 600);
   });
@@ -129,9 +139,6 @@ function EditPropertyFields({
     const oldKey = updatedOldData.key;
     updatedProperties.forEach((item, index) => {
       const reg = new RegExp(`\\$${oldKey}`);
-      if (item.default) {
-        changedProperties[index].default = item.default.replace(reg, '');
-      }
       if (item.template) {
         changedProperties[index].template = item.template.replace(reg, '');
       }
@@ -140,75 +147,40 @@ function EditPropertyFields({
     setChangeType(false);
   };
 
-  const checkUsageOldKey = (newData, oldData) => {
-    let result = false;
-    if (newData.propertyType !== oldData.propertyType) {
-      if (
-        newData.propertyType !== 'string'
-        && newData.propertyType !== 'text'
-        && newData.propertyType !== 'monaco'
-        && newData.propertyType !== 'richtext'
-        && newData.propertyType !== 'urlpath'
-      ) {
-        propertyFields.forEach((item) => {
-          const reg = new RegExp(`\\$${oldData.key}`);
-          if (reg.test(item.default) || reg.test(item.template)) {
-            result = true;
-          }
-        });
-      }
-    }
-    return result;
-  };
-
-  const changeKey = (newData, oldData, fields) => {
-    const oldKey = oldData.key;
-    const newKey = newData.key;
-    const changedFields = JSON.parse(JSON.stringify(fields));
-    if (oldKey !== newKey) {
-      fields.forEach((item, index) => {
-        const reg = new RegExp(`\\$${oldKey}`);
-        if (item.default) {
-          changedFields[index].default = item.default.replace(reg, `$${newKey}`);
-        }
-        if (item.template) {
-          changedFields[index].template = item.template.replace(reg, `$${newKey}`);
-        }
-      });
-    }
-    return changedFields;
-  };
   const handleUpdate = (newData, oldData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
       const data = JSON.parse(JSON.stringify(oldData));
       const sendData = JSON.parse(JSON.stringify(propertyFields));
+      const validateResult = validateProperties(newData, propertyFields, enqueueSnackbar);
+      const validateFlag = validateResult.validation;
+      const updateData = validateResult.updatedData;
       const ruleKeyIndex = sendData.findIndex((rk) => rk._id === oldData._id);
-      if (ruleKeyIndex > -1) {
+      if (ruleKeyIndex > -1 && validateFlag) {
         sendData.splice(ruleKeyIndex, 1, {
-          key: newData.key,
-          label: newData.label,
-          default: newData.default,
-          template: newData.template,
-          propertyType: newData.propertyType,
-          section: newData.section,
-          order: newData.order,
-          items: newData.items,
-          image: (newData.image) ? newData.image : {},
-          _id: newData._id,
+          key: updateData.key,
+          label: updateData.label,
+          default: convertString(updateData.default),
+          template: updateData.template,
+          propertyType: updateData.propertyType,
+          section: updateData.section,
+          order: updateData.order,
+          items: updateData.items,
+          image: (updateData.image) ? updateData.image : {},
+          _id: updateData._id,
         });
         delete data.tableData;
-        if (JSON.stringify(newData) !== JSON.stringify(data)) {
-          const errList = checkTemplate(sendData, newData);
-          if (!isUpdating && isExist(sendData, newData.key) === 1 && errList === '') {
+        if (JSON.stringify(updateData) !== JSON.stringify(data)) {
+          const errList = checkTemplate(sendData, updateData);
+          if (!isUpdating && isExist(sendData, updateData.key) === 1 && errList === '') {
             setUpdatedProperties(sendData);
-            setUpdatedNewData(newData);
+            setUpdatedNewData(updateData);
             setUpdatedOldData(oldData);
-            if (checkUsageOldKey(newData, oldData)) {
+            if (checkUsageOldKey(updateData, oldData, propertyFields)) {
               setChangeType(true);
             } else {
               setChangeType(false);
-              updateAction(changeKey(newData, oldData, sendData), newData);
+              updateAction(changeKey(updateData, oldData, sendData), updateData);
             }
           } else {
             const errMsg = `Templating Error: You are try to use unexpected keys. ${errList}`;

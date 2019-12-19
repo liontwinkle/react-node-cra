@@ -3,6 +3,7 @@ import types from '../actionTypes';
 const INITIAL_STATE = {
   selectedCategory: {},
   rootCategories: [],
+  urlPath: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -16,6 +17,45 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         rootCategories: action.payload,
+      };
+    case types.SET_URL_PATH_NAV:
+      let urlPathData = JSON.parse(JSON.stringify(state.urlPath));
+      const recvData = action.payload;
+
+      const findIndex = urlPathData.findIndex((item) => (item.id === action.payload.subParentId));
+      if (findIndex < 0) {
+        urlPathData = [];
+      } else {
+        urlPathData.splice(findIndex + 1, urlPathData.length - findIndex);
+      }
+      if (recvData.subParentId && recvData.parent_id) {
+        urlPathData.push({
+          name: recvData.parent_name,
+          id: recvData.parent_id,
+          parent_id: recvData.subParentId,
+        });
+      }
+      urlPathData.push({
+        name: recvData.name,
+        id: recvData.id,
+        parent_id: recvData.parent_id,
+      });
+      return {
+        ...state,
+        urlPath: urlPathData,
+      };
+    case types.MOVE_POINTED_PATH:
+      const currentId = action.payload;
+      let currentPathData = JSON.parse(JSON.stringify(state.urlPath));
+      const index = currentPathData.findIndex((item) => (item.id === currentId));
+      if (index < 0) {
+        currentPathData = [];
+      } else {
+        currentPathData.splice(index + 1, currentPathData.length - index);
+      }
+      return {
+        ...state,
+        urlPath: currentPathData,
       };
     default:
       return state;

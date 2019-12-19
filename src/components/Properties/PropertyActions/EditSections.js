@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 import CustomMaterialTableModal from 'components/elements/CustomMaterialTableModal';
 
 import { confirmMessage, isExist } from 'utils';
+import { validateSection } from 'utils/propertyManagement';
 import { updatePropertyField } from 'redux/actions/propertyFields';
 
 function EditSections({
@@ -23,6 +24,7 @@ function EditSections({
   const { enqueueSnackbar } = useSnackbar();
 
   const { sections } = propertyField;
+
   const tableData = {
     columns: [
       { title: 'Key', field: 'key' },
@@ -31,32 +33,38 @@ function EditSections({
     ],
     data: sections,
   };
+
   if (order.index >= 0) {
     tableData.columns[order.index].defaultSort = order.direction;
   }
+
   const handleAdd = (newData) => new Promise((resolve) => {
     setTimeout(() => {
       resolve();
 
-      if (isExist(sections, newData.key) === 0) {
-        sections.push({
-          key: newData.key,
-          label: newData.label,
-          order: newData.order,
-        });
-        if (!isUpdating) {
-          updatePropertyField({ sections })
-            .then(() => {
-              confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
-            })
-            .catch(() => {
-              confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
-            });
-        }
-      } else {
-        const errMsg = `Error: Another section is using the key (${newData.key}) you specified.
+      const validateResult = validateSection(newData, sections, enqueueSnackbar);
+      const data = validateResult.updateData;
+      if (validateResult.validation) {
+        if (isExist(sections, newData.key) === 0) {
+          sections.push({
+            key: data.key,
+            label: data.label,
+            order: data.order,
+          });
+          if (!isUpdating) {
+            updatePropertyField({ sections })
+              .then(() => {
+                confirmMessage(enqueueSnackbar, 'Property field has been added successfully.', 'success');
+              })
+              .catch(() => {
+                confirmMessage(enqueueSnackbar, 'Error in adding property field.', 'error');
+              });
+          }
+        } else {
+          const errMsg = `Error: Another section is using the key (${data.key}) you specified.
          Please update section key name.`;
-        confirmMessage(enqueueSnackbar, errMsg, 'error');
+          confirmMessage(enqueueSnackbar, errMsg, 'error');
+        }
       }
     }, 600);
   });
@@ -66,12 +74,15 @@ function EditSections({
       resolve();
 
       const ruleKeyIndex = sections.findIndex((rk) => rk._id === oldData._id);
-      if (ruleKeyIndex > -1) {
+      const validateResult = validateSection(newData, sections, enqueueSnackbar);
+      const data = validateResult.updateData;
+
+      if (ruleKeyIndex > -1 && validateResult.validation) {
         sections.splice(ruleKeyIndex, 1, {
-          key: newData.key,
-          label: newData.label,
-          order: newData.order,
-          _id: newData._id,
+          key: data.key,
+          label: data.label,
+          order: data.order,
+          _id: data._id,
         });
         if (!isUpdating) {
           updatePropertyField({ sections })
@@ -117,7 +128,7 @@ function EditSections({
   return (
     <CustomMaterialTableModal
       open={open}
-      tilte="Edit Sections"
+      title="Edit Sections"
       tableData={tableData}
       className="mg-edit-properties-content"
       handleClose={handleClose}

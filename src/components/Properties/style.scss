@@ -116,3 +116,23 @@
     }
   }
 }
+
+.add-section-container {
+  .add-section-action {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+
+.add-selectItem-action {
+  display: flex;
+  width: 100%;
+  padding: 0 10px;
+  justify-content: space-between;
+}

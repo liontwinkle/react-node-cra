@@ -18,6 +18,14 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 import { getObjectFromArray } from 'utils';
 import $ from 'jquery';
+import stringIcon from './icons/string.png';
+import toggleIcon from './icons/boolean.png';
+import imageIcon from './icons/image.png';
+import richTextIcon from './icons/richtext.png';
+import textIcon from './icons/text.png';
+import selectIcon from './icons/select.png';
+import arrayIcon from './icons/array.png';
+import urlIcon from './icons/url.png';
 
 const autoFocusFirst = () => {
   setTimeout(() => {
@@ -25,6 +33,7 @@ const autoFocusFirst = () => {
   });
 };
 
+export const Brand = 'MarketReach GUI';
 export const clientType = [
   { key: 'virtual', label: 'Virtual' },
   { key: 'native', label: 'Native' },
@@ -65,15 +74,33 @@ export const ruleNumberItems = [
 ];
 
 export const propertyFieldTypes = [
-  { key: 'string', label: 'String' },
-  { key: 'select', label: 'Select' },
-  { key: 'toggle', label: 'Toggle' },
-  { key: 'text', label: 'Text' },
-  { key: 'array', label: 'Array' },
-  { key: 'monaco', label: 'Monaco Edit' },
-  { key: 'richtext', label: 'Rich Text Edit' },
-  { key: 'urlpath', label: 'URL Path' },
-  { key: 'image', label: 'Upload Image' },
+  {
+    key: 'string', label: 'String', src: stringIcon, description: 'Titles, names and paragraph',
+  },
+  {
+    key: 'select', label: 'Select', src: selectIcon, description: 'List of choices',
+  },
+  {
+    key: 'toggle', label: 'Toggle', src: toggleIcon, description: 'True or false',
+  },
+  {
+    key: 'text', label: 'Text', src: textIcon, description: 'Details and descriptions',
+  },
+  {
+    key: 'array', label: 'Array', src: arrayIcon, description: 'Array types as String such as["1","2"]',
+  },
+  {
+    key: 'monaco', label: 'Monaco Edit', src: richTextIcon, description: 'Text of Code styled',
+  },
+  {
+    key: 'richtext', label: 'Rich Text Edit', src: richTextIcon, description: 'Rich Text',
+  },
+  {
+    key: 'urlpath', label: 'URL Path', src: urlIcon, description: 'The string path with rule',
+  },
+  {
+    key: 'image', label: 'Upload Image', src: imageIcon, description: 'Image upload section',
+  },
 ];
 
 export const propertyTypes = getObjectFromArray(propertyFieldTypes);
@@ -173,3 +200,18 @@ export const detailTableColumns = [
   { title: 'Created Date', field: 'createdAt' },
   { title: 'Updated Date', field: 'updatedAt' },
 ];
+
+export const hints = {
+  default: 'This is default value of the properties based on String type.',
+  template: 'This value is only for String type value. Once type $, you can choose the properties.',
+  image: 'You can upload your media. The name is empty string default.',
+  section: 'You can select Section that includes new property.',
+  basic: 'The value of Key field should be unique.',
+};
+
+export const warning = {
+  keyIssue: 'The key value could not set as Empty or Null.',
+  labelIssue: 'The label could not set as Empty or Null.',
+  propertyTypeIssue: 'The Type should be selected.',
+  orderInfo: (order) => (`The Order is set as ${order}`),
+};

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { useSnackbar } from 'notistack';
-import {
-  Dialog, DialogActions, DialogContent, DialogTitle,
-} from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
 
 import { confirmMessage, useStyles } from 'utils';
 import { CustomImageUpload } from 'components/elements';
@@ -14,6 +12,7 @@ import { bindActionCreators } from 'redux';
 import { makeUpdatedData, setDefault } from 'utils/propertyManagement';
 import { addNewRuleHistory } from 'utils/ruleManagement';
 import { createHistory } from 'redux/actions/history';
+import CustomModalDialog from '../../elements/CustomModalDialog';
 
 function EditImageSection({
   open,
@@ -103,26 +102,19 @@ function EditImageSection({
   };
 
   return (
-    <Dialog
+    <CustomModalDialog
+      handleClose={handleClose}
       open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      title="Edit Image File"
     >
-      <DialogTitle id="form-dialog-title">
-       Edit Image File
-      </DialogTitle>
-
-      <DialogContent className={classes.dialogContent}>
-        <CustomImageUpload
-          className="mb-3"
-          label="Image Upload"
-          value={imageFile}
-          name={imageName}
-          onFileNameChange={handleChangeFileName}
-          onChange={handleChangeImage}
-        />
-      </DialogContent>
-
+      <CustomImageUpload
+        className="mb-3"
+        label="Image Upload"
+        value={imageFile}
+        name={imageName}
+        onFileNameChange={handleChangeFileName}
+        onChange={handleChangeImage}
+      />
       <DialogActions className={classes.dialogAction}>
         <button
           className="mg-button secondary"
@@ -139,7 +131,7 @@ function EditImageSection({
           Save
         </button>
       </DialogActions>
-    </Dialog>
+    </CustomModalDialog>
   );
 }
 

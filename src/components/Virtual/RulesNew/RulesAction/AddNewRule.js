@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
-import {
-  Dialog, DialogActions, DialogContent, DialogTitle,
-} from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
 
 import {
   basis, refer, match, scope, ruleType,
 } from 'utils/constants';
 
 import { confirmMessage, useStyles } from 'utils';
-import { addNewRuleHistory, filterProducts } from 'utils/ruleManagement';
+import { addNewRuleHistory, filterProducts, getUniqueValues } from 'utils/ruleManagement';
 import { updateCategory } from 'redux/actions/categories';
 import { createHistory } from 'redux/actions/history';
 import AddNewRuleBody from 'components/shared/Rules/RulesAction/AddNewRuleBody';
+import CustomModalDialog from 'components/elements/CustomModalDialog';
+import RulesAvailableValues from 'components/shared/Rules/RulesAvailableValues';
 
 function AddNewRule({
   open,
@@ -24,6 +24,7 @@ function AddNewRule({
   updateCategory,
   createHistory,
   valueDetails,
+  propertyField,
   category,
   rules,
   products,
@@ -40,6 +41,7 @@ function AddNewRule({
     criteria: '',
     ruleType: ruleType[0],
   });
+  const [defaultCriteria, setDefaultCriteria] = useState(propertyField.propertyFields[0]);
 
   const [previewValue, setPreviewValue] = useState(0);
 
@@ -82,7 +84,7 @@ function AddNewRule({
     && ruleData.refer
     && ruleData.scope
     && ruleData.type
-    && (ruleData.criteria !== '')
+    && (ruleData.criteria !== '' || ruleData.criteria.length > 0)
   );
 
   const saveRules = (updatedState) => {
@@ -111,6 +113,12 @@ function AddNewRule({
     }
   };
 
+  const updateCriteria = (data) => {
+    const sendData = JSON.parse(JSON.stringify(ruleData));
+    sendData.criteria = `:${data.key}`;
+    setRuleData(sendData);
+  };
+
   const handleSubmit = () => {
     if (!isUpdating && !disabled) {
       if (!rules.find((item) => (
@@ -119,11 +127,14 @@ function AddNewRule({
         && item.criteria === ruleData.criteria
       ))) {
         rules.push(ruleData);
+        const criteria = (typeof ruleData.criteria === 'string')
+          ? ruleData.criteria
+          : ruleData.toString();
         const msgCurrent = `Create New Rule(basis: ${ruleData.basis.key},refer: ${ruleData.refer.key},
-            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${ruleData.criteria})`;
+            detail: ${ruleData.key.key},type: ${ruleData.type.key},criteria: ${criteria})`;
         const msgParent = `Add New Rule in Child ${category.name} (basis: ${ruleData.basis.key},
         refer: ${ruleData.refer.key},detail: ${ruleData.key.key},type: ${ruleData.type.key},
-        criteria: ${ruleData.criteria})`;
+        criteria: ${criteria})`;
         addNewRuleHistory(createHistory, category, category.parent_id, msgCurrent, msgParent, 'virtual');
         saveRules(rules);
       } else {
@@ -134,44 +145,73 @@ function AddNewRule({
     }
   };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        Add Rule
-      </DialogTitle>
+  const [showAvailableValues, setShowAvailableValues] = useState(false);
+  const [availableValues, setAvailableValues] = useState([]);
 
-      <DialogContent className={classes.dialogContent}>
+  const getAvailableData = () => {
+    const validData = getUniqueValues(products, ruleData.key.key);
+    setAvailableValues(validData);
+    setShowAvailableValues(true);
+  };
+
+  const handleAvailableClose = () => {
+    setShowAvailableValues(!showAvailableValues);
+  };
+
+  const handleDefaultCriteriaChoose = (value) => {
+    updateCriteria(value);
+    setDefaultCriteria(value);
+  };
+
+  return (
+    <>
+      <CustomModalDialog
+        handleClose={handleClose}
+        open={open}
+        title="Add Rule"
+      >
         <AddNewRuleBody
           handleSelectChange={handleSelectChange}
           ruleData={ruleData}
           category={category}
           previewNumber={previewValue}
+          propertyFields={propertyField.propertyFields}
           handleChange={handleChange}
           valueDetails={valueDetails}
+          getAvailableData={getAvailableData}
+          handleDefaultCriteriaChoose={handleDefaultCriteriaChoose}
+          defaultCriteria={defaultCriteria}
         />
-      </DialogContent>
+        <DialogActions className={classes.dialogAction}>
+          <button
+            className="mg-button secondary"
+            disabled={isUpdating}
+            onClick={handleClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="mg-button primary"
+            disabled={isUpdating}
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
+        </DialogActions>
+      </CustomModalDialog>
+      {
+        showAvailableValues
+          && (
+            <RulesAvailableValues
+              handleClose={handleAvailableClose}
+              open={showAvailableValues}
+              tableData={availableValues}
+              showKey={ruleData.key.label}
+            />
+          )
 
-      <DialogActions className={classes.dialogAction}>
-        <button
-          className="mg-button secondary"
-          disabled={isUpdating}
-          onClick={handleClose}
-        >
-          Cancel
-        </button>
-        <button
-          className="mg-button primary"
-          disabled={isUpdating}
-          onClick={handleSubmit}
-        >
-          Save
-        </button>
-      </DialogActions>
-    </Dialog>
+      }
+    </>
   );
 }
 
@@ -181,6 +221,7 @@ AddNewRule.propTypes = {
   rules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   valueDetails: PropTypes.array.isRequired,
+  propertyField: PropTypes.object.isRequired,
   category: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   createHistory: PropTypes.func.isRequired,
@@ -192,6 +233,7 @@ const mapStateToProps = (store) => ({
   category: store.categoriesData.category,
   isUpdating: store.categoriesData.isUpdating,
   valueDetails: store.productsData.data.valueDetails,
+  propertyField: store.propertyFieldsData.propertyField,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
