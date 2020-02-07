@@ -36,7 +36,7 @@
     "react-dom": "^16.12.0",
     "react-filepond": "^7.0.1",
     "react-froala-wysiwyg": "^3.0.6",
-    "react-lazyload": "^2.6.2",
+    "react-lazyload": "^2.6.5",
     "react-monaco-editor": "^0.31.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-redux": "^7.1.0",
