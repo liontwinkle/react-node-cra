@@ -1091,10 +1091,10 @@
   resolved "https://registry.yarnpkg.com/@handsontable/jstat/-/jstat-1.0.0.tgz#0cb40e6ee44e2e0188bf047c43551920ae220270"
   integrity sha512-5XxZ9xIk6iSjrc1p5N/yI2dofBXp0IzZVgrkETDC196SxoJCRNOeKgM9fTHMhoxa02wuaZPLp6stojlppNxP/A==
 
-"@handsontable/react@^3.0.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-3.1.0.tgz#35c4d5890f8b26936f2c08c3c624fe68d4d10ab7"
-  integrity sha512-l17UrwDRaUyY/lv6A3mUhaeMC6C1pF3DVN6FZOhuyT0jS8HZI0Zb2yVakrXdFCc7AAred4846qsTCfg7HXq4Kg==
+"@handsontable/react@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-3.1.2.tgz#f6b300d51f976bfb129306883d19eb502879e906"
+  integrity sha512-eDhb03nOGjxtknvpKS+iPIfCzM7fhy1A/B15zWhzthAuhVqhNeRUStCjdArU/Q4XEPsYv4QEtNujIe8BFxJeeg==
 
 "@hapi/address@2.x.x":
   version "2.1.2"
