@@ -118,7 +118,7 @@ function handleCreate(req) {
       collectionAppear.find({ categoryId: createData.parent_id })
         .then((result) => {
           if (result.length > 0) {
-            const attributs = result.map((item) => ({
+            const attributs = result.map(item => ({
               attributeId: item.attributeId,
               categoryId: newId,
             }));
@@ -139,7 +139,7 @@ function setAppearForCategory(data, client) {
       collectionAppear.find({ categoryId: item.parent_id })
         .then((result) => {
           if (result.length > 0) {
-            const attributs = result.map((attributeItem) => ({
+            const attributs = result.map(attributeItem => ({
               attributeId: attributeItem._id,
               categoryId: item._id,
             }));
@@ -194,10 +194,10 @@ function handleAttributeFetch(req, res) {
         .then((result) => {
           entity.forEach((entityItem, index) => {
             if (result.length > 0) {
-              attributeData[index].appear = result.filter(((appearItem) =>
+              attributeData[index].appear = result.filter((appearItem =>
                 (appearItem.attributeId === entityItem._id)
               ))
-                .map((item) => (item.categoryId));
+                .map(item => (item.categoryId));
             } else {
               attributeData[index].appear = [];
             }
@@ -286,7 +286,7 @@ function deleteFile(url) {
 function removeImageUploaded(originData, newData) {
   let diffData = null;
   for (let index = 0; index < originData.length; index++) {
-    if (newData.findIndex((newItem) => (newItem.key === originData[index].key)) < 0) {
+    if (newData.findIndex(newItem => (newItem.key === originData[index].key)) < 0) {
       diffData = originData[index];
       break;
     }
@@ -407,12 +407,12 @@ function getDiffSection(oldsection, newSection) {
   let newKey = '';
   let originalKey = '';
   oldsection.forEach((oldItem) => {
-    const duplicateId = newSection.findIndex((newItem) => (
+    const duplicateId = newSection.findIndex(newItem => (
       (oldItem.key === newItem.key) && (oldItem.label === newItem.label)
     ));
     if (duplicateId < 0) {
       originalKey = oldItem.key;
-      const updatedSection = newSection.find((newItem) => (newItem._id === oldItem._id));
+      const updatedSection = newSection.find(newItem => (newItem._id === oldItem._id));
       if (updatedSection) {
         newKey = updatedSection.key;
       } else {
@@ -466,7 +466,7 @@ function savePropertiesUpdates(collection, updates) {
 }
 
 function getAppear(appearArray) {
-  return appearArray.map((item) => item.categoryId);
+  return appearArray.map(item => item.categoryId);
 }
 
 function checkOffForAttribute(oldData, req, collection, entity) {
