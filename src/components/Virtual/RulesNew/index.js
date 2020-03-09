@@ -10,6 +10,7 @@ import _union from 'lodash/union';
 import { fetchProducts } from 'redux/actions/products';
 import { setPrefilterData } from 'redux/actions/categories';
 import { setProductViewType } from 'redux/actions/clients';
+import { fetchProductsByRules } from 'redux/actions/rules';
 import { confirmMessage, getPreFilterData } from 'utils';
 import {
   setUnionRules, getRules, unionRules, convertRuleasTypes,
@@ -40,6 +41,15 @@ class NewRules extends Component {
       fetchingFlag: true,
       productsFlag: this.props.productViewType.key === 'grid',
     });
+    console.log('### Categories: ', this.props.category); // fixme
+    // this.props.fetchProductsByRules(this.props.category._id)
+    //   .then(() => {
+    //     this.setState({
+    //       fetchingFlag: false,
+    //       productsFlag: this.props.productViewType.key === 'grid',
+    //     });
+    //   });
+
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
       this.getProducts();
     } else {
@@ -53,6 +63,7 @@ class NewRules extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('### Categories: ', this.props.category); // fixme
     if (this.props.category && (this.props.category !== prevProps.category)) {
       if (this.props.products.length === 0 && !this.props.isFetchingList) {
         this.getProducts();
@@ -111,7 +122,8 @@ class NewRules extends Component {
       const srcAttributeRules = setUnionRules(filterAttribute);
 
       const attributeRules = getRules(srcAttributeRules, this.props.valueDetails);
-      filterProduct = getPreFilterData(attributeRules.editRules, this.props.products);
+      console.log('#### DEBUG RULES: ', attributeRules.editRules); // fixme
+      filterProduct = getPreFilterData(attributeRules.editRules, products);
     } else {
       filterProduct = products;
     }
@@ -222,7 +234,10 @@ class NewRules extends Component {
                                     <label className="rule-section-header">
                                       Universal
                                     </label>
-                                    <RulesTable rules={this.getLabelCriteria(universalRules)} />
+                                    <RulesTable
+                                      rules={this.getLabelCriteria(universalRules)}
+                                      fetchProductsByRules={this.props.fetchProductsByRules}
+                                    />
                                   </>
                                 )
                               }
@@ -233,7 +248,10 @@ class NewRules extends Component {
                                       <label className="rule-section-header">
                                         Normal / Default
                                       </label>
-                                      <RulesTable rules={this.getLabelCriteria(otherRules)} />
+                                      <RulesTable
+                                        rules={this.getLabelCriteria(otherRules)}
+                                        fetchProductsByRules={this.props.fetchProductsByRules}
+                                      />
                                     </div>
                                   </>
                                 )
@@ -293,6 +311,7 @@ NewRules.propTypes = {
   setPrefilterData: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
   setProductViewType: PropTypes.func.isRequired,
+  fetchProductsByRules: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (store) => ({
@@ -309,6 +328,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchProducts,
   setPrefilterData,
   setProductViewType,
+  fetchProductsByRules,
 }, dispatch);
 
 export default connect(

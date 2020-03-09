@@ -8,6 +8,6 @@ const controller = require('./rules.controller');
 router.get('/client/:clientId/types/:type/entity/:entityId/rule/:ruleIndex', controller.getProductsByRule);
 
 // Request to get the products with rules
-router.get('/client/:clientId/types/:type/entity/:entityId/rules', controller.getProductsByRules);
+router.post('/client/:clientId/types/:type/entity/rules', controller.getProductsByRules);
 
 module.exports = router;

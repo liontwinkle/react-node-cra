@@ -698,7 +698,6 @@ function removeEntity(res) {
   };
 }
 
-
 module.exports = {
   handleError,
   respondWith,

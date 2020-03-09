@@ -124,21 +124,13 @@ exports.getProductsByRule = async (req, res) => {
     const entity = await entityCollection.findOne({ _id: entityId });
     if (entity !== null) {
       const selectedRule = entity.rules[ruleIndex];
-      const ruleRegex = [];
       if (selectedRule) {
-        ruleRegex.push({
+        const querySingleString = {
           [selectedRule.key]: RuleEngine[selectedRule.type](selectedRule.criteria)
-        });
-        if (ruleRegex.length > 0) {
-          const querySingleString = {
-            $and: [
-              ...ruleRegex
-            ]
-          };
-          productCollection.find(querySingleString)
-            .execAsync()
-            .then(responseWithResult(res, 200));
-        }
+        };
+        productCollection.find(querySingleString)
+          .execAsync()
+          .then(responseWithResult(res, 200));
       }
     } else {
       responseEmptyBody(res);
@@ -150,40 +142,36 @@ exports.getProductsByRule = async (req, res) => {
 };
 
 exports.getProductsByRules = async (req, res) => {
-  const { entityId } = req.params;
+  const rules = req.body;
+  console.log('### DEBUG RULES: ', rules); // fixme
   const productCollection = ProductsModel(`${req.params.clientId}_products`);
-  const entityCollection = selectCollections(req);
-
-  if (entityCollection) {
-    const entity = await entityCollection.findOne({ _id: entityId });
-    if (entity !== null) {
-      const ruleRegex = [];
-      entity.rules.forEach((item) => {
-        if (item.basis === 'exclude') {
-          ruleRegex.push({
-            [item.key]: { $not: RuleEngine[item.type](item.criteria) }
-          });
-        } else {
-          ruleRegex.push({
-            [item.key]: RuleEngine[item.type](item.criteria)
-          });
-        }
-      });
-      if (ruleRegex.length > 0) {
-        const queryString = {
-          $or: [
-            ...ruleRegex
-          ]
-        };
-        productCollection.find(queryString)
-          .execAsync()
-          .then(responseWithResult(res, 200));
+  if (rules.length > 0) {
+    const ruleRegex = [];
+    rules.forEach((item) => {
+      if (item.basis.key === 'exclude') {
+        ruleRegex.push({
+          [item.key.key]: { $not: RuleEngine[item.type.key](item.criteria) }
+        });
       } else {
-        responseEmptyBody(res);
+        ruleRegex.push({
+          [item.key.key]: RuleEngine[item.type.key](item.criteria)
+        });
       }
+    });
+    if (ruleRegex.length > 0) {
+      const queryString = ruleRegex.length > 1 ? {
+        $or: [
+          ...ruleRegex
+        ]
+      } : ruleRegex[0];
+      productCollection.find(queryString)
+        .execAsync()
+        .then(responseWithResult(res, 200));
     } else {
-      res.status(500);
-      res.send('Current collection does not exist or Wrong information');
+      responseEmptyBody(res);
     }
+  } else {
+    res.status(500);
+    res.send('Current collection does not exist or Wrong information');
   }
 };

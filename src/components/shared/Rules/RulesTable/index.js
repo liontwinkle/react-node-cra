@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 
 import { filterProducts } from 'utils/ruleManagement';
+// import { asyncForEach } from 'utils/uploadManagement';
 import PreviewProducts from './PreviewProducts';
 import PreviewGrid from './PreviewGrid';
 
 import './style.scss';
 
 function RulesTable({
-  rules, products, productViewType,
+  rules, products, productViewType, fetchProductsByRules,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [preViewState, setPreViewState] = useState(false);
@@ -20,21 +21,34 @@ function RulesTable({
   const [rulesData, setRulesData] = useState([]);
 
   useEffect(() => {
+    // async function fetchData(rules) {
+    //   const data = [];
+    //   await asyncForEach(rules, async (item, index) => {
+    //     data[index] = await fetchProductsByRules([item]);
+    //     console.log(`### DEBUG STEP ${index}`, data[index]); // fixme
+    //   });
+    //   console.log('### DEBUG FINAL RESULT: ', data); // fixme
+    //   setPreviewData(data);
+    // }
     if (rules && rulesData !== rules) {
       const data = [];
       rules.forEach((item, index) => {
         data[index] = filterProducts(products, rules, index);
       });
-      setPreviewData(data);
       setRulesData(rules);
+      setPreviewData(data);
+      // fetchData(rules);
     }
-  }, [products, rules, setPreviewData, previewData, rulesData]);
+  }, [products, rules, setPreviewData, previewData, rulesData, fetchProductsByRules]);
 
   const handleToggle = (key) => () => {
     if (key !== 'close') {
       const data = previewData[key];
       if (data.length === 0) {
-        enqueueSnackbar('No Products match this rule.', { variant: 'info', autoHideDuration: 4000 });
+        enqueueSnackbar('No Products match this rule.', {
+          variant: 'info',
+          autoHideDuration: 4000,
+        });
       } else {
         setProducts(data);
         setPreViewState(true);
@@ -46,7 +60,7 @@ function RulesTable({
 
   return (
     <div className="mg-rule-actions d-flex flex-column align-items-center">
-      {(previewData.length > 0) && (
+      {(previewData.length > 0 && previewData[0]) && (
         <table>
           <thead className="rule-table-thead">
             <tr>
@@ -138,6 +152,7 @@ RulesTable.propTypes = {
   rules: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
   productViewType: PropTypes.object.isRequired,
+  fetchProductsByRules: PropTypes.func.isRequired,
 };
 const mapStateToProps = (store) => ({
   products: store.productsData.data.products,
