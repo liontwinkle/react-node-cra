@@ -41,14 +41,6 @@ class NewRules extends Component {
       fetchingFlag: true,
       productsFlag: this.props.productViewType.key === 'grid',
     });
-    console.log('### Categories: ', this.props.category); // fixme
-    // this.props.fetchProductsByRules(this.props.category._id)
-    //   .then(() => {
-    //     this.setState({
-    //       fetchingFlag: false,
-    //       productsFlag: this.props.productViewType.key === 'grid',
-    //     });
-    //   });
 
     if (this.props.products.length === 0 && !this.props.isFetchingList) {
       this.getProducts();
@@ -63,7 +55,6 @@ class NewRules extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('### Categories: ', this.props.category); // fixme
     if (this.props.category && (this.props.category !== prevProps.category)) {
       if (this.props.products.length === 0 && !this.props.isFetchingList) {
         this.getProducts();
@@ -122,7 +113,6 @@ class NewRules extends Component {
       const srcAttributeRules = setUnionRules(filterAttribute);
 
       const attributeRules = getRules(srcAttributeRules, this.props.valueDetails);
-      console.log('#### DEBUG RULES: ', attributeRules.editRules); // fixme
       filterProduct = getPreFilterData(attributeRules.editRules, products);
     } else {
       filterProduct = products;
@@ -191,7 +181,7 @@ class NewRules extends Component {
     rules.forEach((item, index) => {
       let newCriteria = item.criteria;
       if (item.ruleType.key !== 'normal') {
-        const property = properties[item.criteria];
+        const property = properties[item.key.key];
         const defaultProperty = defaultProperties.find((defaultItem) => (defaultItem.key === item.criteria));
         if (property && property !== '') {
           newCriteria = property;

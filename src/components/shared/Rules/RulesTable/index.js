@@ -25,9 +25,7 @@ function RulesTable({
     //   const data = [];
     //   await asyncForEach(rules, async (item, index) => {
     //     data[index] = await fetchProductsByRules([item]);
-    //     console.log(`### DEBUG STEP ${index}`, data[index]); // fixme
     //   });
-    //   console.log('### DEBUG FINAL RESULT: ', data); // fixme
     //   setPreviewData(data);
     // }
     if (rules && rulesData !== rules) {
