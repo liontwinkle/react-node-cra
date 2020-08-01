@@ -24,7 +24,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/lib/codemirror.js';
 
 import 'codemirror/mode/xml/xml.js';
-import './style.scss';
+import './index.scss';
 
 import store, { history } from './redux/store';
 import App from './App';

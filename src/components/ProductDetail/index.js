@@ -163,7 +163,7 @@ function ProductsDataDetail({
   };
 
   const handleSaveImageKey = () => {
-    const caseInsensitiveMatch = new RegExp('http', 'i');
+    const caseInsensitiveMatch = new ('http', 'i')();
     if (!isFetchingList && !isUpdating
       && products[0][imageKeySet]
       && caseInsensitiveMatch.test(products[0][imageKeySet])) {
