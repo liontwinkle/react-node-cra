@@ -11,7 +11,7 @@
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.7.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "codemirror": "^5.51.0",
     "concurrently": "^4.1.1",
     "connected-react-router": "^6.4.0",
