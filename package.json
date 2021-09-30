@@ -20,7 +20,7 @@
     "filepond-plugin-image-exif-orientation": "^1.0.6",
     "filepond-plugin-image-preview": "^4.5.0",
     "froala-editor": "^3.0.6",
-    "handsontable": "^7.1.1",
+    "handsontable": "^10.0.0",
     "history": "^4.9.0",
     "immutable": "^4.0.0-rc.12",
     "jquery": "^3.4.1",
